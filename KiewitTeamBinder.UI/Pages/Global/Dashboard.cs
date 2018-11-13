@@ -14,6 +14,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
     {
         #region Entities
         public By _dashBoardLabel => By.XPath("//span[.='Dashboard']");
+        private static By _nameProjectLabel => By.Id("projectInput");
         private string _projectListRows = "//table[@id='ctl00_MaterToolbar_ProjectGrid_GridViewProjList_ctl00']//tbody/tr[{0}]";
 
         public By _logoutLink => By.Id("LogoutLabel");
@@ -27,6 +28,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         public IWebElement ProjectListSumary { get { return StableFindElement(_projectListSumary); } }
         public IWebElement ProjectListTable { get { return StableFindElement(_projectListTable); } }
         public IWebElement HelpButtonDropDown { get { return StableFindElement(_helpButtonDropdown); } }
+        public IWebElement NameProjectLabel { get { return StableFindElement(_nameProjectLabel); } }
 
         #endregion
 
@@ -44,67 +46,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
             return this;
         }
 
-        public KeyValuePair<string, bool> ValidateDataInProjectListAvailable(string nameProject)
-        {
-            var node = StepNode();
-            
-            try
-            {
-                int rowIndex, colIndex;
-                GetTableCellValueIndex(ProjectListTable, nameProject, out rowIndex, out colIndex);
-
-                if (rowIndex == -1)
-                    return SetFailValidation(node, Validation.Data_In_ProjectList_Availiable);
-                else
-                {
-                    string actualProjectName = TableCell(ProjectListTable, rowIndex, colIndex).Text;
-
-                    if (actualProjectName.Contains(nameProject))
-                        return SetPassValidation(node, Validation.Data_In_ProjectList_Availiable);
-
-                    else
-                        return SetFailValidation(node, Validation.Data_In_ProjectList_Availiable, nameProject, actualProjectName);
-                }
-                   
-            }
-            catch (Exception e)
-            {
-                return SetErrorValidation(node, Validation.Data_In_ProjectList_Availiable, e);
-            }
-        }
-
-        public KeyValuePair<string, bool> ValidateProjectIsHighlightedWhenHovered(string nameProject)
-        {
-            var node = StepNode();
-
-            try
-            {
-                
-                int rowIndex, colIndex;
-                GetTableCellValueIndex(ProjectListTable, nameProject, out rowIndex, out colIndex);
-
-                ScrollToElement(StableFindElement(By.XPath(string.Format(_projectListRows, rowIndex))));
-
-                if (rowIndex == -1)
-                    return SetFailValidation(node, Validation.Data_In_ProjectList_Availiable);
-                else
-                {
-                    string actualAttribute = StableFindElement(By.XPath(string.Format(_projectListRows, rowIndex))).GetAttribute("class");
-
-                    if (actualAttribute.Contains("HoveredRow"))
-                        return SetPassValidation(node, Validation.Project_Is_Highlighted_When_Hovered);
-
-                    else
-                        return SetFailValidation(node, Validation.Project_Is_Highlighted_When_Hovered, "Attribute is contains HoveredRow", actualAttribute);
-                }
-
-            }
-            catch (Exception e)
-            {
-                return SetErrorValidation(node, Validation.Project_Is_Highlighted_When_Hovered, e);
-            }
-        }
-
         public HelpAboutDialog OpenHelpDialog(string option)
         {
             SelectComboboxByText(HelpButtonDropDown, _helpButtonDropDownData, option);
@@ -114,10 +55,26 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
             return helpAboutDialog;
         }
+		public KeyValuePair<string, bool> ValidateProjectIsOpened(string nameProject)
+        {
+            var node = StepNode();
+
+            try
+            {
+                if (NameProjectLabel.GetAttribute("title").Equals(nameProject))
+                    return SetPassValidation(node, Validation.Project_Is_Opened);
+
+                else
+                    return SetFailValidation(node, Validation.Project_Is_Opened, nameProject, NameProjectLabel.GetAttribute("title"));
+            }
+            catch (Exception e)
+            {
+                return SetErrorValidation(node, Validation.Project_Is_Opened, e);
+            }
+        }
         private static class Validation
         {
-            public static string Data_In_ProjectList_Availiable = "Validate That All Projected Availiable To The User Are Listed";
-            public static string Project_Is_Highlighted_When_Hovered = "Validate That Project Is Highlighted When Hovered";
+			public static string Project_Is_Opened = "Validate That The Project Is Opened";
         }
 
         #endregion

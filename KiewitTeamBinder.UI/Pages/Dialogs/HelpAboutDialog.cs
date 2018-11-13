@@ -41,13 +41,15 @@ namespace KiewitTeamBinder.UI.Pages.Dialogs
 
             try
             {
-                if (TeamBinderVersion.GetAttribute("text") == version)
-                    return SetPassValidation(node,
-                        Validation.TeamBinder_Version_Field_Displayed_Correctly + " - " + TeamBinderVersion.GetAttribute("text"));
+                var actualVersion = TeamBinderVersion.Text;
+                //if (TeamBinderVersion.GetAttribute("text") == version)
+                if (actualVersion == version)
+                        return SetPassValidation(node,
+                        Validation.TeamBinder_Version_Field_Displayed_Correctly + " - " + actualVersion);
 
                 else
                     return SetFailValidation(node,
-                        Validation.TeamBinder_Version_Field_Displayed_Incorrectly + " - " + "Actual Version is:" + TeamBinderVersion.GetAttribute("text"));
+                        Validation.TeamBinder_Version_Field_Displayed_Incorrectly, version, actualVersion);
             }
             catch (Exception e)
             {

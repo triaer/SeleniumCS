@@ -33,7 +33,7 @@ namespace KiewitTeamBinder.UI.Pages
         {
         }
 
-        public ProjectsList Logon(TestAccount account)
+        public LoggedInLanding Logon(TestAccount account)
         {
             string logonWindow;
 

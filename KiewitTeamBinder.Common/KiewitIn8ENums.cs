@@ -10,55 +10,6 @@ namespace KiewitTeamBinder.UI
     public class KiewitTeamBinderENums
     {
           
-        public enum SettingPage
-        {
-            [Description("User management")]
-            UserManagement,
-            [Description("Project settings")]
-            ProjectSettings,
-            [Description("System")]
-            System,
-            [Description("Roles and permissions")]
-            RolesAndPermissions,
-            [Description("Organizational breakdown structure")]
-            OrganizationalBreakdownStructure,
-            [Description("Organization settings")]
-            OrganizationSettings,
-            [Description("Application integrations")]
-            ApplicationIntegrations,
-            [Description("Library")]
-            Library,
-            [Description("Account code structure")]
-            Accountcodestructure,
-            [Description("Cost center")]
-            CostCenter,
-            [Description("Currencies")]
-            Currencies,
-            [Description("Disciplines and commodities")]
-            DisciplinesAndCommodities,
-            [Description("Documents")]
-            Documents,
-            [Description("Field attributes")]
-            FieldAttributes,
-            [Description("Operational resources")]
-            OperationalResources,
-            [Description("Qualifications")]
-            Qualifications,
-            [Description("Schedules")]
-            Schedules,
-            [Description("Unions")]
-            Unions,
-            [Description("Units of measure")]
-            UnitsOfMeasure,
-            [Description("Vendors")]
-            Vendors,
-            [Description("Workflows")]
-            Workflows,
-            [Description("Projects")]
-            Projects
-        }
-
-        
         public enum GetDateTime
         {
             TODAY,
@@ -78,6 +29,28 @@ namespace KiewitTeamBinder.UI
             LatestReleaseNotes,
             [Description("About")]
             About
+        }
+
+        public enum FilterOptions
+        {
+            [Description("No Filter")]
+            NoFilter,
+            [Description("Contains")]
+            Contains,
+            [Description("Does Not Contain")]
+            DoesNotContain,
+            [Description("Starts With")]
+            StartsWith,
+            [Description("Ends With")]
+            EndsWith,
+            [Description("Equal To")]
+            EqualTo,
+            [Description("Not  Equal To")]
+            NotEqualTo,
+            [Description("Is Empty")]
+            IsEmpty,
+            [Description("Is Not Empty")]
+            IsNotEmpty,
         }
 
     }
