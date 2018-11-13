@@ -7,8 +7,8 @@
     <ProjectGuid>{3F432CCC-DF01-4722-A4F0-3B8496A194F3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>KiewitIn8.UI</RootNamespace>
-    <AssemblyName>KiewitIn8.UI</AssemblyName>
+    <RootNamespace>KiewitTeamBinder.UI</RootNamespace>
+    <AssemblyName>KiewitTeamBinder.UI</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
@@ -128,6 +128,7 @@
     <Compile Include="Pages\Global\Dashboard.cs" />
     <Compile Include="Pages\Global\LoggedInLanding.cs" />
     <Compile Include="Pages\Global\NonSsoSignOn.cs" />
+    <Compile Include="Pages\Global\ProjectsList.cs" />
     <Compile Include="Pages\Global\SsoSignOn.cs" />
     <Compile Include="Pages\Global\NotLoggedInLanding.cs" />
     <Compile Include="Pages\Global\PageBase.cs" />

@@ -33,7 +33,7 @@ namespace KiewitTeamBinder.UI.Pages
         {
         }
 
-        public Dashboard Logon(TestAccount account)
+        public ProjectsList Logon(TestAccount account)
         {
             string logonWindow;
 
@@ -47,10 +47,10 @@ namespace KiewitTeamBinder.UI.Pages
 
             //Click LogIn button
             LoginBtn.Click();
-            var dashboardPage = new Dashboard(WebDriver);
-            WaitForElement(dashboardPage._dashBoardLabel);
-
-            return dashboardPage;
+            var projectsListPage = new ProjectsList(WebDriver);
+            WaitUntil(driver => projectsListPage.ProjListTitle != null);
+            
+            return projectsListPage;
         }
 
     }

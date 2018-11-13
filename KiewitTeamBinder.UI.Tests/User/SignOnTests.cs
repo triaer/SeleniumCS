@@ -26,10 +26,10 @@ namespace KiewitTeamBinder.UI.Tests.User
             NonSsoSignOn otherUserSignOnPage = new NonSsoSignOn(driver);
 
             // when
-            otherUserSignOnPage.Logon(teambinderTestAccount);
+            otherUserSignOnPage.Logon(teambinderTestAccount).Logout();
 
             // then
-            //otherUserSignOnPage.Title.Should().Equals(Browser.Title);
+            otherUserSignOnPage.Title.Should().Equals(Browser.Title);
             //Utils.AddCollectionToCollection(validations, methodValidations);
             //Console.WriteLine(string.Join(System.Environment.NewLine, validations.ToArray()));
             //validations.Should().OnlyContain(validations => validations.Value).Equals(bool.TrueString);

@@ -11,11 +11,12 @@ using KiewitTeamBinder.UI.Pages;
 using AventStack.ExtentReports;
 using static KiewitTeamBinder.UI.ExtentReportsHelper;
 
-namespace KiewitIn8.UI.Pages.Dialogs
+namespace KiewitTeamBinder.UI.Pages.Dialogs
 {
     public class HelpAboutDialog : LoggedInLanding
     {
         #region Entities
+        public string IFrameName = "RadWindowAbout";
         private static By _teamBinderVersion => By.XPath("//span[@id='TBVersion']");
         public static By _okButton => By.XPath("//input[@name='btnOK']");
 

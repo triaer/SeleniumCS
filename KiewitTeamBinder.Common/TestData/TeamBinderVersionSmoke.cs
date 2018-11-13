@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KiewitIn8.Common.TestData
+namespace KiewitTeamBinder.Common.TestData
 {
     public static class TeamBinderVersionSmoke
     {

@@ -12,10 +12,10 @@ using System.IO;
 using KiewitTeamBinder.UI.Tests;
 using KiewitTeamBinder.UI;
 using static KiewitTeamBinder.UI.KiewitTeamBinderENums;
-using KiewitIn8.Common.TestData;
-using KiewitIn8.UI.Pages.Dialogs;
+using KiewitTeamBinder.UI.Pages.Dialogs;
+using KiewitTeamBinder.Common.TestData;
 
-namespace KiewitIn8.UI.Tests.Dashboard
+namespace KiewitTeamBinder.UI.Tests.Dashboard
 {
     /// <summary>
     /// Summary description for HelpAboutTest

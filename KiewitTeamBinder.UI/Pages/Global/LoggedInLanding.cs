@@ -24,7 +24,8 @@ namespace KiewitTeamBinder.UI.Pages
         public static By _closeReleaseNotesButton => By.XPath("//div[@class = 'wm-close-button walkme-x-button']");
         private static By _settingLoading => By.XPath("//*[@id='platform-settings-menu-dropdown_mn_active']/span[contains(@class,'k-link k-sate-active')]");
         private static By _userIcon => By.CssSelector("span.icon.icon-user-alerts.platform-icon-menu");
-        private static By _signOutButton => By.XPath("//*[@value='Sign out']");
+        private static By _logoutLink => By.Id("LogoutLabel");
+        private static By _logoutYesButton => By.XPath("//div[@class='rwDialogPopup radconfirm']//a[.//span[text()='Yes']]");
         private static By _menuItem => By.XPath("//div[@id='platform-navbar']//i[@class = 'core-align-middle icon icon-burger']");
         private static By _settingIcon => By.XPath("//span[contains(@class,'icon-settings platform-icon-menu')]");
         private static By _alertPopup => By.Id("kendoAlertWindow");
@@ -35,7 +36,8 @@ namespace KiewitTeamBinder.UI.Pages
         private static By _closeAnnouncement => By.XPath("//div[contains(@class,'wm-close-button')]");
 
         public IWebElement UserIcon { get { return StableFindElement(_userIcon); } }
-        public IWebElement SignOutButton { get { return StableFindElement(_signOutButton); } }
+        public IWebElement LogoutLink { get { return StableFindElement(_logoutLink); } }
+        public IWebElement LogoutYesButton { get { return StableFindElement(_logoutYesButton); } }
         public IWebElement MenuItem { get { return StableFindElement(_menuItem); } }
         public IWebElement SettingIcon { get { return StableFindElement(_settingIcon); } }
         public IWebElement SaveChangeYesButton { get { return StableFindElement(_saveChangeYesButton); } }
@@ -53,12 +55,15 @@ namespace KiewitTeamBinder.UI.Pages
 
         }
 
-        public SsoSignOn Logoff()
+        public NonSsoSignOn Logout()
         {
-            UserIcon.Click();
-            SignOutButton.Click();
+            
+            LogoutLink.Click();
+            WebDriver.SwitchTo().ActiveElement();
+            LogoutYesButton.Click();
             Wait(shortTimeout);
-            return new SsoSignOn(WebDriver);
+
+            return new NonSsoSignOn(WebDriver);
 
         }
 

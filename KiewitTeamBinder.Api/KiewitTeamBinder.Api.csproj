@@ -7,8 +7,8 @@
     <ProjectGuid>{953E14AD-F154-426C-AD69-92A56FBDE62F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>KiewitIn8.API</RootNamespace>
-    <AssemblyName>KiewitIn8.API</AssemblyName>
+    <RootNamespace>KiewitTeamBinder.API</RootNamespace>
+    <AssemblyName>KiewitTeamBinder.API</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

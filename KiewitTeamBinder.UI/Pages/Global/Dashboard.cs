@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static KiewitTeamBinder.UI.ExtentReportsHelper;
 using KiewitTeamBinder.UI;
-using KiewitIn8.UI.Pages.Dialogs;
+using KiewitTeamBinder.UI.Pages.Dialogs;
 
 namespace KiewitTeamBinder.UI.Pages.Global
 {
@@ -23,7 +23,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
         private static By _helpButtonDropdown => By.XPath("//div[@id='divHelpButton']");
         private static By _helpButtonDropDownData => By.XPath("//div[@id='HelpDropDown_detached']/ul/li");
 
-        public IWebElement LogoutLink { get { return StableFindElement(_logoutLink); } }
         public IWebElement ProjectListDropdown { get { return StableFindElement(_projectListDropdown); } }
         public IWebElement ProjectListSumary { get { return StableFindElement(_projectListSumary); } }
         public IWebElement ProjectListTable { get { return StableFindElement(_projectListTable); } }
@@ -60,11 +59,11 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 {
                     string actualProjectName = TableCell(ProjectListTable, rowIndex, colIndex).Text;
 
-                    if (actualProjectName.Equals(nameProject))
+                    if (actualProjectName.Contains(nameProject))
                         return SetPassValidation(node, Validation.Data_In_ProjectList_Availiable);
 
                     else
-                        return SetFailValidation(node, Validation.Data_In_ProjectList_Availiable, nameProject, "Actual Project Name: " + actualProjectName);
+                        return SetFailValidation(node, Validation.Data_In_ProjectList_Availiable, nameProject, actualProjectName);
                 }
                    
             }
@@ -93,16 +92,16 @@ namespace KiewitTeamBinder.UI.Pages.Global
                     string actualAttribute = StableFindElement(By.XPath(string.Format(_projectListRows, rowIndex))).GetAttribute("class");
 
                     if (actualAttribute.Contains("HoveredRow"))
-                        return SetPassValidation(node, Validation.Data_In_ProjectList_Availiable);
+                        return SetPassValidation(node, Validation.Project_Is_Highlighted_When_Hovered);
 
                     else
-                        return SetFailValidation(node, Validation.Data_In_ProjectList_Availiable, "Attribute is contains HoveredRow", "Actual Attribute: " + actualAttribute);
+                        return SetFailValidation(node, Validation.Project_Is_Highlighted_When_Hovered, "Attribute is contains HoveredRow", actualAttribute);
                 }
 
             }
             catch (Exception e)
             {
-                return SetErrorValidation(node, Validation.Data_In_ProjectList_Availiable, e);
+                return SetErrorValidation(node, Validation.Project_Is_Highlighted_When_Hovered, e);
             }
         }
 
@@ -110,6 +109,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         {
             SelectComboboxByText(HelpButtonDropDown, _helpButtonDropDownData, option);
             var helpAboutDialog = new HelpAboutDialog(WebDriver);
+            WebDriver.SwitchTo().Frame(helpAboutDialog.IFrameName);
             WaitUntil(driver => helpAboutDialog.OkButton != null);
 
             return helpAboutDialog;
