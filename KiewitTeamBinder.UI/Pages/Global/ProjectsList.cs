@@ -60,12 +60,16 @@ namespace KiewitTeamBinder.UI.Pages.Global
             if (filterColumnName.Equals("Project Title"))
             {
                 ProjectTitleTextBox.InputText(filterValue);
+                ProjectTitleImgFilter.Click();
+                WaitForElementAttribute(ProjectTitleImgFilter, "class", null);
                 SelectComboboxByText(ProjectTitleImgFilter, _projectImgFilterData, FilterOptions.EqualTo.ToDescription());
             }
 
             if (filterColumnName.Equals("Project No"))
             {
                 ProjectNoTextBox.InputText(filterValue);
+                ProjectNoImgFilter.Click();
+                WaitForElementAttribute(ProjectNoImgFilter, "class", null);
                 SelectComboboxByText(ProjectNoImgFilter, _projectImgFilterData, FilterOptions.EqualTo.ToDescription());
             }
             WaitForElement(_projGridDataTable);
