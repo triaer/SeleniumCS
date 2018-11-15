@@ -21,6 +21,7 @@ namespace KiewitTeamBinder.UI.Pages
         private static By _nextButton => By.Id("idSIButton9");
         private static By _signInButton => By.Id("submitButton");
         private static By _denyStaySignedIn => By.Id("idBtn_Back");
+        private static By _registerButton => By.Id("lnkRegister");
 
         public IWebElement Username { get { return StableFindElement(_username); } }
         public IWebElement Password { get { return StableFindElement(_password); } }
@@ -28,6 +29,7 @@ namespace KiewitTeamBinder.UI.Pages
         public IWebElement NextButton { get { return StableFindElement(_nextButton); } }
         public IWebElement SignInButton { get { return StableFindElement(_signInButton); } }
         public IWebElement DenyStaySignedIn { get { return StableFindElement(_denyStaySignedIn); } }
+        public IWebElement RegisterButton { get { return StableFindElement(_registerButton); } }
 
         #endregion
 
@@ -54,19 +56,20 @@ namespace KiewitTeamBinder.UI.Pages
             Password.InputText(account.kiewitPassword);
 
             SignInButton.Click();
-            if (FindElement(By.Id("idBtn_Back"), longTimeout) != null)
+            if (FindElement(By.Id("idBtn_Back"), shortTimeout) != null)
                 DenyStaySignedIn.Click();
 
             //Fill TeamBinder account fields
-            if (FindElement(By.Id("txtUserId"), longTimeout) != null)
+            if (FindElement(By.Id("txtUserId"), mediumTimeout) != null)
             {
                 UserIdTextbox.InputText(account.Username);
                 CompanyIdTextbox.InputText(account.Project);
                 PasswordTextbox.InputText(account.Password);
                 //Click LogIn button
-                LoginBtn.Click();
+                RegisterButton.Click();
+                Wait(shortTimeout);
             }
-
+            
             var projectsListPage = new ProjectsList(WebDriver);
             WaitUntil(driver => projectsListPage.ProjListTitle != null);
 

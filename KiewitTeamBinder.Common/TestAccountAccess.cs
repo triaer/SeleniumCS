@@ -42,12 +42,11 @@ namespace KiewitTeamBinder.Common
             {
                 case "NonSSO":
                     SheetName = "TeamBinderAccounts$";
-                    cmdExcel.CommandText = "SELECT ROLE, ENVIRONMENT, DESCRIPTION, URL, USERNAME, PROJECT, PASSWORD, KIEWITUSER, NOTES From [" + SheetName + "] WHERE ROLE='" + role + "' AND ENVIRONMENT='" + environment + "'";
+                    cmdExcel.CommandText = "SELECT ROLE, ENVIRONMENT, DESCRIPTION, URL, USERNAME, COMPANY, PASSWORD, KIEWITUSER, NOTES From [" + SheetName + "] WHERE ROLE='" + role + "' AND ENVIRONMENT='" + environment + "'";
                     break;
                 case "KWUser":
-                    KWSheetName = "KiewitUserAccounts$";
                     SheetName = "TeamBinderAccounts$";
-                    cmdExcel.CommandText = "SELECT ROLE, ENVIRONMENT, DESCRIPTION, URL, USERNAME, PROJECT, PASSWORD, KIEWITUSER, NOTES From [" + SheetName + "] WHERE ROLE='" + tbUserRole + "' AND ENVIRONMENT='" + environment + "'";
+                    cmdExcel.CommandText = "SELECT ROLE, ENVIRONMENT, DESCRIPTION, URL, USERNAME, COMPANY, PASSWORD, KIEWITUSER, NOTES From [" + SheetName + "] WHERE ROLE='" + tbUserRole + "' AND ENVIRONMENT='" + environment + "'";
                     break;
             }
             //Use a DataAdapter and command to populate the DataSet
@@ -64,7 +63,7 @@ namespace KiewitTeamBinder.Common
                 {
                     Role = role,
                     Username = dt.Rows[0]["USERNAME"].ToString(),
-                    Project = dt.Rows[0]["PROJECT"].ToString(),
+                    Project = dt.Rows[0]["COMPANY"].ToString(),
                     Password = dt.Rows[0]["PASSWORD"].ToString(),
                     Url = dt.Rows[0]["URL"].ToString()
                 };
@@ -72,6 +71,7 @@ namespace KiewitTeamBinder.Common
 
             if (type == "KWUser")
             {
+                KWSheetName = "In8Accounts$";
                 cmdExcel.CommandText = "SELECT ROLE, USERNAME, PASSWORD From [" + KWSheetName + "] WHERE ROLE='" + role + "'";
                 dataAdapter.SelectCommand = cmdExcel;
                 DataSet dataSet1 = new DataSet();

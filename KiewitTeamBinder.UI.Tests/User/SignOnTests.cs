@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using KiewitTeamBinder.Common;
 using KiewitTeamBinder.UI.Pages;
+using KiewitTeamBinder.UI.Pages.Global;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using SimpleImpersonation;
@@ -18,18 +19,16 @@ namespace KiewitTeamBinder.UI.Tests.User
         public void NonSSO_ValidUserCanLogonAndLogOff()
         {
             // given
-            validations = new List<KeyValuePair<string, bool>>();
-            List<KeyValuePair<string, bool>> methodValidations = new List<KeyValuePair<string, bool>>();
             var teambinderTestAccount = GetTestAccount("AdminAccount1", environment, "NonSSO");
 
             var driver = Browser.Open(teambinderTestAccount.Url, browser);
-            NonSsoSignOn otherUserSignOnPage = new NonSsoSignOn(driver);
 
             // when
-            otherUserSignOnPage.Logon(teambinderTestAccount).Logout();
+            var projectsList = new NonSsoSignOn(driver).Logon(teambinderTestAccount) as ProjectsList;
+            projectsList.NavigateToProjectDashboardPage("Automation Project 1")
+                        .Logout();
 
             // then
-            otherUserSignOnPage.Title.Should().Equals(Browser.Title);
             //Utils.AddCollectionToCollection(validations, methodValidations);
             //Console.WriteLine(string.Join(System.Environment.NewLine, validations.ToArray()));
             //validations.Should().OnlyContain(validations => validations.Value).Equals(bool.TrueString);
@@ -38,18 +37,16 @@ namespace KiewitTeamBinder.UI.Tests.User
         public void SSO_ValidUserCanLogonAndLogOff()
         {
             // given
-            validations = new List<KeyValuePair<string, bool>>();
-            List<KeyValuePair<string, bool>> methodValidations = new List<KeyValuePair<string, bool>>();
             var teambinderTestAccount = GetTestAccount("SuperUserA", environment, "KWUser", "VendorAccount1");
 
             var driver = Browser.Open(teambinderTestAccount.Url, browser);
-            SsoSignOn kwSignOnPage = new SsoSignOn(driver);
 
             // when
-            kwSignOnPage.KiewitUserLogon(teambinderTestAccount);
+            var projectsList = new SsoSignOn(driver).KiewitUserLogon(teambinderTestAccount) as ProjectsList;
+            projectsList.NavigateToProjectDashboardPage("Automation Project 1")
+                        .Logout();
 
             // then
-            //otherUserSignOnPage.Title.Should().Equals(Browser.Title);
             //Utils.AddCollectionToCollection(validations, methodValidations);
             //Console.WriteLine(string.Join(System.Environment.NewLine, validations.ToArray()));
             //validations.Should().OnlyContain(validations => validations.Value).Equals(bool.TrueString);

@@ -98,7 +98,7 @@ namespace KiewitTeamBinder.UI.Pages
                 try
                 {
                     var wait = Browser.Wait(shortTimeout);
-                    wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(by));
+                    //wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(by));
                     wait.Until(d => d.FindElement(by).Displayed);
                     Element = WebDriver.FindElement(by);
                     break;
@@ -423,7 +423,10 @@ namespace KiewitTeamBinder.UI.Pages
         /// <param name="value">text value of item</param>
         internal static void SelectComboboxByText(IWebElement Combobox, By data, string value, int timeout = mediumTimeout, bool isEqual = true)
         {
-            Combobox.Click();
+            
+            Combobox.ForceClick();
+            //Combobox.ClickForIE();
+            //Combobox.ActionsClick();
             WaitForElement(data, timeout);
             Wait(1);
             List<IWebElement> items = GetElementsWithSize(data, 1);
@@ -434,7 +437,8 @@ namespace KiewitTeamBinder.UI.Pages
                 {
                     if (item.Text.Trim().Equals(value) || item.GetAttribute("innerHTML").Trim().Equals(value))
                     {
-                        item.Click();
+                        //item.Click();
+                        item.ForceClick();
                         break;
                     }
                 }
@@ -587,11 +591,13 @@ namespace KiewitTeamBinder.UI.Pages
 
         internal static void SwitchToPopUpWindow(IWebElement ElementToBeClicked, out string parentWindow, bool closePreviousWindow = false, int timeout = 30)
         {
+
             parentWindow = WebDriver.CurrentWindowHandle;
             ReadOnlyCollection<string> originalHandles = WebDriver.WindowHandles;
 
-            //WaitForElementClickable(GetByOfElement(ElementToBeClicked));
-            ElementToBeClicked.Click();
+            ElementToBeClicked.ActionsClick();
+            //ElementToBeClicked.Click();
+
             string popUpWindowHandle = Browser.Wait(timeout).Until<string>((d) =>
             {
                 string foundHandle = null;

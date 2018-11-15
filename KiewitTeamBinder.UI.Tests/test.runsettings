@@ -31,11 +31,12 @@
   </DataCollectionRunSettings>-->
   <!-- Parameters used by tests at runtime -->
   <TestRunParameters>
-    <Parameter name="browser" value="chrome" />
+    <!-- <Parameter name="browser" value="chrome" /> -->
+    <Parameter name="browser" value="internetexplorer" />
     <Parameter name="headless" value="false" />
     <Parameter name="environment" value="test" />
-    <Parameter name="excelUserSourcePath" value="C:\working\DT_CommonDataKiewitTeamBinder.xls" />
-    <Parameter name="localTempExcelUserTargetPath" value="C:\temp\DT_CommonDataKiewitTeamBinder.xls" />
+    <Parameter name="excelUserSourcePath" value="C:\working\DT_CommonDataKiewitIn8.xls" />
+    <Parameter name="localTempExcelUserTargetPath" value="C:\temp\DT_CommonDataKiewitIn8.xls" />
   </TestRunParameters>
   <!-- Adapter Specific sections -->
   <!-- MSTest adapter -->

@@ -15,18 +15,15 @@ namespace KiewitTeamBinder.UI.Pages.Global
         #region Entities
         public By _dashBoardLabel => By.XPath("//span[.='Dashboard']");
         private static By _nameProjectLabel => By.Id("projectInput");
-        private string _projectListRows = "//table[@id='ctl00_MaterToolbar_ProjectGrid_GridViewProjList_ctl00']//tbody/tr[{0}]";
 
         public By _logoutLink => By.Id("LogoutLabel");
         private static By _projectListDropdown => By.Id("btnShowProjectList");
         private static By _projectListSumary => By.Id("divProjectSummary");
-        private static By _projectListTable => By.XPath("//table[@id='ctl00_MaterToolbar_ProjectGrid_GridViewProjList_ctl00']");
         private static By _helpButtonDropdown => By.XPath("//div[@id='divHelpButton']");
         private static By _helpButtonDropDownData => By.XPath("//div[@id='HelpDropDown_detached']/ul/li");
 
         public IWebElement ProjectListDropdown { get { return StableFindElement(_projectListDropdown); } }
         public IWebElement ProjectListSumary { get { return StableFindElement(_projectListSumary); } }
-        public IWebElement ProjectListTable { get { return StableFindElement(_projectListTable); } }
         public IWebElement HelpButtonDropDown { get { return StableFindElement(_helpButtonDropdown); } }
         public IWebElement NameProjectLabel { get { return StableFindElement(_nameProjectLabel); } }
 

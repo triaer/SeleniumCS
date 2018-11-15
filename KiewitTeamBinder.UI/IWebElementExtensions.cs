@@ -1,4 +1,5 @@
 ﻿using OpenQA.Selenium;
+using OpenQA.Selenium.IE;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using System;
@@ -162,6 +163,11 @@ namespace KiewitTeamBinder.UI
             driver.SwitchTo().DefaultContent();
         }
 
+        public static void ActionsClick(this IWebElement Element)
+        {
+            Actions actions = new Actions(WebDriver);
+            actions.Click(Element).Build().Perform();
+        }
         public static void ClickTwice(this IWebElement Element)
         {
             Actions actions = new Actions(WebDriver);
@@ -172,6 +178,29 @@ namespace KiewitTeamBinder.UI
         {
             Actions actions = new Actions(WebDriver);
             actions.DoubleClick(Element).Perform();
+        }
+        public static void ClickForIE(this IWebElement Element)
+        {
+            IJavaScriptExecutor jse = (IJavaScriptExecutor)WebDriver;
+            jse.ExecuteScript("arguments[0].click();", Element);
+        }
+        public static void ForceClick(this IWebElement Element)
+        {
+            try
+            {
+                if (WebDriver.GetType() == typeof(InternetExplorerDriver))
+                {
+                    ScrollToElement(Element);
+                    Element.SendKeys(Keys.Enter);
+                }
+                else
+                    Element.Click();
+            }
+            catch (Exception)
+            {
+                Element.Click();
+            }
+            
         }
     }
 }
