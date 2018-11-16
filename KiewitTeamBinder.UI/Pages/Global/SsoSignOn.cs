@@ -7,9 +7,9 @@ using KiewitTeamBinder.Common;
 using OpenQA.Selenium;
 using SeleniumExtras.PageObjects;
 using System.Windows.Forms;
-using KiewitTeamBinder.UI.Pages.Global;
 
-namespace KiewitTeamBinder.UI.Pages
+
+namespace KiewitTeamBinder.UI.Pages.Global
 {
     public class SsoSignOn : NonSsoSignOn
     {
@@ -63,7 +63,7 @@ namespace KiewitTeamBinder.UI.Pages
             if (FindElement(By.Id("txtUserId"), mediumTimeout) != null)
             {
                 UserIdTextbox.InputText(account.Username);
-                CompanyIdTextbox.InputText(account.Project);
+                CompanyIdTextbox.InputText(account.Company);
                 PasswordTextbox.InputText(account.Password);
                 //Click LogIn button
                 RegisterButton.Click();

@@ -7,7 +7,7 @@ namespace KiewitTeamBinder.Common
 {
     public class TestAccountAccess
     {
-        public static TestAccount GetTestAccount(string role, string environment, string type, string tbUserRole, string sourceFilePath, string localTempExcelUserTargetPath)
+        public static TestAccount GetTestAccount(string role, string environment, string type, string kwUserRole, string sourceFilePath, string localTempExcelUserTargetPath)
         {
             //Copy File and make sure it was successful before 
             CopyExcelDataFileToTemp(sourceFilePath, localTempExcelUserTargetPath);
@@ -38,17 +38,8 @@ namespace KiewitTeamBinder.Common
             // dtExcelSchema.Rows[1]["TABLE_NAME"].ToString();
 
             //Set up SQL like command
-            switch (type)
-            {
-                case "NonSSO":
-                    SheetName = "TeamBinderAccounts$";
-                    cmdExcel.CommandText = "SELECT ROLE, ENVIRONMENT, DESCRIPTION, URL, USERNAME, COMPANY, PASSWORD, KIEWITUSER, NOTES From [" + SheetName + "] WHERE ROLE='" + role + "' AND ENVIRONMENT='" + environment + "'";
-                    break;
-                case "KWUser":
-                    SheetName = "TeamBinderAccounts$";
-                    cmdExcel.CommandText = "SELECT ROLE, ENVIRONMENT, DESCRIPTION, URL, USERNAME, COMPANY, PASSWORD, KIEWITUSER, NOTES From [" + SheetName + "] WHERE ROLE='" + tbUserRole + "' AND ENVIRONMENT='" + environment + "'";
-                    break;
-            }
+            SheetName = "TeamBinderAccounts$";
+            cmdExcel.CommandText = "SELECT ROLE, ENVIRONMENT, DESCRIPTION, URL, USERNAME, COMPANY, PASSWORD, KIEWITUSER, NOTES From [" + SheetName + "] WHERE ROLE='" + role + "' AND ENVIRONMENT='" + environment + "'";
             //Use a DataAdapter and command to populate the DataSet
             dataAdapter.SelectCommand = cmdExcel;
             dataAdapter.Fill(dataSet, "Data");
@@ -63,16 +54,16 @@ namespace KiewitTeamBinder.Common
                 {
                     Role = role,
                     Username = dt.Rows[0]["USERNAME"].ToString(),
-                    Project = dt.Rows[0]["COMPANY"].ToString(),
+                    Company = dt.Rows[0]["COMPANY"].ToString(),
                     Password = dt.Rows[0]["PASSWORD"].ToString(),
                     Url = dt.Rows[0]["URL"].ToString()
                 };
             }
-
+            //get the user info of Kiewit Account
             if (type == "KWUser")
             {
                 KWSheetName = "In8Accounts$";
-                cmdExcel.CommandText = "SELECT ROLE, USERNAME, PASSWORD From [" + KWSheetName + "] WHERE ROLE='" + role + "'";
+                cmdExcel.CommandText = "SELECT ROLE, USERNAME, PASSWORD From [" + KWSheetName + "] WHERE ROLE='" + kwUserRole + "'";
                 dataAdapter.SelectCommand = cmdExcel;
                 DataSet dataSet1 = new DataSet();
                 dataAdapter.Fill(dataSet1, "Data");
@@ -106,7 +97,7 @@ namespace KiewitTeamBinder.Common
         public string kiewitPassword { get; set; }
         public string Role { get; set; }
         public string Username { get; set; }
-        public string Project { get; set; }
+        public string Company { get; set; }
         public string Password { get; set; }
         public string Url { get; set; }
     }

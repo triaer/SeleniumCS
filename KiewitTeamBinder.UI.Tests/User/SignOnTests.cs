@@ -37,7 +37,7 @@ namespace KiewitTeamBinder.UI.Tests.User
         public void SSO_ValidUserCanLogonAndLogOff()
         {
             // given
-            var teambinderTestAccount = GetTestAccount("SuperUserA", environment, "KWUser", "VendorAccount1");
+            var teambinderTestAccount = GetTestAccount("VendorAccount1", environment, "KWUser", "SuperUserA");
 
             var driver = Browser.Open(teambinderTestAccount.Url, browser);
 

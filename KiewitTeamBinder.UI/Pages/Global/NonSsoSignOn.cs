@@ -9,7 +9,7 @@ using SeleniumExtras.PageObjects;
 using System.Windows.Forms;
 using KiewitTeamBinder.UI.Pages.Global;
 
-namespace KiewitTeamBinder.UI.Pages
+namespace KiewitTeamBinder.UI.Pages.Global
 {
     public class NonSsoSignOn : NotLoggedInLanding
     {
@@ -42,7 +42,7 @@ namespace KiewitTeamBinder.UI.Pages
 
             //Fill account fields
             UserIdTextbox.InputText(account.Username);
-            CompanyIdTextbox.InputText(account.Project);
+            CompanyIdTextbox.InputText(account.Company);
             PasswordTextbox.InputText(account.Password);
 
             //Click LogIn button
