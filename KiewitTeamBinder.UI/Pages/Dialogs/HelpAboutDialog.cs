@@ -7,7 +7,7 @@ using KiewitTeamBinder.Common;
 using OpenQA.Selenium;
 using SeleniumExtras.PageObjects;
 using System.Windows.Forms;
-using KiewitTeamBinder.UI.Pages;
+using KiewitTeamBinder.UI.Pages.Global;
 using AventStack.ExtentReports;
 using static KiewitTeamBinder.UI.ExtentReportsHelper;
 

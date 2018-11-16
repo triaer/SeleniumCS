@@ -9,7 +9,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static KiewitTeamBinder.UI.Pages.PageBase;
+using static KiewitTeamBinder.UI.Pages.Global.PageBase;
 
 namespace KiewitTeamBinder.UI
 {

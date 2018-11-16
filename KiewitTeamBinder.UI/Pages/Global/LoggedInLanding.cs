@@ -10,7 +10,7 @@ using OpenQA.Selenium.Interactions;
 using static KiewitTeamBinder.UI.ExtentReportsHelper;
 using KiewitTeamBinder.Common.Helper;
 
-namespace KiewitTeamBinder.UI.Pages
+namespace KiewitTeamBinder.UI.Pages.Global
 {
     public class LoggedInLanding : PageBase
     {

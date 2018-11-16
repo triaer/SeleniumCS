@@ -17,7 +17,7 @@ using System.Windows.Forms;
 using KiewitTeamBinder.Common.Helper;
 using AventStack.ExtentReports;
 
-namespace KiewitTeamBinder.UI.Pages
+namespace KiewitTeamBinder.UI.Pages.Global
 {
     public abstract class PageBase
     {
