@@ -423,10 +423,8 @@ namespace KiewitTeamBinder.UI.Pages
         /// <param name="value">text value of item</param>
         internal static void SelectComboboxByText(IWebElement Combobox, By data, string value, int timeout = mediumTimeout, bool isEqual = true)
         {
-            
-            Combobox.ForceClick();
-            //Combobox.ClickForIE();
-            //Combobox.ActionsClick();
+
+            Combobox.ClickOnIE();
             WaitForElement(data, timeout);
             Wait(1);
             List<IWebElement> items = GetElementsWithSize(data, 1);
@@ -437,8 +435,7 @@ namespace KiewitTeamBinder.UI.Pages
                 {
                     if (item.Text.Trim().Equals(value) || item.GetAttribute("innerHTML").Trim().Equals(value))
                     {
-                        //item.Click();
-                        item.ForceClick();
+                        item.ClickOnIE();
                         break;
                     }
                 }
@@ -448,7 +445,37 @@ namespace KiewitTeamBinder.UI.Pages
                 {
                     if (item.Text.Trim().Contains(value) || item.GetAttribute("innerHTML").Trim().Contains(value))
                     {
-                        item.Click();
+                        item.ClickOnIE();
+                        break;
+                    }
+                }
+        }
+        internal static void SelectFilterByText(IWebElement Combobox, By data, string value, int timeout = mediumTimeout, bool isEqual = true)
+        {
+
+            Combobox.ActionsClick();
+
+            WaitForElement(data, timeout);
+            Wait(1);
+            List<IWebElement> items = GetElementsWithSize(data, 1);
+
+            if (isEqual)
+            {
+                foreach (IWebElement item in items)
+                {
+                    if (item.Text.Trim().Equals(value) || item.GetAttribute("innerHTML").Trim().Equals(value))
+                    {
+                        item.ClickOnIE();
+                        break;
+                    }
+                }
+            }
+            else
+                foreach (IWebElement item in items)
+                {
+                    if (item.Text.Trim().Contains(value) || item.GetAttribute("innerHTML").Trim().Contains(value))
+                    {
+                        item.ClickOnIE();
                         break;
                     }
                 }

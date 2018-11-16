@@ -166,7 +166,7 @@ namespace KiewitTeamBinder.UI
         public static void ActionsClick(this IWebElement Element)
         {
             Actions actions = new Actions(WebDriver);
-            actions.Click(Element).Build().Perform();
+            actions.MoveToElement(Element).Click(Element).Build().Perform();
         }
         public static void ClickTwice(this IWebElement Element)
         {
@@ -179,28 +179,29 @@ namespace KiewitTeamBinder.UI
             Actions actions = new Actions(WebDriver);
             actions.DoubleClick(Element).Perform();
         }
-        public static void ClickForIE(this IWebElement Element)
+        
+        public static void ClickOnIE(this IWebElement Element)
+        {
+            ScrollIntoView(Element);
+            Element.Click();
+        }
+        public static void HoverAndClickWithJS(this IWebElement Element)
         {
             IJavaScriptExecutor jse = (IJavaScriptExecutor)WebDriver;
+            Element.hoverWithJS();
             jse.ExecuteScript("arguments[0].click();", Element);
         }
-        public static void ForceClick(this IWebElement Element)
+        private static void hoverWithJS(this IWebElement Element)
         {
-            try
-            {
-                if (WebDriver.GetType() == typeof(InternetExplorerDriver))
-                {
-                    ScrollToElement(Element);
-                    Element.SendKeys(Keys.Enter);
-                }
-                else
-                    Element.Click();
-            }
-            catch (Exception)
-            {
-                Element.Click();
-            }
-            
+            var mouseOverScript = "if(document.createEvent){var evObj = document.createEvent('MouseEvents');"
+                + "evObj.initEvent('mouseover', true, false);" 
+                +"arguments[0].dispatchEvent(evObj); }"
+                + "else if(document.createEventObject) { arguments[0].fireEvent('onmouseover'); }";
+            ((IJavaScriptExecutor)WebDriver).ExecuteScript(mouseOverScript, Element);
+        }
+        public static void enableWithJS(this IWebElement Element)
+        {
+            ((IJavaScriptExecutor)WebDriver).ExecuteScript("arguments[0].style.display='block';",Element);
         }
     }
 }

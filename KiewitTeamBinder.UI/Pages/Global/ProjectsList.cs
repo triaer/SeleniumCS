@@ -49,6 +49,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             var dashboard = new Dashboard(WebDriver);
             ProjectItem.Click();
             WaitForElement(dashboard._dashBoardLabel);
+            WaitForAjaxComplete();
 
             return dashboard;
         }

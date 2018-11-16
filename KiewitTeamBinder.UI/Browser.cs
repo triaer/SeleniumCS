@@ -83,10 +83,10 @@ namespace KiewitTeamBinder.UI
             {
 
                 InternetExplorerOptions ieOptions = new InternetExplorerOptions();
-                ieOptions.EnableNativeEvents = false;
+                ieOptions.EnableNativeEvents = true;
                 ieOptions.UnhandledPromptBehavior = UnhandledPromptBehavior.Accept;
                 ieOptions.EnablePersistentHover = true;
-                ieOptions.RequireWindowFocus = true;
+                ieOptions.RequireWindowFocus = false;
                 ieOptions.IntroduceInstabilityByIgnoringProtectedModeSettings = true;
                 ieOptions.IgnoreZoomLevel = true;
                 ieOptions.EnsureCleanSession = true;
