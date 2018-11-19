@@ -76,7 +76,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 Utils.AddCollectionToCollection(validations, methodValidations);
                 Console.WriteLine(string.Join(System.Environment.NewLine, validations.ToArray()));
                 validations.Should().OnlyContain(validations => validations.Value).Equals(bool.TrueString);
-            }
+            } 
             catch (Exception e)
             {
                 lastException = e;
