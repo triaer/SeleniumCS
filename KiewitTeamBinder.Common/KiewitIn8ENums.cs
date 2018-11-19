@@ -53,7 +53,40 @@ namespace KiewitTeamBinder.UI
             IsNotEmpty,
         }
 
-    }
+        public enum VendorDataMenusForVendorAccount
+        {
+            [Description("Holding Area")]
+            HoldingArea
+        }
 
+        public enum VendorDataMenusForAdminAndStandardAccount
+        {
+            [Description("Holding Area")]
+            HoldingArea,
+            [Description("Vendor Data Register")]
+            VendorDataRegister
+        }
+
+        public enum TableComboBoxType
+        {
+            [Description("Rev")]
+            Rev,
+            [Description("Sts")]
+            Sts,
+            [Description("Discipline")]
+            Discipline,
+            [Description("Category")]
+            Category,
+            [Description("Type")]
+            Type,
+            [Description("PFLocation")]
+            PFLocation,
+            [Description("SpecificationRef")]
+            SpecificationRef,
+            [Description("SubType")]
+            SubType,
+            HoldingArea,
+        }
+    }
 }
       
