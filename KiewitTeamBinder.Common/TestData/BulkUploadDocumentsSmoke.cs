@@ -15,7 +15,7 @@ namespace KiewitTeamBinder.Common.TestData
 
         //UserStory120032_Bulk Upload Documents to Holding Area
         public static string[] ValidateFuntionButton = { "OK" };
-        public static string[] CancelFuntionButton = { "Yes", "No" };
+        public static string[] SaveFuntionButton = { "Yes", "No" };
         public static string ValueButtonOnPopUp = "No"; 
         public static string DocumentNo = "AUTO";
     }

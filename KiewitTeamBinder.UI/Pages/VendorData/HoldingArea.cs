@@ -24,11 +24,10 @@ namespace KiewitTeamBinder.UI.Pages.VendorData
         #region Actions
         public HoldingArea(IWebDriver webDriver) : base(webDriver) { }
 
-        public BulkUploadDocuments ClickBulkUploadButton()
+        public BulkUploadDocuments ClickBulkUploadButton(out string currentWindow)
         {
             IWebElement FunctionButton = StableFindElement(By.XPath(string.Format(_functionButton, "Bulk Upload")));
-            string currentWindow;
-            SwitchToPopUpWindow(FunctionButton, out currentWindow, true);
+            SwitchToPopUpWindow(FunctionButton, out currentWindow, false);
             return new BulkUploadDocuments(WebDriver);
         }
 

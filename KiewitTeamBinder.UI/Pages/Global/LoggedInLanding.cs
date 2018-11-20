@@ -34,6 +34,10 @@ namespace KiewitTeamBinder.UI.Pages.Global
         private static By _loggedInUserLabel => By.XPath("//span[@ng-if = 'enableAppInSightsOperationId && operationId']/following-sibling::span");
         private static By _announcementPopup => By.XPath("//div[contains(@id,'wm-shoutout')]");
         private static By _closeAnnouncement => By.XPath("//div[contains(@class,'wm-close-button')]");
+        public By _processingPopUp => By.Id("divProgressWindow");
+
+
+
 
         public IWebElement UserIcon { get { return StableFindElement(_userIcon); } }
         public IWebElement LogoutLink { get { return StableFindElement(_logoutLink); } }

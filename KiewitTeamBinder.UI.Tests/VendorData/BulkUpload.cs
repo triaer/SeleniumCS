@@ -56,21 +56,27 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                                                            holdingAreaPage.ValidateDefaultFilter("New Documents"));
                 holdingAreaPage.LogValidation<HoldingArea>(ref validations,
                                                            holdingAreaPage.ValidateFirstFileterBoxIsHighlighted());
-                var bulkUploadDocuments = holdingAreaPage.ClickBulkUploadButton();
+                string currentWindow;
+                var bulkUploadDocuments = holdingAreaPage.ClickBulkUploadButton(out currentWindow);
                 //bulkUploadDocumentspage.ValidateWindowIsOpened("Bulk Upload Documents");
                 //bulkUploadDocumentspage.ValidateFormTitle("Bulk Upload Documents");
                 //bulkUploadDocumentspage.ClickAddFilesInBulk();
                 bulkUploadDocuments.ClickValidateButton()
                                    .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocuments.ValidateMessageDialogBoxDisplayedForValidateFunction())
-                                   .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocuments.ValidateOkButtonDialogBoxDisplayed())
+                                   .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocuments.ValidateButtonDialogBoxDisplayed(BulkUploadDocumentsSmoke.ValidateFuntionButton))
                                    .ClickOkButtonOnDialogBox()
                                    .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocuments.ValidateDialogBoxClosed())
                                    .ClickSaveButton()
+                                   //.ClickCancelButton()
                                    .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocuments.ValidateMessageDialogBoxDisplayedForSaveAndCancelFunction())
-                                   .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocuments.ValidateYesAndNoButtonDialogBoxDisplayed())
+                                   .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocuments.ValidateButtonDialogBoxDisplayed(BulkUploadDocumentsSmoke.SaveFuntionButton))
                                    .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocuments.ValidateButtonIsHighlightedWhenHovered(BulkUploadDocumentsSmoke.ValueButtonOnPopUp))
-                                   .ClickCancelButton()
-                                   .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocuments.ValidateDialogBoxClosed());
+                                   .ClickNoButtonOnDialogBox()
+                                   .LogValidation<HoldingArea>(ref validations, bulkUploadDocuments.ValidateDialogBoxClosed())
+                                   .SwitchToWindow(currentWindow)
+                                   ;
+                bulkUploadDocuments.EnterDocumentNo(BulkUploadDocumentsSmoke.DocumentNo)
+                                   .PressEnter();
 
                 // then 
                 Utils.AddCollectionToCollection(validations, methodValidations);

@@ -7,12 +7,15 @@ using System.Threading.Tasks;
 using static KiewitTeamBinder.UI.ExtentReportsHelper;
 using KiewitTeamBinder.UI;
 using KiewitTeamBinder.UI.Pages.Dialogs;
+using KiewitTeamBinder.UI.Pages.VendorData;
+using KiewitTeamBinder.Common;
+
 
 namespace KiewitTeamBinder.UI.Pages.Global
 {
     public class Dashboard : LoggedInLanding
     {
-        #region Entities
+        #region Entities        
         public By _dashBoardLabel => By.XPath("//span[.='Dashboard']");
         private static By _nameProjectLabel => By.Id("projectInput");
 
@@ -21,7 +24,16 @@ namespace KiewitTeamBinder.UI.Pages.Global
         private static By _projectListSumary => By.Id("divProjectSummary");
         private static By _helpButtonDropdown => By.XPath("//div[@id='divHelpButton']");
         private static By _helpButtonDropDownData => By.XPath("//div[@id='HelpDropDown_detached']/ul/li");
+        private static By _vendorButton => By.Id("divVendorData");
+        private string _menuButton = "//li[a='{0}']";
+        private static By _defaultFilter => By.Id("lblView");
+        private static By _firstFilterBox => By.Id("FilterView0");
+        private static By _formTitle => By.Id("formTitle");
 
+        public IWebElement FormTitle { get { return StableFindElement(_formTitle); } }
+        public IWebElement FirstFilterBox { get { return StableFindElement(_firstFilterBox); } }
+        public IWebElement DefaultFilter { get { return StableFindElement(_defaultFilter); } }
+        public IWebElement VendorButton { get { return StableFindElement(_vendorButton); } }
         public IWebElement ProjectListDropdown { get { return StableFindElement(_projectListDropdown); } }
         public IWebElement ProjectListSumary { get { return StableFindElement(_projectListSumary); } }
         public IWebElement HelpButtonDropDown { get { return StableFindElement(_helpButtonDropdown); } }
@@ -32,7 +44,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         #region Actions
         public Dashboard(IWebDriver webDriver) : base(webDriver)
         {
-            
+
         }
 
         public Dashboard ShowProjectList()
@@ -41,6 +53,24 @@ namespace KiewitTeamBinder.UI.Pages.Global
             WaitForElementAttribute(ProjectListSumary, "display", "block");
 
             return this;
+        }
+
+        public Dashboard ClickVendorDataButton()
+        {
+            VendorButton.Click();
+            WaitForElementDisplay(By.XPath(string.Format(_menuButton, "Holding Area")));
+            return this;
+        }
+
+        public IWebElement MenuButton(string menu)
+        {
+            return StableFindElement(By.XPath(string.Format(_menuButton, menu)));
+        }
+
+        public HoldingArea ClickHoldingAreaButton()
+        {
+            MenuButton("Holding Area").Click();
+            return new HoldingArea(WebDriver);
         }
 
         public HelpAboutDialog OpenHelpDialog(string option)
@@ -52,7 +82,8 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
             return helpAboutDialog;
         }
-		public KeyValuePair<string, bool> ValidateProjectIsOpened(string nameProject)
+
+        public KeyValuePair<string, bool> ValidateProjectIsOpened(string nameProject)
         {
             var node = StepNode();
 
@@ -69,9 +100,107 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 return SetErrorValidation(node, Validation.Project_Is_Opened, e);
             }
         }
+
+        public List<KeyValuePair<string, bool>> ValidateVendorDataMenusDisplay(string[] subMenu)
+        {
+            var node = StepNode();
+            List<KeyValuePair<string, bool>> validations = new List<KeyValuePair<string, bool>> { };
+            try
+            {
+                foreach (var item in subMenu)
+                {
+                    if (MenuButton(item).IsDisplayed())
+                        validations.Add(SetPassValidation(node, Validation.Vendor_Data_Menus_Display));
+                    else
+                        validations.Add(SetFailValidation(node, Validation.Vendor_Data_Menus_Display));
+                }
+                return validations;
+            }
+            catch (Exception e)
+            {
+                validations.Add(SetErrorValidation(node, Validation.Vendor_Data_Menus_Display, e));
+                return validations;
+            }
+        }
+
+        public KeyValuePair<string, bool> ValidateDefaultFilter(string defaultFilter)
+        {
+            var node = StepNode();
+            try
+            {
+                WaitForElementDisplay(_defaultFilter);
+                if (DefaultFilter.Text == defaultFilter)
+                {
+                    return SetPassValidation(node, string.Format(Validation.Default_Filter_Display, defaultFilter));
+                }
+                return SetFailValidation(node, string.Format(Validation.Default_Filter_Display, defaultFilter));
+            }
+            catch (Exception e)
+            {
+                return SetErrorValidation(node, string.Format(Validation.Default_Filter_Display, defaultFilter), e);
+            }
+        }
+
+        public KeyValuePair<string, bool> ValidateFirstFileterBoxIsHighlighted()
+        {
+            var node = StepNode();
+            try
+            {
+                WaitForElementDisplay(_firstFilterBox);
+                if (FirstFilterBox.GetAttribute("src").Contains("Selected"))
+                {
+                    return SetPassValidation(node, Validation.First_Filter_Box_Is_Highlighted);
+                }
+                return SetFailValidation(node, Validation.First_Filter_Box_Is_Highlighted);
+            }
+            catch (Exception e)
+            {
+                return SetErrorValidation(node, Validation.First_Filter_Box_Is_Highlighted, e);
+            }
+        }
+
+        public KeyValuePair<string, bool> ValidateWindowIsOpened(string windowName)
+        {
+            var node = StepNode();
+            try
+            {
+                if (WebDriver.Title == windowName)
+                    return SetPassValidation(node, string.Format(Validation.Validate_Window_Is_Opened, windowName));
+
+                else
+                    return SetFailValidation(node, string.Format(Validation.Validate_Window_Is_Opened, windowName));
+            }
+            catch (Exception e)
+            {
+                return SetErrorValidation(node, string.Format(Validation.Validate_Window_Is_Opened, windowName), e);
+            }
+        }
+
+        public KeyValuePair<string, bool> ValidateFormTitle(string formTitle)
+        {
+            var node = StepNode();
+            try
+            {
+                if (FormTitle.Text == formTitle)
+                    return SetPassValidation(node, string.Format(Validation.Validate_Form_Title_Is_Correct, formTitle));
+
+                else
+                    return SetFailValidation(node, string.Format(Validation.Validate_Form_Title_Is_Correct, formTitle));
+            }
+            catch (Exception e)
+            {
+                return SetErrorValidation(node, string.Format(Validation.Validate_Form_Title_Is_Correct, formTitle), e);
+            }
+        }
+
         private static class Validation
         {
-			public static string Project_Is_Opened = "Validate That The Project Is Opened";
+            public static string Project_Is_Opened = "Validate That The Project Is Opened";
+            public static string Vendor_Data_Menus_Display = "Validate That The Vendor Data Menus Display";
+            public static string Default_Filter_Display = "Validate that the Default Filter is {0}";
+            public static string First_Filter_Box_Is_Highlighted = "Validate That The First Filter Box Is Highlighted";
+            public static string Validate_Window_Is_Opened = "Validate That {0} window is opened";
+            public static string Validate_Form_Title_Is_Correct = "Validate That form title is {0}";
         }
 
         #endregion
