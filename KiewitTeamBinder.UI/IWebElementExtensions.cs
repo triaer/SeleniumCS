@@ -1,4 +1,5 @@
 ﻿using OpenQA.Selenium;
+using OpenQA.Selenium.IE;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using System;
@@ -8,7 +9,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static KiewitTeamBinder.UI.Pages.PageBase;
+using static KiewitTeamBinder.UI.Pages.Global.PageBase;
 
 namespace KiewitTeamBinder.UI
 {
@@ -162,6 +163,11 @@ namespace KiewitTeamBinder.UI
             driver.SwitchTo().DefaultContent();
         }
 
+        public static void ActionsClick(this IWebElement Element)
+        {
+            Actions actions = new Actions(WebDriver);
+            actions.MoveToElement(Element).Click(Element).Build().Perform();
+        }
         public static void ClickTwice(this IWebElement Element)
         {
             Actions actions = new Actions(WebDriver);
@@ -172,6 +178,33 @@ namespace KiewitTeamBinder.UI
         {
             Actions actions = new Actions(WebDriver);
             actions.DoubleClick(Element).Perform();
+        }
+        
+        public static void ClickOnElement(this IWebElement Element)
+        {
+            if (Browser.Driver.GetType() == typeof(InternetExplorerDriver))
+            {
+                ScrollIntoView(Element);
+            }
+            Element.Click();
+        }
+        public static void HoverAndClickWithJS(this IWebElement Element)
+        {
+            IJavaScriptExecutor jse = (IJavaScriptExecutor)WebDriver;
+            Element.hoverWithJS();
+            jse.ExecuteScript("arguments[0].click();", Element);
+        }
+        private static void hoverWithJS(this IWebElement Element)
+        {
+            var mouseOverScript = "if(document.createEvent){var evObj = document.createEvent('MouseEvents');"
+                + "evObj.initEvent('mouseover', true, false);" 
+                +"arguments[0].dispatchEvent(evObj); }"
+                + "else if(document.createEventObject) { arguments[0].fireEvent('onmouseover'); }";
+            ((IJavaScriptExecutor)WebDriver).ExecuteScript(mouseOverScript, Element);
+        }
+        public static void enableWithJS(this IWebElement Element)
+        {
+            ((IJavaScriptExecutor)WebDriver).ExecuteScript("arguments[0].style.display='block';",Element);
         }
     }
 }

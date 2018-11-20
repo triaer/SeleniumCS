@@ -10,7 +10,7 @@ using OpenQA.Selenium.Interactions;
 using static KiewitTeamBinder.UI.ExtentReportsHelper;
 using KiewitTeamBinder.Common.Helper;
 
-namespace KiewitTeamBinder.UI.Pages
+namespace KiewitTeamBinder.UI.Pages.Global
 {
     public class LoggedInLanding : PageBase
     {
@@ -61,8 +61,6 @@ namespace KiewitTeamBinder.UI.Pages
             LogoutLink.Click();
             WebDriver.SwitchTo().ActiveElement();
             LogoutYesButton.Click();
-            Wait(shortTimeout);
-
             return new NonSsoSignOn(WebDriver);
 
         }

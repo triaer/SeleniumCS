@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 using OpenQA.Selenium;
 using SeleniumExtras.PageObjects;
 
-namespace KiewitTeamBinder.UI.Pages
+namespace KiewitTeamBinder.UI.Pages.Global
 {
     public class NotLoggedInLanding : PageBase
     {
         #region Entities 
 
-        private static By _otherUserLoginBtn => By.XPath("//a[contains(@href,'InEight184/logon/')]");
-        private static By _kiewitUserLoginBtn => By.XPath("//a[contains(@href,'TeamBinderADFS/tbLogin')]");
+        private static By _otherUserLoginBtn => By.XPath("//a[text()='Other User Login']");
+        private static By _kiewitUserLoginBtn => By.XPath("//a[contains(text(),'Kiewit User Login')]");
 
         public IWebElement OtherUserLoginBtn { get { return StableFindElement(_otherUserLoginBtn); } }
         public IWebElement KiewitUserLoginBtn { get { return StableFindElement(_kiewitUserLoginBtn); } }

@@ -17,7 +17,7 @@ using KiewitTeamBinder.Common.TestData;
 using KiewitTeamBinder.UI.Pages.Global;
 using static KiewitTeamBinder.UI.ExtentReportsHelper;
 
-namespace KiewitTeamBinder.UI.Tests.Dashboard
+namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
 {
     /// <summary>
     /// Summary description for HelpAboutTest
@@ -31,23 +31,16 @@ namespace KiewitTeamBinder.UI.Tests.Dashboard
             try
             {
                 // given
-                validations = new List<KeyValuePair<string, bool>>();
-                List<KeyValuePair<string, bool>> methodValidations = new List<KeyValuePair<string, bool>>();
                 var teambinderTestAccount = GetTestAccount("AdminAccount1", environment, "NonSSO");
 
                 test.Info("Open TeamBinder Web Page: " + teambinderTestAccount.Url);
                 var driver = Browser.Open(teambinderTestAccount.Url, browser);
-                // and 119692 - Log on via Other User Login Kiewit Account
-                test = LogTest("Log on via Other User Login Kiewit Account");
+                // and log on via Other User Login Kiewit Account
                 test.Info("Log on TeamBinder via Other User Login: " + teambinderTestAccount.Username);
                 var projectsList = new NonSsoSignOn(driver).Logon(teambinderTestAccount) as ProjectsList;
 
-                projectsList.LogValidation<ProjectsList>(ref validations, projectsList.ValidateDataInProjectListAvailable(TeamBinderVersionSmoke.ProjectName))
-                            .LogValidation<ProjectsList>(ref validations, projectsList.ValidateProjectIsHighlightedWhenHovered(TeamBinderVersionSmoke.ProjectName));
-
                 test.Info("Navigate to DashBoard Page of Project: " + TeamBinderVersionSmoke.ProjectName);
                 var projectDashBoard = projectsList.NavigateToProjectDashboardPage(TeamBinderVersionSmoke.ProjectName);
-                projectDashBoard.LogValidation(ref validations, projectDashBoard.ValidateProjectIsOpened(TeamBinderVersionSmoke.ProjectName));
 
                 //when - 119693 Validate Teambinder Version No
                 test = LogTest("Validate Teambinder Version No.");

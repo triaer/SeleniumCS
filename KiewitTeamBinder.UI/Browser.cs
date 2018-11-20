@@ -79,10 +79,22 @@ namespace KiewitTeamBinder.UI
 
                 webDriver = new ChromeDriver(options);
             }
-            else
+            else if(browserName.ToLower() == "internetexplorer")
             {
-                webDriver = new InternetExplorerDriver();
+
+                InternetExplorerOptions ieOptions = new InternetExplorerOptions();
+                ieOptions.EnableNativeEvents = true;
+                ieOptions.UnhandledPromptBehavior = UnhandledPromptBehavior.Accept;
+                ieOptions.EnablePersistentHover = true;
+                ieOptions.RequireWindowFocus = true;
+                ieOptions.IntroduceInstabilityByIgnoringProtectedModeSettings = true;
+                ieOptions.IgnoreZoomLevel = true;
+                ieOptions.EnsureCleanSession = true;
+                ieOptions.AddAdditionalCapability("disable-popup-blocking", "true");
+
+                webDriver = new InternetExplorerDriver(ieOptions);
             }
+
             webDriver.Navigate().GoToUrl(server);
 
             webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);

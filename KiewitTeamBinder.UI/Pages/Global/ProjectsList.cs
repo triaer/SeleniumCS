@@ -49,6 +49,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             var dashboard = new Dashboard(WebDriver);
             ProjectItem.Click();
             WaitForElement(dashboard._dashBoardLabel);
+            WaitForAjaxComplete();
 
             return dashboard;
         }
@@ -60,8 +61,8 @@ namespace KiewitTeamBinder.UI.Pages.Global
             if (filterColumnName.Equals("Project Title"))
             {
                 ProjectTitleTextBox.InputText(filterValue);
-                ProjectTitleImgFilter.Click();
-                WaitForElementAttribute(ProjectTitleImgFilter, "class", null);
+                //ProjectTitleImgFilter.Click();
+                //WaitForElementAttribute(ProjectTitleImgFilter, "class", null);
                 SelectComboboxByText(ProjectTitleImgFilter, _projectImgFilterData, FilterOptions.EqualTo.ToDescription());
             }
 
