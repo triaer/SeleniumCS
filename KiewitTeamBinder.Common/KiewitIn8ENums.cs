@@ -74,18 +74,56 @@ namespace KiewitTeamBinder.UI
             [Description("Sts")]
             Sts,
             [Description("Discipline")]
-            Discipline,
+            Disc,
             [Description("Category")]
-            Category,
+            Cat,
             [Description("Type")]
             Type,
             [Description("PFLocation")]
-            PFLocation,
+            Location,
             [Description("SpecificationRef")]
-            SpecificationRef,
+            SpecReference,
             [Description("SubType")]
             SubType,
             HoldingArea,
+        }
+        
+        public enum TextboxName
+        {
+            [Description("DocumentNo")]
+            DocumentNo,
+            [Description("Title")]
+            Title,
+            [Description("Due")]
+            Due,
+            [Description("Actual")]
+            Actual,
+            [Description("ForecastKiewit")]
+            Forecast,
+            [Description("AltNDocNo")]
+            AltDocumentNo,
+            [Description("IncTrnNo")]
+            IncTrnNo,
+            [Description("Error")]
+            Error
+        }
+
+        public enum ButtonName
+        {
+            [Description("New Rows")]
+            NewRows,
+            [Description("Copy Attributes")]
+            CopyAttributes,
+            [Description("Get Attributes")]
+            GetAttributes,
+            [Description("Validate")]
+            Validate,
+            [Description("Remove Rows")]
+            RemoveRows,
+            [Description("Link Deliverable Items")]
+            LinkDeliverableItems,
+            [Description("Remove Deliverable Items")]
+            RemoveDeliverableItems
         }
     }
 }
