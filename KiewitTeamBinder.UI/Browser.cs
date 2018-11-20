@@ -86,7 +86,7 @@ namespace KiewitTeamBinder.UI
                 ieOptions.EnableNativeEvents = true;
                 ieOptions.UnhandledPromptBehavior = UnhandledPromptBehavior.Accept;
                 ieOptions.EnablePersistentHover = true;
-                ieOptions.RequireWindowFocus = false;
+                ieOptions.RequireWindowFocus = true;
                 ieOptions.IntroduceInstabilityByIgnoringProtectedModeSettings = true;
                 ieOptions.IgnoreZoomLevel = true;
                 ieOptions.EnsureCleanSession = true;

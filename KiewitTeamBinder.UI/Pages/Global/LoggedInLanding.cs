@@ -61,8 +61,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
             LogoutLink.Click();
             WebDriver.SwitchTo().ActiveElement();
             LogoutYesButton.Click();
-            Wait(shortTimeout);
-
             return new NonSsoSignOn(WebDriver);
 
         }

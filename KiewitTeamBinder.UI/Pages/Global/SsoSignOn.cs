@@ -51,7 +51,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             //Fill Kiewit account fields
             Email.InputText(account.kiewitUserName);
             NextButton.Click();
-            Wait(shortTimeout);
+            WaitUntil(driver => Username != null);
             Username.InputText(account.kiewitUserName);
             Password.InputText(account.kiewitPassword);
 
@@ -67,7 +67,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 PasswordTextbox.InputText(account.Password);
                 //Click LogIn button
                 RegisterButton.Click();
-                Wait(shortTimeout);
             }
             
             var projectsListPage = new ProjectsList(WebDriver);

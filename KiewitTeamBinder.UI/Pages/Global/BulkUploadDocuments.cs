@@ -9,8 +9,10 @@ using static KiewitTeamBinder.UI.ExtentReportsHelper;
 using static KiewitTeamBinder.UI.KiewitTeamBinderENums;
 using OpenQA.Selenium.Support.UI;
 using KiewitTeamBinder.Common.Helper;
-using KiewitTeamBinder.UI.Pages.Dialogs;
-
+using OpenQA.Selenium.Interactions;
+using System.Threading;
+using System.Windows.Forms;
+using KiewitTeamBinder.Common.TestData;
 
 namespace KiewitTeamBinder.UI.Pages.VendorData
 {
@@ -20,39 +22,84 @@ namespace KiewitTeamBinder.UI.Pages.VendorData
         private By _addFileInBulk => By.Id("addBulkFlashWrapper");
         private static By _selectAllCheckbox => By.XPath(
             "//th//input[contains(@id, 'ClientSelectColumnSelectCheckBox')]");
-        private static By _selectCheckboxes => By.XPath(
-            "//td//input[contains(@id,'ClientSelectColumnSelectCheckBox')]");
         private static By _bulkUploadDocumentsTable => By.XPath(
             "//div[@id='RadGrid1_GridData']//*[contains(@class, 'rgMasterTable')]");
-        private static By _documentRows => By.XPath("//tr[@valign='top']");
-        public string _textbox = "//tr[@id = 'RadGrid1_ctl00__{0}']//*[@data-property-name='{1}']";
-        public string _button = "//a[span='{0}']";
+        private By _addFilesInBulkButton => By.XPath("//*[@id='flashUploadBulk']");
+        private By _fileNames => By.XPath("//tr[contains(@id,'ViewFiles')]");
+        private By _tableHearder => By.Id("RadGrid1_ctl00_Header");
 
         public IWebElement AddFileInBulk { get { return StableFindElement(_addFileInBulk); } }
         public IWebElement SelectAllCheckbox { get { return StableFindElement(_selectAllCheckbox); } }
-        public IReadOnlyCollection<IWebElement> SelectCheckboxes { get { return StableFindElements(_selectCheckboxes); } }
-        public IReadOnlyCollection<IWebElement> DocumentRows { get { return StableFindElements(_documentRows); } }
         public IWebElement BulkUploadDocumentsTable { get { return StableFindElement(_bulkUploadDocumentsTable); } }
+        public IWebElement TableHeader { get { return StableFindElement(_tableHearder); } }
+        public IReadOnlyCollection<IWebElement> FileNames { get { return StableFindElements(_fileNames); } }
+        public IWebElement AddFilesInBulkButton { get { return StableFindElement(_addFilesInBulkButton); } }
         #endregion
 
 
         #region Actions
         public BulkUploadDocuments(IWebDriver webDriver) : base(webDriver) { }
 
-        public BulkUploadDocuments ClickAddFilesInBulk()
+        // We have to use hard code waiting time cause this is Windows native control
+        // In order to type in multi-file names we need to separate the filePath and fileNames
+        public BulkUploadDocuments AddFilesInBulk(string filePath, string fileNames)
         {
-            AddFileInBulk.Click();
+            AddFilesInBulkButton.Click();
+            Wait(shortTimeout/2);
+            SendKeys.SendWait(@filePath);
+            SendKeys.SendWait(@"{Enter}");
+            Wait(shortTimeout/2);
+            SendKeys.SendWait(@fileNames);
+            Wait(shortTimeout/3);
+            SendKeys.SendWait(@"{Enter}");
+            Wait(shortTimeout/3);
+            
             return this;
         }
 
-        public BulkUploadDocuments SelectAllCheckboxes(bool selectOption)
+        public KeyValuePair<string, bool> ValidateFilesDisplay(int numberOfFiles)
+        {
+            var node = StepNode();
+
+            try
+            {
+                if (FileNames.Count == numberOfFiles)
+                    return SetPassValidation(node, Validation.Validate_Files_Display);
+
+                return SetFailValidation(node, Validation.Validate_Files_Display);
+            }
+            catch (Exception e)
+            {
+                return SetErrorValidation(node, Validation.Validate_Files_Display, e);
+            }
+        }
+
+        public KeyValuePair<string, bool> ValidateFileNamesAreListedInColumn(string columnName)
+        {
+            var node = StepNode();
+            int rowIndex;
+            int colIndex;
+            try
+            {
+                GetTableCellValueIndex(TableHeader, columnName, out rowIndex, out colIndex, "th");
+                if (colIndex == 5)
+                    return SetPassValidation(node, string.Format(Validation.Validat_File_Names_Are_Listed_In_Column, columnName));
+
+                return SetFailValidation(node, string.Format(Validation.Validat_File_Names_Are_Listed_In_Column, columnName));
+            }
+            catch (Exception e)
+            {
+                return SetErrorValidation(node, string.Format(Validation.Validat_File_Names_Are_Listed_In_Column, columnName), e);
+            }
+
+        }
+
+        public void SelectAllCheckboxes(bool selectOption)
         {
             if (selectOption)
-                SelectAllCheckbox.Check();
+                SelectAllCheckbox.UnCheck();
 
-            SelectAllCheckbox.UnCheck();
-
-            return this;
+            SelectAllCheckbox.Check();
         }
 
         // Set 'checkSelected' equals to 'false' if desire to check all rows are deselected
@@ -62,22 +109,26 @@ namespace KiewitTeamBinder.UI.Pages.VendorData
             var node = StepNode();
             List<bool> validations = new List<bool> { };
             List<int> rowNumbers = new List<int> { };
-            //var totalRows = GetTableRowNumber(BulkUploadDocumentsTable);
-            int totalRows = DocumentRows.Count;
+
+            var totalRows = GetTableRowNumber(BulkUploadDocumentsTable);
+
             try
             {
-                for (int i = 0; i < totalRows; i++)
-                {
-                    if (IsRowSelected(i) == checkSelected)
-                        validations.Add(true);
-                    else
-                    {
-                        validations.Add(false);
-                        rowNumbers.Add(i + 1);
-                    }
-                }
                 if (checkSelected)
                 {
+                    for (int i = 0; i < totalRows / 2; i++)
+                    {
+                        if (FindDynamicRow(i).IsDisplayed())
+                            validations.Add(true);
+
+                        else
+                        {
+                            validations.Add(false);
+                            rowNumbers.Add(i + 1);
+                        }
+
+                    }
+
                     if (validations.TrueForAll(allSelected => allSelected))
                         return SetPassValidation(node, Validation.All_Rows_Are_Selected);
 
@@ -86,7 +137,20 @@ namespace KiewitTeamBinder.UI.Pages.VendorData
                         + String.Format($"Rows {string.Join(",", rowNumbers)} are not selected."));
                 }
                 else
-                {   
+                {
+                    for (int i = 0; i < totalRows / 2; i++)
+                    {
+                        if (FindDynamicRow(i, false).IsDisplayed())
+                            validations.Add(true);
+
+                        else
+                        {
+                            validations.Add(false);
+                            rowNumbers.Add(i + 1);
+                        }
+
+                    }
+
                     if (validations.TrueForAll(allDeselected => allDeselected))
                         return SetPassValidation(node, Validation.All_Rows_Are_DeSelected);
 
@@ -101,60 +165,54 @@ namespace KiewitTeamBinder.UI.Pages.VendorData
             }
         }
 
-        public KeyValuePair<string, bool> ValidateRowIsSelected(int rowIndex, bool checkSelected = true)
+        public static IWebElement FindDynamicRow(int rowIndex, bool isSelected = true)
         {
-            var node = StepNode();
-            try
-            {
-                if (IsRowSelected(rowIndex -1) == checkSelected)
-                    return SetPassValidation(node, string.Format(Validation.Row_Is_Selected, rowIndex - 1));
-                else
-                    return SetFailValidation(node, string.Format(Validation.Row_Is_Selected, rowIndex - 1));
-            }
-            catch (Exception e)
-            {
-                return SetErrorValidation(node, string.Format(Validation.Row_Is_Selected, rowIndex - 1), e);
-            }
-        }
+            if (isSelected)
+                return StableFindElement(By.XPath(
+                    string.Format($"//tr[contains(@class, 'rgSelectedRow') and @id='RadGrid1_ctl00__{rowIndex}']")));
 
-        public bool IsRowSelected(int rowIndex)
-        {
-            IWebElement row = StableFindElement(By.XPath(string.Format($"//tr[@id='RadGrid1_ctl00__{rowIndex}']")));
-            if (row.GetAttribute("class").Contains("rgSelectedRow"))
-                return true;
-            return false;
-        }
+            else if (rowIndex % 2 == 0)
+                return StableFindElement(By.XPath(
+                    string.Format($"//tr[contains(@class, 'rgRow') and @id='RadGrid1_ctl00__{rowIndex}']")));
 
-        //public static IWebElement FindDynamicRow(int rowIndex, bool isSelected = true)
-        //{
-        //    if (isSelected)
-        //        return StableFindElement(By.XPath(
-        //            string.Format($"//tr[contains(@class, 'rgSelectedRow') and @id='RadGrid1_ctl00__{rowIndex}']")));
-        //    else 
-        //        if (rowIndex % 2 == 0)
-        //            return StableFindElement(By.XPath(
-        //                string.Format($"//tr[@class= 'rgRow' and @id='RadGrid1_ctl00__{rowIndex}']")));
-        //        else
-        //            return StableFindElement(By.XPath(
-        //                string.Format($"//tr[@class= 'rgAltRow' and @id='RadGrid1_ctl00__{rowIndex}']")));
-        //}
+            else
+                return StableFindElement(By.XPath(
+                    string.Format($"//tr[contains(@class, 'rgAltRow') and @id='RadGrid1_ctl00__{rowIndex}']")));
+        }
 
         // checkboxType is "selectCheckbox" or "Superseded"
-        public BulkUploadDocuments SelectTableCheckbox(int rowIndex = 1, string selectOption = "on", string checkboxType = "selectCheckbox")
+        public void SelectTableCheckbox(int rowIndex, string selectOption = "on", string checkboxType = "selectCheckbox")
         {
             if (checkboxType == "selectCheckbox")
-            {                
-                var checkboxElement = StableFindElement(By.XPath
-                    (string.Format($"//tr[@id='RadGrid1_ctl00__{rowIndex - 1}']//input[contains(@name, 'ClientSelectColumnSelectCheckBox')]")));
+            {
+                if (rowIndex % 2 == 0)
+                {
+                    var checkboxElement = StableFindElement(By.XPath
+                        (string.Format($"//tr[contains(@class, 'rgRow') and @id='RadGrid1_ctl00__{rowIndex}']//input[contains(@name, 'ClientSelectColumnSelectCheckBox')")));
 
-                if (String.IsNullOrWhiteSpace(selectOption) || (selectOption != "on" && selectOption != "off"))
-                    throw new InvalidOperationException("select option should be 'on' or 'off'. Default value is 'on'");
+                    if (String.IsNullOrWhiteSpace(selectOption) || selectOption != "on" || selectOption != "off")
+                        throw new InvalidOperationException("select option should be 'on' of 'off'. Default value is 'on'");
 
-                else if (selectOption.ToLower() == "on")
-                    checkboxElement.Check();
+                    else if (selectOption.ToLower() == "on")
+                        checkboxElement.Check();
 
+                    else
+                        checkboxElement.UnCheck();
+                }
                 else
-                    checkboxElement.UnCheck();        
+                {
+                    var checkboxElement = StableFindElement(By.XPath
+                          (string.Format($"//tr[contains(@class, 'rgAltRow') and @id='RadGrid1_ctl00__{rowIndex}']//input[contains(@name, 'ClientSelectColumnSelectCheckBox')")));
+
+                    if (String.IsNullOrWhiteSpace(selectOption) || selectOption != "on" || selectOption != "off")
+                        throw new InvalidOperationException("select option should be 'on' of 'off'. Default value is 'on'");
+
+                    else if (selectOption.ToLower() == "on")
+                        checkboxElement.Check();
+
+                    else
+                        checkboxElement.UnCheck();
+                }
             }
             else
             {
@@ -170,76 +228,48 @@ namespace KiewitTeamBinder.UI.Pages.VendorData
                 else
                     checkboxElement.UnCheck();
             }
-            return this;
         }
 
-        public BulkUploadDocuments SelectTableComboBox(int rowIndex, string selectItem, TableComboBoxType comboBoxType)
+        public void SelectTableComboBox(int rowIndex, string selectItem, TableComboBoxType comboBoxType)
         {
             switch (comboBoxType)
             {
                 case TableComboBoxType.Rev:
                     var revComboBox = new SelectElement(StableFindElement(
-                                                        By.XPath($"//tr[@id='RadGrid1_ctl00__{rowIndex - 1}']//select[@data-property-name='{TableComboBoxType.Rev.ToDescription()}']")));
+                                                            By.XPath($"//select[@data-property-name='{TableComboBoxType.Rev.ToDescription()}'][{rowIndex}]")));
                     revComboBox.SelectByText(selectItem);
                     break;
 
                 case TableComboBoxType.Sts:
                     var stsComboBox = new SelectElement(StableFindElement(
-                                                        By.XPath($"//tr[@id='RadGrid1_ctl00__{rowIndex - 1}']//select[@data-property-name='{TableComboBoxType.Sts.ToDescription()}']")));
+                                                            By.XPath($"//select[@data-property-name='{TableComboBoxType.Sts.ToDescription()}'][{rowIndex}]")));
                     stsComboBox.SelectByText(selectItem);
                     break;
 
-                case TableComboBoxType.Disc:
+                case TableComboBoxType.Discipline:
                     var disciplineComboBox = new SelectElement(StableFindElement(
-                                                        By.XPath($"//tr[@id='RadGrid1_ctl00__{rowIndex - 1}']//select[@data-property-name='{TableComboBoxType.Disc.ToDescription()}']")));
+                                                            By.XPath($"//select[@data-property-name='{TableComboBoxType.Discipline.ToDescription()}'][{rowIndex}]")));
                     disciplineComboBox.SelectByText(selectItem);
                     break;
 
-                case TableComboBoxType.Cat:
+                case TableComboBoxType.Category:
                     var categoryComboBox = new SelectElement(StableFindElement(
-                                                        By.XPath($"//tr[@id='RadGrid1_ctl00__{rowIndex - 1}']//select[@data-property-name='{TableComboBoxType.Cat.ToDescription()}']")));
+                                                            By.XPath($"//select[@data-property-name='{TableComboBoxType.Category.ToDescription()}'][{rowIndex}]")));
                     categoryComboBox.SelectByText(selectItem);
                     break;
 
                 case TableComboBoxType.Type:
                     var typeComboBox = new SelectElement(StableFindElement(
-                                                        By.XPath($"//tr[@id='RadGrid1_ctl00__{rowIndex - 1}']//select[@data-property-name='{TableComboBoxType.Type.ToDescription()}']")));
+                                                            By.XPath($"//select[@data-property-name='{TableComboBoxType.Type.ToDescription()}'][{rowIndex}]")));
                     typeComboBox.SelectByText(selectItem);
                     break;
 
                 case TableComboBoxType.SubType:
                     var subTypeComboBox = new SelectElement(StableFindElement(
-                                                         By.XPath($"//tr[@id='RadGrid1_ctl00__{rowIndex - 1}']//select[@data-property-name='{TableComboBoxType.SubType.ToDescription()}']")));
+                                                            By.XPath($"//select[@data-property-name='{TableComboBoxType.SubType.ToDescription()}'][{rowIndex}]")));
                     subTypeComboBox.SelectByText(selectItem);
                     break;
             }
-            return this;
-        }
-
-        public BulkUploadDocuments EnterTextbox(int rowIndex, string textboxName, string content)
-        {
-            IWebElement TextBox = StableFindElement(By.XPath(string.Format(_textbox, rowIndex - 1, textboxName)));
-            TextBox.InputText(content);
-            return this;
-        }
-
-        public void ClickButton(ButtonName buttonName)
-        {            
-            switch (buttonName)
-            {
-                case ButtonName.RemoveRows:
-                    ClickRemoveRowsButton();
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        public ConfirmDialog ClickRemoveRowsButton()
-        {
-            IWebElement button = StableFindElement(By.XPath(string.Format(_button, ButtonName.RemoveRows.ToDescription())));
-            button.HoverAndClickWithJS();
-            return new ConfirmDialog(WebDriver);            
         }
 
         private static class Validation
@@ -249,8 +279,9 @@ namespace KiewitTeamBinder.UI.Pages.VendorData
             public static string Not_All_Rows_Are_Selected = "Validate That All Rows Are Not Selected";
             public static string All_Rows_Are_DeSelected = "Validate That All Rows Are DeSelected";
             public static string Not_All_Rows_Are_DeSelected = "Validate That All Rows Are DeSelected";
-            public static string Row_Is_Selected = "Validate That row {0} is selected";
             public static string Cannot_Validate_Rows_State = "Error Cannot Validate Rows State";
+            public static string Validate_Files_Display = "Validate That 15 files display";
+            public static string Validat_File_Names_Are_Listed_In_Column = "Validat File names are listed in {0} column";
         }
         #endregion
     }
