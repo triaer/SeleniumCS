@@ -15,8 +15,10 @@ namespace KiewitTeamBinder.UI.Pages.VendorData
         #region Entities
         private string _functionButton = "//li[@class='rtbItem rtbBtn'][a='{0}']";
         private static By _holdingAreaLabel => By.Id("lblRegisterCaption");
+        private static By _documentNoTextBox => By.XPath("//input[contains(@id,'FilterTextBox_GridColDocumentNo')]");
 
         public IWebElement HoldingAreaLabel { get { return StableFindElement(_holdingAreaLabel); } }
+        public IWebElement DocumentNoTextBox { get { return StableFindElement(_documentNoTextBox); } }
         #endregion
 
         #region Actions
@@ -24,11 +26,22 @@ namespace KiewitTeamBinder.UI.Pages.VendorData
 
         public BulkUploadDocuments ClickBulkUploadButton()
         {
-            string uploadBulkWindow;
             IWebElement FunctionButton = StableFindElement(By.XPath(string.Format(_functionButton, "Bulk Upload")));
-            
-            SwitchToPopUpWindow(FunctionButton, out uploadBulkWindow, true);
+            string currentWindow;
+            SwitchToPopUpWindow(FunctionButton, out currentWindow, true);
             return new BulkUploadDocuments(WebDriver);
+        }
+
+        public HoldingArea EnterDocumentNo(string value)
+        {
+            DocumentNoTextBox.InputText(value);
+            return this;
+        }
+
+        public HoldingArea PressEnter()
+        {
+            WebDriver.FindElement(By.XPath("String")).SendKeys(Keys.Enter);
+            return this;
         }
 
         public KeyValuePair<string, bool> ValidateHoldingAreaPageDisplays()
@@ -36,7 +49,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorData
             var node = StepNode();
             try
             {
-                WaitForElementDisplay(By.Id("lblRegisterCaption"));               
+                WaitForElementDisplay(By.Id("lblRegisterCaption"));
                 return SetPassValidation(node, Validation.Holding_Area_Page_Displays);
             }
             catch (Exception e)
@@ -44,6 +57,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorData
                 return SetErrorValidation(node, Validation.Holding_Area_Page_Displays, e);
             }
         }
+
 
         private static class Validation
         {
