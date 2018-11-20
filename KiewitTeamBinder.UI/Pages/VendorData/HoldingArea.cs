@@ -63,7 +63,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorData
         {
             public static string Holding_Area_Page_Displays = "Validate That The Holding Area Page Displays";
         }
-
+         
 
         #endregion
     }
