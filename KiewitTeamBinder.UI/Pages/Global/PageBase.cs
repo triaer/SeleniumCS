@@ -424,9 +424,8 @@ namespace KiewitTeamBinder.UI.Pages.Global
         internal static void SelectComboboxByText(IWebElement Combobox, By data, string value, int timeout = mediumTimeout, bool isEqual = true)
         {
 
-            Combobox.ClickOnIE();
+            Combobox.ClickOnElement();
             WaitForElement(data, timeout);
-            Wait(1);
             List<IWebElement> items = GetElementsWithSize(data, 1);
 
             if (isEqual)
@@ -435,7 +434,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 {
                     if (item.Text.Trim().Equals(value) || item.GetAttribute("innerHTML").Trim().Equals(value))
                     {
-                        item.ClickOnIE();
+                        item.ClickOnElement();
                         break;
                     }
                 }
@@ -445,7 +444,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 {
                     if (item.Text.Trim().Contains(value) || item.GetAttribute("innerHTML").Trim().Contains(value))
                     {
-                        item.ClickOnIE();
+                        item.ClickOnElement();
                         break;
                     }
                 }
@@ -456,7 +455,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
             Combobox.ActionsClick();
 
             WaitForElement(data, timeout);
-            Wait(1);
             List<IWebElement> items = GetElementsWithSize(data, 1);
 
             if (isEqual)
@@ -465,7 +463,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 {
                     if (item.Text.Trim().Equals(value) || item.GetAttribute("innerHTML").Trim().Equals(value))
                     {
-                        item.ClickOnIE();
+                        item.ClickOnElement();
                         break;
                     }
                 }
@@ -475,7 +473,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 {
                     if (item.Text.Trim().Contains(value) || item.GetAttribute("innerHTML").Trim().Contains(value))
                     {
-                        item.ClickOnIE();
+                        item.ClickOnElement();
                         break;
                     }
                 }
@@ -491,7 +489,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
         {
             Combobox.Click();
             WaitForElement(data, timeout);
-            Wait(1);
             List<IWebElement> Items = GetElementsWithSize(data, 1);
 
             IWebElement ElementRandom = Items[Utils.GetRandomNumber(0, Items.Count())];

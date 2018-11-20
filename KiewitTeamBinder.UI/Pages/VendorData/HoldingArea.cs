@@ -44,8 +44,6 @@ namespace KiewitTeamBinder.UI.Pages.VendorData
             }
         }
 
-
-
         private static class Validation
         {
             public static string Holding_Area_Page_Displays = "Validate That The Holding Area Page Displays";

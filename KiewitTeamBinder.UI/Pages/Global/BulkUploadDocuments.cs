@@ -9,7 +9,10 @@ using static KiewitTeamBinder.UI.ExtentReportsHelper;
 using static KiewitTeamBinder.UI.KiewitTeamBinderENums;
 using OpenQA.Selenium.Support.UI;
 using KiewitTeamBinder.Common.Helper;
-
+using OpenQA.Selenium.Interactions;
+using System.Threading;
+using System.Windows.Forms;
+using KiewitTeamBinder.Common.TestData;
 
 namespace KiewitTeamBinder.UI.Pages.VendorData
 {
@@ -21,20 +24,74 @@ namespace KiewitTeamBinder.UI.Pages.VendorData
             "//th//input[contains(@id, 'ClientSelectColumnSelectCheckBox')]");
         private static By _bulkUploadDocumentsTable => By.XPath(
             "//div[@id='RadGrid1_GridData']//*[contains(@class, 'rgMasterTable')]");
+        private By _addFilesInBulkButton => By.XPath("//*[@id='flashUploadBulk']");
+        private By _fileNames => By.XPath("//tr[contains(@id,'ViewFiles')]");
+        private By _tableHearder => By.Id("RadGrid1_ctl00_Header");
 
         public IWebElement AddFileInBulk { get { return StableFindElement(_addFileInBulk); } }
         public IWebElement SelectAllCheckbox { get { return StableFindElement(_selectAllCheckbox); } }
         public IWebElement BulkUploadDocumentsTable { get { return StableFindElement(_bulkUploadDocumentsTable); } }
+        public IWebElement TableHeader { get { return StableFindElement(_tableHearder); } }
+        public IReadOnlyCollection<IWebElement> FileNames { get { return StableFindElements(_fileNames); } }
+        public IWebElement AddFilesInBulkButton { get { return StableFindElement(_addFilesInBulkButton); } }
         #endregion
 
 
         #region Actions
         public BulkUploadDocuments(IWebDriver webDriver) : base(webDriver) { }
 
-        public BulkUploadDocuments ClickAddFilesInBulk()
+        // We have to use hard code waiting time cause this is Windows native control
+        // In order to type in multi-file names we need to separate the filePath and fileNames
+        public BulkUploadDocuments AddFilesInBulk(string filePath, string fileNames)
         {
-            AddFileInBulk.Click();
+            AddFilesInBulkButton.Click();
+            Wait(shortTimeout/2);
+            SendKeys.SendWait(@filePath);
+            SendKeys.SendWait(@"{Enter}");
+            Wait(shortTimeout/2);
+            SendKeys.SendWait(@fileNames);
+            Wait(shortTimeout/3);
+            SendKeys.SendWait(@"{Enter}");
+            Wait(shortTimeout/3);
+            
             return this;
+        }
+
+        public KeyValuePair<string, bool> ValidateFilesDisplay(int numberOfFiles)
+        {
+            var node = StepNode();
+
+            try
+            {
+                if (FileNames.Count == numberOfFiles)
+                    return SetPassValidation(node, Validation.Validate_Files_Display);
+
+                return SetFailValidation(node, Validation.Validate_Files_Display);
+            }
+            catch (Exception e)
+            {
+                return SetErrorValidation(node, Validation.Validate_Files_Display, e);
+            }
+        }
+
+        public KeyValuePair<string, bool> ValidateFileNamesAreListedInColumn(string columnName)
+        {
+            var node = StepNode();
+            int rowIndex;
+            int colIndex;
+            try
+            {
+                GetTableCellValueIndex(TableHeader, columnName, out rowIndex, out colIndex, "th");
+                if (colIndex == 5)
+                    return SetPassValidation(node, string.Format(Validation.Validat_File_Names_Are_Listed_In_Column, columnName));
+
+                return SetFailValidation(node, string.Format(Validation.Validat_File_Names_Are_Listed_In_Column, columnName));
+            }
+            catch (Exception e)
+            {
+                return SetErrorValidation(node, string.Format(Validation.Validat_File_Names_Are_Listed_In_Column, columnName), e);
+            }
+
         }
 
         public void SelectAllCheckboxes(bool selectOption)
@@ -215,8 +272,6 @@ namespace KiewitTeamBinder.UI.Pages.VendorData
             }
         }
 
-
-
         private static class Validation
         {
             public static string Holding_Area_Page_Displays = "Validate That The Holding Area Page Displays";
@@ -225,6 +280,8 @@ namespace KiewitTeamBinder.UI.Pages.VendorData
             public static string All_Rows_Are_DeSelected = "Validate That All Rows Are DeSelected";
             public static string Not_All_Rows_Are_DeSelected = "Validate That All Rows Are DeSelected";
             public static string Cannot_Validate_Rows_State = "Error Cannot Validate Rows State";
+            public static string Validate_Files_Display = "Validate That 15 files display";
+            public static string Validat_File_Names_Are_Listed_In_Column = "Validat File names are listed in {0} column";
         }
         #endregion
     }

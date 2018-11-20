@@ -180,9 +180,12 @@ namespace KiewitTeamBinder.UI
             actions.DoubleClick(Element).Perform();
         }
         
-        public static void ClickOnIE(this IWebElement Element)
+        public static void ClickOnElement(this IWebElement Element)
         {
-            ScrollIntoView(Element);
+            if (Browser.Driver.GetType() == typeof(InternetExplorerDriver))
+            {
+                ScrollIntoView(Element);
+            }
             Element.Click();
         }
         public static void HoverAndClickWithJS(this IWebElement Element)

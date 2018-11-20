@@ -47,7 +47,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
             //Click LogIn button
             LoginBtn.Click();
-            Wait(shortTimeout);
             var projectsListPage = new ProjectsList(WebDriver);
             WaitUntil(driver => projectsListPage.ProjListTitle != null);
             
