@@ -62,12 +62,12 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 //bulkUploadDocumentspage.ClickAddFilesInBulk();
                 bulkUploadDocuments.ClickValidateButton()
                                    .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocuments.ValidateMessageDialogBoxDisplayedForValidateFunction())
-                                   .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocuments.ValidateButtonDialogBoxDisplayed(BulkUploadDocumentsSmoke.ValidateFuntionButton))
+                                   .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocuments.ValidateOkButtonDialogBoxDisplayed())
                                    .ClickOkButtonOnDialogBox()
                                    .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocuments.ValidateDialogBoxClosed())
                                    .ClickSaveButton()
                                    .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocuments.ValidateMessageDialogBoxDisplayedForSaveAndCancelFunction())
-                                   .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocuments.ValidateButtonDialogBoxDisplayed(BulkUploadDocumentsSmoke.CancelFuntionButton))
+                                   .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocuments.ValidateYesAndNoButtonDialogBoxDisplayed())
                                    .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocuments.ValidateButtonIsHighlightedWhenHovered(BulkUploadDocumentsSmoke.ValueButtonOnPopUp))
                                    .ClickCancelButton()
                                    .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocuments.ValidateDialogBoxClosed());

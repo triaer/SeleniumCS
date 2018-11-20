@@ -100,7 +100,25 @@ namespace KiewitTeamBinder.UI.Pages.VendorData
             }
         }
 
-        public KeyValuePair<string, bool> ValidateOkDialogBoxDisplayed()
+        public KeyValuePair<string, bool> ValidateOkButtonDialogBoxDisplayed()
+        {
+            var node = StepNode();
+            try
+            {
+                if (StableFindElement(_validateFunctionOkButton) != null)
+                {
+                    return SetPassValidation(node, Validation.Ok_Button_DialogBox_Display);
+                }
+                else
+                    return SetFailValidation(node, Validation.Ok_Button_DialogBox_Display);
+            }
+            catch (Exception e)
+            {
+                return SetErrorValidation(node, Validation.Ok_Button_DialogBox_Display, e); ;
+            }
+        }
+
+        public KeyValuePair<string, bool> ValidateYesAndNoButtonDialogBoxDisplayed()
         {
             var node = StepNode();
             try
