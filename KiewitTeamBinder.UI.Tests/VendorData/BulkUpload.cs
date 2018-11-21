@@ -8,6 +8,8 @@ using KiewitTeamBinder.UI.Pages.Global;
 using KiewitTeamBinder.UI.Pages.VendorData;
 using KiewitTeamBinder.Common.TestData;
 using static KiewitTeamBinder.UI.ExtentReportsHelper;
+using KiewitTeamBinder.UI;
+using KiewitTeamBinder.UI.Pages.Dialogs;
 
 namespace KiewitTeamBinder.UI.Tests.VendorData
 {
@@ -63,11 +65,30 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 bulkUploadDocumentsPage.LogValidation<HoldingArea>(ref validations,
                                                                    bulkUploadDocumentsPage.ValidateFormTitle("Bulk Upload Documents"));
 
-                bulkUploadDocumentsPage.AddFilesInBulk("C:\\BulkUpLoadInFiles", BulkUploadDocumentsSmoke.FileNames);
+                bulkUploadDocumentsPage.AddFilesInBulk("C:\\Working\\BulkUpLoadInFiles", BulkUploadDocumentsSmoke.FileNames);
                 bulkUploadDocumentsPage.LogValidation<HoldingArea>(ref validations,
                                                                    bulkUploadDocumentsPage.ValidateFilesDisplay(15));
                 bulkUploadDocumentsPage.LogValidation<HoldingArea>(ref validations,
                                                                    bulkUploadDocumentsPage.ValidateFileNamesAreListedInColumn("Version*"));
+
+                bulkUploadDocumentsPage.SelectAllCheckboxes(false)
+                   .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocumentsPage.ValidateAllRowsAreSelected(false));
+                bulkUploadDocumentsPage.SelectTableCheckbox(1)
+                    .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocumentsPage.ValidateRowIsSelected(1));
+
+                bulkUploadDocumentsPage.SelectTableComboBox(1, "00 - Rev 00", KiewitTeamBinderENums.TableComboBoxType.Rev)
+                    .SelectTableComboBox(1, "VSUB - Vendor Submission", KiewitTeamBinderENums.TableComboBoxType.Sts)
+                    .EnterTextbox(1, KiewitTeamBinderENums.TextboxName.Title.ToDescription(), "Vendor Submitted Document")
+                    .SelectTableComboBox(1, "CON - Contruction", KiewitTeamBinderENums.TableComboBoxType.Disc)
+                    .SelectTableComboBox(1, "HV - HVAC", KiewitTeamBinderENums.TableComboBoxType.Cat)
+                    .SelectTableCheckbox(2)
+                    .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocumentsPage.ValidateRowIsSelected(2));
+
+                var confirmDialog = bulkUploadDocumentsPage.ClickRemoveRowsButton();
+                confirmDialog.LogValidation<ConfirmDialog>(ref validations, confirmDialog.ValidateDialogOpens(true));
+                confirmDialog.LogValidation<ConfirmDialog>(ref validations, confirmDialog.ValidateMessageOnDialog("Do you want to remove the selected rows?"));
+                confirmDialog.ConfirmAction(true);
+                confirmDialog.LogValidation<ConfirmDialog>(ref validations, confirmDialog.ValidateDialogOpens(false));
 
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);
