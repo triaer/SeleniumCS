@@ -53,7 +53,78 @@ namespace KiewitTeamBinder.UI
             IsNotEmpty,
         }
 
-    }
+        public enum VendorDataMenusForVendorAccount
+        {
+            [Description("Holding Area")]
+            HoldingArea
+        }
 
+        public enum VendorDataMenusForAdminAndStandardAccount
+        {
+            [Description("Holding Area")]
+            HoldingArea,
+            [Description("Vendor Data Register")]
+            VendorDataRegister
+        }
+
+        public enum TableComboBoxType
+        {
+            [Description("Rev")]
+            Rev,
+            [Description("Sts")]
+            Sts,
+            [Description("Discipline")]
+            Disc,
+            [Description("Category")]
+            Cat,
+            [Description("Type")]
+            Type,
+            [Description("PFLocation")]
+            Location,
+            [Description("SpecificationRef")]
+            SpecReference,
+            [Description("SubType")]
+            SubType,
+            HoldingArea,
+        }
+        
+        public enum TextboxName
+        {
+            [Description("DocumentNo")]
+            DocumentNo,
+            [Description("Title")]
+            Title,
+            [Description("Due")]
+            Due,
+            [Description("Actual")]
+            Actual,
+            [Description("ForecastKiewit")]
+            Forecast,
+            [Description("AltNDocNo")]
+            AltDocumentNo,
+            [Description("IncTrnNo")]
+            IncTrnNo,
+            [Description("Error")]
+            Error
+        }
+
+        public enum ButtonName
+        {
+            [Description("New Rows")]
+            NewRows,
+            [Description("Copy Attributes")]
+            CopyAttributes,
+            [Description("Get Attributes")]
+            GetAttributes,
+            [Description("Validate")]
+            Validate,
+            [Description("Remove Rows")]
+            RemoveRows,
+            [Description("Link Deliverable Items")]
+            LinkDeliverableItems,
+            [Description("Remove Deliverable Items")]
+            RemoveDeliverableItems
+        }
+    }
 }
       

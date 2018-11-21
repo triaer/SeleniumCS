@@ -44,7 +44,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         #region Actions
         public Dashboard(IWebDriver webDriver) : base(webDriver)
         {
-
+            
         }
 
         public Dashboard ShowProjectList()
@@ -72,7 +72,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             MenuButton("Holding Area").Click();
             return new HoldingArea(WebDriver);
         }
-
+             
         public HelpAboutDialog OpenHelpDialog(string option)
         {
             SelectComboboxByText(HelpButtonDropDown, _helpButtonDropDownData, option);
@@ -128,7 +128,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             var node = StepNode();
             try
             {
-                WaitForElementDisplay(_defaultFilter);
+                WaitForElementDisplay(_defaultFilter); 
                 if (DefaultFilter.Text == defaultFilter)
                 {
                     return SetPassValidation(node, string.Format(Validation.Default_Filter_Display, defaultFilter));
@@ -195,7 +195,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
         private static class Validation
         {
-            public static string Project_Is_Opened = "Validate That The Project Is Opened";
+			public static string Project_Is_Opened = "Validate That The Project Is Opened";
             public static string Vendor_Data_Menus_Display = "Validate That The Vendor Data Menus Display";
             public static string Default_Filter_Display = "Validate that the Default Filter is {0}";
             public static string First_Filter_Box_Is_Highlighted = "Validate That The First Filter Box Is Highlighted";

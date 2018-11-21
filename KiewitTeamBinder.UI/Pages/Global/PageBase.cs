@@ -29,7 +29,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
         internal static IWebDriver WebDriver { get; set; }
 
         internal static By loadingIcon = By.XPath("//div[@class = 'k-loading-mask']");
-        internal static string loadingIconXpath = "//div[@class = 'k-loading-mask']";
         internal static By overlayWindow = By.XPath("//div[@class = 'k-overlay']");
         internal const int longTimeout = 30;
         internal const int mediumTimeout = 15;
@@ -99,7 +98,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 {
                     var wait = Browser.Wait(shortTimeout);
                     //wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(by));
-                    wait.Until(d => d.FindElement(by).Displayed);
+                    wait.Until(driver => driver.FindElement(by).Displayed);
                     Element = WebDriver.FindElement(by);
                     break;
                 }
@@ -139,6 +138,17 @@ namespace KiewitTeamBinder.UI.Pages.Global
             return Elements;
         }
 
+        internal static IWebElement FindElement(By by, int timeout = shortTimeout)
+        {
+            try
+            {
+                return Browser.Wait(timeout).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(by));
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
         internal static void Wait(int seconds = longTimeout)
         {
             System.Threading.Thread.Sleep(seconds * 1000);
@@ -152,135 +162,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
             wait.IgnoreExceptionTypes(ignoredExceptions.ToArray());
             return wait.Until(condition);
-        }
-
-        internal static void WaitForElementUntil(By elementDescription, int seconds = longTimeout)
-        {
-            IWebElement myDynamicElement = (new WebDriverWait(WebDriver, TimeSpan.FromSeconds(seconds))).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(elementDescription));
-        }
-
-        internal static void WaitFor(By elementDescription)
-
-        {
-            var wait = Browser.Wait();
-
-            wait.Until(e => e.FindElement(elementDescription));
-        }
-
-        internal static void WaitForElementClickable(By elementDescription, int seconds = mediumTimeout)
-        {
-            IWebElement myDynamicElement = (new WebDriverWait(WebDriver, TimeSpan.FromSeconds(seconds))).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(elementDescription));
-        }
-
-        internal static void WaitForElementEnable(By elementDescription, int seconds = mediumTimeout)
-        {
-            var wait = Browser.Wait(seconds);
-            wait.Until(WebDriver => WebDriver.FindElement(elementDescription).Enabled);
-        }
-
-
-        internal static void WaitForElementDisplay(By elementDescription, int seconds = longTimeout)
-        {
-            var wait = Browser.Wait(seconds);
-
-            wait.Until(e => e.FindElement(elementDescription).Displayed);
-        }
-
-        internal static void WaitForElementDisappear(By elementDescription, int seconds = mediumTimeout)
-        {
-            var wait = Browser.Wait(seconds);
-
-            wait.Until(WebDriver => !WebDriver.FindElement(elementDescription).Displayed);
-        }
-
-        internal static void WaitForElementNotExist(IWebElement Element, int seconds = mediumTimeout)
-        {
-            var wait = Browser.Wait(seconds);
-            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.StalenessOf(Element));
-        }
-
-        internal static IWebElement FindElement(By by, int timeout = shortTimeout)
-        {
-            try
-            {
-                return Browser.Wait(timeout).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(by));
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
-        internal static void WaitForPageComplete(int timeoutSec = mediumTimeout)
-        {
-            var wait = Browser.Wait(timeoutSec);
-            IJavaScriptExecutor js = (IJavaScriptExecutor)WebDriver;
-            // Check if document is ready
-            wait.Until(wd => js.ExecuteScript("return document.readyState")).Equals("complete");
-
-        }
-        internal static void ScrollToElement(IWebElement Element)
-        {
-            Actions action = new Actions(WebDriver);
-            action.MoveToElement(Element);
-            action.Perform();
-        }
-        internal static void ScrollToElement(By by, int timeout = longTimeout)
-        {
-            var element = StableFindElement(by, timeout);
-
-            Actions action = new Actions(WebDriver);
-            action.MoveToElement(element);
-            action.Perform();
-        }
-
-        internal static void ScrollIntoView(IWebElement Element)
-        {
-            IJavaScriptExecutor jse = (IJavaScriptExecutor)WebDriver;
-            jse.ExecuteScript("arguments[0].scrollIntoView();", Element);
-        }
-        internal static void WaitForElementCSSAttribute(IWebElement Element, string cssAttribute, string cssAttributeValue, long seconds = mediumTimeout)
-        {
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
-            do
-            {
-                try
-                {
-                    Wait(1);
-                    if (Element.GetCssValue(cssAttribute).Contains(cssAttributeValue))
-                        break;
-                    else
-                        Wait(1);
-                }
-
-                catch (Exception)
-                {
-                    // Skip exception
-                }
-            } while (stopwatch.ElapsedMilliseconds <= seconds * 1000);
-
-            stopwatch.Stop();
-        }
-
-        internal static void WaitForElementAttribute(IWebElement Element, string attribute, string attributeValue, long seconds = 15)
-        {
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
-            do
-            {
-                try
-                {
-                    Wait(1);
-                    if (Element.GetAttribute(attribute).Contains(attributeValue))
-                        break;
-                    else
-                        Wait(1);
-                }
-                catch (Exception)
-                {
-                    // Skip exception
-                }
-            } while (stopwatch.ElapsedMilliseconds <= seconds * 1000);
         }
 
         internal static void WaitForElement(By elementDescription, long timeout = longTimeout)
@@ -306,6 +187,92 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
             stopwatch.Stop();
         }
+        internal static void WaitFor(By elementDescription)
+
+        {
+            var wait = Browser.Wait();
+
+            wait.Until(driver => driver.FindElement(elementDescription));
+        }
+
+        internal static void WaitForElementClickable(By elementDescription, int seconds = mediumTimeout)
+        {
+            IWebElement myDynamicElement = (new WebDriverWait(WebDriver, TimeSpan.FromSeconds(seconds))).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(elementDescription));
+        }
+
+        internal static void WaitForElementEnable(By elementDescription, int seconds = mediumTimeout)
+        {
+            var wait = Browser.Wait(seconds);
+            wait.Until(driver => driver.FindElement(elementDescription).Enabled);
+        }
+
+
+        internal static void WaitForElementDisplay(By elementDescription, int seconds = longTimeout)
+        {
+            var wait = Browser.Wait(seconds);
+
+            wait.Until(driver => driver.FindElement(elementDescription).Displayed);
+        }
+
+        internal static void WaitForElementDisappear(By elementDescription, int seconds = mediumTimeout)
+        {
+            var wait = Browser.Wait(seconds);
+
+            wait.Until(driver => !driver.FindElement(elementDescription).Displayed);
+        }
+
+        internal static void WaitForElementNotExist(IWebElement Element, int seconds = mediumTimeout)
+        {
+            var wait = Browser.Wait(seconds);
+            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.StalenessOf(Element));
+        }
+
+        internal static void WaitForElementCSSAttribute(IWebElement Element, string cssAttribute, string cssAttributeValue, int seconds = mediumTimeout)
+        {
+            var wait = Browser.Wait(seconds);
+
+            wait.Until(driver => Element.GetCssValue(cssAttribute).Contains(cssAttributeValue));
+
+        }
+
+        internal static void WaitForElementAttribute(IWebElement Element, string attribute, string attributeValue, int seconds = 15)
+        {
+            var wait = Browser.Wait(seconds);
+
+            wait.Until(driver => Element.GetAttribute(attribute).Contains(attributeValue));
+
+        }
+
+        internal static void WaitForPageComplete(int timeoutSec = mediumTimeout)
+        {
+            var wait = Browser.Wait(timeoutSec);
+            IJavaScriptExecutor js = (IJavaScriptExecutor)WebDriver;
+            // Check if document is ready
+            wait.Until(wd => js.ExecuteScript("return document.readyState").Equals("complete"));
+
+        }
+        internal static void ScrollToElement(IWebElement Element)
+        {
+            Actions action = new Actions(WebDriver);
+            action.MoveToElement(Element);
+            action.Perform();
+        }
+        internal static void ScrollToElement(By by, int timeout = longTimeout)
+        {
+            var element = StableFindElement(by, timeout);
+
+            Actions action = new Actions(WebDriver);
+            action.MoveToElement(element);
+            action.Perform();
+        }
+
+        internal static void ScrollIntoView(IWebElement Element)
+        {
+            IJavaScriptExecutor jse = (IJavaScriptExecutor)WebDriver;
+            jse.ExecuteScript("arguments[0].scrollIntoView();", Element);
+        }
+        
+        
 
         /// <summary>
         /// Get index of table cell value
