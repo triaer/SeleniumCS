@@ -13,14 +13,15 @@ namespace KiewitTeamBinder.UI.Pages.VendorData
     public class BulkUploadDocuments : HoldingArea
     {
         #region Entities
-        private By _addFileInBulk => By.Id("addBulkFlashWrapper");
+        
 
         private string documentNoHeader = "//th[./span[text()='{0}']]";
         private string _functionButtonPopUp = "//div[contains(@id,'_content')]//span[text()='{0}']";
+        private string _menuButtonXpath = "//li[contains(@class,'rtbItem rtbBtn')]//span[text()='{0}']";
 
+        private static By _addFileInBulk => By.Id("addBulkFlashWrapper");
         private static By _documentNoTextBox => By.XPath("//input[@data-property-name='DocumentNo']");
         private static By _labelMandatoryFieldIcon => By.XPath("//label[@class='MandatoryFields' and contains(@style,'display: inline')][normalize-space(.)='*']");
-        private string _menuButtonXpath = "//li[contains(@class,'rtbItem rtbBtn')]//span[text()='{0}']";
         private static By _validateFunctionMessagePopUp => By.XPath("//div[contains(@id,'message')]");
         private static By _validateFunctionPopUp => By.XPath("//div[contains(@id,'RadWindowWrapper_alert')]");
         private static By _saveFunctionMessagePop => By.XPath("//div[@id='divProgressMessage']//span");
@@ -37,6 +38,19 @@ namespace KiewitTeamBinder.UI.Pages.VendorData
         public BulkUploadDocuments ClickAddFilesInBulk()
         {
             AddFileInBulk.Click();
+            return this;
+        }
+
+        public BulkUploadDocuments EnterDocumentNoForAllRecords(string documentNo)
+        {
+            List<IWebElement> documentNoList = StableFindElements(_documentNoTextBox).ToList();
+            int i = 1;
+            foreach (IWebElement documentTextbox in documentNoList)
+            {
+                documentTextbox.InputText(documentNo + "_" + i);
+                i++;
+            }
+
             return this;
         }
 
@@ -87,18 +101,6 @@ namespace KiewitTeamBinder.UI.Pages.VendorData
             return this;
         }
 
-        public BulkUploadDocuments EnterDocumentNoForAllRecords(string documentNo)
-        {
-            List<IWebElement> documentNoList = StableFindElements(_documentNoTextBox).ToList();
-            int i = 1;
-            foreach (IWebElement documentTextbox in documentNoList)
-            {
-                documentTextbox.InputText(documentNo + "_" + i);
-                i++;
-            }
-
-            return this;
-        }
 
         public KeyValuePair<string, bool> ValidateButtonIsHighlightedWhenHovered(string valueBtn)
         {
