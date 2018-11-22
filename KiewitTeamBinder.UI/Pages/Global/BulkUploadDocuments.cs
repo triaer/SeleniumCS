@@ -14,12 +14,12 @@ using System.Windows.Forms;
 using KiewitTeamBinder.UI.Pages.Dialogs;
 
 
-namespace KiewitTeamBinder.UI.Pages.VendorData
+namespace KiewitTeamBinder.UI.Pages.Global
 {
-    public class BulkUploadDocuments : Dashboard
+    public class BulkUploadDocuments : ProjectsDashboard
     {
         #region Entities
-        private By _addFileInBulkButton => By.Id("addBulkFlashWrapper");
+        private static By _addFileInBulkButton => By.Id("addBulkFlashWrapper");
         private static By _selectAllCheckbox => By.XPath("//th//input[contains(@id, 'ClientSelectColumnSelectCheckBox')]");
         private static By _selectCheckboxes => By.XPath("//td//input[contains(@id,'ClientSelectColumnSelectCheckBox')]");
         private static By _bulkUploadDocumentsTable => By.XPath("//div[@id='RadGrid1_GridData']//*[contains(@class, 'rgMasterTable')]");
@@ -49,25 +49,25 @@ namespace KiewitTeamBinder.UI.Pages.VendorData
         #region Actions
         public BulkUploadDocuments(IWebDriver webDriver) : base(webDriver) { }
 
-        public IReadOnlyCollection<IWebElement> GetAllDocumentRows()
+        private IReadOnlyCollection<IWebElement> GetAllDocumentRows()
         {
             IReadOnlyCollection<IWebElement> AllDocumentRows = StableFindElements(_allDocumentRows);
             return AllDocumentRows;
         }
 
-        public IReadOnlyCollection<IWebElement> GetAllRowCheckboxes()
+        private IReadOnlyCollection<IWebElement> GetAllRowCheckboxes()
         {
             IReadOnlyCollection<IWebElement> AllRowCheckboxes = StableFindElements(_allRowCheckboxes);
             return AllRowCheckboxes;
         }
 
-        public IReadOnlyCollection<IWebElement> GetAllSupersededCheckboxes()
+        private IReadOnlyCollection<IWebElement> GetAllSupersededCheckboxes()
         {
             IReadOnlyCollection<IWebElement> AllSupersededCheckboxes = StableFindElements(_allSupersededCheckboxes);
             return AllSupersededCheckboxes;
         }
 
-        public IReadOnlyCollection<SelectElement> GetAllComboBoxes(string comboBoxName)
+        private IReadOnlyCollection<SelectElement> GetAllComboBoxes(string comboBoxName)
         {
             IReadOnlyCollection<IWebElement> AllComboBoxes = StableFindElements(By.XPath(string.Format(_allComboBoxes, 
                                                                                                        comboBoxName)));
@@ -81,7 +81,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorData
             return AllSelectComboBoxes;
         }
 
-        public IReadOnlyCollection<IWebElement> GetAllCopyAttributesItems()
+        private IReadOnlyCollection<IWebElement> GetAllCopyAttributesItems()
         {
             IReadOnlyCollection<IWebElement> AllCopyAttributesItems = StableFindElements(_allCopyAttributesItems);
             return AllCopyAttributesItems;
@@ -118,7 +118,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorData
             return this;
         }
 
-        public bool IsRowSelected(int rowIndex)
+        private bool IsRowSelected(int rowIndex)
         {
             IReadOnlyCollection<IWebElement> AllDocumentRows = GetAllDocumentRows();
             IWebElement row = AllDocumentRows.ElementAt(rowIndex);
@@ -127,24 +127,9 @@ namespace KiewitTeamBinder.UI.Pages.VendorData
             return false;
         }
 
-        //public static IWebElement FindDynamicRow(int rowIndex, bool isSelected = true)
-        //{
-        //    if (isSelected)
-        //        return StableFindElement(By.XPath(
-        //            string.Format($"//tr[contains(@class, 'rgSelectedRow') and @id='RadGrid1_ctl00__{rowIndex}']")));
-
-        //    else if (rowIndex % 2 == 0)
-        //        return StableFindElement(By.XPath(
-        //            string.Format($"//tr[contains(@class, 'rgRow') and @id='RadGrid1_ctl00__{rowIndex}']")));
-
-        //    else
-        //        return StableFindElement(By.XPath(
-        //            string.Format($"//tr[contains(@class, 'rgAltRow') and @id='RadGrid1_ctl00__{rowIndex}']")));
-        //}
 
         // checkboxType is "rowCheckbox" or "Superseded"
-        public BulkUploadDocuments SelectTableCheckbox(int rowIndex, string selectOption = "on", 
-                                                       string checkboxType = "rowCheckbox")
+        public BulkUploadDocuments SelectTableCheckbox(int rowIndex, string selectOption = "on", string checkboxType = "rowCheckbox")
         {
             var node = StepNode();
             IWebElement checkbox;
@@ -175,7 +160,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorData
             return this;
         }
 
-        public BulkUploadDocuments SelectTableComboBox(int rowIndex, string selectItem, TableComboBoxType comboBoxType)
+        public BulkUploadDocuments SelectDataOfDocumentPropertyDropdown(int rowIndex, string selectItem, DocBulkUploadDropdownType comboBoxType)
         {
             rowIndex = Utils.RefactorIndex(rowIndex);
             var comboBox = GetAllComboBoxes(comboBoxType.ToDescription()).ElementAt(rowIndex);
@@ -185,7 +170,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorData
             return this;
         }
 
-        public BulkUploadDocuments EnterTextbox(int rowIndex, string content, string textboxName)
+        public BulkUploadDocuments EnterDataOfDocumentPropertyTextbox(int rowIndex, string content, string textboxName)
         {
             rowIndex = Utils.RefactorIndex(rowIndex);
             IReadOnlyCollection<IWebElement> DocumentDetailsTextbox 
@@ -194,7 +179,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorData
             return this;
         }
                 
-        public T ClickButton<T>(ButtonName buttonName)
+        public T ClickHeaderButton<T>(DocBulkUploadHeaderButton buttonName)
         {
             IWebElement Button = StableFindElement(By.XPath(string.Format(_headerButton, buttonName.ToDescription())));
             var node = StepNode();            
@@ -203,7 +188,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorData
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }            
 
-        public BulkUploadDocuments HoverItem(string itemName, ref int index)
+        public BulkUploadDocuments HoverOnCopyAttributesMainItem(string itemName, ref int index)
         {
             IReadOnlyCollection<IWebElement> AllCopyAttributesItems = GetAllCopyAttributesItems();            
             IWebElement item;
@@ -220,12 +205,6 @@ namespace KiewitTeamBinder.UI.Pages.VendorData
             return this;
         }
 
-        public ConfirmDialog ClickRemoveRowsButton()
-        {
-            IWebElement button = StableFindElement(By.XPath(string.Format(_headerButton, ButtonName.RemoveRows.ToDescription())));
-            button.HoverAndClickWithJS();
-            return new ConfirmDialog(WebDriver);
-        }
 
         public ApplyToNRowsDialog ClickToNRowsItem(ref int indexOfSubMenu, bool nextRows = true)
         {

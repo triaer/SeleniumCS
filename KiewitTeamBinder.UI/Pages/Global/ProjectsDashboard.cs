@@ -13,19 +13,18 @@ using KiewitTeamBinder.Common;
 
 namespace KiewitTeamBinder.UI.Pages.Global
 {
-    public class Dashboard : LoggedInLanding
+    public class ProjectsDashboard : LoggedInLanding
     {
         #region Entities        
+        private string _menuButton = "//li[a='{0}']";
+
         public By _dashBoardLabel => By.XPath("//span[.='Dashboard']");
         private static By _nameProjectLabel => By.Id("projectInput");
-
-        public By _logoutLink => By.Id("LogoutLabel");
         private static By _projectListDropdown => By.Id("btnShowProjectList");
         private static By _projectListSumary => By.Id("divProjectSummary");
         private static By _helpButtonDropdown => By.XPath("//div[@id='divHelpButton']");
         private static By _helpButtonDropDownData => By.XPath("//div[@id='HelpDropDown_detached']/ul/li");
         private static By _vendorButton => By.Id("divVendorData");
-        private string _menuButton = "//li[a='{0}']";
         private static By _defaultFilter => By.Id("lblView");
         private static By _firstFilterBox => By.Id("FilterView0");
         private static By _formTitle => By.Id("formTitle");
@@ -42,20 +41,17 @@ namespace KiewitTeamBinder.UI.Pages.Global
         #endregion
 
         #region Actions
-        public Dashboard(IWebDriver webDriver) : base(webDriver)
-        {
-            
-        }
+        public ProjectsDashboard(IWebDriver webDriver) : base(webDriver)
+        {  }
 
-        public Dashboard ShowProjectList()
+        public ProjectsDashboard ShowProjectList()
         {
             ProjectListDropdown.Click();
             WaitForElementAttribute(ProjectListSumary, "display", "block");
-
             return this;
         }
 
-        public Dashboard ClickVendorDataButton()
+        public ProjectsDashboard ClickVendorDataButton()
         {
             var node = StepNode();
             node.Info("Click Vendot Data button");
@@ -90,12 +86,10 @@ namespace KiewitTeamBinder.UI.Pages.Global
         public KeyValuePair<string, bool> ValidateProjectIsOpened(string nameProject)
         {
             var node = StepNode();
-
             try
             {
                 if (NameProjectLabel.GetAttribute("title").Equals(nameProject))
                     return SetPassValidation(node, Validation.Project_Is_Opened);
-
                 else
                     return SetFailValidation(node, Validation.Project_Is_Opened, nameProject, NameProjectLabel.GetAttribute("title"));
             }
@@ -170,7 +164,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
             {
                 if (WebDriver.Title == windowName)
                     return SetPassValidation(node, string.Format(Validation.Validate_Window_Is_Opened, windowName));
-
                 else
                     return SetFailValidation(node, string.Format(Validation.Validate_Window_Is_Opened, windowName));
             }
@@ -187,7 +180,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
             {
                 if (FormTitle.Text == formTitle)
                     return SetPassValidation(node, string.Format(Validation.Validate_Form_Title_Is_Correct, formTitle));
-
                 else
                     return SetFailValidation(node, string.Format(Validation.Validate_Form_Title_Is_Correct, formTitle));
             }

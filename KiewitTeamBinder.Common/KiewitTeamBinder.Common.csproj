@@ -53,8 +53,8 @@
     <Compile Include="Models\Control\WBSCostItemOutput.cs" />
     <Compile Include="TestAccountAccess.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestData\TeamBinderLoginSmoke.cs" />
     <Compile Include="TestData\BulkUploadDocumentsSmoke.cs" />
+    <Compile Include="TestData\TeamBinderLoginSmoke.cs" />
     <Compile Include="TestData\TeamBinderVersionSmoke.cs" />
   </ItemGroup>
   <ItemGroup>

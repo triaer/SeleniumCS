@@ -10,26 +10,33 @@ using static KiewitTeamBinder.UI.ExtentReportsHelper;
 
 namespace KiewitTeamBinder.UI.Pages.VendorData
 {
-    public class HoldingArea : Dashboard
+    public class HoldingArea : ProjectsDashboard
     {
         #region Entities
         private string _functionButton = "//li[@class='rtbItem rtbBtn'][a='{0}']";
         private static By _holdingAreaLabel => By.Id("lblRegisterCaption");
+        private static By _documentNoTextBox => By.XPath("//input[contains(@id,'FilterTextBox_GridColDocumentNo')]");
 
         public IWebElement HoldingAreaLabel { get { return StableFindElement(_holdingAreaLabel); } }
+        public IWebElement DocumentNoTextBox { get { return StableFindElement(_documentNoTextBox); } }
         #endregion
 
         #region Actions
         public HoldingArea(IWebDriver webDriver) : base(webDriver) { }
 
-        public BulkUploadDocuments ClickBulkUploadButton()
+        public BulkUploadDocuments ClickBulkUploadButton(out string currentWindow)
         {
-            IWebElement FunctionButton = StableFindElement(By.XPath(string.Format(_functionButton, "Bulk Upload")));
-            string currentWindow;
             var node = StepNode();
-            node.Info("Click Bulk Upload button & switch to Bulk Upload Document window");
-            SwitchToPopUpWindow(FunctionButton, out currentWindow, true);
+            node.Info("Click Bulk Upload button in Holding Area header");
+            IWebElement FunctionButton = StableFindElement(By.XPath(string.Format(_functionButton, "Bulk Upload")));
+            SwitchToPopUpWindow(FunctionButton, out currentWindow, false);
             return new BulkUploadDocuments(WebDriver);
+        }
+
+        public HoldingArea EnterDocumentNo(string value)
+        {
+            DocumentNoTextBox.InputText(value);
+            return this;
         }
 
         public KeyValuePair<string, bool> ValidateHoldingAreaPageDisplays()
@@ -37,8 +44,10 @@ namespace KiewitTeamBinder.UI.Pages.VendorData
             var node = StepNode();
             try
             {
-                WaitForElementDisplay(By.Id("lblRegisterCaption"));               
-                return SetPassValidation(node, Validation.Holding_Area_Page_Displays);
+                if (StableFindElement(_holdingAreaLabel) != null)
+                    return SetPassValidation(node, Validation.Holding_Area_Page_Displays);
+                else
+                    return SetFailValidation(node, Validation.Holding_Area_Page_Displays);
             }
             catch (Exception e)
             {
@@ -46,11 +55,12 @@ namespace KiewitTeamBinder.UI.Pages.VendorData
             }
         }
 
+
         private static class Validation
         {
             public static string Holding_Area_Page_Displays = "Validate That The Holding Area Page Displays";
         }
-
+         
 
         #endregion
     }
