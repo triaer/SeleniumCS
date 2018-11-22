@@ -26,6 +26,8 @@ namespace KiewitTeamBinder.UI.Pages.VendorData
         {
             IWebElement FunctionButton = StableFindElement(By.XPath(string.Format(_functionButton, "Bulk Upload")));
             string currentWindow;
+            var node = StepNode();
+            node.Info("Click Bulk Upload button & switch to Bulk Upload Document window");
             SwitchToPopUpWindow(FunctionButton, out currentWindow, true);
             return new BulkUploadDocuments(WebDriver);
         }

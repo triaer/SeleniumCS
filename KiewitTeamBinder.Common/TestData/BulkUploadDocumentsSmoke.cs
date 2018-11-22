@@ -23,7 +23,7 @@ namespace KiewitTeamBinder.Common.TestData
         public string DataOfComboBoxSts = "VSUB - Vendor Submission";
         public string DataOfTitle = "Vendor Submitted Document";
         public string DataOfComboBoxDics = "CON - Contruction";
-        public string DataOfComboBoxCat = "CON - Contruction";
+        public string DataOfComboBoxCat = "CA - CALCULATION";
         public string HoverItem = "All";
     }
 

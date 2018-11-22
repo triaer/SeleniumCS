@@ -92,7 +92,10 @@ namespace KiewitTeamBinder.UI.Pages.VendorData
         // filePath = "C:\Working", fileNames = {\"File1.txt\" \"File2.txt\" \"File3.txt\...."}
         public BulkUploadDocuments AddFilesInBulk(string filePath, string fileNames)
         {
+            var node = StepNode();
+            node.Info("Click Add Files In Bulk button");
             AddFilesInBulkButton.Click();
+            node.Info("Choose files from window explorer form");
             Wait(shortTimeout/2);
             SendKeys.SendWait(@filePath);
             SendKeys.SendWait(@"{Enter}");
@@ -142,7 +145,8 @@ namespace KiewitTeamBinder.UI.Pages.VendorData
         // checkboxType is "rowCheckbox" or "Superseded"
         public BulkUploadDocuments SelectTableCheckbox(int rowIndex, string selectOption = "on", 
                                                        string checkboxType = "rowCheckbox")
-        {            
+        {
+            var node = StepNode();
             IWebElement checkbox;
             if (checkboxType == "rowCheckbox")
             {               
@@ -155,14 +159,19 @@ namespace KiewitTeamBinder.UI.Pages.VendorData
                 IReadOnlyCollection<IWebElement> AllSupersededCheckboxes = GetAllSupersededCheckboxes();
                 checkbox = AllSupersededCheckboxes.ElementAt(rowIndex);
             }
-            if (String.IsNullOrWhiteSpace(selectOption) 
+            if (String.IsNullOrWhiteSpace(selectOption)
                 || (selectOption.ToLower() != "on" && selectOption.ToLower() != "off"))
                 throw new InvalidOperationException("select option should be 'on' of 'off'. Default value is 'on'");
             else if (selectOption.ToLower() == "on")
+            {
+                node.Info("Check the checkbox: " + checkboxType);
                 checkbox.Check();
+            }
             else
+            {
+                node.Info("Uncheck the checkbox: " + checkboxType);
                 checkbox.UnCheck();
-
+            }
             return this;
         }
 
@@ -170,6 +179,8 @@ namespace KiewitTeamBinder.UI.Pages.VendorData
         {
             rowIndex = Utils.RefactorIndex(rowIndex);
             var comboBox = GetAllComboBoxes(comboBoxType.ToDescription()).ElementAt(rowIndex);
+            var node = StepNode();
+            node.Info("Select " + selectItem);
             comboBox.SelectByText(selectItem);
             return this;
         }
@@ -186,6 +197,8 @@ namespace KiewitTeamBinder.UI.Pages.VendorData
         public T ClickButton<T>(ButtonName buttonName)
         {
             IWebElement Button = StableFindElement(By.XPath(string.Format(_headerButton, buttonName.ToDescription())));
+            var node = StepNode();            
+            node.Info("Click the button: " + buttonName.ToDescription());
             Button.HoverAndClickWithJS();
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }            
@@ -201,6 +214,8 @@ namespace KiewitTeamBinder.UI.Pages.VendorData
                 item = AllCopyAttributesItems.ElementAt(index);                
             }
             while (item.Text != itemName);
+            var node = StepNode();
+            node.Info("Hover " + itemName);
             item.HoverWithJS();
             return this;
         }

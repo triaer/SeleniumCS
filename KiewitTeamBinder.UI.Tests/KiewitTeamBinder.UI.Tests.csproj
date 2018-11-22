@@ -168,6 +168,21 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="BulkUploadInFiles\File1.txt" />
+    <Content Include="BulkUploadInFiles\File10.txt" />
+    <Content Include="BulkUploadInFiles\File11.txt" />
+    <Content Include="BulkUploadInFiles\File12.txt" />
+    <Content Include="BulkUploadInFiles\File13.txt" />
+    <Content Include="BulkUploadInFiles\File14.txt" />
+    <Content Include="BulkUploadInFiles\File15.txt" />
+    <Content Include="BulkUploadInFiles\File2.txt" />
+    <Content Include="BulkUploadInFiles\File3.txt" />
+    <Content Include="BulkUploadInFiles\File4.txt" />
+    <Content Include="BulkUploadInFiles\File5.txt" />
+    <Content Include="BulkUploadInFiles\File6.txt" />
+    <Content Include="BulkUploadInFiles\File7.txt" />
+    <Content Include="BulkUploadInFiles\File8.txt" />
+    <Content Include="BulkUploadInFiles\File9.txt" />
     <Content Include="extent-config.xml" />
   </ItemGroup>
   <ItemGroup />

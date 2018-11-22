@@ -57,7 +57,9 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
         public Dashboard ClickVendorDataButton()
         {
-            VendorButton.Click();
+            var node = StepNode();
+            node.Info("Click Vendot Data button");
+            VendorButton.Click();            
             WaitForElementDisplay(By.XPath(string.Format(_menuButton, "Holding Area")));
             return this;
         }
@@ -69,6 +71,8 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
         public HoldingArea ClickHoldingAreaButton()
         {
+            var node = StepNode();
+            node.Info("Click Holding Area button");
             MenuButton("Holding Area").Click();
             return new HoldingArea(WebDriver);
         }

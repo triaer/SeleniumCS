@@ -71,9 +71,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                                                                bulkUploadDocuments.ValidateFilesDisplay(15));
                 bulkUploadDocuments.LogValidation<HoldingArea>(ref validations,
                                                                bulkUploadDocuments.ValidateFileNamesAreListedInColumn(bulkUploadData.VersionColumn));
-
-                bulkUploadDocuments.SelectAllCheckboxes(false)
-                   .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocuments.ValidateAllRowsAreSelected(false));
+                             
                 bulkUploadDocuments.SelectTableCheckbox(rowIndex: 1)
                     .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocuments.ValidateRowIsSelected(1));
 
@@ -82,7 +80,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                     .SelectTableComboBox(1, bulkUploadData.DataOfComboBoxSts, KiewitTeamBinderENums.TableComboBoxType.Sts)
                     .EnterTextbox(1, bulkUploadData.DataOfTitle, KiewitTeamBinderENums.TextboxName.Title.ToDescription())
                     .SelectTableComboBox(1, bulkUploadData.DataOfComboBoxDics, KiewitTeamBinderENums.TableComboBoxType.Disc)
-                    .SelectTableComboBox(1, bulkUploadData.DataOfComboBoxCat, KiewitTeamBinderENums.TableComboBoxType.Cat)
+                    .SelectTableComboBox(1, bulkUploadData.DataOfComboBoxCat, KiewitTeamBinderENums.TableComboBoxType.Cat) //replace for BS - BUILDING STRUCTURAL DRAWINGS
                     .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocuments.ValidateRowIsSelected(rowIndex: 2));
 
                 int indexOfSubmenu = 0;
