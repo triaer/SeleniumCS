@@ -183,20 +183,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
         }
 
 
-        public ApplyToNRowsDialog ClickToNRowsItem(ref int indexOfSubMenu, bool nextRows = true)
-        {
-            IWebElement ToNRows;
-            if (nextRows)            
-                ToNRows = StableFindElement(By.XPath(string.Format(_toNRows, indexOfSubMenu + 2, "to next N rows...")));
-            else
-                ToNRows = StableFindElement(By.XPath(string.Format(_toNRows, indexOfSubMenu + 2, "to previous N rows...")));
-            ToNRows.HoverAndClickWithJS();
-            
-            var applyToNRowsDialog = new ApplyToNRowsDialog(WebDriver);
-            WebDriver.SwitchTo().Frame(applyToNRowsDialog.IFrameName);
-            WaitUntil(driver => applyToNRowsDialog.OKButton != null);
-            return applyToNRowsDialog;
-        }
 
         public KeyValuePair<string, bool> ValidateFilesDisplay(int numberOfFiles)
         {
