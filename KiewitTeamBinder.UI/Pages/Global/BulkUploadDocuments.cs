@@ -13,18 +13,15 @@ using System.Windows.Forms;
 using KiewitTeamBinder.UI.Pages.Dialogs;
 
 
-namespace KiewitTeamBinder.UI.Pages.VendorData
+namespace KiewitTeamBinder.UI.Pages.Global
 {
-    public class BulkUploadDocuments : Dashboard
+    public class BulkUploadDocuments : ProjectsDashboard
     {
         #region Entities
         private By _addFileInBulkButton => By.Id("addBulkFlashWrapper");
-        private static By _selectAllCheckbox => By.XPath(
-            "//th//input[contains(@id, 'ClientSelectColumnSelectCheckBox')]");
-        private static By _selectCheckboxes => By.XPath(
-            "//td//input[contains(@id,'ClientSelectColumnSelectCheckBox')]");
-        private static By _bulkUploadDocumentsTable => By.XPath(
-            "//div[@id='RadGrid1_GridData']//*[contains(@class, 'rgMasterTable')]");
+        private static By _selectAllCheckbox => By.XPath("//th//input[contains(@id, 'ClientSelectColumnSelectCheckBox')]");
+        private static By _selectCheckboxes => By.XPath("//td//input[contains(@id,'ClientSelectColumnSelectCheckBox')]");
+        private static By _bulkUploadDocumentsTable => By.XPath("//div[@id='RadGrid1_GridData']//*[contains(@class, 'rgMasterTable')]");
         private By _addFilesInBulkButton => By.XPath("//*[@id='flashUploadBulk']");
         private By _fileNames => By.XPath("//tr[contains(@id,'ViewFiles')]");
         private By _tableHearder => By.Id("RadGrid1_ctl00_Header");

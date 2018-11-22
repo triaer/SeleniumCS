@@ -28,38 +28,27 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
 
                 test.Info("Open TeamBinder Web Page: " + teambinderTestAccount.Url);
                 var driver = Browser.Open(teambinderTestAccount.Url, browser);
-                // and 119692 - Log on via Other User Login Kiewit Account
-                test = LogTest("Log on via Other User Login Kiewit Account");
+                // and 
                 test.Info("Log on TeamBinder via Other User Login: " + teambinderTestAccount.Username);
                 var projectsList = new NonSsoSignOn(driver).Logon(teambinderTestAccount) as ProjectsList;
-
-                projectsList.LogValidation<ProjectsList>(ref validations,
-                                                         projectsList.ValidateDataInProjectListAvailable(BulkUploadDocumentsSmoke.ProjectName))
-                            .LogValidation<ProjectsList>(ref validations,
-                                                         projectsList.ValidateProjectIsHighlightedWhenHovered(BulkUploadDocumentsSmoke.ProjectName));
-
                 test.Info("Navigate to DashBoard Page of Project: " + BulkUploadDocumentsSmoke.ProjectName);
                 var projectDashBoard = projectsList.NavigateToProjectDashboardPage(BulkUploadDocumentsSmoke.ProjectName);
-                projectDashBoard.LogValidation(ref validations,
-                                               projectDashBoard.ValidateProjectIsOpened(BulkUploadDocumentsSmoke.ProjectName));
 
                 //when - 119695 Bulk Upload Documents to Holding Area
                 test = LogTest("Bulk Upload Documents to Holding Area");
-                projectDashBoard.ClickVendorDataButton();
-                // var a = KiewitTeamBinderENums.VendorDataMenusForVendorAccount.HoldingArea;
-
-                projectDashBoard.LogValidation<Dashboard>(ref validations,
-                                                          projectDashBoard.ValidateVendorDataMenusDisplay(BulkUploadDocumentsSmoke.VendorDataMenu));
-
-                var holdingAreaPage = projectDashBoard.ClickHoldingAreaButton();
-                holdingAreaPage.LogValidation<HoldingArea>(ref validations,
-                                                           holdingAreaPage.ValidateHoldingAreaPageDisplays());
-                holdingAreaPage.LogValidation<HoldingArea>(ref validations,
+                string currentWindow;
+                var bulkUploadDocuments = projectDashBoard.ClickVendorDataButton()
+                        .LogValidation<ProjectsDashboard>(ref validations,
+                                                          projectDashBoard.ValidateVendorDataMenusDisplay(BulkUploadDocumentsSmoke.VendorDataMenu))
+                        .ClickHoldingAreaButton()
+                        .LogValidation<HoldingArea>(ref validations,
+                                                           holdingAreaPage.ValidateHoldingAreaPageDisplays())
+                        .LogValidation<HoldingArea>(ref validations,
                                                            holdingAreaPage.ValidateDefaultFilter("New Documents"));
                 holdingAreaPage.LogValidation<HoldingArea>(ref validations,
                                                            holdingAreaPage.ValidateFirstFileterBoxIsHighlighted());
 
-                var bulkUploadDocumentsPage = holdingAreaPage.ClickBulkUploadButton();
+                var bulkUploadDocumentsPage = holdingAreaPage.ClickBulkUploadButton(out currentWindow);
                 bulkUploadDocumentsPage.LogValidation<HoldingArea>(ref validations,
                                                                    bulkUploadDocumentsPage.ValidateWindowIsOpened("Bulk Upload Documents"));
                 bulkUploadDocumentsPage.LogValidation<HoldingArea>(ref validations,

@@ -10,7 +10,7 @@ using static KiewitTeamBinder.UI.ExtentReportsHelper;
 
 namespace KiewitTeamBinder.UI.Pages.VendorData
 {
-    public class HoldingArea : Dashboard
+    public class HoldingArea : ProjectsDashboard
     {
         #region Entities
         private string _functionButton = "//li[@class='rtbItem rtbBtn'][a='{0}']";
@@ -26,6 +26,8 @@ namespace KiewitTeamBinder.UI.Pages.VendorData
 
         public BulkUploadDocuments ClickBulkUploadButton(out string currentWindow)
         {
+            var node = StepNode();
+            node.Info("Click Bulk Upload button in Holding Area header");
             IWebElement FunctionButton = StableFindElement(By.XPath(string.Format(_functionButton, "Bulk Upload")));
             SwitchToPopUpWindow(FunctionButton, out currentWindow, false);
             return new BulkUploadDocuments(WebDriver);
@@ -37,19 +39,15 @@ namespace KiewitTeamBinder.UI.Pages.VendorData
             return this;
         }
 
-        public HoldingArea PressEnter()
-        {
-            WebDriver.FindElement(By.XPath("String")).SendKeys(Keys.Enter);
-            return this;
-        }
-
         public KeyValuePair<string, bool> ValidateHoldingAreaPageDisplays()
         {
             var node = StepNode();
             try
             {
-                WaitForElementDisplay(By.Id("lblRegisterCaption"));
-                return SetPassValidation(node, Validation.Holding_Area_Page_Displays);
+                if (StableFindElement(_holdingAreaLabel) != null)
+                    return SetPassValidation(node, Validation.Holding_Area_Page_Displays);
+                else
+                    return SetFailValidation(node, Validation.Holding_Area_Page_Displays);
             }
             catch (Exception e)
             {

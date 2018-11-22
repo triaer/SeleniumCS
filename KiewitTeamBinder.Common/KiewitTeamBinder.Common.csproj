@@ -46,7 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helper\JsonHandler.cs" />
-    <Compile Include="KiewitIn8ENums.cs" />
+    <Compile Include="KiewitTeamBinderENums.cs" />
     <Compile Include="Helper\Utils.cs" />
     <Compile Include="Models\Control\GLAccountDocumentInput.cs" />
     <Compile Include="Models\Control\WBSCostItemInput .cs" />
@@ -55,7 +55,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestData\BulkUploadDocumentsSmoke.cs" />
     <Compile Include="TestData\TeamBinderLoginSmoke.cs" />
-    <Compile Include="TestData\BulkUploadDocumentsSmoke.cs" />
     <Compile Include="TestData\TeamBinderVersionSmoke.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -16,7 +16,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
     {
 
         #region Entities
-
         private static By _userNameLable => By.XPath("//div[@id='divUserName']/span");
         private static By _logoutLink => By.Id("LogoutLabel");
         private static By _logoutYesButton => By.XPath("//div[@class='rwDialogPopup radconfirm']//a[.//span[text()='Yes']]");
@@ -24,9 +23,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
         private static By _saveChangeYesButton => By.Id("Yes");
         private static By _saveChangeNoButton => By.Id("No");
         public By _processingPopUp => By.Id("divProgressWindow");
-
-
-
 
         public IWebElement LogoutLink { get { return StableFindElement(_logoutLink); } }
         public IWebElement LogoutYesButton { get { return StableFindElement(_logoutYesButton); } }
@@ -39,17 +35,14 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
         public LoggedInLanding(IWebDriver webDriver) : base(webDriver)
         {
-
         }
 
         public NonSsoSignOn Logout()
         {
-            
             LogoutLink.Click();
             WebDriver.SwitchTo().ActiveElement();
             LogoutYesButton.Click();
             return new NonSsoSignOn(WebDriver);
-
         }
 
         public LoggedInLanding SelectMenuItem(string menuPath, char separator = '/', bool saveChange = false)
@@ -123,16 +116,12 @@ namespace KiewitTeamBinder.UI.Pages.Global
             return isPopupDisplayed;
         }
 
-
-
         public T ReloadPage<T>()
         {
             Reload();
             WaitForElement(_userNameLable);
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
-
-
 
         public LoggedInLanding SwitchToWindow(string window, bool closePreviousWindow = false)
         {
