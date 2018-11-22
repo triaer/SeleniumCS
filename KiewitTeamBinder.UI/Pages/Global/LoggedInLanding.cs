@@ -45,40 +45,11 @@ namespace KiewitTeamBinder.UI.Pages.Global
             return new NonSsoSignOn(WebDriver);
         }
 
-        public LoggedInLanding SelectMenuItem(string menuPath, char separator = '/', bool saveChange = false)
-        {
-            //var node = StepNode();
-            //node.Info("Select Menu Item: " + menuPath);
-
-            //MenuItem.Click();
-            //string[] item = menuPath.Split(separator);
-
-            //for (int i = 0; i < item.Length; i++)
-            //{
-
-            //    string menuItemXpath = string.Format(_menuItemXpath, item[i]);
-            //    IWebElement MenuItem = StableFindElement(By.XPath(menuItemXpath));
-
-            //    if (i > 0 && i < item.Length - 1)
-            //    {
-            //        ScrollToElement(MenuItem);
-            //    }
-            //    else
-            //    {
-            //        MenuItem.Click();
-            //        if (FindElement(_alertPopup) != null)
-            //            HandleSaveChangesPopup(saveChange);
-            //    }
-            //}
-            //WaitForElement(_userIcon, shortTimeout);
-            //if (FindElement(_closeReleaseNotesButton) != null)
-            //    ClickElement(_closeReleaseNotesButton);
-            return this;
-        }
+        
 
         public T SelectMenuItem<T>(string menuPath, char separator = '/', bool saveChange = false)
         {
-            SelectMenuItem(menuPath, separator, saveChange);
+            //SelectMenuItem(menuPath, separator, saveChange);
             WaitForAngularJSLoad();
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
@@ -100,20 +71,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 else
                     SaveChangeNoButton.Click();
             }
-        }
-
-        public bool HandleAnnouncementPopup(out string contentsPopup, bool closePopup = true)
-        {
-            bool isPopupDisplayed = false;
-            contentsPopup = "";
-            //if (FindElement(_announcementPopup) != null)
-            //{
-            //    isPopupDisplayed = true;
-            //    contentsPopup = AnnouncementPopup.Text;
-            //    if (closePopup)
-            //        CloseAnnouncement.Click();
-            //}
-            return isPopupDisplayed;
         }
 
         public T ReloadPage<T>()
