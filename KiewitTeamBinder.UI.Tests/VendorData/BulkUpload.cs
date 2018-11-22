@@ -33,70 +33,72 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 test = LogTest("Log on via Other User Login Kiewit Account");
                 test.Info("Log on TeamBinder via Other User Login: " + teambinderTestAccount.Username);
                 var projectsList = new NonSsoSignOn(driver).Logon(teambinderTestAccount) as ProjectsList;
-
+                var bulkUploadData = new BulkUploadDocumentsSmoke();
                 projectsList.LogValidation<ProjectsList>(ref validations,
-                                                         projectsList.ValidateDataInProjectListAvailable(BulkUploadDocumentsSmoke.ProjectName))
+                                                         projectsList.ValidateDataInProjectListAvailable(bulkUploadData.ProjectName))
                             .LogValidation<ProjectsList>(ref validations,
-                                                         projectsList.ValidateProjectIsHighlightedWhenHovered(BulkUploadDocumentsSmoke.ProjectName));
+                                                         projectsList.ValidateProjectIsHighlightedWhenHovered(bulkUploadData.ProjectName));
 
-                test.Info("Navigate to DashBoard Page of Project: " + BulkUploadDocumentsSmoke.ProjectName);
-                var projectDashBoard = projectsList.NavigateToProjectDashboardPage(BulkUploadDocumentsSmoke.ProjectName);
+                test.Info("Navigate to DashBoard Page of Project: " + bulkUploadData.ProjectName);
+                var projectDashBoard = projectsList.NavigateToProjectDashboardPage(bulkUploadData.ProjectName);
                 projectDashBoard.LogValidation(ref validations,
-                                               projectDashBoard.ValidateProjectIsOpened(BulkUploadDocumentsSmoke.ProjectName));
+                                               projectDashBoard.ValidateProjectIsOpened(bulkUploadData.ProjectName));
 
                 //when - 119695 Bulk Upload Documents to Holding Area
                 test = LogTest("Bulk Upload Documents to Holding Area");
+                
                 projectDashBoard.ClickVendorDataButton();
 
                 projectDashBoard.LogValidation<Dashboard>(ref validations,
-                                                          projectDashBoard.ValidateVendorDataMenusDisplay(BulkUploadDocumentsSmoke.VendorDataMenu));
+                                                          projectDashBoard.ValidateVendorDataMenusDisplay(bulkUploadData.VendorDataMenu));
 
-                var holdingAreaPage = projectDashBoard.ClickHoldingAreaButton();
-                holdingAreaPage.LogValidation<HoldingArea>(ref validations,
-                                                           holdingAreaPage.ValidateHoldingAreaPageDisplays());
-                holdingAreaPage.LogValidation<HoldingArea>(ref validations,
-                                                           holdingAreaPage.ValidateDefaultFilter("New Documents"));
-                holdingAreaPage.LogValidation<HoldingArea>(ref validations,
-                                                           holdingAreaPage.ValidateFirstFileterBoxIsHighlighted());
+                var holdingArea = projectDashBoard.ClickHoldingAreaButton();
+                holdingArea.LogValidation<HoldingArea>(ref validations,
+                                                       holdingArea.ValidateHoldingAreaPageDisplays());
+                holdingArea.LogValidation<HoldingArea>(ref validations,
+                                                       holdingArea.ValidateDefaultFilter(bulkUploadData.DefaultFilter));
+                holdingArea.LogValidation<HoldingArea>(ref validations,
+                                                       holdingArea.ValidateFirstFileterBoxIsHighlighted());
 
-                var bulkUploadDocumentsPage = holdingAreaPage.ClickBulkUploadButton();
-                bulkUploadDocumentsPage.LogValidation<HoldingArea>(ref validations,
-                                                                   bulkUploadDocumentsPage.ValidateWindowIsOpened("Bulk Upload Documents"));
-                bulkUploadDocumentsPage.LogValidation<HoldingArea>(ref validations,
-                                                                   bulkUploadDocumentsPage.ValidateFormTitle("Bulk Upload Documents"));
+                var bulkUploadDocuments = holdingArea.ClickBulkUploadButton();
+                bulkUploadDocuments.LogValidation<HoldingArea>(ref validations,
+                                                               bulkUploadDocuments.ValidateWindowIsOpened(bulkUploadData.WindowTitle));
+                bulkUploadDocuments.LogValidation<HoldingArea>(ref validations,
+                                                               bulkUploadDocuments.ValidateFormTitle(bulkUploadData.FormTitle));
 
-                bulkUploadDocumentsPage.AddFilesInBulk("C:\\Working\\BulkUpLoadInFiles", BulkUploadDocumentsSmoke.FileNames);
-                bulkUploadDocumentsPage.LogValidation<HoldingArea>(ref validations,
-                                                                   bulkUploadDocumentsPage.ValidateFilesDisplay(15));
-                bulkUploadDocumentsPage.LogValidation<HoldingArea>(ref validations,
-                                                                   bulkUploadDocumentsPage.ValidateFileNamesAreListedInColumn("Version*"));
+                bulkUploadDocuments.AddFilesInBulk(bulkUploadData.FilePath, bulkUploadData.FileNames);
+                bulkUploadDocuments.LogValidation<HoldingArea>(ref validations,
+                                                               bulkUploadDocuments.ValidateFilesDisplay(15));
+                bulkUploadDocuments.LogValidation<HoldingArea>(ref validations,
+                                                               bulkUploadDocuments.ValidateFileNamesAreListedInColumn(bulkUploadData.VersionColumn));
 
-                bulkUploadDocumentsPage.SelectAllCheckboxes(false)
-                   .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocumentsPage.ValidateAllRowsAreSelected(false));
-                bulkUploadDocumentsPage.SelectTableCheckbox(1)
-                    .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocumentsPage.ValidateRowIsSelected(1));
+                bulkUploadDocuments.SelectAllCheckboxes(false)
+                   .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocuments.ValidateAllRowsAreSelected(false));
+                bulkUploadDocuments.SelectTableCheckbox(rowIndex: 1)
+                    .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocuments.ValidateRowIsSelected(1));
 
-                bulkUploadDocumentsPage.SelectTableComboBox(1, "00 - Rev 00", KiewitTeamBinderENums.TableComboBoxType.Rev)
-                    .SelectTableComboBox(1, "VSUB - Vendor Submission", KiewitTeamBinderENums.TableComboBoxType.Sts)
-                    .EnterTextbox(1, KiewitTeamBinderENums.TextboxName.Title.ToDescription(), "Vendor Submitted Document")
-                    .SelectTableComboBox(1, "CON - Contruction", KiewitTeamBinderENums.TableComboBoxType.Disc)
-                    .SelectTableComboBox(1, "HV - HVAC", KiewitTeamBinderENums.TableComboBoxType.Cat)
-                    .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocumentsPage.ValidateRowIsSelected(2));
+                bulkUploadDocuments.SelectTableComboBox(1, bulkUploadData.DataOfComboBoxRev, 
+                                                        KiewitTeamBinderENums.TableComboBoxType.Rev)
+                    .SelectTableComboBox(1, bulkUploadData.DataOfComboBoxSts, KiewitTeamBinderENums.TableComboBoxType.Sts)
+                    .EnterTextbox(1, bulkUploadData.DataOfTitle, KiewitTeamBinderENums.TextboxName.Title.ToDescription())
+                    .SelectTableComboBox(1, bulkUploadData.DataOfComboBoxDics, KiewitTeamBinderENums.TableComboBoxType.Disc)
+                    .SelectTableComboBox(1, bulkUploadData.DataOfComboBoxCat, KiewitTeamBinderENums.TableComboBoxType.Cat)
+                    .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocuments.ValidateRowIsSelected(rowIndex: 2));
+
                 int indexOfSubmenu = 0;
-                bulkUploadDocumentsPage.ClickButton<BulkUploadDocuments>(KiewitTeamBinderENums.ButtonName.CopyAttributes)
-                    .HoverItem("All", ref indexOfSubmenu)
+                bulkUploadDocuments.ClickButton<BulkUploadDocuments>(KiewitTeamBinderENums.ButtonName.CopyAttributes)
+                    .HoverItem(bulkUploadData.HoverItem, ref indexOfSubmenu)
                     .LogValidation<BulkUploadDocuments>(ref validations, 
-                                                        bulkUploadDocumentsPage
+                                                        bulkUploadDocuments
                                                             .ValidateSubMenuDisplaysAfterHovering(ref indexOfSubmenu));
-
-
-                var applyToNextNRowsDialog = bulkUploadDocumentsPage.ClickToNRowsItem(ref indexOfSubmenu);
+                
+                var applyToNextNRowsDialog = bulkUploadDocuments.ClickToNRowsItem(ref indexOfSubmenu);
                 applyToNextNRowsDialog.LogValidation<ApplyToNRowsDialog>(ref validations,
                                                                          applyToNextNRowsDialog.ValidateDialogOpens(true));
                 applyToNextNRowsDialog.LogValidation<ApplyToNRowsDialog>(ref validations,
                                                                          applyToNextNRowsDialog
-                                                                            .ValidateMessageOnDialog(BulkUploadDocumentsSmoke
-                                                                                .messageOnToNRowsDialog));
+                                                                            .ValidateMessageOnDialog(bulkUploadData
+                                                                                .MessageOnToNRowsDialog));
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);
                 Console.WriteLine(string.Join(System.Environment.NewLine, validations.ToArray()));
