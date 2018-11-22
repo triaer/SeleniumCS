@@ -26,11 +26,11 @@ namespace KiewitTeamBinder.UI.Pages.Global
         private static By _helpButtonDropDownData => By.XPath("//div[@id='HelpDropDown_detached']/ul/li");
         private static By _vendorButton => By.Id("divVendorData");
         private static By _defaultFilter => By.Id("lblView");
-        private static By _firstFilterBox => By.Id("FilterView0");
+        private static By _imagesOfFirstFilterBox => By.XPath("//li[@id = 'FilterView0']//img");
         private static By _formTitle => By.Id("formTitle");
 
         public IWebElement FormTitle { get { return StableFindElement(_formTitle); } }
-        public IWebElement FirstFilterBox { get { return StableFindElement(_firstFilterBox); } }
+        public IReadOnlyCollection<IWebElement> ImagesOfFirstFilterBox { get { return StableFindElements(_imagesOfFirstFilterBox); } }
         public IWebElement DefaultFilter { get { return StableFindElement(_defaultFilter); } }
         public IWebElement VendorButton { get { return StableFindElement(_vendorButton); } }
         public IWebElement ProjectListDropdown { get { return StableFindElement(_projectListDropdown); } }
@@ -144,8 +144,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             var node = StepNode();
             try
             {
-                WaitForElementDisplay(_firstFilterBox);
-                if (FirstFilterBox.GetAttribute("src").Contains("Selected"))
+                if (ImagesOfFirstFilterBox.ElementAt(0).IsDisplayed())
                 {
                     return SetPassValidation(node, Validation.First_Filter_Box_Is_Highlighted);
                 }

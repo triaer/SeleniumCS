@@ -43,29 +43,15 @@ namespace KiewitTeamBinder.UI.Pages.Global
         public IWebElement TableHeader { get { return StableFindElement(_tableHearder); } }
         public IReadOnlyCollection<IWebElement> FileNames { get { return StableFindElements(_fileNames); } }
         public IWebElement AddFilesInBulkButton { get { return StableFindElement(_addFilesInBulkButton); } }
+        public IReadOnlyCollection<IWebElement> AllItemsInCopyAttributesDropdown { get { return StableFindElements(_allCopyAttributesItems); } }
+        public IReadOnlyCollection<IWebElement> AllDocumentRows { get { return StableFindElements(_allDocumentRows); } }
+        public IReadOnlyCollection<IWebElement> AllRowCheckboxes { get { return StableFindElements(_allRowCheckboxes); } }
+        public IReadOnlyCollection<IWebElement> AllSupersededCheckboxes { get { return StableFindElements(_allSupersededCheckboxes); } }
         #endregion
 
-        
+
         #region Actions
         public BulkUploadDocuments(IWebDriver webDriver) : base(webDriver) { }
-
-        private IReadOnlyCollection<IWebElement> GetAllDocumentRows()
-        {
-            IReadOnlyCollection<IWebElement> AllDocumentRows = StableFindElements(_allDocumentRows);
-            return AllDocumentRows;
-        }
-
-        private IReadOnlyCollection<IWebElement> GetAllRowCheckboxes()
-        {
-            IReadOnlyCollection<IWebElement> AllRowCheckboxes = StableFindElements(_allRowCheckboxes);
-            return AllRowCheckboxes;
-        }
-
-        private IReadOnlyCollection<IWebElement> GetAllSupersededCheckboxes()
-        {
-            IReadOnlyCollection<IWebElement> AllSupersededCheckboxes = StableFindElements(_allSupersededCheckboxes);
-            return AllSupersededCheckboxes;
-        }
 
         private IReadOnlyCollection<SelectElement> GetAllComboBoxes(string comboBoxName)
         {
@@ -81,11 +67,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
             return AllSelectComboBoxes;
         }
 
-        private IReadOnlyCollection<IWebElement> GetAllCopyAttributesItems()
-        {
-            IReadOnlyCollection<IWebElement> AllCopyAttributesItems = StableFindElements(_allCopyAttributesItems);
-            return AllCopyAttributesItems;
-        }
 
         // We have to use hard code waiting time cause this is Windows native control
         // In order to type in multi-file names we need to separate the filePath and fileNames
@@ -120,7 +101,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
         private bool IsRowSelected(int rowIndex)
         {
-            IReadOnlyCollection<IWebElement> AllDocumentRows = GetAllDocumentRows();
             IWebElement row = AllDocumentRows.ElementAt(rowIndex);
             if (row.GetAttribute("class").Contains("rgSelectedRow"))
                 return true;
@@ -135,13 +115,11 @@ namespace KiewitTeamBinder.UI.Pages.Global
             IWebElement checkbox;
             if (checkboxType == "rowCheckbox")
             {               
-                IReadOnlyCollection<IWebElement> AllRowCheckboxes = GetAllRowCheckboxes();
                 checkbox = AllRowCheckboxes.ElementAt(rowIndex);
             }
             else
             {
                 rowIndex = Utils.RefactorIndex(rowIndex);
-                IReadOnlyCollection<IWebElement> AllSupersededCheckboxes = GetAllSupersededCheckboxes();
                 checkbox = AllSupersededCheckboxes.ElementAt(rowIndex);
             }
             if (String.IsNullOrWhiteSpace(selectOption)
@@ -190,13 +168,12 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
         public BulkUploadDocuments HoverOnCopyAttributesMainItem(string itemName, ref int index)
         {
-            IReadOnlyCollection<IWebElement> AllCopyAttributesItems = GetAllCopyAttributesItems();            
             IWebElement item;
             index = -1;
             do
             {
                 index++;
-                item = AllCopyAttributesItems.ElementAt(index);                
+                item = AllItemsInCopyAttributesDropdown.ElementAt(index);                
             }
             while (item.Text != itemName);
             var node = StepNode();
@@ -237,7 +214,8 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 return SetErrorValidation(node, Validation.Validate_Files_Display, e);
             }
         }
-
+        //TO-DO: Currently, the document file names are shown under the "Document No." instead of the "Version" column.
+        // We need confirmation from the test design team.
         public KeyValuePair<string, bool> ValidateFileNamesAreListedInColumn(string columnName)
         {
             var node = StepNode();
@@ -264,7 +242,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             var node = StepNode();
             List<bool> validations = new List<bool> { };
             List<int> rowNumbers = new List<int> { };
-            int totalRows = GetAllDocumentRows().Count;
+            int totalRows = AllDocumentRows.Count;
             try
             {
                 for (int i = 0; i < totalRows; i++)

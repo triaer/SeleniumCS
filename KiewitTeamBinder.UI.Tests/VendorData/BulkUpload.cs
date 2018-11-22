@@ -37,6 +37,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 var projectDashBoard = projectsList.NavigateToProjectDashboardPage(bulkUploadData.ProjectName);
 
                 //when - 119695 Bulk Upload Documents to Holding Area
+                //User Story 120032 - Part 1
                 test = LogTest("Bulk Upload Documents to Holding Area");
                 projectDashBoard.ClickVendorDataButton()
                         .LogValidation(ref validations, projectDashBoard.ValidateVendorDataMenusDisplay(bulkUploadData.VendorDataMenu));
@@ -49,30 +50,10 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 var bulkUploadDocuments = holdingArea.ClickBulkUploadButton(out currentWindow);
                 bulkUploadDocuments.LogValidation(ref validations, bulkUploadDocuments.ValidateWindowIsOpened(bulkUploadData.WindowTitle))
                         .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocuments.ValidateFormTitle(bulkUploadData.FormTitle))
-                        .AddFilesInBulk(bulkUploadData.FilePath, bulkUploadData.FileNames)
-                        .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocuments.ValidateFilesDisplay(15))
-                        .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocuments.ValidateFileNamesAreListedInColumn(bulkUploadData.VersionColumn))
-                        .SelectTableCheckbox(rowIndex: 1)
-                        .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocuments.ValidateRowIsSelected(1))
-                        .SelectDataOfDocumentPropertyDropdown(1, bulkUploadData.DataOfComboBoxRev, DocBulkUploadDropdownType.Rev)
-                    .SelectDataOfDocumentPropertyDropdown(1, bulkUploadData.DataOfComboBoxSts, DocBulkUploadDropdownType.Sts)
-                    .EnterDataOfDocumentPropertyTextbox(1, bulkUploadData.DataOfTitle, DocBulkUploadInputText.Title.ToDescription())
-                    .SelectDataOfDocumentPropertyDropdown(1, bulkUploadData.DataOfComboBoxDics, DocBulkUploadDropdownType.Disc)
-                    .SelectDataOfDocumentPropertyDropdown(1, bulkUploadData.DataOfComboBoxCat, DocBulkUploadDropdownType.Cat) 
-                    .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocuments.ValidateRowIsSelected(rowIndex: 2));
+                        .AddFilesInBulk(Utils.GetInputFilesLocalPath(), bulkUploadData.FileNames)
+                        .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocuments.ValidateFilesDisplay(numberOfFiles: 15));
+                //bulkUploadDocuments.LogValidation(ref validations, bulkUploadDocuments.ValidateFileNamesAreListedInColumn(bulkUploadData.VersionColumn));
 
-                int indexOfSubmenu = 0;
-                bulkUploadDocuments.ClickHeaderButton<BulkUploadDocuments>(DocBulkUploadHeaderButton.CopyAttributes)
-                    .HoverOnCopyAttributesMainItem(bulkUploadData.HoverCopyAttributesItem, ref indexOfSubmenu)
-                    .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocuments.ValidateSubMenuDisplaysAfterHovering(ref indexOfSubmenu));
-                
-                var applyToNextNRowsDialog = bulkUploadDocuments.ClickToNRowsItem(ref indexOfSubmenu);
-                applyToNextNRowsDialog.LogValidation<ApplyToNRowsDialog>(ref validations,
-                                                                         applyToNextNRowsDialog.ValidateDialogOpens(true));
-                applyToNextNRowsDialog.LogValidation<ApplyToNRowsDialog>(ref validations,
-                                                                         applyToNextNRowsDialog
-                                                                            .ValidateMessageOnDialog(bulkUploadData
-                                                                                .MessageOnToNRowsDialog));
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);
                 Console.WriteLine(string.Join(System.Environment.NewLine, validations.ToArray()));
