@@ -46,7 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helper\JsonHandler.cs" />
-    <Compile Include="KiewitIn8ENums.cs" />
+    <Compile Include="KiewitTeamBinderENums.cs" />
     <Compile Include="Helper\Utils.cs" />
     <Compile Include="Models\Control\GLAccountDocumentInput.cs" />
     <Compile Include="Models\Control\WBSCostItemInput .cs" />

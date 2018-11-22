@@ -8,6 +8,7 @@ using KiewitTeamBinder.UI.Pages.Global;
 using KiewitTeamBinder.UI.Pages.VendorData;
 using KiewitTeamBinder.Common.TestData;
 using static KiewitTeamBinder.UI.ExtentReportsHelper;
+using System.Threading;
 using KiewitTeamBinder.UI;
 using KiewitTeamBinder.UI.Pages.Dialogs;
 
@@ -46,7 +47,6 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 //when - 119695 Bulk Upload Documents to Holding Area
                 test = LogTest("Bulk Upload Documents to Holding Area");
                 projectDashBoard.ClickVendorDataButton();
-                // var a = KiewitTeamBinderENums.VendorDataMenusForVendorAccount.HoldingArea;
 
                 projectDashBoard.LogValidation<Dashboard>(ref validations,
                                                           projectDashBoard.ValidateVendorDataMenusDisplay(BulkUploadDocumentsSmoke.VendorDataMenu));
@@ -81,15 +81,22 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                     .EnterTextbox(1, KiewitTeamBinderENums.TextboxName.Title.ToDescription(), "Vendor Submitted Document")
                     .SelectTableComboBox(1, "CON - Contruction", KiewitTeamBinderENums.TableComboBoxType.Disc)
                     .SelectTableComboBox(1, "HV - HVAC", KiewitTeamBinderENums.TableComboBoxType.Cat)
-                    .SelectTableCheckbox(2)
                     .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocumentsPage.ValidateRowIsSelected(2));
+                int indexOfSubmenu = 0;
+                bulkUploadDocumentsPage.ClickButton<BulkUploadDocuments>(KiewitTeamBinderENums.ButtonName.CopyAttributes)
+                    .HoverItem("All", ref indexOfSubmenu)
+                    .LogValidation<BulkUploadDocuments>(ref validations, 
+                                                        bulkUploadDocumentsPage
+                                                            .ValidateSubMenuDisplaysAfterHovering(ref indexOfSubmenu));
 
-                var confirmDialog = bulkUploadDocumentsPage.ClickRemoveRowsButton();
-                confirmDialog.LogValidation<ConfirmDialog>(ref validations, confirmDialog.ValidateDialogOpens(true));
-                confirmDialog.LogValidation<ConfirmDialog>(ref validations, confirmDialog.ValidateMessageOnDialog("Do you want to remove the selected rows?"));
-                confirmDialog.ConfirmAction(true);
-                confirmDialog.LogValidation<ConfirmDialog>(ref validations, confirmDialog.ValidateDialogOpens(false));
 
+                var applyToNextNRowsDialog = bulkUploadDocumentsPage.ClickToNRowsItem(ref indexOfSubmenu);
+                applyToNextNRowsDialog.LogValidation<ApplyToNRowsDialog>(ref validations,
+                                                                         applyToNextNRowsDialog.ValidateDialogOpens(true));
+                applyToNextNRowsDialog.LogValidation<ApplyToNRowsDialog>(ref validations,
+                                                                         applyToNextNRowsDialog
+                                                                            .ValidateMessageOnDialog(BulkUploadDocumentsSmoke
+                                                                                .messageOnToNRowsDialog));
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);
                 Console.WriteLine(string.Join(System.Environment.NewLine, validations.ToArray()));

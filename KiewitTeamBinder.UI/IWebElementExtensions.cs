@@ -184,17 +184,17 @@ namespace KiewitTeamBinder.UI
         {
             if (Browser.Driver.GetType() == typeof(InternetExplorerDriver))
             {
-                ScrollIntoView(Element);
+               ScrollIntoView(Element);
             }
             Element.Click();
         }
         public static void HoverAndClickWithJS(this IWebElement Element)
         {
             IJavaScriptExecutor jse = (IJavaScriptExecutor)WebDriver;
-            Element.hoverWithJS();
+            Element.HoverWithJS();
             jse.ExecuteScript("arguments[0].click();", Element);
         }
-        private static void hoverWithJS(this IWebElement Element)
+        public static void HoverWithJS(this IWebElement Element)
         {
             var mouseOverScript = "if(document.createEvent){var evObj = document.createEvent('MouseEvents');"
                 + "evObj.initEvent('mouseover', true, false);" 

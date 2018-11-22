@@ -11,6 +11,13 @@ namespace KiewitTeamBinder.Common.Helper
 {
     public static class Utils
     {
+        public static int RefactorIndex(int index)
+        {
+            if (index <= 0)
+                return 0;
+            return index - 1;
+        }
+
         public static string GetRandomValue(string value)
         {
             value = string.Format("{0}_{1}", value.Replace(' ', '_'), DateTime.Now.ToString("yyyyMMddhhmmss"));
