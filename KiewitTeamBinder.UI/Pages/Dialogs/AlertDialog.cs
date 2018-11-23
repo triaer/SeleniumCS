@@ -23,9 +23,62 @@ namespace KiewitTeamBinder.UI.Pages.Dialogs
         public IWebElement OKButton { get { return StableFindElement(_OKButton); } }
         #endregion
 
+        #region Actions
         public AlertDialog(IWebDriver webDriver) : base(webDriver)
         {
             
         }
+
+        public void ClickOKButton()
+        {
+            OKButton.HoverAndClickWithJS();
+        }
+
+        private string GetMessageOnDialog()
+        {
+            return MessageLabel.Text;
+        }
+
+        public KeyValuePair<string, bool> ValidateMessageOnDialog(string expectedMessage)
+        {
+            var node = StepNode();
+            try
+            {
+                if (expectedMessage == GetMessageOnDialog())
+                    return SetPassValidation(node, Validation.Message_On_Dialog);
+                else
+                    return SetFailValidation(node, Validation.Message_On_Dialog);
+            }
+            catch (Exception e)
+            {
+                return SetErrorValidation(node, Validation.Message_On_Dialog, e);
+            }
+        }
+
+        public KeyValuePair<string, bool> ValidateDialogOpens(bool checkOpened)
+        {
+            var node = StepNode();
+            try
+            {
+                IWebElement Board = StableFindElement(By.XPath("//form[@id='form1']/div[1][table]"));
+                if (Board.GetAttribute("id").ToLower().Contains("alert") == checkOpened)
+                    return SetPassValidation(node, Validation.Dialog_Opens);
+
+                return SetFailValidation(node, Validation.Dialog_Opens);
+            }
+            catch (Exception e)
+            {
+                return SetErrorValidation(node, Validation.Dialog_Opens, e);
+            }
+        }
+
+        private static class Validation
+        {
+            public static string Message_On_Dialog = "Validate that the content of message on dialog displays correctly";
+            public static string Dialog_Opens = "Validate that the dialog opens";
+            public static string Dialog_Closes = "Validate that the dialog Closes";
+            public static string OK_Button_Displays = "Validate that the OK button displays";
+        }
+        #endregion
     }
 }

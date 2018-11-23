@@ -70,19 +70,19 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 bulkUploadDocuments.LogValidation<HoldingArea>(ref validations,
                                                                bulkUploadDocuments.ValidateFilesDisplay(15));
                 bulkUploadDocuments.LogValidation<HoldingArea>(ref validations,
-                                                               bulkUploadDocuments.ValidateFileNamesAreListedInColumn(bulkUploadData.VersionColumn));
+                                                               bulkUploadDocuments.ValidateFileNamesAreListedInColumn(bulkUploadData
+                                                                   .VersionColumn));
                              
                 bulkUploadDocuments.SelectTableCheckbox(rowIndex: 1)
                     .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocuments.ValidateRowIsSelected(1));
 
-                bulkUploadDocuments.SelectTableComboBox(1, bulkUploadData.DataOfComboBoxRev, 
+                bulkUploadDocuments.SelectTableComboBox(1, bulkUploadData.DataOfComboBoxRev,
                                                         KiewitTeamBinderENums.TableComboBoxType.Rev)
                     .SelectTableComboBox(1, bulkUploadData.DataOfComboBoxSts, KiewitTeamBinderENums.TableComboBoxType.Sts)
                     .EnterTextbox(1, bulkUploadData.DataOfTitle, KiewitTeamBinderENums.TextboxName.Title.ToDescription())
                     .SelectTableComboBox(1, bulkUploadData.DataOfComboBoxDics, KiewitTeamBinderENums.TableComboBoxType.Disc)
-                    .SelectTableComboBox(1, bulkUploadData.DataOfComboBoxCat, KiewitTeamBinderENums.TableComboBoxType.Cat) //replace for BS - BUILDING STRUCTURAL DRAWINGS
-                    .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocuments.ValidateRowIsSelected(rowIndex: 2));
-
+                    .SelectTableComboBox(1, bulkUploadData.DataOfComboBoxCat, KiewitTeamBinderENums.TableComboBoxType.Cat);
+                
                 int indexOfSubmenu = 0;
                 bulkUploadDocuments.ClickButton<BulkUploadDocuments>(KiewitTeamBinderENums.ButtonName.CopyAttributes)
                     .HoverItem(bulkUploadData.HoverItem, ref indexOfSubmenu)
@@ -90,13 +90,28 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                                                         bulkUploadDocuments
                                                             .ValidateSubMenuDisplaysAfterHovering(ref indexOfSubmenu));
                 
-                var applyToNextNRowsDialog = bulkUploadDocuments.ClickToNRowsItem(ref indexOfSubmenu);
-                applyToNextNRowsDialog.LogValidation<ApplyToNRowsDialog>(ref validations,
-                                                                         applyToNextNRowsDialog.ValidateDialogOpens(true));
-                applyToNextNRowsDialog.LogValidation<ApplyToNRowsDialog>(ref validations,
-                                                                         applyToNextNRowsDialog
-                                                                            .ValidateMessageOnDialog(bulkUploadData
-                                                                                .MessageOnToNRowsDialog));
+                var applyToNextNRows = bulkUploadDocuments.ClickToNRowsItem(ref indexOfSubmenu);
+                applyToNextNRows.LogValidation<ApplyToNRowsDialog>(ref validations,
+                                                                   applyToNextNRows.ValidateApplyToNRowsDialogDisplaysCorrectly());
+                applyToNextNRows.LogValidation<ApplyToNRowsDialog>(ref validations,
+                                                                   applyToNextNRows.ValidateMessageOnDialog(bulkUploadData
+                                                                       .MessageOnToNextNRowsDialog));
+
+                applyToNextNRows.EnterNumberOfRow(bulkUploadData.NumberOfRow)
+                    .ClickOKButton();
+                applyToNextNRows.LogValidation<ApplyToNRowsDialog>(ref validations,
+                                                                   applyToNextNRows.ValidateDialogOpens(false));
+                bulkUploadDocuments.LogValidation<BulkUploadDocuments>(ref validations,
+                                                                       bulkUploadDocuments.ValidateDocumentPropertiesAreCopiedToAllRows(1));
+                var validateAlert = bulkUploadDocuments.EnterTextboxes(bulkUploadData.DocumentNoTextboxContent,
+                                                   KiewitTeamBinderENums.TextboxName.DocumentNo.ToDescription())
+                    .ClickButton<AlertDialog>(KiewitTeamBinderENums.ButtonName.Validate);
+                validateAlert.LogValidation<ApplyToNRowsDialog>(ref validations,
+                                                       validateAlert.ValidateDialogOpens(true));
+                validateAlert.ClickOKButton();
+                validateAlert.LogValidation<ApplyToNRowsDialog>(ref validations,
+                                                       validateAlert.ValidateDialogOpens(false));
+
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);
                 Console.WriteLine(string.Join(System.Environment.NewLine, validations.ToArray()));
