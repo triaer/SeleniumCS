@@ -14,12 +14,12 @@ using System.Windows.Forms;
 using KiewitTeamBinder.UI.Pages.Dialogs;
 
 
-namespace KiewitTeamBinder.UI.Pages.VendorData
+namespace KiewitTeamBinder.UI.Pages.Global
 {
-    public class BulkUploadDocuments : Dashboard
+    public class BulkUploadDocuments : ProjectsDashboard
     {
         #region Entities
-        private By _addFileInBulkButton => By.Id("addBulkFlashWrapper");
+        private static By _addFileInBulkButton => By.Id("addBulkFlashWrapper");
         private static By _selectAllCheckbox => By.XPath("//th//input[contains(@id, 'ClientSelectColumnSelectCheckBox')]");
         private static By _selectCheckboxes => By.XPath("//td//input[contains(@id,'ClientSelectColumnSelectCheckBox')]");
         private static By _bulkUploadDocumentsTable => By.XPath("//div[@id='RadGrid1_GridData']//*[contains(@class, 'rgMasterTable')]");
@@ -64,9 +64,10 @@ namespace KiewitTeamBinder.UI.Pages.VendorData
                 var t = new SelectElement(AllComboBoxes.ElementAt(i));
                 AllSelectComboBoxes.Add(t);
             }
+
             return AllSelectComboBoxes;
         }
-                
+
         // We have to use hard code waiting time cause this is Windows native control
         // In order to type in multi-file names we need to separate the filePath and fileNames
         // filePath = "C:\Working", fileNames = {\"File1.txt\" \"File2.txt\" \"File3.txt\...."}
@@ -98,40 +99,27 @@ namespace KiewitTeamBinder.UI.Pages.VendorData
             return this;
         }
 
-        public bool IsRowSelected(int rowIndex)
-        {            
+        private bool IsRowSelected(int rowIndex)
+        {
             IWebElement row = AllDocumentRows.ElementAt(rowIndex);
             if (row.GetAttribute("class").Contains("rgSelectedRow"))
                 return true;
             return false;
         }
 
-        //public static IWebElement FindDynamicRow(int rowIndex, bool isSelected = true)
-        //{
-        //    if (isSelected)
-        //        return StableFindElement(By.XPath(
-        //            string.Format($"//tr[contains(@class, 'rgSelectedRow') and @id='RadGrid1_ctl00__{rowIndex}']")));
-
-        //    else if (rowIndex % 2 == 0)
-        //        return StableFindElement(By.XPath(
-        //            string.Format($"//tr[contains(@class, 'rgRow') and @id='RadGrid1_ctl00__{rowIndex}']")));
-
-        //    else
-        //        return StableFindElement(By.XPath(
-        //            string.Format($"//tr[contains(@class, 'rgAltRow') and @id='RadGrid1_ctl00__{rowIndex}']")));
-        //}
 
         // checkboxType is "rowCheckbox" or "Superseded"
-        public BulkUploadDocuments SelectTableCheckbox(int rowIndex, string selectOption = "on", 
-                                                       string checkboxType = "rowCheckbox")
+        public BulkUploadDocuments SelectTableCheckbox(int rowIndex, string selectOption = "on", string checkboxType = "rowCheckbox")
         {
             var node = StepNode();
             IWebElement checkbox;
-            if (checkboxType == "rowCheckbox")                           
-                checkbox = AllRowCheckboxes.ElementAt(rowIndex);            
+            if (checkboxType == "rowCheckbox")
+            {               
+                checkbox = AllRowCheckboxes.ElementAt(rowIndex);
+            }
             else
             {
-                rowIndex = Utils.RefactorIndex(rowIndex);                
+                rowIndex = Utils.RefactorIndex(rowIndex);
                 checkbox = AllSupersededCheckboxes.ElementAt(rowIndex);
             }
             if (String.IsNullOrWhiteSpace(selectOption)
@@ -150,7 +138,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorData
             return this;
         }
 
-        public BulkUploadDocuments SelectTableComboBox(int rowIndex, string selectItem, TableComboBoxType comboBoxType)
+        public BulkUploadDocuments SelectDataOfDocumentPropertyDropdown(int rowIndex, string selectItem, DocBulkUploadDropdownType comboBoxType)
         {
             rowIndex = Utils.RefactorIndex(rowIndex);
             var comboBox = GetAllComboBoxes(comboBoxType.ToDescription()).ElementAt(rowIndex);
@@ -160,7 +148,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorData
             return this;
         }
 
-        public BulkUploadDocuments EnterTextbox(int rowIndex, string content, string textboxName)
+        public BulkUploadDocuments EnterDataOfDocumentPropertyTextbox(int rowIndex, string content, string textboxName)
         {
             rowIndex = Utils.RefactorIndex(rowIndex);
             IReadOnlyCollection<IWebElement> DocumentDetailsTextbox 
@@ -201,7 +189,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorData
             return data;
 
         }
-        public T ClickButton<T>(ButtonName buttonName)
+        public T ClickHeaderButton<T>(DocBulkUploadHeaderButton buttonName)
         {
             IWebElement Button = StableFindElement(By.XPath(string.Format(_headerButton, buttonName.ToDescription())));
             var node = StepNode();            
@@ -210,8 +198,8 @@ namespace KiewitTeamBinder.UI.Pages.VendorData
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }            
 
-        public BulkUploadDocuments HoverItem(string itemName, ref int index)
-        {                     
+        public BulkUploadDocuments HoverOnCopyAttributesMainItem(string itemName, ref int index)
+        {
             IWebElement item;
             index = -1;
             do
@@ -224,13 +212,6 @@ namespace KiewitTeamBinder.UI.Pages.VendorData
             node.Info("Hover " + itemName);
             item.HoverWithJS();
             return this;
-        }
-
-        public ConfirmDialog ClickRemoveRowsButton()
-        {
-            IWebElement button = StableFindElement(By.XPath(string.Format(_headerButton, ButtonName.RemoveRows.ToDescription())));
-            button.HoverAndClickWithJS();
-            return new ConfirmDialog(WebDriver);
         }
 
         public ApplyToNRowsDialog ClickToNRowsItem(ref int indexOfSubMenu, bool nextRows = true)
@@ -308,7 +289,8 @@ namespace KiewitTeamBinder.UI.Pages.VendorData
                 return SetErrorValidation(node, Validation.Validate_Files_Display, e);
             }
         }
-
+        //TO-DO: Currently, the document file names are shown under the "Document No." instead of the "Version" column.
+        // We need confirmation from the test design team.
         public KeyValuePair<string, bool> ValidateFileNamesAreListedInColumn(string columnName)
         {
             var node = StepNode();

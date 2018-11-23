@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using static KiewitTeamBinder.UI.KiewitTeamBinderENums;
 
@@ -90,7 +91,6 @@ namespace KiewitTeamBinder.Common.Helper
             string projectPath = new Uri(actualPath).LocalPath; // project path of your solution
             return projectPath;
         }
-
         public static string ImageToBase64(string imagePath)
         {
             string base64String;
@@ -103,21 +103,6 @@ namespace KiewitTeamBinder.Common.Helper
                     base64String = Convert.ToBase64String(imageBytes);
                     return base64String;
                 }
-            }
-        }
-
-        public static string GetUserDefaultDownloadsPath()
-        {
-            if (Environment.OSVersion.Version.Major < 6) throw new NotSupportedException();
-            IntPtr pathPtr = IntPtr.Zero;
-            try
-            {
-                SHGetKnownFolderPath(ref FolderDownloads, 0, IntPtr.Zero, out pathPtr);
-                return Marshal.PtrToStringUni(pathPtr);
-            }
-            finally
-            {
-                Marshal.FreeCoTaskMem(pathPtr);
             }
         }
 
@@ -168,6 +153,12 @@ namespace KiewitTeamBinder.Common.Helper
             if (File.Exists(filePath))
                 File.Delete(filePath);
             
+        }
+
+        public static string GetInputFilesLocalPath([CallerMemberName]string memberName = "")
+        {
+            var path = GetProjectPath() + string.Format(@"ScenariosInputFiles\{0}", memberName);
+            return path;
         }
     }
 }

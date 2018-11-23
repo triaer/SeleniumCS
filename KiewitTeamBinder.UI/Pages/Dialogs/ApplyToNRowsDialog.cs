@@ -40,9 +40,10 @@ namespace KiewitTeamBinder.UI.Pages.Dialogs
             return this;
         }
 
-        public void ClickOKButton()
+        public T ClickOKButton<T>()
         {
             OKButton.HoverAndClickWithJS();
+            return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 
         public void ClickCancelButton()

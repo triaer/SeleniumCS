@@ -53,21 +53,7 @@ namespace KiewitTeamBinder.UI
             IsNotEmpty,
         }
 
-        public enum VendorDataMenusForVendorAccount
-        {
-            [Description("Holding Area")]
-            HoldingArea
-        }
-
-        public enum VendorDataMenusForAdminAndStandardAccount
-        {
-            [Description("Holding Area")]
-            HoldingArea,
-            [Description("Vendor Data Register")]
-            VendorDataRegister
-        }
-
-        public enum TableComboBoxType
+        public enum DocBulkUploadDropdownType
         {
             [Description("Rev")]
             Rev,
@@ -84,11 +70,10 @@ namespace KiewitTeamBinder.UI
             [Description("SpecificationRef")]
             SpecReference,
             [Description("SubType")]
-            SubType,
-            HoldingArea,
+            SubType
         }
         
-        public enum TextboxName
+        public enum DocBulkUploadInputText
         {
             [Description("DocumentNo")]
             DocumentNo,
@@ -108,7 +93,7 @@ namespace KiewitTeamBinder.UI
             Error
         }
 
-        public enum ButtonName
+        public enum DocBulkUploadHeaderButton
         {
             [Description("New Rows")]
             NewRows,
