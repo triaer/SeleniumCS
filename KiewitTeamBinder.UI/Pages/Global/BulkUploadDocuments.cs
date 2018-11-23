@@ -186,14 +186,15 @@ namespace KiewitTeamBinder.UI.Pages.Global
             return data;
 
         }
+
         public T ClickHeaderButton<T>(DocBulkUploadHeaderButton buttonName)
         {
             IWebElement Button = StableFindElement(By.XPath(string.Format(_headerButton, buttonName.ToDescription())));
             var node = StepNode();            
             node.Info("Click the button: " + buttonName.ToDescription());
             Button.HoverAndClickWithJS();
-            if (StableFindElement(_processingPopUp) != null)
-                WaitForElementAttribute(StableFindElement(_processingPopUp), "display", "none");
+            //if (StableFindElement(_processingPopUp) != null)
+            //    WaitForElementAttribute(StableFindElement(_processingPopUp), "display", "none");
 
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }            
@@ -231,9 +232,8 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
         private Dictionary<string, string> GetDataFromDocumentRow(int rowIndex)
         {
-            //rowIndex = Utils.RefactorIndex(rowIndex);
             Dictionary<string, string> data = new Dictionary<string, string>();
-
+            string value;
             string[] textboxName = new string[7];
             textboxName[0] = DocBulkUploadInputText.DocumentNo.ToDescription();
             textboxName[1] = DocBulkUploadInputText.Title.ToDescription();
@@ -247,7 +247,11 @@ namespace KiewitTeamBinder.UI.Pages.Global
             for (int i = 0; i < textboxName.Length; i++)
             {
                 DocumentDetailsTextbox = StableFindElements(By.XPath(string.Format(_documentDetailsTextbox, textboxName[i])));
-                data.Add(textboxName[i], DocumentDetailsTextbox.ElementAt(rowIndex).Text);
+                if (DocumentDetailsTextbox.ElementAt(rowIndex).Text != null)
+                    value = DocumentDetailsTextbox.ElementAt(rowIndex).Text;
+                else
+                    value = "";
+                data.Add(textboxName[i], value);
             }
 
             string[] comboboxName = new string[8];
@@ -266,11 +270,58 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 DocumentDetailsCombobox = GetAllComboBoxes(comboboxName[i]);
                 data.Add(comboboxName[i], DocumentDetailsCombobox.ElementAt(rowIndex).SelectedOption.Text);
             }
-
+            
             data.Add("SupersededCheckbox",AllSupersededCheckboxes.ElementAt(rowIndex).Selected.ToString());
 
             return data;
         }
+
+        //private List<Dictionary<string, string>> GetDataFromAllDocumentRows()
+        //{            
+        //    int numberOfRows = AllDocumentRows.Count;
+        //    List<Dictionary<string, string>> data = new List<Dictionary<string, string>>(numberOfRows);
+        //    Dictionary<string, string> temp = new Dictionary<string, string>();
+        //    string[] textboxName = new string[7];
+        //    textboxName[0] = DocBulkUploadInputText.DocumentNo.ToDescription();
+        //    textboxName[1] = DocBulkUploadInputText.Title.ToDescription();
+        //    textboxName[2] = DocBulkUploadInputText.Due.ToDescription();
+        //    textboxName[3] = DocBulkUploadInputText.Actual.ToDescription();
+        //    textboxName[4] = DocBulkUploadInputText.Forecast.ToDescription();
+        //    textboxName[5] = DocBulkUploadInputText.AltDocumentNo.ToDescription();
+        //    textboxName[6] = DocBulkUploadInputText.IncTrnNo.ToDescription();
+
+        //    IReadOnlyCollection<IWebElement> DocumentDetailsTextbox;
+        //    for (int i = 0; i < textboxName.Length; i++)
+        //    {
+        //        DocumentDetailsTextbox = StableFindElements(By.XPath(string.Format(_documentDetailsTextbox, textboxName[i])));
+        //        for (int j = 0; j < numberOfRows; j++)
+        //        {
+        //            temp.Add(textboxName[i], DocumentDetailsTextbox.ElementAt(j).Text);
+        //            data.Add(temp);
+        //        }                
+        //    }
+
+        //    string[] comboboxName = new string[8];
+        //    comboboxName[0] = DocBulkUploadDropdownType.Rev.ToDescription();
+        //    comboboxName[1] = DocBulkUploadDropdownType.Sts.ToDescription();
+        //    comboboxName[2] = DocBulkUploadDropdownType.Disc.ToDescription();
+        //    comboboxName[3] = DocBulkUploadDropdownType.Cat.ToDescription();
+        //    comboboxName[4] = DocBulkUploadDropdownType.Type.ToDescription();
+        //    comboboxName[5] = DocBulkUploadDropdownType.Location.ToDescription();
+        //    comboboxName[6] = DocBulkUploadDropdownType.SpecReference.ToDescription();
+        //    comboboxName[7] = DocBulkUploadDropdownType.SubType.ToDescription();
+
+        //    IReadOnlyCollection<SelectElement> DocumentDetailsCombobox;
+        //    for (int i = 0; i < comboboxName.Length; i++)
+        //    {
+        //        DocumentDetailsCombobox = GetAllComboBoxes(comboboxName[i]);
+        //        data.Add(comboboxName[i], DocumentDetailsCombobox.ElementAt(rowIndex).SelectedOption.Text);
+        //    }
+
+        //    data.Add("SupersededCheckbox", AllSupersededCheckboxes.ElementAt(rowIndex).Selected.ToString());
+
+        //    return data;
+        //}
 
         public KeyValuePair<string, bool> ValidateFilesDisplay(int numberOfFiles)
         {
@@ -360,14 +411,14 @@ namespace KiewitTeamBinder.UI.Pages.Global
             var node = StepNode();
             try
             {
-                if (IsRowSelected(documentRow - 1) == checkSelected)
-                    return SetPassValidation(node, string.Format(Validation.Row_Is_Selected, documentRow));
+                if (IsRowSelected(documentRow) == checkSelected)
+                    return SetPassValidation(node, string.Format(Validation.Row_Is_Selected, documentRow + 1));
                 else
-                    return SetFailValidation(node, string.Format(Validation.Row_Is_Selected, documentRow));
+                    return SetFailValidation(node, string.Format(Validation.Row_Is_Selected, documentRow + 1));
             }
             catch (Exception e)
             {
-                return SetErrorValidation(node, string.Format(Validation.Row_Is_Selected, documentRow), e);
+                return SetErrorValidation(node, string.Format(Validation.Row_Is_Selected, documentRow + 1), e);
             }
         }
 
@@ -398,9 +449,12 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 int i = 0;
                 do
                 {
-                    if (i != rowIndexOfStandardRow && GetDataFromDocumentRow(i) != dataOfStandardRow)                        
-                        return SetFailValidation(node, Validation.Document_Properties_Are_Copied_To_All_Rows);                        
-                    
+                    if (i != rowIndexOfStandardRow)
+                    {
+                        var dataFromDocumentRow = GetDataFromDocumentRow(0);
+                        if (!dataFromDocumentRow.Equals(dataOfStandardRow))
+                            return SetFailValidation(node, Validation.Document_Properties_Are_Copied_To_All_Rows);
+                    }
                     i++;
                 }
                 while (i < AllDocumentRows.Count);

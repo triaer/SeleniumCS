@@ -42,7 +42,7 @@ namespace KiewitTeamBinder.UI.Pages.Dialogs
 
         public T ClickOKButton<T>()
         {
-            OKButton.HoverAndClickWithJS();
+            OKButton.Click();
             WebDriver.SwitchTo().DefaultContent();
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
