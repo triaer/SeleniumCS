@@ -450,8 +450,8 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 {
                     if (i != rowIndexOfStandardRow)
                     {
-                        var dataFromDocumentRow = GetDataFromDocumentRow(0);
-                        if (!dataFromDocumentRow.Equals(dataOfStandardRow))
+                        var dataFromDocumentRow = GetDataFromDocumentRow(i);
+                        if (!Utils.DeepEquals(dataFromDocumentRow,dataOfStandardRow))
                             return SetFailValidation(node, Validation.Document_Properties_Are_Copied_To_All_Rows);
                     }
                     i++;

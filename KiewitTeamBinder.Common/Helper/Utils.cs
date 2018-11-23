@@ -12,17 +12,23 @@ namespace KiewitTeamBinder.Common.Helper
 {
     public static class Utils
     {
-        //public static bool DeepEquals(Dictionary<string, string> dict1, Dictionary<string, string> dict2)
-        //{
-        //    bool result = true;
+        public static bool DeepEquals(Dictionary<string, string> dict1, Dictionary<string, string> dict2)
+        {
+            bool result = true;
+            if (dict1.Count != dict2.Count)
+                return false;
 
-        //    foreach (var key in dict1)
-        //    {
-        //        if ()
-        //    }
+            foreach (var key in dict1.Keys)
+            {
+                if (!dict1[key].Equals(dict2[key]))
+                {
+                    result = false;
+                    break;
+                }
+            }
 
-        //    return result;
-        //}
+            return result;
+        }
 
         public static int RefactorIndex(int index)
         {
