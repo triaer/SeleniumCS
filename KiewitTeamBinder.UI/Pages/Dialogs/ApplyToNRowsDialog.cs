@@ -43,12 +43,14 @@ namespace KiewitTeamBinder.UI.Pages.Dialogs
         public T ClickOKButton<T>()
         {
             OKButton.HoverAndClickWithJS();
+            WebDriver.SwitchTo().DefaultContent();
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 
         public void ClickCancelButton()
         {
             CancelButton.HoverAndClickWithJS();
+            WebDriver.SwitchTo().DefaultContent();
         }
 
         private string GetMessageOnDialog()
@@ -58,23 +60,23 @@ namespace KiewitTeamBinder.UI.Pages.Dialogs
             return message;
         }
 
-        public KeyValuePair<string, bool> ValidateMessageOnDialog(string expectedMessage)
-        {
-            var node = StepNode();
-            try
-            {
-                if (expectedMessage == GetMessageOnDialog())
-                    return SetPassValidation(node, Validation.Message_On_Dialog);
-                else
-                    return SetFailValidation(node, Validation.Message_On_Dialog);
-            }
-            catch (Exception e)
-            {
-                return SetErrorValidation(node, Validation.Message_On_Dialog, e);
-            }
-        }
+        //public KeyValuePair<string, bool> ValidateMessageOnDialog(string expectedMessage)
+        //{
+        //    var node = StepNode();
+        //    try
+        //    {
+        //        if (expectedMessage == GetMessageOnDialog())
+        //            return SetPassValidation(node, Validation.Message_On_Dialog);
+        //        else
+        //            return SetFailValidation(node, Validation.Message_On_Dialog);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return SetErrorValidation(node, Validation.Message_On_Dialog, e);
+        //    }
+        //}
 
-        public List<KeyValuePair<string, bool>> ValidateApplyToNRowsDialogDisplaysCorrectly(bool checkOpened = true)
+        public List<KeyValuePair<string, bool>> ValidateApplyToNRowsDialogDisplaysCorrectly(string expectedMessage, bool checkOpened = true)
         {
             var node = StepNode();
             var validation = new List<KeyValuePair<string, bool>>();
@@ -96,7 +98,12 @@ namespace KiewitTeamBinder.UI.Pages.Dialogs
                         validation.Add(SetPassValidation(node, Validation.Dialog_Closes));
                     return validation;
                 }
-                    
+
+                if (expectedMessage == GetMessageOnDialog())
+                    validation.Add(SetPassValidation(node, Validation.Message_On_Dialog));
+                else
+                    validation.Add(SetFailValidation(node, Validation.Message_On_Dialog));
+
                 if (FindElement(_nTextbox) != null)
                     validation.Add(SetPassValidation(node, Validation.Edit_Textbox_Displays));
                 else

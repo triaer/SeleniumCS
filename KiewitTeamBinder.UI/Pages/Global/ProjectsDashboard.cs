@@ -25,13 +25,14 @@ namespace KiewitTeamBinder.UI.Pages.Global
         private static By _helpButtonDropdown => By.XPath("//div[@id='divHelpButton']");
         private static By _helpButtonDropDownData => By.XPath("//div[@id='HelpDropDown_detached']/ul/li");
         private static By _vendorButton => By.Id("divVendorData");
-        private static By _defaultFilter => By.Id("lblView");
+        private static By _viewFilter => By.Id("lblView");
         private static By _imagesOfFirstFilterBox => By.XPath("//li[@id = 'FilterView0']//img");
         private static By _formTitle => By.Id("formTitle");
+        
 
         public IWebElement FormTitle { get { return StableFindElement(_formTitle); } }
         public IReadOnlyCollection<IWebElement> ImagesOfFirstFilterBox { get { return StableFindElements(_imagesOfFirstFilterBox); } }
-        public IWebElement DefaultFilter { get { return StableFindElement(_defaultFilter); } }
+        public IWebElement ViewFilter { get { return StableFindElement(_viewFilter); } }
         public IWebElement VendorButton { get { return StableFindElement(_vendorButton); } }
         public IWebElement ProjectListDropdown { get { return StableFindElement(_projectListDropdown); } }
         public IWebElement ProjectListSumary { get { return StableFindElement(_projectListSumary); } }
@@ -79,6 +80,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             var helpAboutDialog = new HelpAboutDialog(WebDriver);
             WebDriver.SwitchTo().Frame(helpAboutDialog.IFrameName);
             WaitUntil(driver => helpAboutDialog.OkButton != null);
+            
 
             return helpAboutDialog;
         }
@@ -121,21 +123,20 @@ namespace KiewitTeamBinder.UI.Pages.Global
             }
         }
 
-        public KeyValuePair<string, bool> ValidateDefaultFilter(string defaultFilter)
+        public KeyValuePair<string, bool> ValidateDisplayedViewFilterOption(string filterOption)
         {
             var node = StepNode();
             try
             {
-                WaitForElementDisplay(_defaultFilter); 
-                if (DefaultFilter.Text == defaultFilter)
-                {
-                    return SetPassValidation(node, string.Format(Validation.Default_Filter_Display, defaultFilter));
-                }
-                return SetFailValidation(node, string.Format(Validation.Default_Filter_Display, defaultFilter));
+                WaitForElementDisplay(_viewFilter);
+                if (ViewFilter.Text == filterOption)
+                    return SetPassValidation(node, string.Format(Validation.Default_Filter_Display, filterOption));
+
+                return SetFailValidation(node, string.Format(Validation.Default_Filter_Display, filterOption));
             }
             catch (Exception e)
             {
-                return SetErrorValidation(node, string.Format(Validation.Default_Filter_Display, defaultFilter), e);
+                return SetErrorValidation(node, string.Format(Validation.Default_Filter_Display, filterOption), e);
             }
         }
 

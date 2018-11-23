@@ -5,46 +5,51 @@ using System.Text;
 using System.Threading.Tasks;
 using KiewitTeamBinder.Common;
 using OpenQA.Selenium;
+
 using SeleniumExtras.PageObjects;
 using System.Windows.Forms;
 using KiewitTeamBinder.UI.Pages.Global;
 using AventStack.ExtentReports;
 using static KiewitTeamBinder.UI.ExtentReportsHelper;
+using SeleniumExtras.WaitHelpers;
 
 namespace KiewitTeamBinder.UI.Pages.Dialogs
 {
     public class AlertDialog : LoggedInLanding
     {
         #region Entities
-        public static By _messageLabel => By.XPath("//div[contains(@id,'message')]");
-        public static By _OKButton => By.XPath("");
 
-        public IWebElement MessageLabel { get { return StableFindElement(_messageLabel); } }
-        public IWebElement OKButton { get { return StableFindElement(_OKButton); } }
+        public static By _oKButton => By.XPath("//div[@class='rwDialogPopup radalert']//a");
+        public static By _messageDialog => By.XPath("//div[@class='rwDialogPopup radalert']//div[@class='rwDialogText']");
+        public IWebElement OKButton { get { return StableFindElement(_oKButton); } }
+        public IWebElement MessageDialog { get { return StableFindElement(_messageDialog); } }
+        
         #endregion
 
         #region Actions
         public AlertDialog(IWebDriver webDriver) : base(webDriver)
         {
-            
+            webDriver.SwitchTo().ActiveElement();
         }
 
-        public void ClickOKButton()
+        public T ClickOKButton<T>()
         {
-            OKButton.HoverAndClickWithJS();
+            OKButton.Click();
+            WebDriver.SwitchTo().DefaultContent();
+            return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 
-        private string GetMessageOnDialog()
+        private string GetDialogMessage()
         {
-            return MessageLabel.Text;
+            return MessageDialog.Text;
         }
 
-        public KeyValuePair<string, bool> ValidateMessageOnDialog(string expectedMessage)
+        public KeyValuePair<string, bool> ValidateMessageDialogAsExpected(string expectedMessage)
         {
             var node = StepNode();
             try
             {
-                if (expectedMessage == GetMessageOnDialog())
+                if (expectedMessage == GetDialogMessage())
                     return SetPassValidation(node, Validation.Message_On_Dialog);
                 else
                     return SetFailValidation(node, Validation.Message_On_Dialog);
@@ -55,29 +60,13 @@ namespace KiewitTeamBinder.UI.Pages.Dialogs
             }
         }
 
-        public KeyValuePair<string, bool> ValidateDialogOpens(bool checkOpened)
-        {
-            var node = StepNode();
-            try
-            {
-                IWebElement Board = StableFindElement(By.XPath("//form[@id='form1']/div[1][table]"));
-                if (Board.GetAttribute("id").ToLower().Contains("alert") == checkOpened)
-                    return SetPassValidation(node, Validation.Dialog_Opens);
 
-                return SetFailValidation(node, Validation.Dialog_Opens);
-            }
-            catch (Exception e)
-            {
-                return SetErrorValidation(node, Validation.Dialog_Opens, e);
-            }
-        }
 
         private static class Validation
         {
             public static string Message_On_Dialog = "Validate that the content of message on dialog displays correctly";
             public static string Dialog_Opens = "Validate that the dialog opens";
             public static string Dialog_Closes = "Validate that the dialog Closes";
-            public static string OK_Button_Displays = "Validate that the OK button displays";
         }
         #endregion
     }

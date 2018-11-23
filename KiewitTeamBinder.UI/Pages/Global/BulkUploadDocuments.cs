@@ -109,23 +109,20 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
 
         // checkboxType is "rowCheckbox" or "Superseded"
-        public BulkUploadDocuments SelectTableCheckbox(int rowIndex, string selectOption = "on", string checkboxType = "rowCheckbox")
+        public BulkUploadDocuments ClickACheckboxInDocumentRow(int documentRow, bool checkedState = true, string checkboxType = "rowCheckbox")
         {
             var node = StepNode();
             IWebElement checkbox;
             if (checkboxType == "rowCheckbox")
             {               
-                checkbox = AllRowCheckboxes.ElementAt(rowIndex);
+                checkbox = AllRowCheckboxes.ElementAt(documentRow);
             }
             else
             {
-                rowIndex = Utils.RefactorIndex(rowIndex);
-                checkbox = AllSupersededCheckboxes.ElementAt(rowIndex);
+                documentRow = Utils.RefactorIndex(documentRow);
+                checkbox = AllSupersededCheckboxes.ElementAt(documentRow);
             }
-            if (String.IsNullOrWhiteSpace(selectOption)
-                || (selectOption.ToLower() != "on" && selectOption.ToLower() != "off"))
-                throw new InvalidOperationException("select option should be 'on' of 'off'. Default value is 'on'");
-            else if (selectOption.ToLower() == "on")
+            if (checkedState)
             {
                 node.Info("Check the checkbox: " + checkboxType);
                 checkbox.Check();
@@ -138,22 +135,22 @@ namespace KiewitTeamBinder.UI.Pages.Global
             return this;
         }
 
-        public BulkUploadDocuments SelectDataOfDocumentPropertyDropdown(int rowIndex, string selectItem, DocBulkUploadDropdownType comboBoxType)
+        public BulkUploadDocuments SelectDataOfDocumentPropertyDropdown(string selectItem, DocBulkUploadDropdownType comboBoxType, int documentRow)
         {
-            rowIndex = Utils.RefactorIndex(rowIndex);
-            var comboBox = GetAllComboBoxes(comboBoxType.ToDescription()).ElementAt(rowIndex);
+            documentRow = Utils.RefactorIndex(documentRow);
+            var comboBox = GetAllComboBoxes(comboBoxType.ToDescription()).ElementAt(documentRow);
             var node = StepNode();
             node.Info("Select " + selectItem);
             comboBox.SelectByText(selectItem);
             return this;
         }
 
-        public BulkUploadDocuments EnterDataOfDocumentPropertyTextbox(int rowIndex, string content, string textboxName)
+        public BulkUploadDocuments EnterDataOfDocumentPropertyTextbox(string content, string textboxName, int documentRow)
         {
-            rowIndex = Utils.RefactorIndex(rowIndex);
+            documentRow = Utils.RefactorIndex(documentRow);
             IReadOnlyCollection<IWebElement> DocumentDetailsTextbox 
                 = StableFindElements(By.XPath(string.Format(_documentDetailsTextbox, textboxName)));
-            DocumentDetailsTextbox.ElementAt(rowIndex).InputText(content);
+            DocumentDetailsTextbox.ElementAt(documentRow).InputText(content);
             return this;
         }
                 
@@ -195,6 +192,9 @@ namespace KiewitTeamBinder.UI.Pages.Global
             var node = StepNode();            
             node.Info("Click the button: " + buttonName.ToDescription());
             Button.HoverAndClickWithJS();
+            if (StableFindElement(_processingPopUp) != null)
+                WaitForElementAttribute(StableFindElement(_processingPopUp), "display", "none");
+
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }            
 
@@ -222,11 +222,10 @@ namespace KiewitTeamBinder.UI.Pages.Global
             else
                 ToNRows = StableFindElement(By.XPath(string.Format(_toNRows, indexOfSubMenu + 2, "to previous N rows...")));
             ToNRows.HoverAndClickWithJS();
-            
+
             var applyToNRowsDialog = new ApplyToNRowsDialog(WebDriver);
             WebDriver.SwitchTo().Frame(applyToNRowsDialog.IFrameName);
             WaitUntil(driver => applyToNRowsDialog.OKButton != null);
-            System.Threading.Thread.Sleep(5000);
             return applyToNRowsDialog;
         }
 
@@ -236,13 +235,13 @@ namespace KiewitTeamBinder.UI.Pages.Global
             Dictionary<string, string> data = new Dictionary<string, string>();
 
             string[] textboxName = new string[7];
-            textboxName[0] = TextboxName.DocumentNo.ToDescription();
-            textboxName[1] = TextboxName.Title.ToDescription();
-            textboxName[2] = TextboxName.Due.ToDescription();
-            textboxName[3] = TextboxName.Actual.ToDescription();
-            textboxName[4] = TextboxName.Forecast.ToDescription();
-            textboxName[5] = TextboxName.AltDocumentNo.ToDescription();
-            textboxName[6] = TextboxName.IncTrnNo.ToDescription();
+            textboxName[0] = DocBulkUploadInputText.DocumentNo.ToDescription();
+            textboxName[1] = DocBulkUploadInputText.Title.ToDescription();
+            textboxName[2] = DocBulkUploadInputText.Due.ToDescription();
+            textboxName[3] = DocBulkUploadInputText.Actual.ToDescription();
+            textboxName[4] = DocBulkUploadInputText.Forecast.ToDescription();
+            textboxName[5] = DocBulkUploadInputText.AltDocumentNo.ToDescription();
+            textboxName[6] = DocBulkUploadInputText.IncTrnNo.ToDescription();
 
             IReadOnlyCollection<IWebElement> DocumentDetailsTextbox;
             for (int i = 0; i < textboxName.Length; i++)
@@ -252,14 +251,14 @@ namespace KiewitTeamBinder.UI.Pages.Global
             }
 
             string[] comboboxName = new string[8];
-            comboboxName[0] = TableComboBoxType.Rev.ToDescription();
-            comboboxName[1] = TableComboBoxType.Sts.ToDescription();
-            comboboxName[2] = TableComboBoxType.Disc.ToDescription();
-            comboboxName[3] = TableComboBoxType.Cat.ToDescription();
-            comboboxName[4] = TableComboBoxType.Type.ToDescription();
-            comboboxName[5] = TableComboBoxType.Location.ToDescription();
-            comboboxName[6] = TableComboBoxType.SpecReference.ToDescription();
-            comboboxName[7] = TableComboBoxType.SubType.ToDescription();
+            comboboxName[0] = DocBulkUploadDropdownType.Rev.ToDescription();
+            comboboxName[1] = DocBulkUploadDropdownType.Sts.ToDescription();
+            comboboxName[2] = DocBulkUploadDropdownType.Disc.ToDescription();
+            comboboxName[3] = DocBulkUploadDropdownType.Cat.ToDescription();
+            comboboxName[4] = DocBulkUploadDropdownType.Type.ToDescription();
+            comboboxName[5] = DocBulkUploadDropdownType.Location.ToDescription();
+            comboboxName[6] = DocBulkUploadDropdownType.SpecReference.ToDescription();
+            comboboxName[7] = DocBulkUploadDropdownType.SubType.ToDescription();
 
             IReadOnlyCollection<SelectElement> DocumentDetailsCombobox;
             for (int i = 0; i < comboboxName.Length; i++)
@@ -355,20 +354,20 @@ namespace KiewitTeamBinder.UI.Pages.Global
             }
         }
 
-        public KeyValuePair<string, bool> ValidateRowIsSelected(int rowIndex, bool checkSelected = true)
+        public KeyValuePair<string, bool> ValidateDocumentRowIsSelected(int documentRow, bool checkSelected = true)
         {
-            rowIndex = Utils.RefactorIndex(rowIndex);
+            documentRow = Utils.RefactorIndex(documentRow);
             var node = StepNode();
             try
             {
-                if (IsRowSelected(rowIndex - 1) == checkSelected)
-                    return SetPassValidation(node, string.Format(Validation.Row_Is_Selected, rowIndex - 1));
+                if (IsRowSelected(documentRow - 1) == checkSelected)
+                    return SetPassValidation(node, string.Format(Validation.Row_Is_Selected, documentRow));
                 else
-                    return SetFailValidation(node, string.Format(Validation.Row_Is_Selected, rowIndex - 1));
+                    return SetFailValidation(node, string.Format(Validation.Row_Is_Selected, documentRow));
             }
             catch (Exception e)
             {
-                return SetErrorValidation(node, string.Format(Validation.Row_Is_Selected, rowIndex - 1), e);
+                return SetErrorValidation(node, string.Format(Validation.Row_Is_Selected, documentRow), e);
             }
         }
 
@@ -424,7 +423,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             public static string Cannot_Validate_Rows_State = "Error Cannot Validate Rows State";
             public static string Validate_Files_Display = "Validate that 15 files display";
             public static string Validat_File_Names_Are_Listed_In_Column = "Validat File names are listed in {0} column";
-            public static string Row_Is_Selected = "Validate that row {0} is selected";
+            public static string Row_Is_Selected = "Validate that document row {0} is selected";
             public static string Submenu_Displays = "Validate that Submenu displays after hovering";
             public static string Document_Properties_Are_Copied_To_All_Rows = "Validate that the Document properties are copied to all rows";
         }

@@ -26,6 +26,7 @@ namespace KiewitTeamBinder.Common.TestData
         public int NumberOfRow = 14;
         public string DocumentNoTextboxContent = "AUTO";
         public string HoverCopyAttributesItem = "All";
+        public string MessageOnValidateDocumentsDialog = "Document details are successfully validated.";
 
     }
 
