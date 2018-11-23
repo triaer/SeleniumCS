@@ -30,7 +30,13 @@ namespace KiewitTeamBinder.UI.Pages.Global
         private static By _allRowCheckboxes => By.XPath("//input[contains(@name, 'ClientSelectColumnSelectCheckBox')]");
         private static By _allSupersededCheckboxes => By.XPath("//input[contains(@name, 'chkSuperseded')]");
         private static By _allCopyAttributesItems => By.XPath("//div[@id='RadContextMenu1_detached']/div[contains(@class,'rmScrollWrap')]//li");
-        
+        private static By _documentNoTextBox => By.XPath("//input[@data-property-name='DocumentNo']");
+        private static By _labelMandatoryFieldIcon => By.XPath("//label[@class='MandatoryFields' and contains(@style,'display: inline')][normalize-space(.)='*']");
+        private static By _validateFunctionMessagePopUp => By.XPath("//div[contains(@id,'message')]");
+        private static By _validateFunctionPopUp => By.XPath("//div[contains(@id,'RadWindowWrapper_alert')]");
+        private static By _saveFunctionMessagePop => By.XPath("//div[@id='divProgressMessage']//span");
+
+
         public string _allComboBoxes = "//select[@data-property-name='{0}']";
         public string _documentDetailsTextbox = "//td//*[@data-property-name='{0}']";
         public string _headerButton = "//a[span='{0}']";
@@ -47,7 +53,9 @@ namespace KiewitTeamBinder.UI.Pages.Global
         public IReadOnlyCollection<IWebElement> AllDocumentRows { get { return StableFindElements(_allDocumentRows); } }
         public IReadOnlyCollection<IWebElement> AllRowCheckboxes { get { return StableFindElements(_allRowCheckboxes); } }
         public IReadOnlyCollection<IWebElement> AllSupersededCheckboxes { get { return StableFindElements(_allSupersededCheckboxes); } }
-        #endregion
+        public IWebElement ValidateMessagePopUp { get { return StableFindElement(_validateFunctionMessagePopUp); } }
+        public IWebElement SaveFunctionMessagePop { get { return StableFindElement(_saveFunctionMessagePop); } }
+		#endregion
 
 
         #region Actions
@@ -182,8 +190,65 @@ namespace KiewitTeamBinder.UI.Pages.Global
             return this;
         }
 
+        public BulkUploadDocuments EnterDocumentNoForAllRecords(string documentNo)
+        {
+            List<IWebElement> documentNoList = StableFindElements(_documentNoTextBox).ToList();
+            int i = 1;
+            foreach (IWebElement documentTextbox in documentNoList)
+            {
+                documentTextbox.InputText(documentNo + "_" + i);
+                i++;
+            }
 
+            return this;
+        }
 
+        public BulkUploadDocuments ClickValidateButton()
+        {
+            IWebElement FunctionButton = StableFindElement(By.XPath(string.Format(_menuButtonXpath, "Validate")));
+            FunctionButton.Click();
+
+            if (StableFindElement(_processingPopUp) != null)
+                WaitForElementAttribute(StableFindElement(_processingPopUp), "display", "none");
+
+            WebDriver.SwitchTo().ActiveElement();
+            return this;
+        }
+
+        public BulkUploadDocuments ClickOkButtonOnDialogBox()
+        {
+            StableFindElement(By.XPath(string.Format(_functionButtonPopUp, "OK")))
+                .Click();
+            return this;
+        }
+
+        public BulkUploadDocuments ClickSaveButton()
+        {
+            IWebElement FunctionButton = StableFindElement(By.XPath(string.Format(_menuButtonXpath, "Save")));
+            FunctionButton.Click();
+
+            if (StableFindElement(_processingPopUp) != null)
+                WaitForElementAttribute(StableFindElement(_processingPopUp), "display", "none");
+
+            WebDriver.SwitchTo().ActiveElement();
+            return this;
+        }
+
+        public BulkUploadDocuments ClickNoButtonOnDialogBox()
+        {
+            StableFindElement(By.XPath(string.Format(_functionButtonPopUp, "No")))
+                .Click();
+            return this;
+        }
+
+        public BulkUploadDocuments ClickCancelButton()
+        {
+            IWebElement FunctionButton = StableFindElement(By.XPath(string.Format(_menuButtonXpath, "Cancel")));
+            FunctionButton.Click();
+
+            WebDriver.SwitchTo().ActiveElement();
+            return this;
+        }
         public KeyValuePair<string, bool> ValidateFilesDisplay(int numberOfFiles)
         {
             var node = StepNode();
@@ -300,6 +365,126 @@ namespace KiewitTeamBinder.UI.Pages.Global
             }
         }
 
+        public KeyValuePair<string, bool> ValidateButtonIsHighlightedWhenHovered(string valueBtn)
+        {
+            var node = StepNode();
+
+            try
+            {
+                IWebElement Button = StableFindElement(By.XPath(string.Format(_menuButtonXpath, valueBtn)));
+                ScrollToElement(Button);
+
+                string actualAttribute = Button.GetCssValue("background-color");
+                if (actualAttribute.Equals("#e5e5e5"))
+                    return SetPassValidation(node, Validation.Button_Is_Highlighted_When_Hovered);
+
+                else
+                    return SetFailValidation(node, Validation.Button_Is_Highlighted_When_Hovered, "Color is #e5e5e5 ", actualAttribute);
+
+            }
+            catch (Exception e)
+            {
+                return SetErrorValidation(node, Validation.Button_Is_Highlighted_When_Hovered, e);
+            }
+        }
+
+        public KeyValuePair<string, bool> ValidateColumnIsMandatoryField(string columnName)
+        {
+            var node = StepNode();
+            try
+            {
+                IWebElement mandatorySign = StableFindElement(By.XPath(string.Format(documentNoHeader, columnName)))
+                                        .StableFindElement(_labelMandatoryFieldIcon);
+                if (mandatorySign != null)
+                    return SetPassValidation(node, Validation.Column_Marked_Mandatory_Field + columnName);
+                else
+                    return SetFailValidation(node, Validation.Column_Marked_Mandatory_Field + columnName);
+            }
+            catch (Exception e)
+            {
+
+                return SetErrorValidation(node, Validation.Column_Marked_Mandatory_Field, e); ;
+            }
+
+        }
+
+        public KeyValuePair<string, bool> ValidateMessageDialogBoxDisplayedForValidateFunction()
+        {
+            var node = StepNode();
+            string expectMessage = "Document details are successfully validated.";
+            try
+            {
+                if (ValidateMessagePopUp.Text.Trim() == expectMessage || ValidateMessagePopUp.GetAttribute("innerHTML").Trim() == expectMessage)
+                {
+                    return SetPassValidation(node, Validation.Message_DialogBox_Display + expectMessage);
+                }
+                else
+                    return SetFailValidation(node, Validation.Message_DialogBox_Display + expectMessage, expectMessage, ValidateMessagePopUp.Text);
+            }
+            catch (Exception e)
+            {
+                return SetErrorValidation(node, Validation.Message_DialogBox_Display + expectMessage, e); ;
+            }
+        }
+
+        public KeyValuePair<string, bool> ValidateMessageDialogBoxDisplayedForSaveAndCancelFunction()
+        {
+            var node = StepNode();
+            string expectMessage = "Document details saved successfully. Do you want to upload more documents?";
+            try
+            {
+                if (ValidateMessagePopUp.Text.Trim() == expectMessage || ValidateMessagePopUp.GetAttribute("innerHTML").Trim() == expectMessage)
+                {
+                    return SetPassValidation(node, Validation.Message_DialogBox_Display + expectMessage);
+                }
+                else
+                    return SetFailValidation(node, Validation.Message_DialogBox_Display + expectMessage, expectMessage, ValidateMessagePopUp.Text);
+            }
+            catch (Exception e)
+            {
+                return SetErrorValidation(node, Validation.Message_DialogBox_Display + expectMessage, e); ;
+            }
+        }
+        public List<KeyValuePair<string, bool>> ValidateButtonDialogBoxDisplayed(string[] valueButton)
+        {
+            var node = StepNode();
+            var validations = new List<KeyValuePair<string, bool>>();
+
+            try
+            {
+                for (int i = 0; i < valueButton.Length; i++)
+                {
+                    if (StableFindElement(By.XPath(string.Format(_functionButtonPopUp, valueButton[i]))) != null)
+                    {
+                        validations.Add(SetPassValidation(node, Validation.Button_DialogBox_Displayed));
+                    }
+                    else
+                        validations.Add(SetFailValidation(node, Validation.Button_DialogBox_Displayed));
+                }
+            }
+            catch (Exception e)
+            {
+                validations.Add(SetErrorValidation(node, Validation.Button_DialogBox_Displayed, e));
+            }
+            return validations;
+        }
+        public KeyValuePair<string, bool> ValidateDialogBoxClosed()
+        {
+            var node = StepNode();
+            try
+            {
+                if (StableFindElement(_validateFunctionPopUp) == null)
+                {
+                    return SetPassValidation(node, Validation.Validate_Function_DialogBix_Closed);
+                }
+                else
+                    return SetFailValidation(node, Validation.Validate_Function_DialogBix_Closed);
+            }
+            catch (Exception e)
+            {
+                return SetErrorValidation(node, Validation.Validate_Function_DialogBix_Closed, e); ;
+            }
+        }
         private static class Validation
         {
             public static string Holding_Area_Page_Displays = "Validate That The Holding Area Page Displays";
@@ -312,6 +497,13 @@ namespace KiewitTeamBinder.UI.Pages.Global
             public static string Validat_File_Names_Are_Listed_In_Column = "Validat File names are listed in {0} column";
             public static string Row_Is_Selected = "Validate that row {0} is selected";
             public static string Submenu_Displays = "Validate that Submenu displays after hovering";
+			
+			public static string Column_Marked_Mandatory_Field = "Validate that column is marked Mandatory with red astrisk - Column Name:";
+            public static string Message_DialogBox_Display = "Validate That Dialog box opens displaying ";
+            public static string Button_DialogBox_Displayed = "Validate That The Button Is Displayed.";
+            public static string Validate_Function_DialogBix_Closed = "Validate That The DialogBox Is Closed.";
+            public static string Button_Is_Highlighted_When_Hovered = "Validate That Button Is Highlighted When Hovered";
+
         }
         #endregion
     }
