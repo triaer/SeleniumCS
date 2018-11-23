@@ -29,9 +29,12 @@ namespace KiewitTeamBinder.UI.Pages.Dialogs
             
         }
 
-        public void ClickOKButton()
+        public T ClickOKButton<T>()
         {
-            OKButton.HoverAndClickWithJS();
+            OKButton.Click();
+            WebDriver.SwitchTo().DefaultContent();
+            System.Threading.Thread.Sleep(5000);
+            return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 
         private string GetMessageOnDialog()
