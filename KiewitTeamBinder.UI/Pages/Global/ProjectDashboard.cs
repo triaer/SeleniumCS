@@ -7,35 +7,48 @@ using System.Threading.Tasks;
 using static KiewitTeamBinder.UI.ExtentReportsHelper;
 using KiewitTeamBinder.UI;
 using KiewitTeamBinder.UI.Pages.Dialogs;
+using Microsoft.Office.Interop.Excel;
 
 namespace KiewitTeamBinder.UI.Pages.Global
 {
-    public class Dashboard : LoggedInLanding
+    public class ProjectDashboard : LoggedInLanding
     {
         #region Entities
         public By _dashBoardLabel => By.XPath("//span[.='Dashboard']");
         private static By _nameProjectLabel => By.Id("projectInput");
+        private string _projectListRows = "//table[@id='ctl00_MaterToolbar_ProjectGrid_GridViewProjList_ctl00']//tbody/tr[{0}]";
+        private static By _moduleButton(string value) => By.XPath($"//div[@id='divNavigatorExpand']//div[text()='{value}']");
+        public static By _subMenuItemLink(string value) => By.XPath($"//span[(text()='{value}')]");
 
         public By _logoutLink => By.Id("LogoutLabel");
         private static By _projectListDropdown => By.Id("btnShowProjectList");
         private static By _projectListSumary => By.Id("divProjectSummary");
+        private static By _projectListTable => By.XPath("//table[@id='ctl00_MaterToolbar_ProjectGrid_GridViewProjList_ctl00']");
         private static By _helpButtonDropdown => By.XPath("//div[@id='divHelpButton']");
         private static By _helpButtonDropDownData => By.XPath("//div[@id='HelpDropDown_detached']/ul/li");
+        private static By _pageHeading => By.Id("lblRegisterCaption");
+        private static By _divSubMenu => By.XPath("//div[@id='divSubMenu']");
 
+
+        public IWebElement PageHeading { get { return StableFindElement(_pageHeading); } }
         public IWebElement ProjectListDropdown { get { return StableFindElement(_projectListDropdown); } }
         public IWebElement ProjectListSumary { get { return StableFindElement(_projectListSumary); } }
+        public IWebElement ProjectListTable { get { return StableFindElement(_projectListTable); } }
         public IWebElement HelpButtonDropDown { get { return StableFindElement(_helpButtonDropdown); } }
         public IWebElement NameProjectLabel { get { return StableFindElement(_nameProjectLabel); } }
+        public IWebElement DivSubMenu { get { return StableFindElement(_divSubMenu); } }
+        public IWebElement ModuleButton(string value) => StableFindElement(_moduleButton(value));
+        public IWebElement SubMenuItemLink(string value) => StableFindElement(_subMenuItemLink(value));
 
         #endregion
 
         #region Actions
-        public Dashboard(IWebDriver webDriver) : base(webDriver)
+        public ProjectDashboard(IWebDriver webDriver) : base(webDriver)
         {
             
         }
 
-        public Dashboard ShowProjectList()
+        public ProjectDashboard ShowProjectList()
         {
             ProjectListDropdown.Click();
             WaitForElementAttribute(ProjectListSumary, "display", "block");
@@ -69,12 +82,43 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 return SetErrorValidation(node, Validation.Project_Is_Opened, e);
             }
         }
-        private static class Validation
+
+        // MenuPath example: Mail or Mail/Inbox 
+        public ProjectDashboard SelectModuleMenuItem(string menuPath)
         {
-			public static string Project_Is_Opened = "Validate That The Project Is Opened";
+            var node = StepNode();
+
+            var separator = '/';
+            var nodes = menuPath.Split(separator);
+            if (nodes.Count() == 1)
+            {
+                node.Info($"Click on the root node: {nodes[0]}");
+                ModuleButton(nodes[0]).Click();
+                WaitForElement(_divSubMenu);
+            }
+            else
+            {
+                node.Info($"Click on the root node: {nodes[0]}");
+                ModuleButton(nodes[0]).Click();
+                WaitForElement(_divSubMenu);
+                node.Info($"Click on the sub node: {nodes[1]}");
+                SubMenuItemLink(nodes[1]).Click();
+                WaitForElement(_pageHeading);
+            }
+
+            return this;
         }
 
-        #endregion
+        public T SelectModuleMenuItem<T>(string menuPath)
+        {
+            SelectMenuItem(menuPath);
+            return (T)Activator.CreateInstance(typeof(T), WebDriver);
+        }
 
+        private static class Validation
+        {
+            public static string Project_Is_Opened = "Validate That Number of Items Counted Is Valid";
+        }
+        #endregion
     }
 }

@@ -40,13 +40,13 @@ namespace KiewitTeamBinder.UI.Pages.Global
         {
         }
 
-        public Dashboard NavigateToProjectDashboardPage(string filterValue)
+        public ProjectDashboard NavigateToProjectDashboardPage(string filterValue)
         {
 
             //Filter project by title
             IWebElement ProjectItem = FilterProjectByIDOrTitle("Project Title", filterValue);
             //click on the project
-            var dashboard = new Dashboard(WebDriver);
+            var dashboard = new ProjectDashboard(WebDriver);
             ProjectItem.Click();
             WaitForElement(dashboard._dashBoardLabel);
             WaitForAjaxComplete();

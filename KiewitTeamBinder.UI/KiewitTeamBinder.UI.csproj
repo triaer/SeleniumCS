@@ -125,13 +125,14 @@
     <Compile Include="ExtentReportsHelper.cs" />
     <Compile Include="IWebElementExtensions.cs" />
     <Compile Include="Pages\Dialogs\HelpAboutDialog.cs" />
-    <Compile Include="Pages\Global\Dashboard.cs" />
+    <Compile Include="Pages\Global\ProjectDashboard.cs" />
     <Compile Include="Pages\Global\LoggedInLanding.cs" />
     <Compile Include="Pages\Global\NonSsoSignOn.cs" />
     <Compile Include="Pages\Global\ProjectsList.cs" />
     <Compile Include="Pages\Global\SsoSignOn.cs" />
     <Compile Include="Pages\Global\NotLoggedInLanding.cs" />
     <Compile Include="Pages\Global\PageBase.cs" />
+    <Compile Include="Pages\Mail\MailInboxPage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

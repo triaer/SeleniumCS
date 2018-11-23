@@ -9,7 +9,7 @@ namespace KiewitTeamBinder.UI
 {
     public class KiewitTeamBinderENums
     {
-          
+
         public enum GetDateTime
         {
             TODAY,
@@ -53,7 +53,39 @@ namespace KiewitTeamBinder.UI
             IsNotEmpty,
         }
 
-    }
+        public enum ViewFilterOptions
+        {
+            [Description("Personal")]
+            Personal,
+            [Description("Company")]
+            Company
+        }
 
+        public enum ProjectDashboardModuleName
+        {
+            [Description("Mail")]
+            Mail,
+            [Description("Transmittals")]
+            Transmittals,
+            [Description("Package")]
+            Package,
+            [Description("Tasks")]
+            Tasks
+        }
+
+        public enum ProjectDashboardMailSubMenuItems
+        {
+            [Description("Inbox")]
+            Inbox,
+            [Description("Drafts")]
+            Drafts,
+            [Description("Sent Items")]
+            SentItems,
+            [Description("Unregistered")]
+            Unregistered,
+            [Description("Deleted Items")]
+            DeletedItems,
+        }
+    }
 }
       
