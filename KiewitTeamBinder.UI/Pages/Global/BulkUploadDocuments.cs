@@ -77,6 +77,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             node.Info("Click Add Files In Bulk button");
             AddFilesInBulkButton.Click();
             node.Info("Choose files from window explorer form");
+            node.Info("Files name: " + fileNames);
             Wait(shortTimeout/2);
             SendKeys.SendWait(@filePath);
             SendKeys.SendWait(@"{Enter}");
@@ -124,12 +125,12 @@ namespace KiewitTeamBinder.UI.Pages.Global
             }
             if (checkedState)
             {
-                node.Info("Check the checkbox: " + checkboxType);
+                node.Info($"Check The Checkbox At The Row {documentRow} With Type: " + checkboxType);
                 checkbox.Check();
             }
             else
             {
-                node.Info("Uncheck the checkbox: " + checkboxType);
+                node.Info($"UnCheck The Checkbox At The Row {documentRow} With Type" + checkboxType);
                 checkbox.UnCheck();
             }
             return this;
@@ -140,13 +141,15 @@ namespace KiewitTeamBinder.UI.Pages.Global
             documentRow = Utils.RefactorIndex(documentRow);
             var comboBox = GetAllComboBoxes(comboBoxType.ToDescription()).ElementAt(documentRow);
             var node = StepNode();
-            node.Info("Select " + selectItem);
+            node.Info($"Select {comboBoxType.ToDescription()} Dropdown With Item '{selectItem}' On The Document Row {documentRow + 1} " );
             comboBox.SelectByText(selectItem);
             return this;
         }
 
         public BulkUploadDocuments EnterDataOfDocumentPropertyTextbox(string content, string textboxName, int documentRow)
         {
+            var node = StepNode();
+            node.Info($"Enter {textboxName} With Data '{content}' On The Document Row {documentRow} ");
             documentRow = Utils.RefactorIndex(documentRow);
             IReadOnlyCollection<IWebElement> DocumentDetailsTextbox 
                 = StableFindElements(By.XPath(string.Format(_documentDetailsTextbox, textboxName)));
@@ -156,6 +159,8 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 
         public BulkUploadDocuments EnterTextboxes(string content, string textboxName, bool unique = true)
         {
+            var node = StepNode();
+            node.Info($"Enter {textboxName} With Data '{content}' ");
             IReadOnlyCollection<IWebElement> DocumentDetailsTextbox
                 = StableFindElements(By.XPath(string.Format(_documentDetailsTextbox, textboxName)));
             string[] data = GenerateDataForTextbox(content, DocumentDetailsTextbox.Count, unique);
@@ -210,13 +215,15 @@ namespace KiewitTeamBinder.UI.Pages.Global
             }
             while (item.Text != itemName);
             var node = StepNode();
-            node.Info("Hover " + itemName);
+            node.Info("Hover On Item:" + itemName);
             item.HoverWithJS();
             return this;
         }
 
         public ApplyToNRowsDialog ClickToNRowsItem(ref int indexOfSubMenu, bool nextRows = true)
         {
+            var node = StepNode();
+            node.Info("Click 'to next N rows' item");
             IWebElement ToNRows;
             if (nextRows)            
                 ToNRows = StableFindElement(By.XPath(string.Format(_toNRows, indexOfSubMenu + 2, "to next N rows...")));
@@ -276,52 +283,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
             return data;
         }
 
-        //private List<Dictionary<string, string>> GetDataFromAllDocumentRows()
-        //{            
-        //    int numberOfRows = AllDocumentRows.Count;
-        //    List<Dictionary<string, string>> data = new List<Dictionary<string, string>>(numberOfRows);
-        //    Dictionary<string, string> temp = new Dictionary<string, string>();
-        //    string[] textboxName = new string[7];
-        //    textboxName[0] = DocBulkUploadInputText.DocumentNo.ToDescription();
-        //    textboxName[1] = DocBulkUploadInputText.Title.ToDescription();
-        //    textboxName[2] = DocBulkUploadInputText.Due.ToDescription();
-        //    textboxName[3] = DocBulkUploadInputText.Actual.ToDescription();
-        //    textboxName[4] = DocBulkUploadInputText.Forecast.ToDescription();
-        //    textboxName[5] = DocBulkUploadInputText.AltDocumentNo.ToDescription();
-        //    textboxName[6] = DocBulkUploadInputText.IncTrnNo.ToDescription();
-
-        //    IReadOnlyCollection<IWebElement> DocumentDetailsTextbox;
-        //    for (int i = 0; i < textboxName.Length; i++)
-        //    {
-        //        DocumentDetailsTextbox = StableFindElements(By.XPath(string.Format(_documentDetailsTextbox, textboxName[i])));
-        //        for (int j = 0; j < numberOfRows; j++)
-        //        {
-        //            temp.Add(textboxName[i], DocumentDetailsTextbox.ElementAt(j).Text);
-        //            data.Add(temp);
-        //        }                
-        //    }
-
-        //    string[] comboboxName = new string[8];
-        //    comboboxName[0] = DocBulkUploadDropdownType.Rev.ToDescription();
-        //    comboboxName[1] = DocBulkUploadDropdownType.Sts.ToDescription();
-        //    comboboxName[2] = DocBulkUploadDropdownType.Disc.ToDescription();
-        //    comboboxName[3] = DocBulkUploadDropdownType.Cat.ToDescription();
-        //    comboboxName[4] = DocBulkUploadDropdownType.Type.ToDescription();
-        //    comboboxName[5] = DocBulkUploadDropdownType.Location.ToDescription();
-        //    comboboxName[6] = DocBulkUploadDropdownType.SpecReference.ToDescription();
-        //    comboboxName[7] = DocBulkUploadDropdownType.SubType.ToDescription();
-
-        //    IReadOnlyCollection<SelectElement> DocumentDetailsCombobox;
-        //    for (int i = 0; i < comboboxName.Length; i++)
-        //    {
-        //        DocumentDetailsCombobox = GetAllComboBoxes(comboboxName[i]);
-        //        data.Add(comboboxName[i], DocumentDetailsCombobox.ElementAt(rowIndex).SelectedOption.Text);
-        //    }
-
-        //    data.Add("SupersededCheckbox", AllSupersededCheckboxes.ElementAt(rowIndex).Selected.ToString());
-
-        //    return data;
-        //}
 
         public KeyValuePair<string, bool> ValidateFilesDisplay(int numberOfFiles)
         {
@@ -330,9 +291,9 @@ namespace KiewitTeamBinder.UI.Pages.Global
             try
             {
                 if (FileNames.Count == numberOfFiles)
-                    return SetPassValidation(node, Validation.Validate_Files_Display);
+                    return SetPassValidation(node, Validation.Validate_Files_Display + numberOfFiles);
 
-                return SetFailValidation(node, Validation.Validate_Files_Display);
+                return SetFailValidation(node, Validation.Validate_Files_Display + numberOfFiles);
             }
             catch (Exception e)
             {
@@ -438,7 +399,8 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 return SetErrorValidation(node, Validation.Submenu_Displays, e);
             }
         }
-
+        //TO-DO: Currently, there is an abnormal issue relating to the Copy Properties function. Sometime, the properties are not copied to n rows as expected
+        //
         public KeyValuePair<string, bool> ValidateDocumentPropertiesAreCopiedToAllRows(int rowIndexOfStandardRow)
         {
             var node = StepNode();
@@ -473,13 +435,13 @@ namespace KiewitTeamBinder.UI.Pages.Global
             public static string All_Rows_Are_Selected = "Validate That All Rows Are Selected";
             public static string Not_All_Rows_Are_Selected = "Validate That All Rows Are Not Selected";
             public static string All_Rows_Are_DeSelected = "Validate That All Rows Are DeSelected";
-            public static string Not_All_Rows_Are_DeSelected = "Validate That All Rows Are DeSelected";
+            public static string Not_All_Rows_Are_DeSelected = "Validate That All Rows Are Not DeSelected";
             public static string Cannot_Validate_Rows_State = "Error Cannot Validate Rows State";
-            public static string Validate_Files_Display = "Validate that 15 files display";
-            public static string Validat_File_Names_Are_Listed_In_Column = "Validat File names are listed in {0} column";
-            public static string Row_Is_Selected = "Validate that document row {0} is selected";
-            public static string Submenu_Displays = "Validate that Submenu displays after hovering";
-            public static string Document_Properties_Are_Copied_To_All_Rows = "Validate that the Document properties are copied to all rows";
+            public static string Validate_Files_Display = "Validate That Files Are Added And Displayed Success:";
+            public static string Validat_File_Names_Are_Listed_In_Column = "Validate That File Names Are Listed In {0} Column";
+            public static string Row_Is_Selected = "Validate That Document Row {0} Is Selected";
+            public static string Submenu_Displays = "Validate That Submenu Displays After Hovering";
+            public static string Document_Properties_Are_Copied_To_All_Rows = "Validate That The Document Properties Are Copied To All Rows";
         }
         #endregion
     }

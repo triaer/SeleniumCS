@@ -49,10 +49,11 @@ namespace KiewitTeamBinder.UI.Pages.Dialogs
             var node = StepNode();
             try
             {
-                if (expectedMessage == GetDialogMessage())
-                    return SetPassValidation(node, Validation.Message_On_Dialog);
+                string actualContent = GetDialogMessage();
+                if (expectedMessage == actualContent)
+                    return SetPassValidation(node, Validation.Message_On_Dialog + actualContent);
                 else
-                    return SetFailValidation(node, Validation.Message_On_Dialog);
+                    return SetFailValidation(node, Validation.Message_On_Dialog, expectedMessage, actualContent);
             }
             catch (Exception e)
             {
@@ -64,9 +65,9 @@ namespace KiewitTeamBinder.UI.Pages.Dialogs
 
         private static class Validation
         {
-            public static string Message_On_Dialog = "Validate that the content of message on dialog displays correctly";
-            public static string Dialog_Opens = "Validate that the dialog opens";
-            public static string Dialog_Closes = "Validate that the dialog Closes";
+            public static string Message_On_Dialog = "Validate The Content Of Message On Dialog Displays Correctly: ";
+            public static string Dialog_Opens = "Validate That The Dialog Opens";
+            public static string Dialog_Closes = "Validate That The Dialog Closes";
         }
         #endregion
     }

@@ -82,43 +82,40 @@ namespace KiewitTeamBinder.UI.Pages.Dialogs
             var validation = new List<KeyValuePair<string, bool>>();
             try
             {
-                IWebElement Board = StableFindElement(By.XPath("//form[@id='form1']/div[contains(@id,'_RadWindowConfirm')]"));
-                if (Board != null)
-                {
-                    if (checkOpened)                
-                        validation.Add(SetPassValidation(node, Validation.Dialog_Opens));
-                    else
-                        validation.Add(SetFailValidation(node, Validation.Dialog_Opens));
-                }
+                IWebElement Board = StableFindElement(By.XPath("//form[@id='form1']/table[@id='tblMessage']"));
+                if (checkOpened)
+                    validation.Add((Board != null) ? SetPassValidation(node, Validation.Dialog_Opens)
+                                                   : SetFailValidation(node, Validation.Dialog_Opens));
                 else
                 {
-                    if (checkOpened)
-                        validation.Add(SetFailValidation(node, Validation.Dialog_Closes));
-                    else
-                        validation.Add(SetPassValidation(node, Validation.Dialog_Closes));
+                    validation.Add((Board == null) ? SetPassValidation(node, Validation.Dialog_Closes)
+                                                   : SetFailValidation(node, Validation.Dialog_Closes));
                     return validation;
                 }
 
-                if (expectedMessage == GetMessageOnDialog())
-                    validation.Add(SetPassValidation(node, Validation.Message_On_Dialog));
-                else
-                    validation.Add(SetFailValidation(node, Validation.Message_On_Dialog));
+                if (Board != null)
+                {
+                    string actualContent = GetMessageOnDialog();
+                    if (expectedMessage == actualContent)
+                        validation.Add(SetPassValidation(node, Validation.Message_On_Dialog + actualContent));
+                    else
+                        validation.Add(SetFailValidation(node, Validation.Message_On_Dialog,expectedMessage,actualContent));
 
-                if (FindElement(_nTextbox) != null)
-                    validation.Add(SetPassValidation(node, Validation.Edit_Textbox_Displays));
-                else
-                    validation.Add(SetFailValidation(node, Validation.Edit_Textbox_Displays));
+                    if (FindElement(_nTextbox) != null)
+                        validation.Add(SetPassValidation(node, Validation.Edit_Textbox_Displays));
+                    else
+                        validation.Add(SetFailValidation(node, Validation.Edit_Textbox_Displays));
 
-                if (FindElement(_oKButton) != null)
-                    validation.Add(SetPassValidation(node, Validation.OK_Button_Displays));
-                else
-                    validation.Add(SetFailValidation(node, Validation.OK_Button_Displays));
+                    if (FindElement(_oKButton) != null)
+                        validation.Add(SetPassValidation(node, Validation.OK_Button_Displays));
+                    else
+                        validation.Add(SetFailValidation(node, Validation.OK_Button_Displays));
 
-                if (FindElement(_cancelButton) != null)
-                    validation.Add(SetPassValidation(node, Validation.Cancel_Button_Displays));
-                else
-                    validation.Add(SetFailValidation(node, Validation.Cancel_Button_Displays));
-                
+                    if (FindElement(_cancelButton) != null)
+                        validation.Add(SetPassValidation(node, Validation.Cancel_Button_Displays));
+                    else
+                        validation.Add(SetFailValidation(node, Validation.Cancel_Button_Displays));
+                }
                 return validation;
             }
             catch (Exception e)
@@ -147,12 +144,12 @@ namespace KiewitTeamBinder.UI.Pages.Dialogs
 
         private static class Validation
         {
-            public static string Message_On_Dialog = "Validate that the content of message on dialog displays correctly";
-            public static string Dialog_Opens = "Validate that the dialog opens";
-            public static string Dialog_Closes = "Validate that the dialog Closes";
-            public static string OK_Button_Displays = "Validate that the OK button displays";
-            public static string Cancel_Button_Displays = "Validate that the Cancel button displays";
-            public static string Edit_Textbox_Displays = "Validate that the Edit textbox displays";
+            public static string Message_On_Dialog = "Validate The Content Of Message On Dialog Displays Correctly: ";
+            public static string Dialog_Opens = "Validate That The Dialog Opens";
+            public static string Dialog_Closes = "Validate That The Dialog Closes";
+            public static string OK_Button_Displays = "Validate The OK Button Displays";
+            public static string Cancel_Button_Displays = "Validate The Cancel Button Displays";
+            public static string Edit_Textbox_Displays = "Validate The Edit Textbox Displays";
 
         }
 

@@ -54,7 +54,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         public ProjectsDashboard ClickVendorDataButton()
         {
             var node = StepNode();
-            node.Info("Click Vendot Data button");
+            node.Info("Click Vendor Data Module Button in Left Nav");
             VendorButton.Click();            
             WaitForElementDisplay(By.XPath(string.Format(_menuButton, "Holding Area")));
             return this;
@@ -68,7 +68,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         public HoldingArea ClickHoldingAreaButton()
         {
             var node = StepNode();
-            node.Info("Click Holding Area button");
+            node.Info("Click Holding Area under Vendor Data Module in Left Nav");
             MenuButton("Holding Area").Click();
             return new HoldingArea(WebDriver);
         }
@@ -196,11 +196,11 @@ namespace KiewitTeamBinder.UI.Pages.Global
         private static class Validation
         {
 			public static string Project_Is_Opened = "Validate That The Project Is Opened";
-            public static string Vendor_Data_Menus_Display = "Validate That The Vendor Data Menus Display";
-            public static string Default_Filter_Display = "Validate that the Default Filter is {0}";
+            public static string Vendor_Data_Menus_Display = "Validate That The Vendor Data Sub-Menus Display Correct";
+            public static string Default_Filter_Display = "Validate That The View Filter In Upper Right Corner Is Defaulted To The {0}";
             public static string First_Filter_Box_Is_Highlighted = "Validate That The First Filter Box Is Highlighted";
-            public static string Validate_Window_Is_Opened = "Validate That {0} window is opened";
-            public static string Validate_Form_Title_Is_Correct = "Validate That form title is {0}";
+            public static string Validate_Window_Is_Opened = "Validate That {0} Window Is Opened";
+            public static string Validate_Form_Title_Is_Correct = "Validate That Form Title Is {0}";
         }
 
         #endregion

@@ -43,7 +43,6 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 int indexOfCopyAttributeItem = 0;
                 projectDashBoard.ClickVendorDataButton()
                         .LogValidation(ref validations, projectDashBoard.ValidateVendorDataMenusDisplay(bulkUploadData.VendorDataMenu));
-
                 var holdingArea = projectDashBoard.ClickHoldingAreaButton();
                 holdingArea.LogValidation<HoldingArea>(ref validations, holdingArea.ValidateHoldingAreaPageDisplays())
                         .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateDisplayedViewFilterOption(bulkUploadData.DefaultFilter))
@@ -66,13 +65,10 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                     .HoverOnCopyAttributesMainItem(bulkUploadData.HoverCopyAttributesItem, ref indexOfCopyAttributeItem)
                     .LogValidation<BulkUploadDocuments>(ref validations, 
                                                         bulkUploadDocuments.ValidateSubMenuDisplaysAfterHovering(ref indexOfCopyAttributeItem));
-                
                 var applyToNextNRows = bulkUploadDocuments.ClickToNRowsItem(ref indexOfCopyAttributeItem);
                 applyToNextNRows.LogValidation<ApplyToNRowsDialog>(ref validations, applyToNextNRows.ValidateApplyToNRowsDialogDisplaysCorrectly(bulkUploadData.MessageOnToNextNRowsDialog))
                     .EnterNumberOfRow(bulkUploadData.NumberOfRow)
                     .ClickOKButton<BulkUploadDocuments>()
-                    .LogValidation<BulkUploadDocuments>(ref validations,
-                                                        bulkUploadDocuments.ValidateDocumentPropertiesAreCopiedToAllRows(1))
                     .EnterTextboxes(bulkUploadData.DocumentNoTextboxContent,
                                     DocBulkUploadInputText.DocumentNo.ToDescription());
                 var validateDialog = bulkUploadDocuments.ClickHeaderButton<AlertDialog>(DocBulkUploadHeaderButton.Validate);
