@@ -3,3 +3,4 @@ C:\Users\hoang.bao.nguyen\Source\Repos\Document\HoangTest\bin\Debug\HoangTest.ex
 C:\Users\hoang.bao.nguyen\Source\Repos\Document\HoangTest\bin\Debug\HoangTest.pdb
 C:\Users\hoang.bao.nguyen\Source\Repos\Document\HoangTest\obj\Debug\HoangTest.exe
 C:\Users\hoang.bao.nguyen\Source\Repos\Document\HoangTest\obj\Debug\HoangTest.pdb
+C:\Users\hoang.bao.nguyen\Source\Repos\Document\HoangTest\obj\Debug\HoangTest.csprojResolveAssemblyReference.cache

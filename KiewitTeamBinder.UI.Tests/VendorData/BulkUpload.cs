@@ -13,6 +13,7 @@ using KiewitTeamBinder.UI;
 using KiewitTeamBinder.UI.Pages.Dialogs;
 using static KiewitTeamBinder.UI.KiewitTeamBinderENums;
 
+
 namespace KiewitTeamBinder.UI.Tests.VendorData
 {
     [TestClass]
@@ -44,7 +45,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
 
                 var holdingArea = projectDashBoard.ClickHoldingAreaButton();
                 holdingArea.LogValidation<HoldingArea>(ref validations, holdingArea.ValidateHoldingAreaPageDisplays())
-                        .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateDefaultFilter(bulkUploadData.DefaultFilter))
+                        .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateDisplayedViewFilterOption(bulkUploadData.DefaultFilter))
                         .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateFirstFileterBoxIsHighlighted());
                 string currentWindow;
                 var bulkUploadDocuments = holdingArea.ClickBulkUploadButton(out currentWindow);

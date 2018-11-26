@@ -8,20 +8,13 @@ namespace HoangTest
 {
     class Program
     {
-        public enum MenuItemLink
-        {
-           Inbox,
-           Drafts
-        }
+        
         static void Main(string[] args)
         {
-            var values = Enum.GetValues(typeof(MenuItemLink));
-
-            foreach (var item in values)
-            {
-                Console.WriteLine(item);
-            }
-            
+            DateTime date = new DateTime();
+            date = DateTime.Now;
+            Console.WriteLine(date);
+            date.F
         }
     }
 }

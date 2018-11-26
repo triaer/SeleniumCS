@@ -72,7 +72,7 @@ namespace KiewitTeamBinder.UI
             [Description("SubType")]
             SubType
         }
-        
+
         public enum DocBulkUploadInputText
         {
             [Description("DocumentNo")]
@@ -92,6 +92,7 @@ namespace KiewitTeamBinder.UI
             [Description("Error")]
             Error
         }
+
         public enum ViewFilterOptions
         {
             [Description("Personal")]
@@ -129,7 +130,25 @@ namespace KiewitTeamBinder.UI
             [Description("Remove Deliverable Items")]
             RemoveDeliverableItems
         }
-    }
+
+        public enum MailInboxHeaderButton
+        {
+            [Description("Reply")]
+            Reply,
+            [Description("Reply All")]
+            ReplyAll,
+            [Description("Forward")]
+            Forward,
+            [Description("Refresh")]
+            Refresh,
+            [Description("Print")]
+            Print,
+            [Description("Export")]
+            Export,
+            [Description("More")]
+            More
+        }
+
         public enum ProjectDashboardMailSubMenuItems
         {
             [Description("Inbox")]
@@ -145,4 +164,5 @@ namespace KiewitTeamBinder.UI
         }
     }
 }
+
       

@@ -107,14 +107,12 @@ namespace KiewitTeamBinder.UI.Pages.Global
             return false;
         }
 
-
-        // checkboxType is "rowCheckbox" or "Superseded"
-        public BulkUploadDocuments SelectTableCheckbox(int rowIndex, string selectOption = "on", string checkboxType = "rowCheckbox")
+        public BulkUploadDocuments ClickACheckboxInDocumentRow(int rowIndex, bool checkedState = true, string checkboxType = "rowCheckbox")
         {
             var node = StepNode();
             IWebElement checkbox;
             if (checkboxType == "rowCheckbox")
-            {               
+            {
                 checkbox = AllRowCheckboxes.ElementAt(rowIndex);
             }
             else
@@ -122,10 +120,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 rowIndex = Utils.RefactorIndex(rowIndex);
                 checkbox = AllSupersededCheckboxes.ElementAt(rowIndex);
             }
-            if (String.IsNullOrWhiteSpace(selectOption)
-                || (selectOption.ToLower() != "on" && selectOption.ToLower() != "off"))
-                throw new InvalidOperationException("select option should be 'on' of 'off'. Default value is 'on'");
-            else if (selectOption.ToLower() == "on")
+            if (checkedState)
             {
                 node.Info("Check the checkbox: " + checkboxType);
                 checkbox.Check();
@@ -181,8 +176,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
             item.HoverWithJS();
             return this;
         }
-
-
 
         public KeyValuePair<string, bool> ValidateFilesDisplay(int numberOfFiles)
         {

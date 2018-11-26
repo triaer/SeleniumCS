@@ -24,6 +24,7 @@ namespace KiewitTeamBinder.Common.TestData
         public string DataOfComboBoxDics = "CON - Contruction";
         public string DataOfComboBoxCat = "CA - CALCULATION";
         public string HoverCopyAttributesItem = "All";
+        public List<string> MailSubItemLinks = new List<string>{"Inbox", "Drafts", "Sent Items", "Unregistered", "Deleted Items" };
 
     }
 

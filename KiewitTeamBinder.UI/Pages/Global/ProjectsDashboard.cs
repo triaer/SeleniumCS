@@ -26,13 +26,17 @@ namespace KiewitTeamBinder.UI.Pages.Global
         private static By _helpButtonDropdown => By.XPath("//div[@id='divHelpButton']");
         private static By _helpButtonDropDownData => By.XPath("//div[@id='HelpDropDown_detached']/ul/li");
         private static By _vendorButton => By.Id("divVendorData");
-        private static By _defaultFilter => By.Id("lblView");
+        private static By _viewFilter => By.Id("lblView");
         private static By _imagesOfFirstFilterBox => By.XPath("//li[@id = 'FilterView0']//img");
         private static By _formTitle => By.Id("formTitle");
+        public static By _subMenuItemLink(string value) => By.XPath($"//span[(text()='{value}')]");
+        private static By _itemsNumberLabel(string value) => By.XPath($"//span[contains(@id, 'GridView{value}_ctl00DSC')]");
+        private static By _divSubMenu => By.XPath("//div[@id='divSubMenu']");
+        private static By _pageHeading => By.Id("lblRegisterCaption");
 
         public IWebElement FormTitle { get { return StableFindElement(_formTitle); } }
         public IReadOnlyCollection<IWebElement> ImagesOfFirstFilterBox { get { return StableFindElements(_imagesOfFirstFilterBox); } }
-        public IWebElement DefaultFilter { get { return StableFindElement(_defaultFilter); } }
+        public IWebElement ViewFilter { get { return StableFindElement(_viewFilter); } }
         public IWebElement VendorButton { get { return StableFindElement(_vendorButton); } }
         public IWebElement ProjectListDropdown { get { return StableFindElement(_projectListDropdown); } }
         public IWebElement ProjectListSumary { get { return StableFindElement(_projectListSumary); } }
@@ -42,6 +46,8 @@ namespace KiewitTeamBinder.UI.Pages.Global
         public IWebElement DivSubMenu { get { return StableFindElement(_divSubMenu); } }
         public IWebElement ModuleButton(string value) => StableFindElement(_moduleButton(value));
         public IWebElement SubMenuItemLink(string value) => StableFindElement(_subMenuItemLink(value));
+        public IWebElement ItemsNumberLabel(string value) => StableFindElement(_itemsNumberLabel(value));
+
 
         #endregion
 
@@ -77,7 +83,38 @@ namespace KiewitTeamBinder.UI.Pages.Global
             MenuButton("Holding Area").Click();
             return new HoldingArea(WebDriver);
         }
-             
+
+        public ProjectsDashboard SelectModuleMenuItem(string menuPath)
+        {
+            var node = StepNode();
+
+            var separator = '/';
+            var nodes = menuPath.Split(separator);
+            if (nodes.Count() == 1)
+            {
+                node.Info($"Click on the root node: {nodes[0]}");
+                ModuleButton(nodes[0]).Click();
+                WaitForElement(_divSubMenu);
+            }
+            else
+            {
+                node.Info($"Click on the root node: {nodes[0]}");
+                ModuleButton(nodes[0]).Click();
+                WaitForElement(_divSubMenu);
+                node.Info($"Click on the sub node: {nodes[1]}");
+                SubMenuItemLink(nodes[1]).Click();
+                WaitForElement(_pageHeading);
+            }
+
+            return this;
+        }
+
+        public T SelectModuleMenuItem<T>(string menuPath)
+        {
+            SelectModuleMenuItem(menuPath);
+            return (T)Activator.CreateInstance(typeof(T), WebDriver);
+        }
+
         public HelpAboutDialog OpenHelpDialog(string option)
         {
             SelectComboboxByText(HelpButtonDropDown, _helpButtonDropDownData, option);
@@ -104,43 +141,60 @@ namespace KiewitTeamBinder.UI.Pages.Global
             }
         }
 
-        public List<KeyValuePair<string, bool>> ValidateVendorDataMenusDisplay(string[] subMenu)
+        public KeyValuePair<string, bool> ValidateDisplayedSubItemLinks(string[] subItemLinks)
         {
             var node = StepNode();
-            List<KeyValuePair<string, bool>> validations = new List<KeyValuePair<string, bool>> { };
+            node.Info("Validate all sub item links are displayed");
             try
             {
-                foreach (var item in subMenu)
+                foreach (var item in subItemLinks)
                 {
-                    if (MenuButton(item).IsDisplayed())
-                        validations.Add(SetPassValidation(node, Validation.Vendor_Data_Menus_Display));
-                    else
-                        validations.Add(SetFailValidation(node, Validation.Vendor_Data_Menus_Display));
+                    if (SubMenuItemLink(item).IsDisplayed() == false)
+                        return SetFailValidation(node, Validation.Sub_Item_links_Are_Displayed);
                 }
-                return validations;
+
+                return SetPassValidation(node, Validation.Sub_Item_links_Are_Displayed);
             }
             catch (Exception e)
             {
-                validations.Add(SetErrorValidation(node, Validation.Vendor_Data_Menus_Display, e));
-                return validations;
+                return SetErrorValidation(node, Validation.Sub_Item_links_Are_Displayed, e);
             }
         }
 
-        public KeyValuePair<string, bool> ValidateDefaultFilter(string defaultFilter)
+        public KeyValuePair<string, bool> ValidateDisplayedViewFilterOption(string filterOption)
         {
             var node = StepNode();
             try
             {
-                WaitForElementDisplay(_defaultFilter); 
-                if (DefaultFilter.Text == defaultFilter)
-                {
-                    return SetPassValidation(node, string.Format(Validation.Default_Filter_Display, defaultFilter));
-                }
-                return SetFailValidation(node, string.Format(Validation.Default_Filter_Display, defaultFilter));
+                WaitForElementDisplay(_viewFilter); 
+                if (ViewFilter.Text == filterOption)
+                    return SetPassValidation(node, string.Format(Validation.Default_Filter_Display, filterOption));
+
+                return SetFailValidation(node, string.Format(Validation.Default_Filter_Display, filterOption));
             }
             catch (Exception e)
             {
-                return SetErrorValidation(node, string.Format(Validation.Default_Filter_Display, defaultFilter), e);
+                return SetErrorValidation(node, string.Format(Validation.Default_Filter_Display, filterOption), e);
+            }
+        }
+
+        // moduleName: Mail/Transmittals/Vendor Data
+        public KeyValuePair<string, bool> ValidateRecordItemsCount(int itemsNumber, string moduleName)
+        {
+            var node = StepNode();
+            node.Info($"Validate number of record items is equals to: {itemsNumber}");
+
+            try
+            {
+                var actualQuantity = ItemsNumberLabel(moduleName).Text;
+                if (Int32.Parse(actualQuantity) == itemsNumber)
+                    return SetPassValidation(node, Validation.Number_Of_Items_Counted_Is_Valid);
+
+                return SetFailValidation(node, Validation.Number_Of_Items_Counted_Is_Valid, "Actual number is: " + actualQuantity);
+            }
+            catch (Exception e)
+            {
+                return SetErrorValidation(node, Validation.Number_Of_Items_Counted_Is_Valid, e);
             }
         }
 
@@ -201,6 +255,9 @@ namespace KiewitTeamBinder.UI.Pages.Global
             public static string First_Filter_Box_Is_Highlighted = "Validate That The First Filter Box Is Highlighted";
             public static string Validate_Window_Is_Opened = "Validate That {0} window is opened";
             public static string Validate_Form_Title_Is_Correct = "Validate That form title is {0}";
+            public static string Sub_Item_links_Are_Displayed = "Validate That Sub Item Links Are Displayed";
+            public static string Number_Of_Items_Counted_Is_Valid = "Validate That Number of Items Counted Is Valid";
+
         }
         #endregion
     }
