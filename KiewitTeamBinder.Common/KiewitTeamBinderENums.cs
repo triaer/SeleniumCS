@@ -53,6 +53,45 @@ namespace KiewitTeamBinder.UI
             IsNotEmpty,
         }
 
+        public enum DocBulkUploadDropdownType
+        {
+            [Description("Rev")]
+            Rev,
+            [Description("Sts")]
+            Sts,
+            [Description("Discipline")]
+            Disc,
+            [Description("Category")]
+            Cat,
+            [Description("Type")]
+            Type,
+            [Description("PFLocation")]
+            Location,
+            [Description("SpecificationRef")]
+            SpecReference,
+            [Description("SubType")]
+            SubType
+        }
+        
+        public enum DocBulkUploadInputText
+        {
+            [Description("DocumentNo")]
+            DocumentNo,
+            [Description("Title")]
+            Title,
+            [Description("Due")]
+            Due,
+            [Description("Actual")]
+            Actual,
+            [Description("ForecastKiewit")]
+            Forecast,
+            [Description("AltNDocNo")]
+            AltDocumentNo,
+            [Description("IncTrnNo")]
+            IncTrnNo,
+            [Description("Error")]
+            Error
+        }
         public enum ViewFilterOptions
         {
             [Description("Personal")]
@@ -73,6 +112,24 @@ namespace KiewitTeamBinder.UI
             Tasks
         }
 
+        public enum DocBulkUploadHeaderButton
+        {
+            [Description("New Rows")]
+            NewRows,
+            [Description("Copy Attributes")]
+            CopyAttributes,
+            [Description("Get Attributes")]
+            GetAttributes,
+            [Description("Validate")]
+            Validate,
+            [Description("Remove Rows")]
+            RemoveRows,
+            [Description("Link Deliverable Items")]
+            LinkDeliverableItems,
+            [Description("Remove Deliverable Items")]
+            RemoveDeliverableItems
+        }
+    }
         public enum ProjectDashboardMailSubMenuItems
         {
             [Description("Inbox")]

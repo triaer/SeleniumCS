@@ -40,13 +40,13 @@ namespace KiewitTeamBinder.UI.Pages.Global
         {
         }
 
-        public ProjectDashboard NavigateToProjectDashboardPage(string filterValue)
+        public ProjectsDashboard NavigateToProjectDashboardPage(string filterValue)
         {
 
             //Filter project by title
             IWebElement ProjectItem = FilterProjectByIDOrTitle("Project Title", filterValue);
             //click on the project
-            var dashboard = new ProjectDashboard(WebDriver);
+            var dashboard = new ProjectsDashboard(WebDriver);
             ProjectItem.Click();
             WaitForElement(dashboard._dashBoardLabel);
             WaitForAjaxComplete();
@@ -61,16 +61,15 @@ namespace KiewitTeamBinder.UI.Pages.Global
             if (filterColumnName.Equals("Project Title"))
             {
                 ProjectTitleTextBox.InputText(filterValue);
-                //ProjectTitleImgFilter.Click();
-                //WaitForElementAttribute(ProjectTitleImgFilter, "class", null);
+                ProjectTitleTextBox.SendKeys(Keys.Tab);
+                WaitForAjaxComplete();
                 SelectComboboxByText(ProjectTitleImgFilter, _projectImgFilterData, FilterOptions.EqualTo.ToDescription());
             }
 
             if (filterColumnName.Equals("Project No"))
             {
                 ProjectNoTextBox.InputText(filterValue);
-                ProjectNoImgFilter.Click();
-                WaitForElementAttribute(ProjectNoImgFilter, "class", null);
+                ProjectNoTextBox.SendKeys(Keys.Tab);
                 SelectComboboxByText(ProjectNoImgFilter, _projectImgFilterData, FilterOptions.EqualTo.ToDescription());
             }
             WaitForElement(_projGridDataTable);
