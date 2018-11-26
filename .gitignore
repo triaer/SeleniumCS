@@ -14,3 +14,6 @@
 /KiewitTeamBinder.UI.Tests/bin/Debug
 /KiewitTeamBinder.UI.Tests/obj/Debug
 /packages
+/.vs
+/KiewitTeamBinder.Api/obj/Release
+/KiewitTeamBinder.Common/obj/Release

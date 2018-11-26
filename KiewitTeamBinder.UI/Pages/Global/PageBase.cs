@@ -243,14 +243,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
         }
 
-        internal static void WaitForPageComplete(int timeoutSec = mediumTimeout)
-        {
-            var wait = Browser.Wait(timeoutSec);
-            IJavaScriptExecutor js = (IJavaScriptExecutor)WebDriver;
-            // Check if document is ready
-            wait.Until(wd => js.ExecuteScript("return document.readyState").Equals("complete"));
-
-        }
         internal static void ScrollToElement(IWebElement Element)
         {
             Actions action = new Actions(WebDriver);
@@ -508,7 +500,44 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 //skip the action
             }
         }
+        internal static void WaitUntilJSReady(int timeoutSec = mediumTimeout)
+        {
+            var wait = Browser.Wait(timeoutSec);
+            wait.Until(driver => ((IJavaScriptExecutor)driver).ExecuteScript("return document.readyState").ToString().Equals("complete"));
+            
+        }
 
+        internal static void WaitForJQueryLoad(int timeout = 30)
+        {
+            var wait = Browser.Wait(timeout*2);
+            wait.Until(driver => (bool)((IJavaScriptExecutor)driver).ExecuteScript(
+                "var result = true; " +
+                "try { result = (typeof jQuery != 'undefined') ? jQuery.active == 0 : true } " +
+                "catch (e) {}; return result;"));
+            //wait.Until(driver => (bool)((IJavaScriptExecutor)driver).ExecuteScript("return (window.jQuery != null) && (jQuery.active == 0);"));
+            WaitUntilJSReady(timeout);
+        }
+
+        internal static void WaitForJQueryToBeActive(int timeout = 30)
+        {
+           
+            int numOfWait = 1;
+            bool isJqueryUsed = (bool)((IJavaScriptExecutor)WebDriver).ExecuteScript("return (typeof(jQuery) != 'undefined')");
+            if (isJqueryUsed)
+            {
+                while (true)
+                {
+                    // JavaScript test to verify jQuery is active or not
+                    bool ajaxIsComplete = (bool)(((IJavaScriptExecutor)WebDriver).ExecuteScript("return jQuery.active == 0"));
+                    if (ajaxIsComplete) break;
+                    try
+                    {
+                        numOfWait++;
+                    }
+                    catch (Exception) { }
+                }
+            }
+        }
         internal static void WaitForAngularJSLoad()
         {
             IJavaScriptExecutor js = (IJavaScriptExecutor)WebDriver;
@@ -522,12 +551,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 if (numOfWait > 60)
                     break;
             }
-        }
-
-        internal static void WaitForAjaxComplete(int timeout = 30)
-        {
-            var wait = Browser.Wait(timeout);
-            wait.Until(d => (bool)(d as IJavaScriptExecutor).ExecuteScript("return jQuery.active == 0"));
         }
 
         internal static void Reload()
