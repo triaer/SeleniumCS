@@ -12,7 +12,7 @@ namespace KiewitTeamBinder.Common.Helper
 {
     public static class Utils
     {
-        public static bool DeepEquals(Dictionary<string, string> dict1, Dictionary<string, string> dict2)
+        public static bool DictEquals(Dictionary<string, string> dict1, Dictionary<string, string> dict2)
         {
             bool result = true;
             if (dict1.Count != dict2.Count)

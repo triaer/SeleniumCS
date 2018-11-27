@@ -110,6 +110,13 @@ namespace KiewitTeamBinder.UI
             [Description("Remove Deliverable Items")]
             RemoveDeliverableItems
         }
+        public enum DialogPopupButton
+        {
+            Yes,
+            No,
+            OK
+
+        }
     }
 }
       
