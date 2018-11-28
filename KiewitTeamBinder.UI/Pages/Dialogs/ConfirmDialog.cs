@@ -13,7 +13,7 @@ using AventStack.ExtentReports;
 using static KiewitTeamBinder.UI.ExtentReportsHelper;
 using SeleniumExtras.WaitHelpers;
 using KiewitTeamBinder.Common.Helper;
-using static KiewitTeamBinder.UI.KiewitTeamBinderENums;
+using static KiewitTeamBinder.Common.KiewitTeamBinderENums;
 
 namespace KiewitTeamBinder.UI.Pages.Dialogs
 {
@@ -62,7 +62,7 @@ namespace KiewitTeamBinder.UI.Pages.Dialogs
             var validation = new List<KeyValuePair<string, bool>>();
             try
             {
-                string actualContent = GetDialogMessage();
+                string actualContent = GetDialogMessage().Replace(System.Environment.NewLine, string.Empty);
                 if (expectedMessage == actualContent)
                     validation.Add(SetPassValidation(node, Validation.Message_On_Dialog + actualContent));
                 else

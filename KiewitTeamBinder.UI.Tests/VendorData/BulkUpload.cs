@@ -11,7 +11,7 @@ using static KiewitTeamBinder.UI.ExtentReportsHelper;
 using System.Threading;
 using KiewitTeamBinder.UI;
 using KiewitTeamBinder.UI.Pages.Dialogs;
-using static KiewitTeamBinder.UI.KiewitTeamBinderENums;
+using static KiewitTeamBinder.Common.KiewitTeamBinderENums;
 
 namespace KiewitTeamBinder.UI.Tests.VendorData
 {
@@ -44,40 +44,41 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 projectDashBoard.ClickVendorDataButton()
                         .LogValidation(ref validations, projectDashBoard.ValidateVendorDataMenusDisplay(bulkUploadData.VendorDataMenu));
                 var holdingArea = projectDashBoard.ClickHoldingAreaButton();
-                //holdingArea.LogValidation<HoldingArea>(ref validations, holdingArea.ValidateHoldingAreaPageDisplays())
-                //        .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateDisplayedViewFilterOption(bulkUploadData.DefaultFilter))
-                //        .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateFilterBoxIsHighlighted(filterBoxIndex: 1));
-                //var bulkUploadDocuments = holdingArea.ClickBulkUploadButton(out currentWindow);
-                //bulkUploadDocuments.LogValidation(ref validations, bulkUploadDocuments.ValidateWindowIsOpened(bulkUploadData.WindowTitle))
-                //        .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocuments.ValidateFormTitle(bulkUploadData.FormTitle))
-                //        .AddFilesInBulk(Utils.GetInputFilesLocalPath(), bulkUploadData.FileNames)
-                //        .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocuments.ValidateFilesDisplay(numberOfFiles: 15));
-                ////bulkUploadDocuments.LogValidation(ref validations, bulkUploadDocuments.ValidateFileNamesAreListedInColumn(bulkUploadData.VersionColumn));
+                holdingArea.LogValidation<HoldingArea>(ref validations, holdingArea.ValidateHoldingAreaPageDisplays())
+                        .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateDisplayedViewFilterOption(bulkUploadData.DefaultFilter))
+                        .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateFilterBoxIsHighlighted(filterBoxIndex: 1));
+                var bulkUploadDocuments = holdingArea.ClickBulkUploadButton(out currentWindow);
+                bulkUploadDocuments.LogValidation(ref validations, bulkUploadDocuments.ValidateWindowIsOpened(bulkUploadData.WindowTitle))
+                        .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocuments.ValidateFormTitle(bulkUploadData.FormTitle))
+                        .AddFilesInBulk(Utils.GetInputFilesLocalPath(), bulkUploadData.FileNames)
+                        .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocuments.ValidateFilesDisplay(bulkUploadData.numberOfUploadFiles));
+                //bulkUploadDocuments.LogValidation(ref validations, bulkUploadDocuments.ValidateFileNamesAreListedInColumn(bulkUploadData.VersionColumn));
 
-                //bulkUploadDocuments.ClickACheckboxInDocumentRow(documentRow: 1)
-                //    .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocuments.ValidateDocumentRowIsSelected(documentRow: 1))
-                //    .SelectDataOfDocumentPropertyDropdown(bulkUploadData.DataOfComboBoxRev, DocBulkUploadDropdownType.Rev, documentRow: 1)
-                //    .SelectDataOfDocumentPropertyDropdown(bulkUploadData.DataOfComboBoxSts, DocBulkUploadDropdownType.Sts, documentRow: 1)
-                //    .EnterDataOfDocumentPropertyTextbox(bulkUploadData.DataOfTitle, DocBulkUploadInputText.Title.ToDescription(), documentRow: 1)
-                //    .SelectDataOfDocumentPropertyDropdown(bulkUploadData.DataOfComboBoxDics, DocBulkUploadDropdownType.Disc, documentRow: 1)
-                //    .SelectDataOfDocumentPropertyDropdown(bulkUploadData.DataOfComboBoxCat, DocBulkUploadDropdownType.Cat, documentRow: 1)
-                //    .ClickHeaderButton<BulkUploadDocuments>(DocBulkUploadHeaderButton.CopyAttributes)
-                //    .HoverOnCopyAttributesMainItem(bulkUploadData.HoverCopyAttributesItem, ref indexOfCopyAttributeItem)
-                //    .LogValidation<BulkUploadDocuments>(ref validations, 
-                //                                        bulkUploadDocuments.ValidateSubMenuDisplaysAfterHovering(ref indexOfCopyAttributeItem));
-                //var applyToNextNRows = bulkUploadDocuments.ClickToNRowsItem(ref indexOfCopyAttributeItem);
-                //applyToNextNRows.LogValidation<ApplyToNRowsDialog>(ref validations, applyToNextNRows.ValidateApplyToNRowsDialogDisplaysCorrectly(bulkUploadData.MessageOnToNextNRowsDialog))
-                //    .EnterNumberOfRow(bulkUploadData.NumberOfRow)
-                //    .ClickOKButton<BulkUploadDocuments>()
-                //    .EnterTextboxes(bulkUploadData.DocumentNoTextboxContent,
-                //                    DocBulkUploadInputText.DocumentNo.ToDescription());
-                //var validateDialog = bulkUploadDocuments.ClickValidateDocumentDetails(DocBulkUploadHeaderButton.Validate, methodValidations);
-                //validateDialog.LogValidation<AlertDialog>(ref validations, validateDialog.ValidateMessageDialogAsExpected(bulkUploadData.MessageOnValidateDocumentsDialog))
-                //    .ClickOKButton<BulkUploadDocuments>();
-                //var saveDocumentDialog = bulkUploadDocuments.ClickSaveBulkUploadDocuments(methodValidations);
-                //validateDialog.LogValidation<ConfirmDialog>(ref validations, saveDocumentDialog.ValidateMessageDialogAsExpected(bulkUploadData.MessageOnSaveDocumentsDialog))
-                //    .ClickPopupButton<HoldingArea>(DialogPopupButton.No, true)
-                holdingArea.FilterDocumentsByGridFilterRow(bulkUploadData.HoldingAreaFilterByColumn, bulkUploadData.FilterWithValue)
+                bulkUploadDocuments.ClickACheckboxInDocumentRow(documentRow: 1)
+                    .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocuments.ValidateDocumentRowIsSelected(documentRow: 1))
+                    .SelectDataOfDocumentPropertyDropdown(bulkUploadData.DataOfComboBoxRev, DocBulkUploadDropdownType.Rev, documentRow: 1)
+                    .SelectDataOfDocumentPropertyDropdown(bulkUploadData.DataOfComboBoxSts, DocBulkUploadDropdownType.Sts, documentRow: 1)
+                    .EnterDataOfDocumentPropertyTextbox(bulkUploadData.DataOfTitle, DocBulkUploadInputText.Title.ToDescription(), documentRow: 1)
+                    .SelectDataOfDocumentPropertyDropdown(bulkUploadData.DataOfComboBoxDics, DocBulkUploadDropdownType.Disc, documentRow: 1)
+                    .SelectDataOfDocumentPropertyDropdown(bulkUploadData.DataOfComboBoxCat, DocBulkUploadDropdownType.Cat, documentRow: 1)
+                    .ClickHeaderButton<BulkUploadDocuments>(DocBulkUploadHeaderButton.CopyAttributes)
+                    .HoverOnCopyAttributesMainItem(bulkUploadData.HoverCopyAttributesItem, ref indexOfCopyAttributeItem)
+                    .LogValidation<BulkUploadDocuments>(ref validations,
+                                                        bulkUploadDocuments.ValidateSubMenuDisplaysAfterHovering(ref indexOfCopyAttributeItem));
+                var applyToNextNRows = bulkUploadDocuments.ClickToNRowsItem(ref indexOfCopyAttributeItem);
+                applyToNextNRows.LogValidation<ApplyToNRowsDialog>(ref validations, applyToNextNRows.ValidateApplyToNRowsDialogDisplaysCorrectly(bulkUploadData.MessageOnToNextNRowsDialog))
+                    .EnterNumberOfRow(bulkUploadData.NumberOfRow)
+                    .ClickOKButton<BulkUploadDocuments>()
+                    .LogValidation<BulkUploadDocuments>(ref validations,bulkUploadDocuments.ValidateDocumentPropertiesAreCopiedToAllRows(rowIndexOfStandardRow: 1))
+                    .EnterTextboxes(bulkUploadData.DocumentNoTextboxContent,
+                                    DocBulkUploadInputText.DocumentNo.ToDescription());
+                var validateDialog = bulkUploadDocuments.ClickValidateDocumentDetails(DocBulkUploadHeaderButton.Validate, methodValidations);
+                validateDialog.LogValidation<AlertDialog>(ref validations, validateDialog.ValidateMessageDialogAsExpected(bulkUploadData.MessageOnValidateDocumentsDialog))
+                    .ClickOKButton<BulkUploadDocuments>();
+                var saveDocumentDialog = bulkUploadDocuments.ClickSaveBulkUploadDocuments(methodValidations);
+                validateDialog.LogValidation<ConfirmDialog>(ref validations, saveDocumentDialog.ValidateMessageDialogAsExpected(bulkUploadData.MessageOnSaveDocumentsDialog))
+                    .ClickPopupButton<HoldingArea>(DialogPopupButton.No, true)
+                    .FilterDocumentsByGridFilterRow(bulkUploadData.HoldingAreaFilterByColumn, bulkUploadData.FilterWithValue)
                     .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateHoldingAreaGridShownDataCorrect(bulkUploadData.HoldingAreaFilterByColumn, bulkUploadData.FilterWithValue))
                     .ClickCheckboxOfDocumentAtRow(indexRow: 1)
                     .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateDocumentRowIsHighlighted(indexRow: 1));

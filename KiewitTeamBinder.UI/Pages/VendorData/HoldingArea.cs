@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using KiewitTeamBinder.UI.Pages.Global;
 using OpenQA.Selenium;
 using static KiewitTeamBinder.UI.ExtentReportsHelper;
-using static KiewitTeamBinder.UI.KiewitTeamBinderENums;
+using static KiewitTeamBinder.Common.KiewitTeamBinderENums;
 using KiewitTeamBinder.Common.Helper;
 
 namespace KiewitTeamBinder.UI.Pages.VendorData
@@ -21,7 +21,8 @@ namespace KiewitTeamBinder.UI.Pages.VendorData
         private static By _documentNoTextBox => By.XPath("//input[contains(@id,'FilterTextBox_GridColDocumentNo')]");
         private static By _holdingAreaRadGrid => By.XPath("//div[contains(@id,'_cntPhMain_GridViewHoldingArea')][contains(@class,'RadGrid')]");
         private static By _holdingAreaGridData => By.XPath("//div[contains(@id,'_GridViewHoldingArea_GridData')]");
-        private static By _infoPagerInHoldingAreaGrid => By.XPath("//table[contains(@id,'GridViewHoldingArea')]//div[contains(@class,'rgInfoPart')]");
+        private static By _infoPagerInHoldingAreaGrid => By.XPath("//table[contains(@id,'GridViewHoldingArea')]//div[contains(@class,'rgInfoPart')]//span[contains(@id,'DSC')]");
+        private static By _documentRowsVisiableOnGrid => By.XPath(".//tbody/tr[not(@class='rgNoRecords')][contains(@style,'visible')]");
 
         public IWebElement HoldingAreaLabel { get { return StableFindElement(_holdingAreaLabel); } }
         public IWebElement DocumentNoTextBox { get { return StableFindElement(_documentNoTextBox); } }
@@ -80,14 +81,13 @@ namespace KiewitTeamBinder.UI.Pages.VendorData
                 node.Info("Check the data of document lines in column: Hold Process Status");
                 validation.Add(ValidateDataOfDocumentRowsInAColumn("Hold Process Status", "New", true));
 
-                List<IWebElement> documentLines = StableFindElements(By.XPath(".//tbody/tr[not(@class='rgNoRecords')]")).ToList();
+                List<IWebElement> documentLines = HoldingAreaGridData.StableFindElements(_documentRowsVisiableOnGrid).ToList();
                 int expectedTotal = documentLines.Count;
-                string actualItems = InfoPagerInHoldingAreaGrid.GetAttribute("innerHTML");
-                actualItems = actualItems.Substring(0, actualItems.IndexOf(" ") - 1);
+                string actualItems = InfoPagerInHoldingAreaGrid.Text;
                 if (actualItems == expectedTotal.ToString())
-                    validation.Add(SetPassValidation(node, Validation.Item_Count_In_Bottom_Right_Corner_Displays_Correct));
+                    validation.Add(SetPassValidation(node, Validation.Item_Count_In_Bottom_Right_Corner_Displays_Correct + expectedTotal.ToString()));
                 else
-                    validation.Add(SetFailValidation(node, Validation.Item_Count_In_Bottom_Right_Corner_Displays_Correct));
+                    validation.Add(SetFailValidation(node, Validation.Item_Count_In_Bottom_Right_Corner_Displays_Correct, expectedTotal.ToString(), actualItems));
 
                 return validation;
             }
@@ -107,14 +107,14 @@ namespace KiewitTeamBinder.UI.Pages.VendorData
             bool result = false;
             try
             {
-                List<IWebElement> documentLines = HoldingAreaGridData.StableFindElements(By.XPath(".//tbody/tr[not(@class='rgNoRecords')][contains(@style,'table-row')]")).ToList();
+                List<IWebElement> documentLines = HoldingAreaGridData.StableFindElements(_documentRowsVisiableOnGrid).ToList();
                 GetTableCellValueIndex(HoldingAreaRadGrid, column, out rowIndex, out colIndex,"th");
                 valMsg = string.Format(Validation.Document_Data_Displays_Correct, column, expectedMessage);
                 foreach (IWebElement row in documentLines)
                 {
                     i++;
-                    IWebElement cell = row.StableFindElement(By.XPath("./td[" + colIndex + "]"));
-                    actualContent = cell.GetAttribute("innerHTML");
+                    IWebElement cell = row.FindElement(By.XPath("./td[" + colIndex + "]"));
+                    actualContent = cell.Text;
                     
                     if (isEqual)
                         result = (actualContent == expectedMessage) ? true : false;
@@ -168,7 +168,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorData
         {
             public static string Holding_Area_Page_Displays = "Validate that the Vendor Data Module Holding Area page displays";
             public static string Document_Data_Displays_Correct = "Validate that the document data displays correct in column '{0}' with value '{1}' ";
-            public static string Item_Count_In_Bottom_Right_Corner_Displays_Correct = "Validate that item count in bottom right corner of holding area matches actual count of items in grid ";
+            public static string Item_Count_In_Bottom_Right_Corner_Displays_Correct = "Validate that item count in bottom right corner of holding area matches actual count of items in grid: ";
             public static string Holding_Area_Page_Shows_Data_Correct = "Validate that Holding Area page shows data correct ";
             public static string Document_Row_Is_Highlighted = "Validate that Document row is selected and highlighted";
         }
