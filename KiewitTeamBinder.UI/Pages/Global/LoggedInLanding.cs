@@ -16,13 +16,14 @@ namespace KiewitTeamBinder.UI.Pages.Global
     {
 
         #region Entities
+
         private static By _userNameLable => By.XPath("//div[@id='divUserName']/span");
         private static By _logoutLink => By.Id("LogoutLabel");
         private static By _logoutYesButton => By.XPath("//div[@class='rwDialogPopup radconfirm']//a[.//span[text()='Yes']]");
         private static By _alertPopup => By.Id("kendoAlertWindow");
         private static By _saveChangeYesButton => By.Id("Yes");
         private static By _saveChangeNoButton => By.Id("No");
-        public By _processingPopUp => By.Id("divProgressWindow");
+
 
         public IWebElement LogoutLink { get { return StableFindElement(_logoutLink); } }
         public IWebElement LogoutYesButton { get { return StableFindElement(_logoutYesButton); } }

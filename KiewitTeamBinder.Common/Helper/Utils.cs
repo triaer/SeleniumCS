@@ -6,13 +6,13 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
 using System.Threading;
-using static KiewitTeamBinder.UI.KiewitTeamBinderENums;
+using static KiewitTeamBinder.Common.KiewitTeamBinderENums;
 
 namespace KiewitTeamBinder.Common.Helper
 {
     public static class Utils
     {
-        public static bool DeepEquals(Dictionary<string, string> dict1, Dictionary<string, string> dict2)
+        public static bool DictEquals(Dictionary<string, string> dict1, Dictionary<string, string> dict2)
         {
             bool result = true;
             if (dict1.Count != dict2.Count)
@@ -123,7 +123,20 @@ namespace KiewitTeamBinder.Common.Helper
                 }
             }
         }
-
+        public static string GetUserDefaultDownloadsPath()
+        {
+            if (Environment.OSVersion.Version.Major < 6) throw new NotSupportedException();
+            IntPtr pathPtr = IntPtr.Zero;
+            try
+            {
+                SHGetKnownFolderPath(ref FolderDownloads, 0, IntPtr.Zero, out pathPtr);
+                return Marshal.PtrToStringUni(pathPtr);
+            }
+            finally
+            {
+                Marshal.FreeCoTaskMem(pathPtr);
+            }
+        }
         private static Guid FolderDownloads = new Guid("374DE290-123F-4565-9164-39C4925E467B");
         [DllImport("shell32.dll", CharSet = CharSet.Auto)]
         private static extern int SHGetKnownFolderPath(ref Guid id, int flags, IntPtr token, out IntPtr path);

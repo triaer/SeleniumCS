@@ -124,6 +124,7 @@
     <Compile Include="ExcelInterop\Old_ExcelHelper.cs" />
     <Compile Include="ExtentReportsHelper.cs" />
     <Compile Include="IWebElementExtensions.cs" />
+    <Compile Include="Pages\Dialogs\ConfirmDialog.cs" />
     <Compile Include="Pages\Dialogs\AlertDialog.cs" />
     <Compile Include="Pages\Dialogs\ApplyToNRowsDialog.cs" />
     <Compile Include="Pages\Dialogs\HelpAboutDialog.cs" />

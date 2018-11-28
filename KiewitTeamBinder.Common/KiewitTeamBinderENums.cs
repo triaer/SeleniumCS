@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KiewitTeamBinder.UI
+namespace KiewitTeamBinder.Common
 {
     public class KiewitTeamBinderENums
     {
@@ -109,6 +109,13 @@ namespace KiewitTeamBinder.UI
             LinkDeliverableItems,
             [Description("Remove Deliverable Items")]
             RemoveDeliverableItems
+        }
+        public enum DialogPopupButton
+        {
+            Yes,
+            No,
+            OK
+
         }
     }
 }
