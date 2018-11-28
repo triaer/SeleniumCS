@@ -149,18 +149,38 @@ namespace KiewitTeamBinder.UI
             More
         }
 
-        public enum ProjectDashboardMailSubMenuItems
+        public enum PackagesInboxHeaderButton
         {
-            [Description("Inbox")]
-            Inbox,
-            [Description("Drafts")]
-            Drafts,
-            [Description("Sent Items")]
-            SentItems,
-            [Description("Unregistered")]
-            Unregistered,
-            [Description("Deleted Items")]
-            DeletedItems,
+            [Description("Refresh")]
+            Refresh,
+            [Description("Print")]
+            Print,
+            [Description("Export")]
+            Export,
+            [Description("More")]
+            More
+        }
+
+        public enum HeaderOfTableOnMainPane
+        {
+            [Description("Transmittal No.")]
+            TransmittalNo,
+            [Description("Attach")]
+            Attachment,
+            [Description("Package")]
+            Package,
+            [Description("Received")]
+            Received,
+            [Description("Subject")]
+            Subject,
+            [Description("From")]
+            From,
+            [Description("Message")]
+            Message,
+            [Description("To")]
+            To,
+            [Description("TaskCount")]
+            TaskCount
         }
     }
 }

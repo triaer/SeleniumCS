@@ -26,8 +26,6 @@ namespace KiewitTeamBinder.Common.TestData
         public int NumberOfRow = 14;
         public string DocumentNoTextboxContent = "AUTO";
         public string HoverCopyAttributesItem = "All";
-        public List<string> MailSubItemLinks = new List<string>{"Inbox", "Drafts", "Sent Items", "Unregistered", "Deleted Items" };
-
     }
 
 }

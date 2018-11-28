@@ -206,7 +206,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
             wait.Until(driver => driver.FindElement(elementDescription).Enabled);
         }
 
-
         internal static void WaitForElementDisplay(By elementDescription, int seconds = longTimeout)
         {
             var wait = Browser.Wait(seconds);
@@ -263,7 +262,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
             IJavaScriptExecutor jse = (IJavaScriptExecutor)WebDriver;
             jse.ExecuteScript("arguments[0].scrollIntoView();", Element);
         }
-        
         
 
         /// <summary>

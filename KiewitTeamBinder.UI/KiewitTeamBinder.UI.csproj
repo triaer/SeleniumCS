@@ -135,6 +135,9 @@
     <Compile Include="Pages\Global\SsoSignOn.cs" />
     <Compile Include="Pages\Global\NotLoggedInLanding.cs" />
     <Compile Include="Pages\Global\PageBase.cs" />
+    <Compile Include="Pages\Packages\PackagesDrafts.cs" />
+    <Compile Include="Pages\Packages\PackagesInbox.cs" />
+    <Compile Include="Pages\Packages\PackagesSentItems.cs" />
     <Compile Include="Pages\VendorData\HoldingArea.cs" />
     <Compile Include="Pages\Mail\MailInboxPage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -108,13 +108,13 @@ namespace KiewitTeamBinder.UI.Pages.Global
             return false;
         }
 
-        public BulkUploadDocuments ClickACheckboxInDocumentRow(int rowIndex, bool checkedState = true, string checkboxType = "rowCheckbox")
+        public BulkUploadDocuments ClickACheckboxInDocumentRow(int documentRow, bool checkedState = true, string checkboxType = "rowCheckbox")
         {
             var node = StepNode();
             IWebElement checkbox;
             if (checkboxType == "rowCheckbox")
             {
-                checkbox = AllRowCheckboxes.ElementAt(rowIndex);
+                checkbox = AllRowCheckboxes.ElementAt(documentRow);
             }
             else
             {
