@@ -188,19 +188,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             }
             return data;
 
-        }
-
-        public T ClickHeaderButton<T>(DocBulkUploadHeaderButton buttonName)
-        {
-            IWebElement Button = StableFindElement(By.XPath(string.Format(_headerButton, buttonName.ToDescription())));
-            var node = StepNode();            
-            node.Info("Click the button: " + buttonName.ToDescription());
-            Button.HoverAndClickWithJS();
-            //if (StableFindElement(_processingPopUp) != null)
-            //    WaitForElementAttribute(StableFindElement(_processingPopUp), "display", "none");
-
-            return (T)Activator.CreateInstance(typeof(T), WebDriver);
-        }            
+        }                
 
         public BulkUploadDocuments HoverOnCopyAttributesMainItem(string itemName, ref int index)
         {

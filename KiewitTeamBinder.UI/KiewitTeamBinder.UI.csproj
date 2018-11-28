@@ -135,6 +135,10 @@
     <Compile Include="Pages\Global\SsoSignOn.cs" />
     <Compile Include="Pages\Global\NotLoggedInLanding.cs" />
     <Compile Include="Pages\Global\PageBase.cs" />
+    <Compile Include="Pages\Transmittals\TransmittalsDrafts.cs" />
+    <Compile Include="Pages\Transmittals\TransmittalsInbox.cs" />
+    <Compile Include="Pages\Transmittals\TransmittalsSentItems.cs" />
+    <Compile Include="Pages\Transmittals\TransmittalsPending.cs" />
     <Compile Include="Pages\Packages\PackagesDrafts.cs" />
     <Compile Include="Pages\Packages\PackagesInbox.cs" />
     <Compile Include="Pages\Packages\PackagesSentItems.cs" />

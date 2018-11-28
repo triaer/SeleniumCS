@@ -30,16 +30,16 @@ namespace KiewitTeamBinder.UI.Pages.Global
         public static By _subMenuItemLink(string value) => By.XPath($"//span[(text()='{value}')]");
 
         public static By _moduleButton(string value) => By.XPath($"//div[@id = 'div{value}']");
-        public static By _subPageTable(string value) => By.XPath($"//table[@id='ctl00_cntPhMain_GridView{value}_ctl00']");
+        public static By _subPageTable(string value) => By.XPath($"//table[@id='ctl00_cntPhMain_{value}_ctl00']");
 
-        private static By _itemsNumberLabel(string value) => By.XPath($"//span[contains(@id, 'GridView{value}_ctl00DSC')]");
+        private static By _itemsNumberLabel(string value) => By.XPath($"//span[contains(@id, '{value}_ctl00DSC')]");
         private static By _divSubMenu => By.XPath("//div[@id='divSubMenu']");
         private static string _menuButton = "//li[a='{0}']";
         private static string _imageOfFilterBox = "//img[contains(@id,'Link{1}{0}')]";
         private static By _subPageHeader => By.Id("lblRegisterCaption");
         private string _headerButton = "//a[span='{0}']";
         private static string _filterItems = "//tr[@valign='top']";
-        private static By _paneTable => By.XPath("//table[contains(@id, 'RegisterGrid_ctl00_Header')]/thead");
+        private static By _paneTable(string gridViewName) => By.XPath($"//table[contains(@id, '{gridViewName}_ctl00_Header')]/thead");
 
         public IWebElement FormTitle { get { return StableFindElement(_formTitle); } }        
         public IWebElement ViewFilter { get { return StableFindElement(_viewFilter); } }
@@ -55,7 +55,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         public IWebElement SubMenuItemLink(string value) => StableFindElement(_subMenuItemLink(value));
         public IWebElement ItemsNumberLabel(string value) => StableFindElement(_itemsNumberLabel(value));
         public IWebElement SubPageTable(string value) => StableFindElement(_subPageTable(value));
-        public IWebElement PaneTable { get { return StableFindElement(_paneTable); } }
+        public IWebElement PaneTable(string gridViewName) => StableFindElement(_paneTable(gridViewName));
 
         #endregion
 
@@ -151,14 +151,14 @@ namespace KiewitTeamBinder.UI.Pages.Global
             return helpAboutDialog;
         }
 
-        public T ClickHeaderButton<T>(PackagesInboxHeaderButton buttonName, bool waitForLoading, string tableName = null)
+        public T ClickHeaderButton<T>(MainPaneTableHeaderButton buttonName, bool waitForLoading, string tableName = null)
         {
             IWebElement Button = StableFindElement(By.XPath(string.Format(_headerButton, buttonName.ToDescription())));
             var node = StepNode();
             node.Info("Click the button: " + buttonName.ToDescription());
             Button.HoverAndClickWithJS();
 
-            if (!waitForLoading & tableName != null)
+            if (!waitForLoading && tableName != null)
                 WaitForElement(_subPageTable(tableName));
             
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
@@ -309,12 +309,12 @@ namespace KiewitTeamBinder.UI.Pages.Global
             }
         }
 
-        public KeyValuePair<string, bool> ValidateItemsAreShown(List<KeyValuePair<string, string>> columnValuePairList)
+        public KeyValuePair<string, bool> ValidateItemsAreShown(List<KeyValuePair<string, string>> columnValuePairList, string gridViewName)
         {
             var node = StepNode();
             try
             {
-                if (IsItemShown(columnValuePairList))
+                if (IsItemShown(gridViewName, columnValuePairList))
                     return SetPassValidation(node, Validation.Validate_Items_Are_Shown);
                 return SetFailValidation(node, Validation.Validate_Items_Are_Shown);
             }
@@ -324,33 +324,30 @@ namespace KiewitTeamBinder.UI.Pages.Global
             }
         }
 
-        private bool IsItemShown(List<KeyValuePair<string, string>> columnValuePairList)
+        private bool IsItemShown(string gridViewName, List<KeyValuePair<string, string>> columnValuePairList)
         {
-            IReadOnlyCollection<IWebElement> AvailableItems = GetAvailableItems(columnValuePairList);
+            IReadOnlyCollection<IWebElement> AvailableItems = GetAvailableItems(gridViewName, columnValuePairList);
             if (AvailableItems != null)
                 return true;
             return false;
         }
 
-        private IReadOnlyCollection<IWebElement> GetAvailableItems(List<KeyValuePair<string, string>> columnValuePairList)
+        private IReadOnlyCollection<IWebElement> GetAvailableItems(string gridViewName, List<KeyValuePair<string, string>> columnValuePairList)
         {
             int rowIndex, colIndex = 1;
             string itemsXpath = _filterItems;
-            GetTableCellValueIndex(PaneTable, columnValuePairList.ElementAt(0).Key, out rowIndex, out colIndex, "th");
+            GetTableCellValueIndex(PaneTable(gridViewName), columnValuePairList.ElementAt(0).Key, out rowIndex, out colIndex, "th");
             if (colIndex < 2)
                 return null;
             itemsXpath += $"[td[{colIndex}][contains(., '{columnValuePairList.ElementAt(0).Value}')]";
 
-            int i = 1;
-            do
+            for (int i = 1; i < columnValuePairList.Count; i++)
             {
-                GetTableCellValueIndex(PaneTable, columnValuePairList.ElementAt(i).Key, out rowIndex, out colIndex, "th");
+                GetTableCellValueIndex(PaneTable(gridViewName), columnValuePairList.ElementAt(i).Key, out rowIndex, out colIndex, "th");
                 if (colIndex < 2)
                     return null;
                 itemsXpath += $" and td[{colIndex}][contains(., '{columnValuePairList.ElementAt(i).Value}')]";
-                i++;
-            }
-            while (i < columnValuePairList.Count);
+            }                       
             itemsXpath += "]";
 
             return StableFindElements(By.XPath(itemsXpath));

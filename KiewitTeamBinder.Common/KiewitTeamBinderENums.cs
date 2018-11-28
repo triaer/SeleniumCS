@@ -113,7 +113,7 @@ namespace KiewitTeamBinder.UI
             Tasks
         }
 
-        public enum DocBulkUploadHeaderButton
+        public enum MainPaneTableHeaderButton
         {
             [Description("New Rows")]
             NewRows,
@@ -128,11 +128,7 @@ namespace KiewitTeamBinder.UI
             [Description("Link Deliverable Items")]
             LinkDeliverableItems,
             [Description("Remove Deliverable Items")]
-            RemoveDeliverableItems
-        }
-
-        public enum MailInboxHeaderButton
-        {
+            RemoveDeliverableItems,
             [Description("Reply")]
             Reply,
             [Description("Reply All")]
@@ -146,23 +142,17 @@ namespace KiewitTeamBinder.UI
             [Description("Export")]
             Export,
             [Description("More")]
-            More
+            More            
         }
 
-        public enum PackagesInboxHeaderButton
+        public enum MainPaneTableHeaderLabel
         {
-            [Description("Refresh")]
-            Refresh,
-            [Description("Print")]
-            Print,
-            [Description("Export")]
-            Export,
-            [Description("More")]
-            More
-        }
-
-        public enum HeaderOfTableOnMainPane
-        {
+            [Description("Package ID")]
+            PackageID,
+            [Description("Package Type")]
+            PackageType,
+            [Description("Title")]
+            Title,
             [Description("Transmittal No.")]
             TransmittalNo,
             [Description("Attach")]
