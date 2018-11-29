@@ -29,18 +29,17 @@ namespace KiewitTeamBinder.UI.Pages.Global
         private static By _viewFilter => By.Id("lblView");        
         private static By _formTitle => By.Id("formTitle");
         public static By _subMenuItemLink(string value) => By.XPath($"//span[(text()='{value}')]");
-
         public static By _moduleButton(string value) => By.XPath($"//div[@id = 'div{value}']");
         public static By _subPageTable(string value) => By.XPath($"//table[@id='ctl00_cntPhMain_{value}_ctl00']");
-
         private static By _itemsNumberLabel(string value) => By.XPath($"//span[contains(@id, '{value}_ctl00DSC')]");
-        private static By _divSubMenu => By.XPath("//div[@id='divSubMenu']");
-        private static string _menuButton = "//li[a='{0}']";
-        private static string _imageOfFilterBox = "//img[contains(@id,'Link{1}{0}')]";
-        private static By _subPageHeader => By.Id("lblRegisterCaption");
-        private string _headerButton = "//a[span='{0}']";
-        private static string _filterItems = "//tr[@valign='top']";
+        private static By _divSubMenu => By.XPath("//div[@id='divSubMenu']");        
+        private static By _subPageHeader => By.Id("lblRegisterCaption");              
         private static By _paneTable(string gridViewName) => By.XPath($"//table[contains(@id, '{gridViewName}_ctl00_Header')]/thead");
+        private static By _visibleRows => By.XPath("//tr[contains(@style, 'visibility: visible')]");
+
+        private static string _filterItemsXpath = "//tr[@valign='top']";
+        private static string _imageOfFilterBoxXpath = "//img[contains(@id,'Link{1}{0}')]";
+        private string _headerButtonXpath = "//a[span='{0}']";
 
         public IWebElement FormTitle { get { return StableFindElement(_formTitle); } }        
         public IWebElement ViewFilter { get { return StableFindElement(_viewFilter); } }
@@ -57,6 +56,8 @@ namespace KiewitTeamBinder.UI.Pages.Global
         public IWebElement ItemsNumberLabel(string value) => StableFindElement(_itemsNumberLabel(value));
         public IWebElement SubPageTable(string value) => StableFindElement(_subPageTable(value));
         public IWebElement PaneTable(string gridViewName) => StableFindElement(_paneTable(gridViewName));
+        public IReadOnlyCollection<IWebElement> VisibleRows { get { return StableFindElements(_visibleRows); } }
+
 
         #endregion
 
@@ -70,40 +71,16 @@ namespace KiewitTeamBinder.UI.Pages.Global
             WaitForElementAttribute(ProjectListSumary, "display", "block");
             return this;
         }
-
-        public ProjectsDashboard ClickVendorDataButton()
-        {
-            var node = StepNode();
-            node.Info("Click Vendor Data Module Button in Left Nav");
-            VendorButton.Click();            
-            WaitForElementDisplay(By.XPath(string.Format(_menuButton, "Holding Area")));
-            return this;
-        }
-
-        public IWebElement MenuButton(string menu)
-        {
-            return StableFindElement(By.XPath(string.Format(_menuButton, menu)));
-        }
-
-        public HoldingArea ClickHoldingAreaButton()
-        {
-            var node = StepNode();
-            node.Info("Click Holding Area under Vendor Data Module in Left Nav");
-            MenuButton("Holding Area").Click();
-            return new HoldingArea(WebDriver);
-        }
-
+              
         public int GetTableItemNumber()
         {
             var node = StepNode();
             node.Info("Get number of items in table");
-            const string rowXpath = "//tr[contains(@style, 'visibility: visible')]";
 
             try
-            {
-                var rows = StableFindElements(By.XPath(rowXpath)).Count;
-                return rows;
-            }
+            { 
+                return VisibleRows.Count;
+            }                          
             catch
             {
                 return 0;
@@ -154,7 +131,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
         public T ClickHeaderButton<T>(MainPaneTableHeaderButton buttonName, bool waitForLoading, string tableName = null)
         {
-            IWebElement Button = StableFindElement(By.XPath(string.Format(_headerButton, buttonName.ToDescription())));
+            IWebElement Button = StableFindElement(By.XPath(string.Format(_headerButtonXpath, buttonName.ToDescription())));
             var node = StepNode();
             node.Info("Click the button: " + buttonName.ToDescription());
             Button.HoverAndClickWithJS();
@@ -165,6 +142,35 @@ namespace KiewitTeamBinder.UI.Pages.Global
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 
+        private bool IsItemShown(string gridViewName, List<KeyValuePair<string, string>> columnValuePairList)
+        {
+            IReadOnlyCollection<IWebElement> AvailableItems = GetAvailableItems(gridViewName, columnValuePairList);
+            if (AvailableItems != null)
+                return true;
+            return false;
+        }
+
+        private IReadOnlyCollection<IWebElement> GetAvailableItems(string gridViewName, List<KeyValuePair<string, string>> columnValuePairList)
+        {
+            int rowIndex, colIndex = 1;
+            string itemsXpath = _filterItemsXpath;
+            GetTableCellValueIndex(PaneTable(gridViewName), columnValuePairList.ElementAt(0).Key, out rowIndex, out colIndex, "th");
+            if (colIndex < 2)
+                return null;
+            itemsXpath += $"[td[{colIndex}][contains(., '{columnValuePairList.ElementAt(0).Value}')]";
+
+            for (int i = 1; i < columnValuePairList.Count; i++)
+            {
+                GetTableCellValueIndex(PaneTable(gridViewName), columnValuePairList.ElementAt(i).Key, out rowIndex, out colIndex, "th");
+                if (colIndex < 2)
+                    return null;
+                itemsXpath += $" and td[{colIndex}][contains(., '{columnValuePairList.ElementAt(i).Value}')]";
+            }
+            itemsXpath += "]";
+
+            return StableFindElements(By.XPath(itemsXpath));
+        }
+        
         public KeyValuePair<string, bool> ValidateProjectIsOpened(string nameProject)
         {
             var node = StepNode();
@@ -249,15 +255,15 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 if (!isHighlighted)
                     highlight = "NotSelected";
 
-                IWebElement ImageOfFilterBox = StableFindElement(By.XPath(string.Format(_imageOfFilterBox, filterBoxIndex, highlight)));
+                IWebElement ImageOfFilterBox = StableFindElement(By.XPath(string.Format(_imageOfFilterBoxXpath, filterBoxIndex, highlight)));
                 if (ImageOfFilterBox.IsDisplayed())                
-                    return SetPassValidation(node, Validation.First_Filter_Box_Is_Highlighted);
+                    return SetPassValidation(node, string.Format(Validation.Filter_Box_Is_Highlighted, filterBoxIndex + 1));
                 
-                return SetFailValidation(node, Validation.First_Filter_Box_Is_Highlighted);
+                return SetFailValidation(node, string.Format(Validation.Filter_Box_Is_Highlighted, filterBoxIndex + 1));
             }
             catch (Exception e)
             {
-                return SetErrorValidation(node, Validation.First_Filter_Box_Is_Highlighted, e);
+                return SetErrorValidation(node, string.Format(Validation.Filter_Box_Is_Highlighted, filterBoxIndex + 1), e);
             }
         }
 
@@ -267,13 +273,13 @@ namespace KiewitTeamBinder.UI.Pages.Global
             try
             {
                 if (WebDriver.Title == windowName)
-                    return SetPassValidation(node, string.Format(Validation.Validate_Window_Is_Opened, windowName));
+                    return SetPassValidation(node, string.Format(Validation.Window_Is_Opened, windowName));
                 else
-                    return SetFailValidation(node, string.Format(Validation.Validate_Window_Is_Opened, windowName));
+                    return SetFailValidation(node, string.Format(Validation.Window_Is_Opened, windowName));
             }
             catch (Exception e)
             {
-                return SetErrorValidation(node, string.Format(Validation.Validate_Window_Is_Opened, windowName), e);
+                return SetErrorValidation(node, string.Format(Validation.Window_Is_Opened, windowName), e);
             }
         }
 
@@ -283,13 +289,13 @@ namespace KiewitTeamBinder.UI.Pages.Global
             try
             {
                 if (FormTitle.Text == formTitle)
-                    return SetPassValidation(node, string.Format(Validation.Validate_Form_Title_Is_Correct, formTitle));
+                    return SetPassValidation(node, string.Format(Validation.Form_Title_Is_Correct, formTitle));
                 else
-                    return SetFailValidation(node, string.Format(Validation.Validate_Form_Title_Is_Correct, formTitle));
+                    return SetFailValidation(node, string.Format(Validation.Form_Title_Is_Correct, formTitle));
             }
             catch (Exception e)
             {
-                return SetErrorValidation(node, string.Format(Validation.Validate_Form_Title_Is_Correct, formTitle), e);
+                return SetErrorValidation(node, string.Format(Validation.Form_Title_Is_Correct, formTitle), e);
             }
         }
 
@@ -316,56 +322,28 @@ namespace KiewitTeamBinder.UI.Pages.Global
             try
             {
                 if (IsItemShown(gridViewName, columnValuePairList))
-                    return SetPassValidation(node, Validation.Validate_Items_Are_Shown);
-                return SetFailValidation(node, Validation.Validate_Items_Are_Shown);
+                    return SetPassValidation(node, Validation.Items_Are_Shown);
+                return SetFailValidation(node, Validation.Items_Are_Shown);
             }
             catch (Exception e)
             {
-                return SetErrorValidation(node, Validation.Validate_Items_Are_Shown, e);
+                return SetErrorValidation(node, Validation.Items_Are_Shown, e);
             }
         }
 
-        private bool IsItemShown(string gridViewName, List<KeyValuePair<string, string>> columnValuePairList)
-        {
-            IReadOnlyCollection<IWebElement> AvailableItems = GetAvailableItems(gridViewName, columnValuePairList);
-            if (AvailableItems != null)
-                return true;
-            return false;
-        }
-
-        private IReadOnlyCollection<IWebElement> GetAvailableItems(string gridViewName, List<KeyValuePair<string, string>> columnValuePairList)
-        {
-            int rowIndex, colIndex = 1;
-            string itemsXpath = _filterItems;
-            GetTableCellValueIndex(PaneTable(gridViewName), columnValuePairList.ElementAt(0).Key, out rowIndex, out colIndex, "th");
-            if (colIndex < 2)
-                return null;
-            itemsXpath += $"[td[{colIndex}][contains(., '{columnValuePairList.ElementAt(0).Value}')]";
-
-            for (int i = 1; i < columnValuePairList.Count; i++)
-            {
-                GetTableCellValueIndex(PaneTable(gridViewName), columnValuePairList.ElementAt(i).Key, out rowIndex, out colIndex, "th");
-                if (colIndex < 2)
-                    return null;
-                itemsXpath += $" and td[{colIndex}][contains(., '{columnValuePairList.ElementAt(i).Value}')]";
-            }                       
-            itemsXpath += "]";
-
-            return StableFindElements(By.XPath(itemsXpath));
-        }
-
+        
         private static class Validation
         {
 			public static string Project_Is_Opened = "Validate that the project is opened";
             public static string Vendor_Data_Menus_Display = "Validate that the vendor data sub-menus display correct";
             public static string Default_Filter_Display = "Validate that the view filter in upper right corner is defaulted to the {0}";
-            public static string First_Filter_Box_Is_Highlighted = "Validate that the first filter box is highlighted";
-            public static string Validate_Window_Is_Opened = "Validate that {0} window is opened";
-            public static string Validate_Form_Title_Is_Correct = "Validate that form title is {0}";
+            public static string Filter_Box_Is_Highlighted = "Validate that the {0} filter box is highlighted";
+            public static string Window_Is_Opened = "Validate that {0} window is opened";
+            public static string Form_Title_Is_Correct = "Validate that form title is {0}";
             public static string Sub_Item_links_Are_Displayed = "Validate that sub item links are displayed";
             public static string Number_Of_Items_Counted_Is_Valid = "Validate that number of items counted is valid";
             public static string Sub_Page_Is_Displayed = "Validate that the sub page is displayed";
-            public static string Validate_Items_Are_Shown = "Validate that items on main pane are shown";
+            public static string Items_Are_Shown = "Validate that items on main pane are shown";
 
         }
         #endregion

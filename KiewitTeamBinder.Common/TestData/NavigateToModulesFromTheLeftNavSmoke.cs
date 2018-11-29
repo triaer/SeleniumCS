@@ -61,6 +61,14 @@ namespace KiewitTeamBinder.Common.TestData
             }
         }
 
+        public class GalleryModules : NavigateToModulesFromTheLeftNavSmoke
+        {
+            public string[] NavigatePath = { "TeamPics" };
+            public string DefaultFilter = "All";
+            public string GridViewName = "GridViewThumbnail";
+            public string SortByValue = "Date Uploaded";
+        }
+
     }
 
 }

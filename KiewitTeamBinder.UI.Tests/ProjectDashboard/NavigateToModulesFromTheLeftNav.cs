@@ -17,10 +17,10 @@ using KiewitTeamBinder.UI.Pages.Packages;
 namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
 {
     [TestClass]
-    public class NavigateToPackagesModuleFromLeftNav : UITestBase
+    public class NavigateToModulesFromTheLeftNav : UITestBase
     {
         [TestMethod]
-        public void Validate_NavigateToPackagesModuleFromLeftNav()
+        public void Validate_NavigateToModulesFromTheLeftNav()
         {
             try
             {
@@ -36,6 +36,7 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                 var packagesData = new NavigateToModulesFromTheLeftNavSmoke.PackagesModules();
                 var transmittalsData = new NavigateToModulesFromTheLeftNavSmoke.TransmittalsModules();
                 var tasksData = new NavigateToModulesFromTheLeftNavSmoke.TasksModules();
+                var galleryData = new NavigateToModulesFromTheLeftNavSmoke.GalleryModules();
 
                 test.Info("Navigate to DashBoard Page of Project: " + packagesData.ProjectName);
                 var projectDashBoard = projectsList.NavigateToProjectDashboardPage(packagesData.ProjectName);
@@ -146,6 +147,15 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                     .LogValidation<TasksSentItems>(ref validations, taskInbox.ValidateRecordItemsCount(taskInbox.GetTableItemNumber(), tasksData.GridViewName))
                     .LogValidation<TasksSentItems>(ref validations, taskInbox.ValidateItemsAreShown(columnValuesInConditionList, tasksData.GridViewName))
                     .ClickHeaderButton<ProjectsDashboard>(MainPaneTableHeaderButton.Refresh, true, tasksData.GridViewName);
+
+                //User Story 121328 - 119703 Navigate to Modules from the Left Nav - Part 7
+                var gallery = projectDashBoard.SelectModuleMenuItem<Gallery>(galleryData.NavigatePath[0]);
+                                
+                gallery.LogValidation<Gallery>(ref validations, gallery.ValidateDisplayedViewFilterOption(galleryData.DefaultFilter))
+                    .LogValidation<Gallery>(ref validations, gallery.ValidateFilterBoxIsHighlighted(filterBoxIndex: 4))
+                    .LogValidation<Gallery>(ref validations, gallery.ValidateRecordItemsCount(gallery.GetTableItemNumber(true), galleryData.GridViewName))
+                    .LogValidation<Gallery>(ref validations, gallery.ValidateSortByValue(galleryData.SortByValue))
+                    .ClickHeaderButton<ProjectsDashboard>(MainPaneTableHeaderButton.Refresh, true, galleryData.GridViewName);
 
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);
