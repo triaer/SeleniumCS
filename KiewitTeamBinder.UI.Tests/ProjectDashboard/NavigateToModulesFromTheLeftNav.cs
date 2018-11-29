@@ -34,7 +34,8 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                 var projectsList = new NonSsoSignOn(driver).Logon(teambinderTestAccount) as ProjectsList;
 
                 var packagesData = new NavigateToModulesFromTheLeftNavSmoke.PackagesModules();
-                var transmittalsData = new NavigateToModulesFromTheLeftNavSmoke.TransmittalsModules();                
+                var transmittalsData = new NavigateToModulesFromTheLeftNavSmoke.TransmittalsModules();
+                var tasksData = new NavigateToModulesFromTheLeftNavSmoke.TasksModules();
 
                 test.Info("Navigate to DashBoard Page of Project: " + packagesData.ProjectName);
                 var projectDashBoard = projectsList.NavigateToProjectDashboardPage(packagesData.ProjectName);
@@ -79,7 +80,7 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                     .LogValidation<TransmittalsPending>(ref validations, transmittalsSentItems.ValidateDisplayedViewFilterOption(transmittalsData.DefaultFilterAtPendingPane))
                     .LogValidation<TransmittalsPending>(ref validations, transmittalsSentItems.ValidateFilterBoxIsHighlighted(filterBoxIndex: 1))
                     .ClickHeaderButton<ProjectsDashboard>(MainPaneTableHeaderButton.Refresh, true, transmittalsData.GridViewPendingName);
-                
+
                 //User Story 121272 - 119703 Navigate to Modules from the Left Nav - Part 3
                 projectDashBoard.SelectModuleMenuItem<ProjectsDashboard>(packagesData.NavigatePath[0])
                     .LogValidation<ProjectsDashboard>(ref validations, projectDashBoard.ValidateDisplayedSubItemLinks(packagesData.SubItemLinks));
@@ -112,7 +113,40 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                     .LogValidation<PackagesSentItems>(ref validations, packagesSentItems.ValidateRecordItemsCount(packagesInbox.GetTableItemNumber(), packagesData.GridViewName))
                     .LogValidation<PackagesSentItems>(ref validations, packagesSentItems.ValidateItemsAreShown(columnValuesInConditionList, packagesData.GridViewName))
                     .ClickHeaderButton<ProjectsDashboard>(MainPaneTableHeaderButton.Refresh, true, packagesData.GridViewName);
-                               
+
+                //User Story 121307 - 119703 Navigate to Modules from the Left Nav - Part 4
+                projectDashBoard.SelectModuleMenuItem<ProjectsDashboard>(tasksData.NavigatePath[0])
+                    .LogValidation<ProjectsDashboard>(ref validations, projectDashBoard.ValidateDisplayedSubItemLinks(tasksData.SubItemLinks));
+
+                columnValuesInConditionList = new List<KeyValuePair<string, string>>
+                {
+                    tasksData.ColumnValuesInConditionList.Subject
+                };
+
+                var taskInbox = projectDashBoard.SelectModuleMenuItem<TasksInbox>(tasksData.NavigatePath[1]);
+                taskInbox.LogValidation<TasksInbox>(ref validations, taskInbox.ValidateSubPageIsDislayed(tasksData.SubItemLinks[0]))
+                    .LogValidation<TasksInbox>(ref validations, taskInbox.ValidateDisplayedViewFilterOption(tasksData.DefaultFilter))
+                    .LogValidation<TasksInbox>(ref validations, taskInbox.ValidateFilterBoxIsHighlighted(filterBoxIndex: 1))
+                    .LogValidation<TasksInbox>(ref validations, taskInbox.ValidateRecordItemsCount(taskInbox.GetTableItemNumber(), tasksData.GridViewName))
+                    .LogValidation<TasksInbox>(ref validations, taskInbox.ValidateItemsAreShown(columnValuesInConditionList, tasksData.GridViewName))
+                    .ClickHeaderButton<ProjectsDashboard>(MainPaneTableHeaderButton.Refresh, true, tasksData.GridViewName);
+
+                var taskDrafts = projectDashBoard.SelectModuleMenuItem<TasksDrafts>(tasksData.NavigatePath[2]);
+                taskInbox.LogValidation<TasksDrafts>(ref validations, taskInbox.ValidateSubPageIsDislayed(tasksData.SubItemLinks[1]))
+                    .LogValidation<TasksDrafts>(ref validations, taskInbox.ValidateDisplayedViewFilterOption(tasksData.DefaultFilter))
+                    .LogValidation<TasksDrafts>(ref validations, taskInbox.ValidateFilterBoxIsHighlighted(filterBoxIndex: 1))
+                    .LogValidation<TasksDrafts>(ref validations, taskInbox.ValidateRecordItemsCount(taskInbox.GetTableItemNumber(), tasksData.GridViewName))
+                    .LogValidation<TasksDrafts>(ref validations, taskInbox.ValidateItemsAreShown(columnValuesInConditionList, tasksData.GridViewName))
+                    .ClickHeaderButton<ProjectsDashboard>(MainPaneTableHeaderButton.Refresh, true, tasksData.GridViewName);
+
+                var taskSentItems = projectDashBoard.SelectModuleMenuItem<TasksSentItems>(tasksData.NavigatePath[3]);
+                taskInbox.LogValidation<TasksSentItems>(ref validations, taskInbox.ValidateSubPageIsDislayed(tasksData.SubItemLinks[2]))
+                    .LogValidation<TasksSentItems>(ref validations, taskInbox.ValidateDisplayedViewFilterOption(tasksData.DefaultFilter))
+                    .LogValidation<TasksSentItems>(ref validations, taskInbox.ValidateFilterBoxIsHighlighted(filterBoxIndex: 1))
+                    .LogValidation<TasksSentItems>(ref validations, taskInbox.ValidateRecordItemsCount(taskInbox.GetTableItemNumber(), tasksData.GridViewName))
+                    .LogValidation<TasksSentItems>(ref validations, taskInbox.ValidateItemsAreShown(columnValuesInConditionList, tasksData.GridViewName))
+                    .ClickHeaderButton<ProjectsDashboard>(MainPaneTableHeaderButton.Refresh, true, tasksData.GridViewName);
+
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);
                 Console.WriteLine(string.Join(System.Environment.NewLine, validations.ToArray()));
