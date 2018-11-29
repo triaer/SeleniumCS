@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using OpenQA.Selenium;
 using KiewitTeamBinder.UI.Pages.Global;
 using static KiewitTeamBinder.UI.ExtentReportsHelper;
-using static KiewitTeamBinder.UI.KiewitTeamBinderENums;
+using static KiewitTeamBinder.Common.KiewitTeamBinderENums;
 using OpenQA.Selenium.Support.UI;
 using KiewitTeamBinder.Common.Helper;
 using System.Windows.Forms;
@@ -35,7 +35,8 @@ namespace KiewitTeamBinder.UI.Pages.Global
         private string _documentDetailsTextbox = "//td//*[@data-property-name='{0}']";
         private string _headerButton = "//a[span='{0}']";
         private string _toNRows = "//*[@id='RadContextMenu1_detached']/div[{0}]//a[span= '{1}']";
-        
+        private string _bottomButtonXpath = "//li[contains(@class,'rtbItem rtbBtn')]//span[text()='{0}']";
+
         public IWebElement AddFileInBulkButton { get { return StableFindElement(_addFileInBulkButton); } }
         public IWebElement SelectAllCheckbox { get { return StableFindElement(_selectAllCheckbox); } }
         public IReadOnlyCollection<IWebElement> SelectCheckboxes { get { return StableFindElements(_selectCheckboxes); } }
@@ -188,7 +189,19 @@ namespace KiewitTeamBinder.UI.Pages.Global
             }
             return data;
 
-        }                
+        }
+
+        public T ClickHeaderButton<T>(DocBulkUploadHeaderButton buttonName, bool checkProgressPopup = false)
+        {
+            IWebElement Button = StableFindElement(By.XPath(string.Format(_headerButton, buttonName.ToDescription())));
+            var node = StepNode();            
+            node.Info("Click the button: " + buttonName.ToDescription());
+            Button.HoverAndClickWithJS();
+            if (checkProgressPopup)
+                WaitForLoading(_progressPopUp);
+
+            return (T)Activator.CreateInstance(typeof(T), WebDriver);
+        }            
 
         public BulkUploadDocuments HoverOnCopyAttributesMainItem(string itemName, ref int index)
         {
@@ -269,7 +282,25 @@ namespace KiewitTeamBinder.UI.Pages.Global
             return data;
         }
 
+        public AlertDialog ClickValidateDocumentDetails(DocBulkUploadHeaderButton buttonName, List<KeyValuePair<string, bool>> methodValidation)
+        {
+            var dialog = ClickHeaderButton<AlertDialog>(buttonName,true);
+            methodValidation.Add(ValidateProgressContentMessage("Validating Documents in progress"));
+            return dialog;
+        }
 
+        private KeyValuePair<string, bool> ValidateProgressContentMessage(string message)
+        {
+            var node = StepNode();
+            WaitForLoading(_progressPopUp);
+            IWebElement DialogMessage = FindElement(_progressMessage);
+            var actual = DialogMessage.GetAttribute("innerHTML");
+            if (actual.Contains(message))
+                return SetPassValidation(node, Validation.Progress_Message_Is_Displayed + message);
+            else
+                return SetFailValidation(node, Validation.Progress_Message_Is_Displayed, message, actual);
+
+        }
         public KeyValuePair<string, bool> ValidateFilesDisplay(int numberOfFiles)
         {
             var node = StepNode();
@@ -393,26 +424,86 @@ namespace KiewitTeamBinder.UI.Pages.Global
             rowIndexOfStandardRow = Utils.RefactorIndex(rowIndexOfStandardRow);
             try
             {
-                Dictionary<string, string> dataOfStandardRow = GetDataFromDocumentRow(rowIndexOfStandardRow);
-                int i = 0;
-                do
-                {
-                    if (i != rowIndexOfStandardRow)
-                    {
-                        var dataFromDocumentRow = GetDataFromDocumentRow(i);
-                        if (!Utils.DeepEquals(dataFromDocumentRow,dataOfStandardRow))
-                            return SetFailValidation(node, Validation.Document_Properties_Are_Copied_To_All_Rows);
-                    }
-                    i++;
-                }
-                while (i < AllDocumentRows.Count);
+                Dictionary<string, string>[] dataFromAllDocumentRows = GetDataFromAllDocumentRows();
+                Dictionary<string, string> dataOfStandardRow = dataFromAllDocumentRows[rowIndexOfStandardRow];
 
-                return SetPassValidation(node, Validation.Document_Properties_Are_Copied_To_All_Rows); 
+                for (int i = 0; i < dataFromAllDocumentRows.Length; i++)
+                    if (i != rowIndexOfStandardRow)
+                        if (!Utils.DictEquals(dataFromAllDocumentRows[i], dataOfStandardRow))
+                            return SetFailValidation(node, Validation.Document_Properties_Are_Copied_To_All_Rows);
+
+                return SetPassValidation(node, Validation.Document_Properties_Are_Copied_To_All_Rows);
             }
             catch (Exception e)
             {
                 return SetErrorValidation(node, Validation.Document_Properties_Are_Copied_To_All_Rows, e);
             }
+        }
+
+
+        private Dictionary<string, string>[] GetDataFromAllDocumentRows()
+        {
+            int numberOfRows = AllDocumentRows.Count;
+            string value;
+            Dictionary<string, string>[] dataArray = new Dictionary<string, string>[numberOfRows];
+            for (int i = 0; i < dataArray.Length; i++)
+            {
+                dataArray[i] = new Dictionary<string, string>();
+            }
+
+            string[] textboxName = new string[7];
+            textboxName[0] = DocBulkUploadInputText.DocumentNo.ToDescription();
+            textboxName[1] = DocBulkUploadInputText.Title.ToDescription();
+            textboxName[2] = DocBulkUploadInputText.Due.ToDescription();
+            textboxName[3] = DocBulkUploadInputText.Actual.ToDescription();
+            textboxName[4] = DocBulkUploadInputText.Forecast.ToDescription();
+            textboxName[5] = DocBulkUploadInputText.AltDocumentNo.ToDescription();
+            textboxName[6] = DocBulkUploadInputText.IncTrnNo.ToDescription();
+
+            IReadOnlyCollection<IWebElement> DocumentDetailsTextbox;
+            for (int i = 0; i < textboxName.Length; i++)
+            {
+                DocumentDetailsTextbox = StableFindElements(By.XPath(string.Format(_documentDetailsTextbox, textboxName[i])));
+                for (int j = 0; j < numberOfRows; j++)
+                {
+                    if (DocumentDetailsTextbox.ElementAt(j).Text != null)
+                        value = DocumentDetailsTextbox.ElementAt(j).Text;
+                    else
+                        value = "";
+                    dataArray[j].Add(textboxName[i], value);
+                }
+            }
+
+            string[] comboboxName = new string[8];
+            comboboxName[0] = DocBulkUploadDropdownType.Rev.ToDescription();
+            comboboxName[1] = DocBulkUploadDropdownType.Sts.ToDescription();
+            comboboxName[2] = DocBulkUploadDropdownType.Disc.ToDescription();
+            comboboxName[3] = DocBulkUploadDropdownType.Cat.ToDescription();
+            comboboxName[4] = DocBulkUploadDropdownType.Type.ToDescription();
+            comboboxName[5] = DocBulkUploadDropdownType.Location.ToDescription();
+            comboboxName[6] = DocBulkUploadDropdownType.SpecReference.ToDescription();
+            comboboxName[7] = DocBulkUploadDropdownType.SubType.ToDescription();
+
+            IReadOnlyCollection<SelectElement> DocumentDetailsCombobox;
+            for (int i = 0; i < comboboxName.Length; i++)
+            {
+                DocumentDetailsCombobox = GetAllComboBoxes(comboboxName[i]);
+                for (int j = 0; j < numberOfRows; j++)
+                    dataArray[j].Add(comboboxName[i], DocumentDetailsCombobox.ElementAt(j).SelectedOption.Text);
+            }
+
+            for (int j = 0; j < numberOfRows; j++)
+                dataArray[j].Add("SupersededCheckbox", AllSupersededCheckboxes.ElementAt(j).Selected.ToString());
+
+            return dataArray;
+        }
+
+        public ConfirmDialog ClickSaveBulkUploadDocuments(List<KeyValuePair<string, bool>> methodValidation)
+        {
+            IWebElement SaveButton = StableFindElement(By.XPath(string.Format(_bottomButtonXpath, "Save")));
+            SaveButton.Click();
+            methodValidation.Add(ValidateProgressContentMessage("Saving Documents in progress"));
+            return new ConfirmDialog(WebDriver);
         }
 
         private static class Validation
@@ -428,6 +519,8 @@ namespace KiewitTeamBinder.UI.Pages.Global
             public static string Row_Is_Selected = "Validate That Document Row {0} Is Selected";
             public static string Submenu_Displays = "Validate That Submenu Displays After Hovering";
             public static string Document_Properties_Are_Copied_To_All_Rows = "Validate That The Document Properties Are Copied To All Rows";
+            public static string Progress_Message_Is_Displayed = "Validate That The Progress Message Display: ";
+            
         }
         #endregion
     }

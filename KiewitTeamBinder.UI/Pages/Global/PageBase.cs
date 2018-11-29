@@ -28,7 +28,8 @@ namespace KiewitTeamBinder.UI.Pages.Global
         internal static string Url { get; set; }
         internal static IWebDriver WebDriver { get; set; }
 
-        internal static By loadingIcon = By.XPath("//div[@class = 'k-loading-mask']");
+        internal static By _progressPopUp => By.Id("divProgressWindow");
+        internal static By _progressMessage => By.Id("spanProgressMsg");
         internal static By overlayWindow = By.XPath("//div[@class = 'k-overlay']");
         internal const int longTimeout = 30;
         internal const int mediumTimeout = 15;
@@ -242,6 +243,77 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
         }
 
+        /// <summary>
+        /// Wait for progress appear and disappear
+        /// </summary>
+        /// <param name="elementDescription"></param>
+        /// <param name="timeout"></param>
+        internal static void WaitForLoading(By elementDescription, int timeout = mediumTimeout)
+        {
+            var wait = Browser.Wait(timeout);
+            try
+            {
+                wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.VisibilityOfAllElementsLocatedBy(elementDescription));
+                wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.InvisibilityOfElementLocated(elementDescription));
+            }
+            catch (Exception)
+            {
+                //skip the action
+            }
+        }
+        internal static void WaitUntilJSReady(int timeoutSec = mediumTimeout)
+        {
+            var wait = Browser.Wait(timeoutSec);
+            wait.Until(driver => ((IJavaScriptExecutor)driver).ExecuteScript("return document.readyState").ToString().Equals("complete"));
+
+        }
+
+        internal static void WaitForJQueryLoad(int timeout = 30)
+        {
+            var wait = Browser.Wait(timeout * 2);
+            wait.Until(driver => (bool)((IJavaScriptExecutor)driver).ExecuteScript(
+                "var result = true; " +
+                "try { result = (typeof jQuery != 'undefined') ? jQuery.active == 0 : true } " +
+                "catch (e) {}; return result;"));
+            //wait.Until(driver => (bool)((IJavaScriptExecutor)driver).ExecuteScript("return (window.jQuery != null) && (jQuery.active == 0);"));
+            WaitUntilJSReady(timeout);
+        }
+
+        internal static void WaitForJQueryToBeActive(int timeout = 30)
+        {
+
+            int numOfWait = 1;
+            bool isJqueryUsed = (bool)((IJavaScriptExecutor)WebDriver).ExecuteScript("return (typeof(jQuery) != 'undefined')");
+            if (isJqueryUsed)
+            {
+                while (true)
+                {
+                    // JavaScript test to verify jQuery is active or not
+                    bool ajaxIsComplete = (bool)(((IJavaScriptExecutor)WebDriver).ExecuteScript("return jQuery.active == 0"));
+                    if (ajaxIsComplete) break;
+                    try
+                    {
+                        numOfWait++;
+                    }
+                    catch (Exception) { }
+                }
+            }
+        }
+        internal static void WaitForAngularJSLoad()
+        {
+            IJavaScriptExecutor js = (IJavaScriptExecutor)WebDriver;
+            bool isDataLoaded = false;
+            int numOfWait = 1;
+            while (isDataLoaded == false)
+            {
+                isDataLoaded = (bool)js.ExecuteScript("return (window.angular !== undefined) && (angular.element(document).injector() !== undefined) && (angular.element(document).injector().get('$http').pendingRequests.length === 0)");
+                Wait(1);
+                numOfWait++;
+                if (numOfWait > 60)
+                    break;
+            }
+        }
+
         internal static void ScrollToElement(IWebElement Element)
         {
             Actions action = new Actions(WebDriver);
@@ -263,7 +335,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
             jse.ExecuteScript("arguments[0].scrollIntoView();", Element);
         }
         
-
         /// <summary>
         /// Get index of table cell value
         /// </summary>
@@ -480,77 +551,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
             return eles;
         }
 
-        /// <summary>
-        /// Wait for spinner appear and disappear
-        /// </summary>
-        /// <param name="elementDescription"></param>
-        /// <param name="timeout"></param>
-        internal static void WaitForLoading(By elementDescription, int timeout = mediumTimeout)
-        {
-            var wait = Browser.Wait(timeout);
-            try
-            {
-                wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.VisibilityOfAllElementsLocatedBy(elementDescription));
-                wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.InvisibilityOfElementLocated(elementDescription));
-            }
-            catch (Exception)
-            {
-                //skip the action
-            }
-        }
-        internal static void WaitUntilJSReady(int timeoutSec = mediumTimeout)
-        {
-            var wait = Browser.Wait(timeoutSec);
-            wait.Until(driver => ((IJavaScriptExecutor)driver).ExecuteScript("return document.readyState").ToString().Equals("complete"));
-            
-        }
-
-        internal static void WaitForJQueryLoad(int timeout = 30)
-        {
-            var wait = Browser.Wait(timeout*2);
-            wait.Until(driver => (bool)((IJavaScriptExecutor)driver).ExecuteScript(
-                "var result = true; " +
-                "try { result = (typeof jQuery != 'undefined') ? jQuery.active == 0 : true } " +
-                "catch (e) {}; return result;"));
-            //wait.Until(driver => (bool)((IJavaScriptExecutor)driver).ExecuteScript("return (window.jQuery != null) && (jQuery.active == 0);"));
-            WaitUntilJSReady(timeout);
-        }
-
-        internal static void WaitForJQueryToBeActive(int timeout = 30)
-        {
-           
-            int numOfWait = 1;
-            bool isJqueryUsed = (bool)((IJavaScriptExecutor)WebDriver).ExecuteScript("return (typeof(jQuery) != 'undefined')");
-            if (isJqueryUsed)
-            {
-                while (true)
-                {
-                    // JavaScript test to verify jQuery is active or not
-                    bool ajaxIsComplete = (bool)(((IJavaScriptExecutor)WebDriver).ExecuteScript("return jQuery.active == 0"));
-                    if (ajaxIsComplete) break;
-                    try
-                    {
-                        numOfWait++;
-                    }
-                    catch (Exception) { }
-                }
-            }
-        }
-        internal static void WaitForAngularJSLoad()
-        {
-            IJavaScriptExecutor js = (IJavaScriptExecutor)WebDriver;
-            bool isDataLoaded = false;
-            int numOfWait = 1;
-            while (isDataLoaded == false)
-            {
-                isDataLoaded = (bool)js.ExecuteScript("return (window.angular !== undefined) && (angular.element(document).injector() !== undefined) && (angular.element(document).injector().get('$http').pendingRequests.length === 0)");
-                Wait(1);
-                numOfWait++;
-                if (numOfWait > 60)
-                    break;
-            }
-        }
-
         internal static void Reload()
         {
             WebDriver.Navigate().Refresh();
@@ -707,18 +707,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             WaitForElementClickable(by);
             StableFindElement(by).Click();
         }
-
-        public void GlobalSearchByName(string valueSearch, IWebElement SearchTextbox, By gridRows)
-        {
-            WaitForElement(gridRows);
-            SearchTextbox.InputText(valueSearch);
-            SearchTextbox.SendKeys(OpenQA.Selenium.Keys.Enter);
-
-            if (FindElement(loadingIcon) != null)
-                WaitForLoading(loadingIcon);
-            WaitForElement(gridRows);
-            WaitForAngularJSLoad();
-        }
+               
         internal static KeyValuePair<string, bool> SetPassValidation(ExtentTest test, string testInfo)
         {
             test.Pass(testInfo);

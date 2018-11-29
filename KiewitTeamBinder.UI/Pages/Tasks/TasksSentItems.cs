@@ -16,15 +16,14 @@ using KiewitTeamBinder.UI.Pages.Dialogs;
 
 namespace KiewitTeamBinder.UI.Pages.Global
 {
-    public class PackagesInbox : ProjectsDashboard
+    public class TasksSentItems : ProjectsDashboard
     {
         #region Entities
 
-        private static By _projectListSumary => By.Id("divProjectSummary");
 
         #endregion
 
-        public PackagesInbox(IWebDriver webDriver) : base(webDriver)
+        public TasksSentItems(IWebDriver webDriver) : base(webDriver)
         {
         }
     }

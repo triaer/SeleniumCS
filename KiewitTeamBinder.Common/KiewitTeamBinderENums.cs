@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KiewitTeamBinder.UI
+namespace KiewitTeamBinder.Common
 {
     public class KiewitTeamBinderENums
     {
@@ -71,6 +71,24 @@ namespace KiewitTeamBinder.UI
             SpecReference,
             [Description("SubType")]
             SubType
+        }
+
+        public enum DocBulkUploadHeaderButton
+        {
+            [Description("New Rows")]
+            NewRows,
+            [Description("Copy Attributes")]
+            CopyAttributes,
+            [Description("Get Attributes")]
+            GetAttributes,
+            [Description("Validate")]
+            Validate,
+            [Description("Remove Rows")]
+            RemoveRows,
+            [Description("Link Deliverable Items")]
+            LinkDeliverableItems,
+            [Description("Remove Deliverable Items")]
+            RemoveDeliverableItems
         }
 
         public enum DocBulkUploadInputText
@@ -171,6 +189,13 @@ namespace KiewitTeamBinder.UI
             To,
             [Description("TaskCount")]
             TaskCount
+        }
+        public enum DialogPopupButton
+        {
+            Yes,
+            No,
+            OK
+
         }
     }
 }

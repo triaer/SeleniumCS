@@ -124,6 +124,7 @@
     <Compile Include="ExcelInterop\Old_ExcelHelper.cs" />
     <Compile Include="ExtentReportsHelper.cs" />
     <Compile Include="IWebElementExtensions.cs" />
+    <Compile Include="Pages\Dialogs\ConfirmDialog.cs" />
     <Compile Include="Pages\Dialogs\AlertDialog.cs" />
     <Compile Include="Pages\Dialogs\ApplyToNRowsDialog.cs" />
     <Compile Include="Pages\Dialogs\HelpAboutDialog.cs" />
@@ -135,6 +136,9 @@
     <Compile Include="Pages\Global\SsoSignOn.cs" />
     <Compile Include="Pages\Global\NotLoggedInLanding.cs" />
     <Compile Include="Pages\Global\PageBase.cs" />
+    <Compile Include="Pages\Tasks\TasksDrafts.cs" />
+    <Compile Include="Pages\Tasks\TasksInbox.cs" />
+    <Compile Include="Pages\Tasks\TasksSentItems.cs" />
     <Compile Include="Pages\Transmittals\TransmittalsDrafts.cs" />
     <Compile Include="Pages\Transmittals\TransmittalsInbox.cs" />
     <Compile Include="Pages\Transmittals\TransmittalsSentItems.cs" />

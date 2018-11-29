@@ -16,7 +16,7 @@ using KiewitTeamBinder.UI.Pages.Dialogs;
 
 namespace KiewitTeamBinder.UI.Pages.Global
 {
-    public class PackagesInbox : ProjectsDashboard
+    public class TasksInbox : ProjectsDashboard
     {
         #region Entities
 
@@ -24,7 +24,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
         #endregion
 
-        public PackagesInbox(IWebDriver webDriver) : base(webDriver)
+        public TasksInbox(IWebDriver webDriver) : base(webDriver)
         {
         }
     }

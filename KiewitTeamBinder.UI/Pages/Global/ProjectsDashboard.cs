@@ -10,7 +10,7 @@ using KiewitTeamBinder.UI.Pages.Dialogs;
 using KiewitTeamBinder.UI.Pages.VendorData;
 using KiewitTeamBinder.Common;
 using KiewitTeamBinder.Common.Helper;
-using static KiewitTeamBinder.UI.KiewitTeamBinderENums;
+using static KiewitTeamBinder.Common.KiewitTeamBinderENums;
 
 namespace KiewitTeamBinder.UI.Pages.Global
 {
@@ -18,6 +18,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
     {
         #region Entities                
         public By _dashBoardLabel => By.XPath("//span[.='Dashboard']");
+        public By _gridViewFilterListData => By.XPath("//div[substring(@id, string-length(@id) - string-length('_rfltMenu_detached') +1) = '_rfltMenu_detached'][contains(@style,'block')]/ul/li");
         private static By _nameProjectLabel => By.Id("projectInput");
         private static By _projectListDropdown => By.Id("btnShowProjectList");
         private static By _projectListSumary => By.Id("divProjectSummary");

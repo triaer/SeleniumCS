@@ -11,7 +11,7 @@ using System.Diagnostics;
 using System.IO;
 using KiewitTeamBinder.UI.Tests;
 using KiewitTeamBinder.UI;
-using static KiewitTeamBinder.UI.KiewitTeamBinderENums;
+using static KiewitTeamBinder.Common.KiewitTeamBinderENums;
 using KiewitTeamBinder.UI.Pages.Dialogs;
 using KiewitTeamBinder.Common.TestData;
 using KiewitTeamBinder.UI.Pages.Global;

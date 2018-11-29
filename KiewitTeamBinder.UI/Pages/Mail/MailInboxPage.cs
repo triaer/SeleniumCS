@@ -8,7 +8,7 @@ using static KiewitTeamBinder.UI.ExtentReportsHelper;
 using KiewitTeamBinder.UI;
 using KiewitTeamBinder.UI.Pages.Dialogs;
 using KiewitTeamBinder.UI.Pages.Global;
-using static KiewitTeamBinder.UI.KiewitTeamBinderENums;
+using static KiewitTeamBinder.Common.KiewitTeamBinderENums;
 
 namespace KiewitTeamBinder.UI.Pages.Mail
 {

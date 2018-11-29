@@ -11,7 +11,7 @@ using static KiewitTeamBinder.UI.ExtentReportsHelper;
 using System.Threading;
 using KiewitTeamBinder.UI;
 using KiewitTeamBinder.UI.Pages.Dialogs;
-using static KiewitTeamBinder.UI.KiewitTeamBinderENums;
+using static KiewitTeamBinder.Common.KiewitTeamBinderENums;
 using KiewitTeamBinder.UI.Pages.Packages;
 
 namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
@@ -35,6 +35,7 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
 
                 var packagesData = new NavigateToModulesFromTheLeftNavSmoke.PackagesModules();
                 var transmittalsData = new NavigateToModulesFromTheLeftNavSmoke.TransmittalsModules();
+                var taskData = new NavigateToModulesFromTheLeftNavSmoke.TasksModules();
 
                 test.Info("Navigate to DashBoard Page of Project: " + packagesData.ProjectName);
                 var projectDashBoard = projectsList.NavigateToProjectDashboardPage(packagesData.ProjectName);
@@ -122,12 +123,12 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                     packagesData.ColumnValuesInConditionList.PackageType
                 };
 
-                var packagesInbox = projectDashBoard.SelectModuleMenuItem<PackagesInbox>(packagesData.NavigatePath[1]);
-                packagesInbox.LogValidation<PackagesInbox>(ref validations, packagesInbox.ValidateSubPageIsDislayed(packagesData.SubItemLinks[0]))
-                    .LogValidation<PackagesInbox>(ref validations, packagesInbox.ValidateDisplayedViewFilterOption(packagesData.DefaultFilter))
-                    .LogValidation<PackagesInbox>(ref validations, packagesInbox.ValidateFilterBoxIsHighlighted(filterBoxIndex: 1))
-                    .LogValidation<PackagesInbox>(ref validations, packagesInbox.ValidateRecordItemsCount(packagesInbox.GetTableItemNumber(), packagesData.GridViewName))
-                    .LogValidation<PackagesInbox>(ref validations, packagesInbox.ValidateItemsAreShown(columnValuesInConditionList, packagesData.GridViewName))
+                var taskInbox = projectDashBoard.SelectModuleMenuItem<TasksInbox>(packagesData.NavigatePath[1]);
+                packagesInbox.LogValidation<TasksInbox>(ref validations, packagesInbox.ValidateSubPageIsDislayed(packagesData.SubItemLinks[0]))
+                    .LogValidation<TasksInbox>(ref validations, packagesInbox.ValidateDisplayedViewFilterOption(packagesData.DefaultFilter))
+                    .LogValidation<TasksInbox>(ref validations, packagesInbox.ValidateFilterBoxIsHighlighted(filterBoxIndex: 1))
+                    .LogValidation<TasksInbox>(ref validations, packagesInbox.ValidateRecordItemsCount(packagesInbox.GetTableItemNumber(), packagesData.GridViewName))
+                    .LogValidation<TasksInbox>(ref validations, packagesInbox.ValidateItemsAreShown(columnValuesInConditionList, packagesData.GridViewName))
                     .ClickHeaderButton<ProjectsDashboard>(MainPaneTableHeaderButton.Refresh, true, packagesData.GridViewName);
 
                 // then
