@@ -25,8 +25,6 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
             try
             {
                 // given
-                validations = new List<KeyValuePair<string, bool>>();
-                List<KeyValuePair<string, bool>> methodValidations = new List<KeyValuePair<string, bool>>();
                 var teambinderTestAccount = GetTestAccount("VendorAccount1", environment, "NonSSO");
                 test.Info("Open TeamBinder Web Page: " + teambinderTestAccount.Url);
                 var driver = Browser.Open(teambinderTestAccount.Url, browser);

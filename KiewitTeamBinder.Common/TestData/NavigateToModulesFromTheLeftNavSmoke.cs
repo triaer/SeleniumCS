@@ -13,7 +13,7 @@ namespace KiewitTeamBinder.Common.TestData
         public string ProjectName = "Automation Project 1";
         public class TransmittalsModules : NavigateToModulesFromTheLeftNavSmoke
         {
-            public string[] NavigatePath = { "Transmittals", "Transmittals/Inbox", "Transmittals/Drafts", "Transmittals/Sent Items", "Transmittals/Pending" };
+            
             public string[] SubItemLinks = { "Inbox", "Drafts", "Sent Items", "Pending" };
             public string SubPendingTitle = "Pending Transmittals";
             public string DefaultFilter = "Personal";
@@ -32,7 +32,7 @@ namespace KiewitTeamBinder.Common.TestData
         }
         public class PackagesModules : NavigateToModulesFromTheLeftNavSmoke
         {
-            public string[] NavigatePath = { "Packages", "Packages/Inbox", "Packages/Drafts", "Packages/Sent Items" };
+            
             public string[] SubItemLinks = { "Inbox", "Drafts", "Sent Items" };
             public string DefaultFilter = "All";
             public string PackageModule = "Package";
