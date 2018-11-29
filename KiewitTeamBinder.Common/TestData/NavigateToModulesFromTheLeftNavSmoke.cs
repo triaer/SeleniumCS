@@ -45,24 +45,7 @@ namespace KiewitTeamBinder.Common.TestData
                 public KeyValuePair<string, string> PackageID = new KeyValuePair<string, string>(MainPaneTableHeaderLabel.PackageID.ToDescription(), "74841");
                 public KeyValuePair<string, string> PackageType = new KeyValuePair<string, string>(MainPaneTableHeaderLabel.PackageType.ToDescription(), "Standard");
             }
-        }
-
-        public class TasksModules : NavigateToModulesFromTheLeftNavSmoke
-        {
-            public string[] NavigatePath = { "Tasks", "Tasks/Inbox", "Tasks/Drafts", "Tasks/Sent Items" };
-            public string[] SubItemLinks = { "Inbox", "Drafts", "Sent Items" };
-            public string DefaultFilter = "All";
-            public string TasksModule = "Tasks";
-            public string TasksNode = "Tasks";
-            public string GridViewName = "GridViewTasks";
-            public ColumnValuesInCondition ColumnValuesInConditionList = new ColumnValuesInCondition();
-
-            public class ColumnValuesInCondition
-            {
-                public KeyValuePair<string, string> PackageID = new KeyValuePair<string, string>(MainPaneTableHeaderLabel.PackageID.ToDescription(), "74841");
-                public KeyValuePair<string, string> PackageType = new KeyValuePair<string, string>(MainPaneTableHeaderLabel.PackageType.ToDescription(), "Standard");
-            }
-        }
+        }      
 
     }
 
