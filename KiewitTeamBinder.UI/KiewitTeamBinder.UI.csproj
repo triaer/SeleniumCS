@@ -136,6 +136,7 @@
     <Compile Include="Pages\Global\SsoSignOn.cs" />
     <Compile Include="Pages\Global\NotLoggedInLanding.cs" />
     <Compile Include="Pages\Global\PageBase.cs" />
+    <Compile Include="Pages\TasksModule\Task.cs" />
     <Compile Include="Pages\TransmittalsModule\Transmittal.cs" />
     <Compile Include="Pages\PackagesModule\Package.cs" />
     <Compile Include="Pages\VendorData\HoldingArea.cs" />

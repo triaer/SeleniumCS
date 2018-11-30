@@ -13,11 +13,18 @@ using KiewitTeamBinder.Common.Helper;
 using System.Windows.Forms;
 using KiewitTeamBinder.UI.Pages.Dialogs;
 
-namespace KiewitTeamBinder.UI.Pages.Packages
+
+namespace KiewitTeamBinder.UI.Pages.TransmittalsModule
 {
-    public class TasksDrafts : ProjectsDashboard
+    public class Task : ProjectsDashboard
     {
-        public TasksDrafts(IWebDriver webDriver) : base(webDriver)
+        #region Entities
+
+        
+
+        #endregion
+
+        public Task(IWebDriver webDriver) : base(webDriver)
         {
         }
     }
