@@ -11,6 +11,14 @@ namespace KiewitTeamBinder.Common.TestData
     public class NavigateToModulesFromTheLeftNavSmoke
     {        
         public string ProjectName = "Automation Project 1";
+
+        public class DashboardModules : NavigateToModulesFromTheLeftNavSmoke
+        {
+            public string[] ListWidgits = { DashboardWidgit.MAIL.ToDescription(), DashboardWidgit.PACKAGES.ToDescription() };
+            public string DefaultFilter = "Latest Unrestrained";
+            public string GridViewName = "GridViewDocReg";
+            public string DocumentNo = "77777";
+        }
         public class TransmittalsModules : NavigateToModulesFromTheLeftNavSmoke
         {
             
@@ -31,8 +39,7 @@ namespace KiewitTeamBinder.Common.TestData
             }
         }
         public class PackagesModules : NavigateToModulesFromTheLeftNavSmoke
-        {
-            
+        { 
             public string[] SubItemLinks = { "Inbox", "Drafts", "Sent Items" };
             public string DefaultFilter = "All";
             public string PackageModule = "Package";

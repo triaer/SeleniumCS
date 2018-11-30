@@ -128,7 +128,11 @@ namespace KiewitTeamBinder.Common
             [Description("Packages")]
             PACKAGES,
             [Description("Tasks")]
-            TASKS
+            TASKS,
+            [Description("Dashboard")]
+            DASHBOARD,
+            [Description("Documents")]
+            DOCUMENTS,
         }
 
         public enum MainPaneTableHeaderButton
@@ -160,7 +164,7 @@ namespace KiewitTeamBinder.Common
             [Description("Export")]
             Export,
             [Description("More")]
-            More            
+            More
         }
 
         public enum MainPaneTableHeaderLabel
@@ -207,6 +211,34 @@ namespace KiewitTeamBinder.Common
             SENTITEMS,
             [Description("Pending")]
             PENDING
+        }
+
+        public enum DashboardWidgit
+        {
+            [Description("Mail")]
+            MAIL,
+            [Description("Unregistered Mail")]
+            UNREGISTERED_MAIL,
+            [Description("Documents")]
+            DOCUMENTS,
+            [Description("Workflow")]
+            WORKFLOW,
+            [Description("Packages")]
+            PACKAGES,
+            [Description("Transmittals")]
+            TRANSMITTALS,
+            [Description("Tasks")]
+            TASKS,
+            [Description("My Statistics")]
+            MY_STATISTICS,
+            [Description("Contractor View")]
+            CONTRACTOR_VIEW,
+            [Description("Forms")]
+            FORMS,
+            [Description("Gallery")]
+            GALLERY,
+            [Description("Submission View (Vendor)")]
+            SUBMISSION_VIEW,
         }
     }
 }

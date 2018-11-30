@@ -601,13 +601,16 @@ namespace KiewitTeamBinder.UI.Pages.Global
             excelDriver.Close();
         }
 
-        internal static void SwitchToPopUpWindow(IWebElement ElementToBeClicked, out string parentWindow, bool closePreviousWindow = false, int timeout = 30)
+        internal static void SwitchToPopUpWindow(IWebElement ElementToBeClicked, out string parentWindow, bool isDocument = false, bool closePreviousWindow = false, int timeout = 30)
         {
 
             parentWindow = WebDriver.CurrentWindowHandle;
             ReadOnlyCollection<string> originalHandles = WebDriver.WindowHandles;
 
-            ElementToBeClicked.ActionsClick();
+            if(isDocument == true)
+                ElementToBeClicked.ClickTwice();
+            else
+                ElementToBeClicked.ActionsClick();
             //ElementToBeClicked.Click();
 
             string popUpWindowHandle = Browser.Wait(timeout).Until<string>((d) =>
