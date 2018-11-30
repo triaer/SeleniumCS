@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using static KiewitTeamBinder.UI.ExtentReportsHelper;
 using KiewitTeamBinder.UI;
 using KiewitTeamBinder.UI.Pages.Dialogs;
-using KiewitTeamBinder.UI.Pages.VendorData;
 using KiewitTeamBinder.Common;
 using KiewitTeamBinder.Common.Helper;
 using static KiewitTeamBinder.Common.KiewitTeamBinderENums;

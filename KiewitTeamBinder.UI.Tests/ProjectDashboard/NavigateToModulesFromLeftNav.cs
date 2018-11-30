@@ -5,7 +5,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using FluentAssertions;
 using KiewitTeamBinder.Common.Helper;
 using KiewitTeamBinder.UI.Pages.Global;
-using KiewitTeamBinder.UI.Pages.VendorData;
 using KiewitTeamBinder.Common.TestData;
 using static KiewitTeamBinder.UI.ExtentReportsHelper;
 using System.Threading;
@@ -18,6 +17,7 @@ using KiewitTeamBinder.UI.Pages.TasksModule;
 using KiewitTeamBinder.UI.Pages.GalleryModule;
 using KiewitTeamBinder.UI.Pages.DashboardModule;
 using KiewitTeamBinder.UI.Pages.DocumentModule;
+using KiewitTeamBinder.UI.Pages.VendorDataModule;
 
 namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
 {

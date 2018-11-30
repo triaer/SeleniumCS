@@ -9,7 +9,7 @@ using static KiewitTeamBinder.UI.ExtentReportsHelper;
 using static KiewitTeamBinder.Common.KiewitTeamBinderENums;
 using KiewitTeamBinder.Common.Helper;
 
-namespace KiewitTeamBinder.UI.Pages.VendorData
+namespace KiewitTeamBinder.UI.Pages.VendorDataModule
 {
     public class HoldingArea : ProjectsDashboard
     {
