@@ -119,16 +119,18 @@ namespace KiewitTeamBinder.Common
             Company
         }
 
-        public enum ProjectDashboardModuleName
+        public enum ModuleNameInLeftNav
         {
             [Description("Mail")]
-            Mail,
+            MAIL,
             [Description("Transmittals")]
-            Transmittals,
-            [Description("Package")]
-            Package,
+            TRANSMITTALS,
+            [Description("Packages")]
+            PACKAGES,
             [Description("Tasks")]
-            Tasks
+            TASKS,
+            [Description("VendorData")]
+            VENDORDATA
         }
 
         public enum MainPaneTableHeaderButton
@@ -196,6 +198,21 @@ namespace KiewitTeamBinder.Common
             No,
             OK
 
+        }
+        public enum ModuleSubMenuInLeftNav
+        {
+            [Description("Inbox")]
+            INBOX,
+            [Description("Drafts")]
+            DRAFTS,
+            [Description("Sent Items")]
+            SENTITEMS,
+            [Description("Pending")]
+            PENDING,
+            [Description("Vendor Data Register")]
+            VENDODATAREGISTER,
+            [Description("Holding Area")]
+            HOLDINGAREA
         }
     }
 }

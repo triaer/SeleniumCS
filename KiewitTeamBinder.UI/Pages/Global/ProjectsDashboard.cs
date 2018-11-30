@@ -17,8 +17,8 @@ namespace KiewitTeamBinder.UI.Pages.Global
     public class ProjectsDashboard : LoggedInLanding
     {
         #region Entities                
-        public By _dashBoardLabel => By.XPath("//span[.='Dashboard']");
-        public By _gridViewFilterListData => By.XPath("//div[substring(@id, string-length(@id) - string-length('_rfltMenu_detached') +1) = '_rfltMenu_detached'][contains(@style,'block')]/ul/li");
+        private By _dashBoardLabel => By.XPath("//span[.='Dashboard']");
+        private By _gridViewFilterListData => By.XPath("//div[substring(@id, string-length(@id) - string-length('_rfltMenu_detached') +1) = '_rfltMenu_detached'][contains(@style,'block')]/ul/li");
         private static By _nameProjectLabel => By.Id("projectInput");
         private static By _projectListDropdown => By.Id("btnShowProjectList");
         private static By _projectListSumary => By.Id("divProjectSummary");
@@ -28,9 +28,9 @@ namespace KiewitTeamBinder.UI.Pages.Global
         private static By _vendorButton => By.Id("divVendorData");
         private static By _viewFilter => By.Id("lblView");        
         private static By _formTitle => By.Id("formTitle");
-        public static By _subMenuItemLink(string value) => By.XPath($"//span[(text()='{value}')]");
-        public static By _moduleButton(string value) => By.XPath($"//div[@id = 'div{value}']");
-        public static By _subPageTable(string value) => By.XPath($"//table[@id='ctl00_cntPhMain_{value}_ctl00']");
+        private static By _subMenuItemLink(string value) => By.XPath($"//span[(text()='{value}')]");
+        private static By _moduleButton(string value) => By.XPath($"//div[@id = 'div{value}']");
+        private static By _subPageTable(string value) => By.XPath($"//table[@id='ctl00_cntPhMain_{value}_ctl00']");
         private static By _itemsNumberLabel(string value) => By.XPath($"//span[contains(@id, '{value}_ctl00DSC')]");
         private static By _divSubMenu => By.XPath("//div[@id='divSubMenu']");        
         private static By _subPageHeader => By.Id("lblRegisterCaption");              
@@ -57,8 +57,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
         public IWebElement SubPageTable(string value) => StableFindElement(_subPageTable(value));
         public IWebElement PaneTable(string gridViewName) => StableFindElement(_paneTable(gridViewName));
         public IReadOnlyCollection<IWebElement> VisibleRows { get { return StableFindElements(_visibleRows); } }
-
-
         #endregion
 
         #region Actions
@@ -70,51 +68,38 @@ namespace KiewitTeamBinder.UI.Pages.Global
             ProjectListDropdown.Click();
             WaitForElementAttribute(ProjectListSumary, "display", "block");
             return this;
-        }
-              
-        public int GetTableItemNumber()
+        }       
+            
+        private void ClickMenuItem(string menuItem)
         {
             var node = StepNode();
-            node.Info("Get number of items in table");
-
-            try
-            { 
-                return VisibleRows.Count;
-            }                          
-            catch
-            {
-                return 0;
-            }
+            node.Info($"Click on the root node: {menuItem}");
+            ModuleButton(menuItem).Click();
+            WaitForElement(_divSubMenu);
         }
 
-        public ProjectsDashboard SelectModuleMenuItem(string menuPath)
+        private void ClickSubMenuItem(string subMenuItem)
         {
             var node = StepNode();
+            node.Info($"Click on the sub node: {subMenuItem}");
+            SubMenuItemLink(subMenuItem).Click();
+            WaitForElement(_subPageHeader);
+        }
 
-            var separator = '/';
-            var nodes = menuPath.Split(separator);
-            if (nodes.Count() == 1)
-            {
-                node.Info($"Click on the root node: {nodes[0]}");
-                ModuleButton(nodes[0]).Click();
-                WaitForElement(_divSubMenu);
-            }
-            else
-            {
-                node.Info($"Click on the root node: {nodes[0]}");
-                ModuleButton(nodes[0]).Click();
-                WaitForElement(_divSubMenu);
-                node.Info($"Click on the sub node: {nodes[1]}");
-                SubMenuItemLink(nodes[1]).Click();
-                WaitForElement(_subPageHeader);
-            }
+        private ProjectsDashboard SelectModuleMenuItem(string menuItem, string subMenuItem)
+        {
+            if (menuItem != "")
+                ClickMenuItem(menuItem);
+            
+            if (subMenuItem != "")
+                ClickSubMenuItem(subMenuItem);
 
             return this;
         }
 
-        public T SelectModuleMenuItem<T>(string menuPath)
+        public T SelectModuleMenuItem<T>(string menuItem = "", string subMenuItem = "")
         {
-            SelectModuleMenuItem(menuPath);
+            SelectModuleMenuItem(menuItem, subMenuItem);
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 
@@ -141,15 +126,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
-
-        private bool IsItemShown(string gridViewName, List<KeyValuePair<string, string>> columnValuePairList)
-        {
-            IReadOnlyCollection<IWebElement> AvailableItems = GetAvailableItems(gridViewName, columnValuePairList);
-            if (AvailableItems != null)
-                return true;
-            return false;
-        }
-
+                
         private IReadOnlyCollection<IWebElement> GetAvailableItems(string gridViewName, List<KeyValuePair<string, string>> columnValuePairList)
         {
             int rowIndex, colIndex = 1;
@@ -170,7 +147,38 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
             return StableFindElements(By.XPath(itemsXpath));
         }
-        
+
+        private int GetTableItemNumberWithConditions(string gridViewName, List<KeyValuePair<string, string>> columnValuePairList)
+        {
+            IReadOnlyCollection<IWebElement> AvailableItems = GetAvailableItems(gridViewName, columnValuePairList);          
+            try
+            {
+                return AvailableItems.Count;
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+
+        private int GetTableItemNumber()
+        {
+            var node = StepNode();
+
+            const string rowXpath = "//tr[contains(@style, 'visibility: visible')]";
+
+            try
+            {
+                var rows = StableFindElements(By.XPath(rowXpath)).Count;
+                node.Info("Get number of items in table: " + rows);
+                return rows;
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+
         public KeyValuePair<string, bool> ValidateProjectIsOpened(string nameProject)
         {
             var node = StepNode();
@@ -225,8 +233,9 @@ namespace KiewitTeamBinder.UI.Pages.Global
         }
 
         // moduleName: Mail/Transmittals/Vendor Data
-        public KeyValuePair<string, bool> ValidateRecordItemsCount(int itemsNumber, string moduleName)
+        public virtual KeyValuePair<string, bool> ValidateRecordItemsCount(string moduleName)
         {
+            int itemsNumber = GetTableItemNumber();
             var node = StepNode();
             node.Info($"Validate number of record items is equals to: {itemsNumber}");
 
@@ -321,7 +330,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             var node = StepNode();
             try
             {
-                if (IsItemShown(gridViewName, columnValuePairList))
+                if (GetTableItemNumberWithConditions(gridViewName, columnValuePairList) > 0)
                     return SetPassValidation(node, Validation.Items_Are_Shown);
                 return SetFailValidation(node, Validation.Items_Are_Shown);
             }
@@ -330,7 +339,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 return SetErrorValidation(node, Validation.Items_Are_Shown, e);
             }
         }
-
         
         private static class Validation
         {
@@ -344,7 +352,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
             public static string Number_Of_Items_Counted_Is_Valid = "Validate that number of items counted is valid";
             public static string Sub_Page_Is_Displayed = "Validate that the sub page is displayed";
             public static string Items_Are_Shown = "Validate that items on main pane are shown";
-
         }
         #endregion
     }

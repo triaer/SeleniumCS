@@ -10,10 +10,9 @@ using static KiewitTeamBinder.UI.ExtentReportsHelper;
 using static KiewitTeamBinder.Common.KiewitTeamBinderENums;
 using OpenQA.Selenium.Support.UI;
 using KiewitTeamBinder.Common.Helper;
-using System.Windows.Forms;
-using KiewitTeamBinder.UI.Pages.Dialogs;
+using KiewitTeamBinder.Common.TestData;
 
-namespace KiewitTeamBinder.UI.Pages.Packages
+namespace KiewitTeamBinder.UI.Pages.GalleryModule
 {
     public class Gallery : ProjectsDashboard
     {
@@ -107,9 +106,30 @@ namespace KiewitTeamBinder.UI.Pages.Packages
             }
         }
 
+        public KeyValuePair<string, bool> ValidateRecordItemsCount()
+        {
+            int itemsNumber = GetTableItemNumber(true);
+            var node = StepNode();
+            node.Info($"Validate number of record items is equals to: {itemsNumber}");
+
+            try
+            {
+                var actualQuantity = ItemsNumberLabel(new NavigateToModulesFromTheLeftNavSmoke.GalleryModules().GridViewName).Text;
+                if (Int32.Parse(actualQuantity) == itemsNumber)
+                    return SetPassValidation(node, Validation.Number_Of_Items_Counted_Is_Valid);
+
+                return SetFailValidation(node, Validation.Number_Of_Items_Counted_Is_Valid);
+            }
+            catch (Exception e)
+            {
+                return SetErrorValidation(node, Validation.Number_Of_Items_Counted_Is_Valid, e);
+            }
+        }
+
         private static class Validation
         {
             public static string Sort_By_Value_Displays_Correctly = "Validate that the Sort by value displays correctly";
+            public static string Number_Of_Items_Counted_Is_Valid = "Validate that number of items counted is valid";
         }
             #endregion
     }

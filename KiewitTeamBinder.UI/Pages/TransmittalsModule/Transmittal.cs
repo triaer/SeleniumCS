@@ -14,16 +14,17 @@ using System.Windows.Forms;
 using KiewitTeamBinder.UI.Pages.Dialogs;
 
 
-namespace KiewitTeamBinder.UI.Pages.Global
+namespace KiewitTeamBinder.UI.Pages.TransmittalsModule
 {
-    public class TransmittalsSentItems: ProjectsDashboard
+    public class Transmittal : ProjectsDashboard
     {
         #region Entities
 
+        
 
         #endregion
 
-        public TransmittalsSentItems(IWebDriver webDriver) : base(webDriver)
+        public Transmittal(IWebDriver webDriver) : base(webDriver)
         {
         }
     }

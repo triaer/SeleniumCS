@@ -25,8 +25,6 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
             try
             {
                 // given
-                validations = new List<KeyValuePair<string, bool>>();
-                List<KeyValuePair<string, bool>> methodValidations = new List<KeyValuePair<string, bool>>();
                 var teambinderTestAccount = GetTestAccount("VendorAccount1", environment, "NonSSO");
                 test.Info("Open TeamBinder Web Page: " + teambinderTestAccount.Url);
                 var driver = Browser.Open(teambinderTestAccount.Url, browser);
@@ -42,18 +40,19 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 test = LogTest("Bulk Upload Documents to Holding Area");
                 string currentWindow;
                 int indexOfCopyAttributeItem = 0;
-                projectDashBoard.SelectModuleMenuItem<ProjectsDashboard>(bulkUploadData.NavigatePath[0])
-                        .LogValidation(ref validations, projectDashBoard.ValidateDisplayedSubItemLinks(bulkUploadData.SubItemLinks));
+                projectDashBoard.SelectModuleMenuItem<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription())
+                    .LogValidation(ref validations, projectDashBoard.ValidateDisplayedSubItemLinks(bulkUploadData.SubItemLinks));
 
-                var holdingArea = projectDashBoard.SelectModuleMenuItem<HoldingArea>(bulkUploadData.NavigatePath[1]);
-                holdingArea.LogValidation<HoldingArea>(ref validations, holdingArea.ValidateHoldingAreaPageDisplays())
-                        .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateDisplayedViewFilterOption(bulkUploadData.DefaultFilter))
-                        .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateFilterBoxIsHighlighted(filterBoxIndex: 1));
+                var holdingArea = projectDashBoard.SelectModuleMenuItem<HoldingArea>(subMenuItem: ModuleSubMenuInLeftNav.HOLDINGAREA.ToDescription());
+                holdingArea.LogValidation<HoldingArea>(ref validations, holdingArea.ValidateSubPageIsDislayed(ModuleSubMenuInLeftNav.HOLDINGAREA.ToDescription() + " -"))
+                    .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateDisplayedViewFilterOption(bulkUploadData.DefaultFilter))
+                    .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateFilterBoxIsHighlighted(filterBoxIndex: 1));
+
                 var bulkUploadDocuments = holdingArea.ClickBulkUploadButton(out currentWindow);
                 bulkUploadDocuments.LogValidation(ref validations, bulkUploadDocuments.ValidateWindowIsOpened(bulkUploadData.WindowTitle))
-                        .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocuments.ValidateFormTitle(bulkUploadData.FormTitle))
-                        .AddFilesInBulk(Utils.GetInputFilesLocalPath(), bulkUploadData.FileNames)
-                        .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocuments.ValidateFilesDisplay(bulkUploadData.numberOfUploadFiles));
+                    .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocuments.ValidateFormTitle(bulkUploadData.FormTitle))
+                    .AddFilesInBulk(Utils.GetInputFilesLocalPath(), bulkUploadData.FileNames)
+                    .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocuments.ValidateFilesDisplay(bulkUploadData.numberOfUploadFiles));
                 //bulkUploadDocuments.LogValidation(ref validations, bulkUploadDocuments.ValidateFileNamesAreListedInColumn(bulkUploadData.VersionColumn));
 
                 bulkUploadDocuments.ClickACheckboxInDocumentRow(documentRow: 1)
@@ -71,16 +70,19 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 applyToNextNRows.LogValidation<ApplyToNRowsDialog>(ref validations, applyToNextNRows.ValidateApplyToNRowsDialogDisplaysCorrectly(bulkUploadData.MessageOnToNextNRowsDialog))
                     .EnterNumberOfRow(bulkUploadData.NumberOfRow)
                     .ClickOKButton<BulkUploadDocuments>()
-                    .LogValidation<BulkUploadDocuments>(ref validations,bulkUploadDocuments.ValidateDocumentPropertiesAreCopiedToAllRows(rowIndexOfStandardRow: 1))
+                    .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocuments.ValidateDocumentPropertiesAreCopiedToAllRows(rowIndexOfStandardRow: 1))
                     .EnterTextboxes(bulkUploadData.DocumentNoTextboxContent,
                                     DocBulkUploadInputText.DocumentNo.ToDescription());
+
                 var validateDialog = bulkUploadDocuments.ClickValidateDocumentDetails(DocBulkUploadHeaderButton.Validate, methodValidations);
                 validateDialog.LogValidation<AlertDialog>(ref validations, validateDialog.ValidateMessageDialogAsExpected(bulkUploadData.MessageOnValidateDocumentsDialog))
                     .ClickOKButton<BulkUploadDocuments>();
+
                 var saveDocumentDialog = bulkUploadDocuments.ClickSaveBulkUploadDocuments(methodValidations);
-                validateDialog.LogValidation<ConfirmDialog>(ref validations, saveDocumentDialog.ValidateMessageDialogAsExpected(bulkUploadData.MessageOnSaveDocumentsDialog))
-                    .ClickPopupButton<HoldingArea>(DialogPopupButton.No, true)
-                    .FilterDocumentsByGridFilterRow(bulkUploadData.HoldingAreaFilterByColumn, bulkUploadData.FilterWithValue)
+                saveDocumentDialog.LogValidation<ConfirmDialog>(ref validations, saveDocumentDialog.ValidateMessageDialogAsExpected(bulkUploadData.MessageOnSaveDocumentsDialog))
+                    .ClickPopupButton<HoldingArea>(DialogPopupButton.No, true);
+                    
+                holdingArea.FilterDocumentsByGridFilterRow(bulkUploadData.HoldingAreaFilterByColumn, bulkUploadData.FilterWithValue)
                     .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateHoldingAreaGridShownDataCorrect(bulkUploadData.HoldingAreaFilterByColumn, bulkUploadData.FilterWithValue))
                     .ClickCheckboxOfDocumentAtRow(indexRow: 1)
                     .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateDocumentRowIsHighlighted(indexRow: 1));
