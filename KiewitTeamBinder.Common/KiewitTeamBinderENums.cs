@@ -9,7 +9,7 @@ namespace KiewitTeamBinder.Common
 {
     public class KiewitTeamBinderENums
     {
-          
+
         public enum GetDateTime
         {
             TODAY,
@@ -72,7 +72,25 @@ namespace KiewitTeamBinder.Common
             [Description("SubType")]
             SubType
         }
-        
+
+        public enum DocBulkUploadHeaderButton
+        {
+            [Description("New Rows")]
+            NewRows,
+            [Description("Copy Attributes")]
+            CopyAttributes,
+            [Description("Get Attributes")]
+            GetAttributes,
+            [Description("Validate")]
+            Validate,
+            [Description("Remove Rows")]
+            RemoveRows,
+            [Description("Link Deliverable Items")]
+            LinkDeliverableItems,
+            [Description("Remove Deliverable Items")]
+            RemoveDeliverableItems
+        }
+
         public enum DocBulkUploadInputText
         {
             [Description("DocumentNo")]
@@ -93,7 +111,27 @@ namespace KiewitTeamBinder.Common
             Error
         }
 
-        public enum DocBulkUploadHeaderButton
+        public enum ViewFilterOptions
+        {
+            [Description("Personal")]
+            Personal,
+            [Description("Company")]
+            Company
+        }
+
+        public enum ModuleNameInLeftNav
+        {
+            [Description("Mail")]
+            MAIL,
+            [Description("Transmittals")]
+            TRANSMITTALS,
+            [Description("Packages")]
+            PACKAGES,
+            [Description("Tasks")]
+            TASKS
+        }
+
+        public enum MainPaneTableHeaderButton
         {
             [Description("New Rows")]
             NewRows,
@@ -108,7 +146,49 @@ namespace KiewitTeamBinder.Common
             [Description("Link Deliverable Items")]
             LinkDeliverableItems,
             [Description("Remove Deliverable Items")]
-            RemoveDeliverableItems
+            RemoveDeliverableItems,
+            [Description("Reply")]
+            Reply,
+            [Description("Reply All")]
+            ReplyAll,
+            [Description("Forward")]
+            Forward,
+            [Description("Refresh")]
+            Refresh,
+            [Description("Print")]
+            Print,
+            [Description("Export")]
+            Export,
+            [Description("More")]
+            More            
+        }
+
+        public enum MainPaneTableHeaderLabel
+        {
+            [Description("Package ID")]
+            PackageID,
+            [Description("Package Type")]
+            PackageType,
+            [Description("Title")]
+            Title,
+            [Description("Transmittal No.")]
+            TransmittalNo,
+            [Description("Attach")]
+            Attachment,
+            [Description("Package")]
+            Package,
+            [Description("Received")]
+            Received,
+            [Description("Subject")]
+            Subject,
+            [Description("From")]
+            From,
+            [Description("Message")]
+            Message,
+            [Description("To")]
+            To,
+            [Description("TaskCount")]
+            TaskCount
         }
         public enum DialogPopupButton
         {
@@ -117,6 +197,18 @@ namespace KiewitTeamBinder.Common
             OK
 
         }
+        public enum ModuleSubMenuInLeftNav
+        {
+            [Description("Inbox")]
+            INBOX,
+            [Description("Drafts")]
+            DRAFTS,
+            [Description("Sent Items")]
+            SENTITEMS,
+            [Description("Pending")]
+            PENDING
+        }
     }
 }
+
       

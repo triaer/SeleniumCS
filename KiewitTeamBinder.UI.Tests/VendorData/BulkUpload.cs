@@ -13,6 +13,7 @@ using KiewitTeamBinder.UI;
 using KiewitTeamBinder.UI.Pages.Dialogs;
 using static KiewitTeamBinder.Common.KiewitTeamBinderENums;
 
+
 namespace KiewitTeamBinder.UI.Tests.VendorData
 {
     [TestClass]
@@ -24,8 +25,6 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
             try
             {
                 // given
-                validations = new List<KeyValuePair<string, bool>>();
-                List<KeyValuePair<string, bool>> methodValidations = new List<KeyValuePair<string, bool>>();
                 var teambinderTestAccount = GetTestAccount("VendorAccount1", environment, "NonSSO");
                 test.Info("Open TeamBinder Web Page: " + teambinderTestAccount.Url);
                 var driver = Browser.Open(teambinderTestAccount.Url, browser);
@@ -41,9 +40,10 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 test = LogTest("Bulk Upload Documents to Holding Area");
                 string currentWindow;
                 int indexOfCopyAttributeItem = 0;
-                projectDashBoard.ClickVendorDataButton()
-                        .LogValidation(ref validations, projectDashBoard.ValidateVendorDataMenusDisplay(bulkUploadData.VendorDataMenu));
-                var holdingArea = projectDashBoard.ClickHoldingAreaButton();
+                projectDashBoard.SelectModuleMenuItem<ProjectsDashboard>(bulkUploadData.NavigatePath[0])
+                        .LogValidation(ref validations, projectDashBoard.ValidateDisplayedSubItemLinks(bulkUploadData.SubItemLinks));
+
+                var holdingArea = projectDashBoard.SelectModuleMenuItem<HoldingArea>(bulkUploadData.NavigatePath[1]);
                 holdingArea.LogValidation<HoldingArea>(ref validations, holdingArea.ValidateHoldingAreaPageDisplays())
                         .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateDisplayedViewFilterOption(bulkUploadData.DefaultFilter))
                         .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateFilterBoxIsHighlighted(filterBoxIndex: 1));

@@ -207,7 +207,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
             wait.Until(driver => driver.FindElement(elementDescription).Enabled);
         }
 
-
         internal static void WaitForElementDisplay(By elementDescription, int seconds = longTimeout)
         {
             var wait = Browser.Wait(seconds);
@@ -708,18 +707,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             WaitForElementClickable(by);
             StableFindElement(by).Click();
         }
-
-        //public void GlobalSearchByName(string valueSearch, IWebElement SearchTextbox, By gridRows)
-        //{
-        //    WaitForElement(gridRows);
-        //    SearchTextbox.InputText(valueSearch);
-        //    SearchTextbox.SendKeys(OpenQA.Selenium.Keys.Enter);
-
-        //    if (FindElement(loadingIcon) != null)
-        //        WaitForLoading(loadingIcon);
-        //    WaitForElement(gridRows);
-        //    WaitForAngularJSLoad();
-        //}
+               
         internal static KeyValuePair<string, bool> SetPassValidation(ExtentTest test, string testInfo)
         {
             test.Pass(testInfo);

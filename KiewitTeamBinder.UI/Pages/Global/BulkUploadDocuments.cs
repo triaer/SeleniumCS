@@ -109,14 +109,12 @@ namespace KiewitTeamBinder.UI.Pages.Global
             return false;
         }
 
-
-        // checkboxType is "rowCheckbox" or "Superseded"
         public BulkUploadDocuments ClickACheckboxInDocumentRow(int documentRow, bool checkedState = true, string checkboxType = "rowCheckbox")
         {
             var node = StepNode();
             IWebElement checkbox;
             if (checkboxType == "rowCheckbox")
-            {               
+            {
                 checkbox = AllRowCheckboxes.ElementAt(documentRow);
             }
             else

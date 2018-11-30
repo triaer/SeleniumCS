@@ -9,9 +9,13 @@ using KiewitTeamBinder.Common;
 namespace KiewitTeamBinder.Common.TestData
 {
     public class BulkUploadDocumentsSmoke
-    {        
+    {
+        public string[] NavigatePath = {"Vendor Data", "Vendor Data/Holding Area"};
+        public string[] SubItemLinks = {"Holding Area"};
+        public string PackageModule = "Package";
+        public string PackagesNode = "Packages";
+        public string GridViewName = "GridViewPackage";
         public string ProjectName = "Automation Project 1";
-        public string[] VendorDataMenu = {"Holding Area"};
         public string FileNames = "\"File1.txt\" \"File2.txt\" \"File3.txt\" \"File4.txt\" \"File5.txt\" \"File6.txt\" \"File7.txt\" \"File8.txt\" \"File9.txt\" \"File10.txt\" \"File11.txt\" \"File12.txt\" \"File13.txt\" \"File14.txt\" \"File15.txt\" ";
         public int numberOfUploadFiles = 15;
         public string MessageOnToNextNRowsDialog = "Apply All to next 5 rows.";
