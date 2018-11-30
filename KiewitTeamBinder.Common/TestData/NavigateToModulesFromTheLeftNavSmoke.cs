@@ -14,11 +14,17 @@ namespace KiewitTeamBinder.Common.TestData
 
         public class DashboardModules : NavigateToModulesFromTheLeftNavSmoke
         {
-            public string[] ListWidgits = { DashboardWidgit.MAIL.ToDescription(), DashboardWidgit.PACKAGES.ToDescription() };
+            public string[] ListWidgits = {DashboardWidgit.MAIL.ToDescription(),
+                                           DashboardWidgit.PACKAGES.ToDescription()};
+        }
+
+        public class DocumentsModules : NavigateToModulesFromTheLeftNavSmoke
+        {            
             public string DefaultFilter = "Latest Unrestrained";
             public string GridViewName = "GridViewDocReg";
             public string DocumentNo = "77777";
         }
+
         public class TransmittalsModules : NavigateToModulesFromTheLeftNavSmoke
         {
             

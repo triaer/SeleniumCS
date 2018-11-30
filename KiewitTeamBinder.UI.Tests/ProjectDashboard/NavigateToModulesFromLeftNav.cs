@@ -116,11 +116,11 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                 //User Story 121307 - 119703 Navigate to Modules from the Left Nav - Part 4 - Tasks Modules
                 test = LogTest("119703 Navigate to Modules from Left Nav - Packages Module");
                 var tasksData = new NavigateToModulesFromTheLeftNavSmoke.TasksModules();
-                columnValuesInConditionList = new List<KeyValuePair<string, string>> {tasksData.ColumnValuesInConditionList.Subject};
+                columnValuesInConditionList = new List<KeyValuePair<string, string>> { tasksData.ColumnValuesInConditionList.Subject };
 
                 projectDashBoard.SelectModuleMenuItem<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.TASKS.ToDescription())
                     .LogValidation<ProjectsDashboard>(ref validations, projectDashBoard.ValidateDisplayedSubItemLinks(tasksData.SubItemMenus));
-                                
+
                 var tasksModule = projectDashBoard.SelectModuleMenuItem<Task>(subMenuItem: ModuleSubMenuInLeftNav.INBOX.ToDescription());
                 tasksModule.LogValidation<Task>(ref validations, tasksModule.ValidateSubPageIsDislayed(ModuleSubMenuInLeftNav.INBOX.ToDescription()))
                     .LogValidation<Task>(ref validations, tasksModule.ValidateDisplayedViewFilterOption(tasksData.DefaultFilter))
@@ -148,7 +148,7 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                 //User Story 121328 - 119703 Navigate to Modules from the Left Nav - Part 7 - Gallery Module
                 var galleryData = new NavigateToModulesFromTheLeftNavSmoke.GalleryModules();
                 var gallery = projectDashBoard.SelectModuleMenuItem<Gallery>(galleryData.NavigatePath[0]);
-                
+
                 gallery.LogValidation<Gallery>(ref validations, gallery.ValidateDisplayedViewFilterOption(galleryData.DefaultFilter))
                     .LogValidation<Gallery>(ref validations, gallery.ValidateFilterBoxIsHighlighted(filterBoxIndex: 4))
                     .LogValidation<Gallery>(ref validations, gallery.ValidateRecordItemsCount())
@@ -158,17 +158,17 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                 //User Story 121272 - 119703 Navigate to Modules from the Left Nav - Part 9 - Dashboard Module - Documents Module
                 string parrentWindow;
                 var dashboardData = new NavigateToModulesFromTheLeftNavSmoke.DashboardModules();
+                var documentsData = new NavigateToModulesFromTheLeftNavSmoke.DocumentsModules();
 
                 var dashboardModule = projectDashBoard.SelectModuleMenuItem<Dashboard>(ModuleNameInLeftNav.DASHBOARD.ToDescription());
-                dashboardModule.LogValidation<ProjectsDashboard>(ref validations, dashboardModule.ValidateWidgetsOfDashboardDisplayed(dashboardData.ListWidgits));
-                var documentModule = dashboardModule.SelectModuleMenuItem<Document>(ModuleNameInLeftNav.DOCUMENTS.ToDescription());
-                documentModule.LogValidation<Document>(ref validations, dashboardModule.ValidateDisplayedViewFilterOption(dashboardData.DefaultFilter))
-                    //issue
-                    .LogValidation<Document>(ref validations, dashboardModule.ValidateRecordItemsCount(dashboardData.GridViewName))
-                    .LogValidation<Document>(ref validations, dashboardModule.ValidateFilterBoxIsHighlighted(filterBoxIndex: 1))
-                    .OpenDocument(dashboardData.DocumentNo, out parrentWindow)
-                    //.SelectDocmentByIndexRandom(dashboardModule.GetTableItemNumber(), out parrentWindow)
-                    .LogValidation<Document>(ref validations, documentModule.ValidateDocumentsDetailIsOpened(dashboardData.DocumentNo))
+                dashboardModule.LogValidation<Dashboard>(ref validations, dashboardModule.ValidateWidgetsOfDashboardDisplayed(dashboardData.ListWidgits));
+
+                var documentModule = projectDashBoard.SelectModuleMenuItem<Document>(ModuleNameInLeftNav.DOCUMENTS.ToDescription());
+                documentModule.LogValidation<Document>(ref validations, documentModule.ValidateDisplayedViewFilterOption(documentsData.DefaultFilter))
+                    .LogValidation<Document>(ref validations, documentModule.ValidateRecordItemsCount())
+                    .LogValidation<Document>(ref validations, documentModule.ValidateFilterBoxIsHighlighted(filterBoxIndex: 1))
+                    .OpenDocument(documentsData.DocumentNo, out parrentWindow)
+                    .LogValidation<Document>(ref validations, documentModule.ValidateDocumentsDetailIsOpened(documentsData.DocumentNo))
                     .ClickCloseButton()
                     .SwitchToWindow(parrentWindow)
                     .Logout();
