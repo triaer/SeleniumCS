@@ -71,74 +71,41 @@ namespace KiewitTeamBinder.UI.Pages.Global
             return this;
         }
 
-        public ProjectsDashboard ClickVendorDataButton()
-        {
-            var node = StepNode();
-            node.Info("Click Vendor Data Module Button in Left Nav");
-            VendorButton.Click();            
-            WaitForElementDisplay(By.XPath(string.Format(_menuButton, "Holding Area")));
-            return this;
-        }
-
         public IWebElement MenuButton(string menu)
         {
             return StableFindElement(By.XPath(string.Format(_menuButton, menu)));
         }
-
-        public HoldingArea ClickHoldingAreaButton()
-        {
-            var node = StepNode();
-            node.Info("Click Holding Area under Vendor Data Module in Left Nav");
-            MenuButton("Holding Area").Click();
-            return new HoldingArea(WebDriver);
-        }
-
-        public int GetTableItemNumber()
-        {
-            var node = StepNode();
             
-            const string rowXpath = "//tr[contains(@style, 'visibility: visible')]";
-
-            try
-            {
-                var rows = StableFindElements(By.XPath(rowXpath)).Count;
-                node.Info("Get number of items in table: " + rows);
-                return rows;
-            }
-            catch
-            {
-                return 0;
-            }
-        }
-
-        public ProjectsDashboard SelectModuleMenuItem(string menuPath)
+        private void ClickMenuItem(string menuItem)
         {
             var node = StepNode();
+            node.Info($"Click on the root node: {menuItem}");
+            ModuleButton(menuItem).Click();
+            WaitForElement(_divSubMenu);
+        }
 
-            var separator = '/';
-            var nodes = menuPath.Split(separator);
-            if (nodes.Count() == 1)
-            {
-                node.Info($"Click on the root node: {nodes[0]}");
-                ModuleButton(nodes[0]).Click();
-                WaitForElement(_divSubMenu);
-            }
-            else
-            {
-                node.Info($"Click on the root node: {nodes[0]}");
-                ModuleButton(nodes[0]).Click();
-                WaitForElement(_divSubMenu);
-                node.Info($"Click on the sub node: {nodes[1]}");
-                SubMenuItemLink(nodes[1]).Click();
-                WaitForElement(_subPageHeader);
-            }
+        private void ClickSubMenuItem(string subMenuItem)
+        {
+            var node = StepNode();
+            node.Info($"Click on the sub node: {subMenuItem}");
+            SubMenuItemLink(subMenuItem).Click();
+            WaitForElement(_subPageHeader);
+        }
+
+        private ProjectsDashboard SelectModuleMenuItem(string menuItem, string subMenuItem)
+        {
+            if (menuItem != "")
+                ClickMenuItem(menuItem);
+            
+            if (subMenuItem != "")
+                ClickSubMenuItem(subMenuItem);
 
             return this;
         }
 
-        public T SelectModuleMenuItem<T>(string menuPath)
+        public T SelectModuleMenuItem<T>(string menuItem = "", string subMenuItem = "")
         {
-            SelectModuleMenuItem(menuPath);
+            SelectModuleMenuItem(menuItem, subMenuItem);
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 
@@ -164,6 +131,58 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 WaitForElement(_subPageTable(tableName));
             
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
+        }
+                
+        private IReadOnlyCollection<IWebElement> GetAvailableItems(string gridViewName, List<KeyValuePair<string, string>> columnValuePairList)
+        {
+            int rowIndex, colIndex = 1;
+            string itemsXpath = _filterItems;
+            GetTableCellValueIndex(PaneTable(gridViewName), columnValuePairList.ElementAt(0).Key, out rowIndex, out colIndex, "th");
+            if (colIndex < 2)
+                return null;
+            itemsXpath += $"[td[{colIndex}][contains(., '{columnValuePairList.ElementAt(0).Value}')]";
+
+            for (int i = 1; i < columnValuePairList.Count; i++)
+            {
+                GetTableCellValueIndex(PaneTable(gridViewName), columnValuePairList.ElementAt(i).Key, out rowIndex, out colIndex, "th");
+                if (colIndex < 2)
+                    return null;
+                itemsXpath += $" and td[{colIndex}][contains(., '{columnValuePairList.ElementAt(i).Value}')]";
+            }
+            itemsXpath += "]";
+
+            return StableFindElements(By.XPath(itemsXpath));
+        }
+
+        private int GetTableItemNumberWithConditions(string gridViewName, List<KeyValuePair<string, string>> columnValuePairList)
+        {
+            IReadOnlyCollection<IWebElement> AvailableItems = GetAvailableItems(gridViewName, columnValuePairList);          
+            try
+            {
+                return AvailableItems.Count;
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+
+        private int GetTableItemNumber()
+        {
+            var node = StepNode();
+
+            const string rowXpath = "//tr[contains(@style, 'visibility: visible')]";
+
+            try
+            {
+                var rows = StableFindElements(By.XPath(rowXpath)).Count;
+                node.Info("Get number of items in table: " + rows);
+                return rows;
+            }
+            catch
+            {
+                return 0;
+            }
         }
 
         public KeyValuePair<string, bool> ValidateProjectIsOpened(string nameProject)
@@ -220,8 +239,9 @@ namespace KiewitTeamBinder.UI.Pages.Global
         }
 
         // moduleName: Mail/Transmittals/Vendor Data
-        public KeyValuePair<string, bool> ValidateRecordItemsCount(int itemsNumber, string moduleName)
+        public KeyValuePair<string, bool> ValidateRecordItemsCount(string moduleName)
         {
+            int itemsNumber = GetTableItemNumber();
             var node = StepNode();
             node.Info($"Validate number of record items is equals to: {itemsNumber}");
 
@@ -316,7 +336,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             var node = StepNode();
             try
             {
-                if (IsItemShown(gridViewName, columnValuePairList))
+                if (GetTableItemNumberWithConditions(gridViewName, columnValuePairList) > 0)
                     return SetPassValidation(node, Validation.Validate_Items_Are_Shown);
                 return SetFailValidation(node, Validation.Validate_Items_Are_Shown);
             }
@@ -325,36 +345,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 return SetErrorValidation(node, Validation.Validate_Items_Are_Shown, e);
             }
         }
-
-        private bool IsItemShown(string gridViewName, List<KeyValuePair<string, string>> columnValuePairList)
-        {
-            IReadOnlyCollection<IWebElement> AvailableItems = GetAvailableItems(gridViewName, columnValuePairList);
-            if (AvailableItems != null)
-                return true;
-            return false;
-        }
-
-        private IReadOnlyCollection<IWebElement> GetAvailableItems(string gridViewName, List<KeyValuePair<string, string>> columnValuePairList)
-        {
-            int rowIndex, colIndex = 1;
-            string itemsXpath = _filterItems;
-            GetTableCellValueIndex(PaneTable(gridViewName), columnValuePairList.ElementAt(0).Key, out rowIndex, out colIndex, "th");
-            if (colIndex < 2)
-                return null;
-            itemsXpath += $"[td[{colIndex}][contains(., '{columnValuePairList.ElementAt(0).Value}')]";
-
-            for (int i = 1; i < columnValuePairList.Count; i++)
-            {
-                GetTableCellValueIndex(PaneTable(gridViewName), columnValuePairList.ElementAt(i).Key, out rowIndex, out colIndex, "th");
-                if (colIndex < 2)
-                    return null;
-                itemsXpath += $" and td[{colIndex}][contains(., '{columnValuePairList.ElementAt(i).Value}')]";
-            }                       
-            itemsXpath += "]";
-
-            return StableFindElements(By.XPath(itemsXpath));
-        }
-
+        
         private static class Validation
         {
 			public static string Project_Is_Opened = "Validate that the project is opened";

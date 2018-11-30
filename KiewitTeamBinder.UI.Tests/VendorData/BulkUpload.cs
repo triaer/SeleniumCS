@@ -40,18 +40,19 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 test = LogTest("Bulk Upload Documents to Holding Area");
                 string currentWindow;
                 int indexOfCopyAttributeItem = 0;
-                projectDashBoard.SelectModuleMenuItem<ProjectsDashboard>(bulkUploadData.NavigatePath[0])
-                        .LogValidation(ref validations, projectDashBoard.ValidateDisplayedSubItemLinks(bulkUploadData.SubItemLinks));
+                projectDashBoard.SelectModuleMenuItem<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription())
+                    .LogValidation(ref validations, projectDashBoard.ValidateDisplayedSubItemLinks(bulkUploadData.SubItemLinks));
 
-                var holdingArea = projectDashBoard.SelectModuleMenuItem<HoldingArea>(bulkUploadData.NavigatePath[1]);
-                holdingArea.LogValidation<HoldingArea>(ref validations, holdingArea.ValidateHoldingAreaPageDisplays())
-                        .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateDisplayedViewFilterOption(bulkUploadData.DefaultFilter))
-                        .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateFilterBoxIsHighlighted(filterBoxIndex: 1));
+                var holdingArea = projectDashBoard.SelectModuleMenuItem<HoldingArea>(subMenuItem: ModuleSubMenuInLeftNav.HOLDINGAREA.ToDescription());
+                holdingArea.LogValidation<HoldingArea>(ref validations, holdingArea.ValidateSubPageIsDislayed(ModuleSubMenuInLeftNav.HOLDINGAREA.ToDescription() + " -"))
+                    .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateDisplayedViewFilterOption(bulkUploadData.DefaultFilter))
+                    .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateFilterBoxIsHighlighted(filterBoxIndex: 1));
+
                 var bulkUploadDocuments = holdingArea.ClickBulkUploadButton(out currentWindow);
                 bulkUploadDocuments.LogValidation(ref validations, bulkUploadDocuments.ValidateWindowIsOpened(bulkUploadData.WindowTitle))
-                        .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocuments.ValidateFormTitle(bulkUploadData.FormTitle))
-                        .AddFilesInBulk(Utils.GetInputFilesLocalPath(), bulkUploadData.FileNames)
-                        .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocuments.ValidateFilesDisplay(bulkUploadData.numberOfUploadFiles));
+                    .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocuments.ValidateFormTitle(bulkUploadData.FormTitle))
+                    .AddFilesInBulk(Utils.GetInputFilesLocalPath(), bulkUploadData.FileNames)
+                    .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocuments.ValidateFilesDisplay(bulkUploadData.numberOfUploadFiles));
                 //bulkUploadDocuments.LogValidation(ref validations, bulkUploadDocuments.ValidateFileNamesAreListedInColumn(bulkUploadData.VersionColumn));
 
                 bulkUploadDocuments.ClickACheckboxInDocumentRow(documentRow: 1)
@@ -69,7 +70,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 applyToNextNRows.LogValidation<ApplyToNRowsDialog>(ref validations, applyToNextNRows.ValidateApplyToNRowsDialogDisplaysCorrectly(bulkUploadData.MessageOnToNextNRowsDialog))
                     .EnterNumberOfRow(bulkUploadData.NumberOfRow)
                     .ClickOKButton<BulkUploadDocuments>()
-                    .LogValidation<BulkUploadDocuments>(ref validations,bulkUploadDocuments.ValidateDocumentPropertiesAreCopiedToAllRows(rowIndexOfStandardRow: 1))
+                    .LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocuments.ValidateDocumentPropertiesAreCopiedToAllRows(rowIndexOfStandardRow: 1))
                     .EnterTextboxes(bulkUploadData.DocumentNoTextboxContent,
                                     DocBulkUploadInputText.DocumentNo.ToDescription());
                 var validateDialog = bulkUploadDocuments.ClickValidateDocumentDetails(DocBulkUploadHeaderButton.Validate, methodValidations);

@@ -14,7 +14,7 @@ namespace KiewitTeamBinder.Common.TestData
         public class TransmittalsModules : NavigateToModulesFromTheLeftNavSmoke
         {
             
-            public string[] SubItemLinks = { "Inbox", "Drafts", "Sent Items", "Pending" };
+            public string[] SubItemMenus = { "Inbox", "Drafts", "Sent Items", "Pending" };
             public string SubPendingTitle = "Pending Transmittals";
             public string DefaultFilter = "Personal";
             public string DefaultFilterAtPendingPane = "By Recipient";
@@ -33,7 +33,7 @@ namespace KiewitTeamBinder.Common.TestData
         public class PackagesModules : NavigateToModulesFromTheLeftNavSmoke
         {
             
-            public string[] SubItemLinks = { "Inbox", "Drafts", "Sent Items" };
+            public string[] SubItemMenus = { "Inbox", "Drafts", "Sent Items" };
             public string DefaultFilter = "All";
             public string PackageModule = "Package";
             public string PackagesNode = "Packages";
@@ -49,8 +49,7 @@ namespace KiewitTeamBinder.Common.TestData
 
         public class TasksModules : NavigateToModulesFromTheLeftNavSmoke
         {
-            public string[] NavigatePath = { "Tasks", "Tasks/Inbox", "Tasks/Drafts", "Tasks/Sent Items" };
-            public string[] SubItemLinks = { "Inbox", "Drafts", "Sent Items" };
+            public string[] SubItemMenus = { "Inbox", "Drafts", "Sent Items" };
             public string DefaultFilter = "Personal";
             public string GridViewName = "GridViewTask";
             public ColumnValuesInCondition ColumnValuesInConditionList = new ColumnValuesInCondition();

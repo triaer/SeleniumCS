@@ -128,7 +128,9 @@ namespace KiewitTeamBinder.Common
             [Description("Packages")]
             PACKAGES,
             [Description("Tasks")]
-            TASKS
+            TASKS,
+            [Description("VendorData")]
+            VENDORDATA
         }
 
         public enum MainPaneTableHeaderButton
@@ -206,7 +208,11 @@ namespace KiewitTeamBinder.Common
             [Description("Sent Items")]
             SENTITEMS,
             [Description("Pending")]
-            PENDING
+            PENDING,
+            [Description("Vendor Data Register")]
+            VENDODATAREGISTER,
+            [Description("Holding Area")]
+            HOLDINGAREA
         }
     }
 }
