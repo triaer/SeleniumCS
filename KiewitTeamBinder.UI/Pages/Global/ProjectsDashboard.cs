@@ -17,8 +17,8 @@ namespace KiewitTeamBinder.UI.Pages.Global
     public class ProjectsDashboard : LoggedInLanding
     {
         #region Entities                
-        private By _dashBoardLabel => By.XPath("//span[.='Dashboard']");
-        private By _gridViewFilterListData => By.XPath("//div[substring(@id, string-length(@id) - string-length('_rfltMenu_detached') +1) = '_rfltMenu_detached'][contains(@style,'block')]/ul/li");
+        public By _dashBoardLabel => By.XPath("//span[.='Dashboard']");
+        public By _gridViewFilterListData => By.XPath("//div[substring(@id, string-length(@id) - string-length('_rfltMenu_detached') +1) = '_rfltMenu_detached'][contains(@style,'block')]/ul/li");
         private static By _nameProjectLabel => By.Id("projectInput");
         private static By _projectListDropdown => By.Id("btnShowProjectList");
         private static By _projectListSumary => By.Id("divProjectSummary");
