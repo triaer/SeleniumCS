@@ -133,6 +133,8 @@ namespace KiewitTeamBinder.Common
             DASHBOARD,
             [Description("Documents")]
             DOCUMENTS,
+            [Description("VendorData")]
+            VENDORDATA
         }
 
         public enum MainPaneTableHeaderButton
@@ -210,7 +212,11 @@ namespace KiewitTeamBinder.Common
             [Description("Sent Items")]
             SENTITEMS,
             [Description("Pending")]
-            PENDING
+            PENDING,
+            [Description("Vendor Data Register")]
+            VENDODATAREGISTER,
+            [Description("Holding Area")]
+            HOLDINGAREA
         }
 
         public enum DashboardWidgit
