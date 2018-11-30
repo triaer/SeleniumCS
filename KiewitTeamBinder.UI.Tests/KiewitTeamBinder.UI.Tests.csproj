@@ -129,12 +129,11 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="ProjectDashboard\NavigateToModulesFromTheLeftNav.cs" />
+    <Compile Include="ProjectDashboard\NavigateToModulesFromLeftNav.cs" />
     <Compile Include="ProjectDashboard\VersionNumber.cs" />
     <Compile Include="UITestBase.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
-    <Compile Include="UnitTest1.cs" />
     <Compile Include="User\SignOnTests.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>

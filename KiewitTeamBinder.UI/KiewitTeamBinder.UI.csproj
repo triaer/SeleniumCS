@@ -136,16 +136,8 @@
     <Compile Include="Pages\Global\SsoSignOn.cs" />
     <Compile Include="Pages\Global\NotLoggedInLanding.cs" />
     <Compile Include="Pages\Global\PageBase.cs" />
-    <Compile Include="Pages\Tasks\TasksDrafts.cs" />
-    <Compile Include="Pages\Tasks\TasksInbox.cs" />
-    <Compile Include="Pages\Tasks\TasksSentItems.cs" />
-    <Compile Include="Pages\Transmittals\TransmittalsDrafts.cs" />
-    <Compile Include="Pages\Transmittals\TransmittalsInbox.cs" />
-    <Compile Include="Pages\Transmittals\TransmittalsSentItems.cs" />
-    <Compile Include="Pages\Transmittals\TransmittalsPending.cs" />
-    <Compile Include="Pages\Packages\PackagesDrafts.cs" />
-    <Compile Include="Pages\Packages\PackagesInbox.cs" />
-    <Compile Include="Pages\Packages\PackagesSentItems.cs" />
+    <Compile Include="Pages\TransmittalsModule\Transmittal.cs" />
+    <Compile Include="Pages\PackagesModule\Package.cs" />
     <Compile Include="Pages\VendorData\HoldingArea.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

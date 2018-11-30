@@ -96,12 +96,13 @@ namespace KiewitTeamBinder.UI.Pages.Global
         public int GetTableItemNumber()
         {
             var node = StepNode();
-            node.Info("Get number of items in table");
+            
             const string rowXpath = "//tr[contains(@style, 'visibility: visible')]";
 
             try
             {
                 var rows = StableFindElements(By.XPath(rowXpath)).Count;
+                node.Info("Get number of items in table: " + rows);
                 return rows;
             }
             catch
