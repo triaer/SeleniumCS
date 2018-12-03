@@ -34,9 +34,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         private static By _divSubMenu => By.XPath("//div[@id='divSubMenu']");        
         private static By _subPageHeader => By.Id("lblRegisterCaption");              
         private static By _paneTable(string gridViewName) => By.XPath($"//table[contains(@id, '{gridViewName}_ctl00_Header')]/thead");
-        //private static By _visibleRows => By.XPath("//tr[contains(@style, 'visibility: visible')]");
         private static By _visibleRows(string gridViewName) => By.XPath($"//div[contains(@id, '{gridViewName}_GridData')]//tr[@class != 'rgNoRecords' and not(contains(@style, 'hidden'))]");
-
 
         private static string _filterItemsXpath = "//tr[@valign='top']";
         private static string _imageOfFilterBoxXpath = "//img[contains(@id,'Link{1}{0}')]";
