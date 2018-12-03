@@ -66,14 +66,7 @@ namespace KiewitTeamBinder.Common.TestData
             public string DefaultFilter = "Personal";
             public string GridViewName = "GridViewForms";
             public string FormsModule = "Forms";
-        }
-
-        public class GalleryModules : NavigateToModulesFromTheLeftNavSmoke
-        {
-            public string DefaultFilter = "All";
-            public string GridViewName = "GridViewThumbnail";
-            public string SortByValue = "Date Uploaded";
-        }        
+        }         
     }
 
 }

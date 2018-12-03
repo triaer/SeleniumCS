@@ -129,7 +129,6 @@
     <Compile Include="Pages\Dialogs\ApplyToNRowsDialog.cs" />
     <Compile Include="Pages\Dialogs\HelpAboutDialog.cs" />
     <Compile Include="Pages\FormModule\Form.cs" />
-    <Compile Include="Pages\GalleryModule\Gallery.cs" />
     <Compile Include="Pages\Global\BulkUploadDocuments.cs" />
     <Compile Include="Pages\Global\ProjectsDashboard.cs" />
     <Compile Include="Pages\Global\LoggedInLanding.cs" />

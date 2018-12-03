@@ -15,7 +15,6 @@ using KiewitTeamBinder.UI.Pages.TransmittalsModule;
 using KiewitTeamBinder.UI.Pages.PackagesModule;
 using KiewitTeamBinder.UI.Pages.TasksModule;
 using KiewitTeamBinder.UI.Pages.FormModule;
-using KiewitTeamBinder.UI.Pages.GalleryModule;
  
 
 namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
@@ -152,18 +151,7 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                     .LogValidation<Form>(ref validations, formsModule.ValidateRecordItemsCount(formsData.GridViewName))
                     .LogValidation<Form>(ref validations, formsModule.ValidateFilterBoxIsHighlighted(filterBoxIndex: 1))
                     .ClickHeaderButton<ProjectsDashboard>(MainPaneTableHeaderButton.Refresh, true, formsData.FormsModule);
-
-                //User Story 121328 - 119703 Navigate to Modules from the Left Nav - Part 7 - Gallery Modules
-                test = LogTest("119703 Navigate to Modules from Left Nav - Gallery Module");
-                var galleryData = new NavigateToModulesFromTheLeftNavSmoke.GalleryModules();
-                Gallery galleryModule = projectDashBoard.SelectModuleMenuItem<Gallery>(menuItem: ModuleNameInLeftNav.GALLERY.ToDescription());
-
-                galleryModule.LogValidation<Gallery>(ref validations, galleryModule.ValidateDisplayedViewFilterOption(galleryData.DefaultFilter))
-                    .LogValidation<Gallery>(ref validations, galleryModule.ValidateFilterBoxIsHighlighted(filterBoxIndex: 4))
-                    .LogValidation<Gallery>(ref validations, galleryModule.ValidateRecordItemsCount())
-                    .LogValidation<Gallery>(ref validations, galleryModule.ValidateSortByValue(galleryData.SortByValue))
-                    .ClickHeaderButton<Gallery>(MainPaneTableHeaderButton.Refresh, true, galleryData.GridViewName);
-                                
+                                          
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);
                 Console.WriteLine(string.Join(System.Environment.NewLine, validations.ToArray()));
