@@ -74,6 +74,13 @@ namespace KiewitTeamBinder.Common.TestData
             }
         }
 
+        public class FormsModules : NavigateToModulesFromTheLeftNavSmoke
+        {
+            public string DefaultFilter = "Personal";
+            public string GridViewName = "GridViewForms";
+            public string FormsModule = "Forms";
+        }
+
         public class GalleryModules : NavigateToModulesFromTheLeftNavSmoke
         {
             public string DefaultFilter = "All";

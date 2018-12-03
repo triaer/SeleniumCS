@@ -18,12 +18,10 @@ namespace KiewitTeamBinder.UI.Pages.DocumentModule
         private string _gridViewDocRegRowXpath = "//table[@id = 'ctl00_cntPhMain_GridViewDocReg_ctl00']/tbody/tr[{0}]";
 
         private static By _menuHeaderFunction(string buttonName) => By.XPath($"//li[a='{buttonName}']");
-        private static By _visibleItems => By.XPath("//tr[@title= 'Double click to view details']");
         private static By _gridViewDocReg => By.XPath("//table[@id = 'ctl00_cntPhMain_GridViewDocReg_ctl00']/tbody");
         private static By _documentNoTextBox => By.XPath("//input[@id='txtDocumentNo']");
 
         public IWebElement MenuHeaderFunction(string buttonName) => StableFindElement(_menuHeaderFunction(buttonName));
-        public IReadOnlyCollection<IWebElement> VisibleItems { get { return StableFindElements(_visibleItems); } }
         public IWebElement GridViewDocReg { get { return StableFindElement(_gridViewDocReg); } }
         public IWebElement DocumentNoTextBox { get { return StableFindElement(_documentNoTextBox); } }
         #endregion
@@ -79,45 +77,10 @@ namespace KiewitTeamBinder.UI.Pages.DocumentModule
             return this;
         }
 
-        private int GetTableItemNumber()
-        {
-            var node = StepNode();            
-            try
-            {
-                var rows = VisibleItems.Count;
-                node.Info("Get number of items in table: " + rows);
-                return rows;
-            }
-            catch
-            {
-                return 0;
-            }
-        }
-
-        public KeyValuePair<string, bool> ValidateRecordItemsCount()
-        {
-            int itemsNumber = GetTableItemNumber();
-            var node = StepNode();
-            node.Info($"Validate number of record items is equals to: {itemsNumber}");
-
-            try
-            {
-                var actualQuantity = ItemsNumberLabel(new NavigateToModulesFromTheLeftNavSmoke.DocumentsModules().GridViewName).Text;
-                if (Int32.Parse(actualQuantity) == itemsNumber)
-                    return SetPassValidation(node, Validation.Number_Of_Items_Counted_Is_Valid);
-
-                return SetFailValidation(node, Validation.Number_Of_Items_Counted_Is_Valid);
-            }
-            catch (Exception e)
-            {
-                return SetErrorValidation(node, Validation.Number_Of_Items_Counted_Is_Valid, e);
-            }
-        }
-
         private static class Validation
         {
             public static string Document_Detail_Is_Opened = "Validate that the document detail is opened and the detail document is correctly";
-            public static string Number_Of_Items_Counted_Is_Valid = "Validate that number of items counted is valid";
+   
         }
         #endregion
 

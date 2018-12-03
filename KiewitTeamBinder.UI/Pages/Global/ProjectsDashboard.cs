@@ -34,7 +34,9 @@ namespace KiewitTeamBinder.UI.Pages.Global
         private static By _divSubMenu => By.XPath("//div[@id='divSubMenu']");        
         private static By _subPageHeader => By.Id("lblRegisterCaption");              
         private static By _paneTable(string gridViewName) => By.XPath($"//table[contains(@id, '{gridViewName}_ctl00_Header')]/thead");
-        private static By _visibleRows => By.XPath("//tr[contains(@style, 'visibility: visible')]");
+        //private static By _visibleRows => By.XPath("//tr[contains(@style, 'visibility: visible')]");
+        private static By _visibleRows(string gridViewName) => By.XPath($"//div[contains(@id, '{gridViewName}_GridData')]//tr[@class != 'rgNoRecords' and not(contains(@style, 'hidden'))]");
+
 
         private static string _filterItemsXpath = "//tr[@valign='top']";
         private static string _imageOfFilterBoxXpath = "//img[contains(@id,'Link{1}{0}')]";
@@ -55,7 +57,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         public IWebElement ItemsNumberLabel(string value) => StableFindElement(_itemsNumberLabel(value));
         public IWebElement SubPageTable(string value) => StableFindElement(_subPageTable(value));
         public IWebElement PaneTable(string gridViewName) => StableFindElement(_paneTable(gridViewName));
-        public IReadOnlyCollection<IWebElement> VisibleRows { get { return StableFindElements(_visibleRows); } }
+        public IReadOnlyCollection<IWebElement> VisibleRows(string gridViewName) => StableFindElements(_visibleRows(gridViewName));
         #endregion
 
         #region Actions
@@ -160,12 +162,12 @@ namespace KiewitTeamBinder.UI.Pages.Global
             }
         }
 
-        private int GetTableItemNumber()
+        private int GetTableItemNumber(string gridViewName)
         {
             var node = StepNode();
             try
             {
-                var rows = VisibleRows.Count;
+                var rows = VisibleRows(gridViewName).Count;
                 node.Info("Get number of items in table: " + rows);
                 return rows;
             }
@@ -229,15 +231,15 @@ namespace KiewitTeamBinder.UI.Pages.Global
         }
 
         // moduleName: Mail/Transmittals/Vendor Data
-        public virtual KeyValuePair<string, bool> ValidateRecordItemsCount(string moduleName)
+        public virtual KeyValuePair<string, bool> ValidateRecordItemsCount(string gridViewName)
         {
-            int itemsNumber = GetTableItemNumber();
+            int itemsNumber = GetTableItemNumber(gridViewName);
             var node = StepNode();
             node.Info($"Validate number of record items is equals to: {itemsNumber}");
 
             try
             {
-                var actualQuantity = ItemsNumberLabel(moduleName).Text;
+                var actualQuantity = ItemsNumberLabel(gridViewName).Text;
                 if (Int32.Parse(actualQuantity) == itemsNumber)
                     return SetPassValidation(node, Validation.Number_Of_Items_Counted_Is_Valid);
 

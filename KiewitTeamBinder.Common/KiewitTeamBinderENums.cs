@@ -133,6 +133,8 @@ namespace KiewitTeamBinder.Common
             DASHBOARD,
             [Description("Documents")]
             DOCUMENTS,
+            [Description("Forms")]
+            FORMS,
             [Description("TeamPics")]
             GALLERY,
             [Description("VendorData")]
