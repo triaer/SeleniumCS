@@ -147,7 +147,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             return StableFindElements(By.XPath(itemsXpath));
         }
 
-        private int GetTableItemNumberWithConditions(string gridViewName, List<KeyValuePair<string, string>> columnValuePairList)
+        protected int GetTableItemNumberWithConditions(string gridViewName, List<KeyValuePair<string, string>> columnValuePairList)
         {
             IReadOnlyCollection<IWebElement> AvailableItems = GetAvailableItems(gridViewName, columnValuePairList);          
             try
@@ -163,12 +163,9 @@ namespace KiewitTeamBinder.UI.Pages.Global
         private int GetTableItemNumber()
         {
             var node = StepNode();
-
-            const string rowXpath = "//tr[contains(@style, 'visibility: visible')]";
-
             try
             {
-                var rows = StableFindElements(By.XPath(rowXpath)).Count;
+                var rows = VisibleRows.Count;
                 node.Info("Get number of items in table: " + rows);
                 return rows;
             }

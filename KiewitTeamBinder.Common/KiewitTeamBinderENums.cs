@@ -133,6 +133,8 @@ namespace KiewitTeamBinder.Common
             DASHBOARD,
             [Description("Documents")]
             DOCUMENTS,
+            [Description("TeamPics")]
+            GALLERY,
             [Description("VendorData")]
             VENDORDATA
         }
@@ -194,8 +196,11 @@ namespace KiewitTeamBinder.Common
             [Description("To")]
             To,
             [Description("TaskCount")]
-            TaskCount
+            TaskCount,
+            [Description("Contract Number")]
+            ContractNumber
         }
+
         public enum DialogPopupButton
         {
             Yes,
@@ -203,6 +208,7 @@ namespace KiewitTeamBinder.Common
             OK
 
         }
+
         public enum ModuleSubMenuInLeftNav
         {
             [Description("Inbox")]
@@ -212,7 +218,7 @@ namespace KiewitTeamBinder.Common
             [Description("Sent Items")]
             SENTITEMS,
             [Description("Pending")]
-            PENDING,
+            PENDING,            
             [Description("Vendor Data Register")]
             VENDODATAREGISTER,
             [Description("Holding Area")]

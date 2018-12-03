@@ -44,7 +44,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                     .LogValidation(ref validations, projectDashBoard.ValidateDisplayedSubItemLinks(bulkUploadData.SubItemLinks));
 
                 var holdingArea = projectDashBoard.SelectModuleMenuItem<HoldingArea>(subMenuItem: ModuleSubMenuInLeftNav.HOLDINGAREA.ToDescription());
-                holdingArea.LogValidation<HoldingArea>(ref validations, holdingArea.ValidateSubPageIsDislayed(ModuleSubMenuInLeftNav.HOLDINGAREA.ToDescription() + " -"))
+                holdingArea.LogValidation<HoldingArea>(ref validations, holdingArea.ValidateSubPageIsDislayed(bulkUploadData.HoldingAreaPaneName))
                     .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateDisplayedViewFilterOption(bulkUploadData.DefaultFilter))
                     .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateFilterBoxIsHighlighted(filterBoxIndex: 1));
 

@@ -45,7 +45,7 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                 //when - 119703 Navigate to Modules from Left Nav
                 //User Story 121270 - 119703 Navigate to Modules from the Left Nav - Part 2 - Transmittals Module 
                 test = LogTest("119703 Navigate to Modules from Left Nav - Transmittals Module");
-                var columnValuesInConditionList = new List<KeyValuePair<string, string>> {transmittalsData.ColumnValuesInConditionList.Subject};
+                var columnValuesInConditionList = new List<KeyValuePair<string, string>> { transmittalsData.ColumnValuesInConditionList.Subject };
 
                 projectDashBoard.SelectModuleMenuItem<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.TRANSMITTALS.ToDescription())
                     .LogValidation<ProjectsDashboard>(ref validations, projectDashBoard.ValidateDisplayedSubItemLinks(transmittalsData.SubItemMenus));
@@ -58,24 +58,24 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                     .LogValidation<Transmittal>(ref validations, transmittalsModule.ValidateItemsAreShown(columnValuesInConditionList, transmittalsData.GridViewName))
                     .ClickHeaderButton<Transmittal>(MainPaneTableHeaderButton.Refresh, true, transmittalsData.TransmittalsModule);
 
-                projectDashBoard.SelectModuleMenuItem<Transmittal>(subMenuItem: ModuleSubMenuInLeftNav.DRAFTS.ToDescription())
-                    .LogValidation<Transmittal>(ref validations, transmittalsModule.ValidateSubPageIsDislayed(ModuleSubMenuInLeftNav.DRAFTS.ToDescription()))
+                projectDashBoard.SelectModuleMenuItem<Transmittal>(subMenuItem: ModuleSubMenuInLeftNav.DRAFTS.ToDescription());
+                transmittalsModule.LogValidation<Transmittal>(ref validations, transmittalsModule.ValidateSubPageIsDislayed(ModuleSubMenuInLeftNav.DRAFTS.ToDescription()))
                     .LogValidation<Transmittal>(ref validations, transmittalsModule.ValidateDisplayedViewFilterOption(transmittalsData.DefaultFilter))
                     .LogValidation<Transmittal>(ref validations, transmittalsModule.ValidateFilterBoxIsHighlighted(filterBoxIndex: 1))
                     .LogValidation<Transmittal>(ref validations, transmittalsModule.ValidateRecordItemsCount(transmittalsData.GridViewName))
                     .LogValidation<Transmittal>(ref validations, transmittalsModule.ValidateItemsAreShown(columnValuesInConditionList, transmittalsData.GridViewName))
                     .ClickHeaderButton<Transmittal>(MainPaneTableHeaderButton.Refresh, true, transmittalsData.GridViewName);
 
-                projectDashBoard.SelectModuleMenuItem<Transmittal>(subMenuItem: ModuleSubMenuInLeftNav.SENTITEMS.ToDescription())
-                    .LogValidation<Transmittal>(ref validations, transmittalsModule.ValidateSubPageIsDislayed(ModuleSubMenuInLeftNav.SENTITEMS.ToDescription()))
+                projectDashBoard.SelectModuleMenuItem<Transmittal>(subMenuItem: ModuleSubMenuInLeftNav.SENTITEMS.ToDescription());
+                transmittalsModule.LogValidation<Transmittal>(ref validations, transmittalsModule.ValidateSubPageIsDislayed(ModuleSubMenuInLeftNav.SENTITEMS.ToDescription()))
                     .LogValidation<Transmittal>(ref validations, transmittalsModule.ValidateDisplayedViewFilterOption(transmittalsData.DefaultFilter))
                     .LogValidation<Transmittal>(ref validations, transmittalsModule.ValidateFilterBoxIsHighlighted(filterBoxIndex: 1))
                     .LogValidation<Transmittal>(ref validations, transmittalsModule.ValidateRecordItemsCount(transmittalsData.GridViewName))
                     .LogValidation<Transmittal>(ref validations, transmittalsModule.ValidateItemsAreShown(columnValuesInConditionList, transmittalsData.GridViewName))
                     .ClickHeaderButton<Transmittal>(MainPaneTableHeaderButton.Refresh, true, transmittalsData.GridViewName);
 
-                projectDashBoard.SelectModuleMenuItem<Transmittal>(subMenuItem: ModuleSubMenuInLeftNav.PENDING.ToDescription())
-                    .LogValidation<Transmittal>(ref validations, transmittalsModule.ValidateSubPageIsDislayed(transmittalsData.SubPendingTitle))
+                projectDashBoard.SelectModuleMenuItem<Transmittal>(subMenuItem: ModuleSubMenuInLeftNav.PENDING.ToDescription());
+                transmittalsModule.LogValidation<Transmittal>(ref validations, transmittalsModule.ValidateSubPageIsDislayed(transmittalsData.SubPendingTitle))
                     .LogValidation<Transmittal>(ref validations, transmittalsModule.ValidateDisplayedViewFilterOption(transmittalsData.DefaultFilterAtPendingPane))
                     .LogValidation<Transmittal>(ref validations, transmittalsModule.ValidateFilterBoxIsHighlighted(filterBoxIndex: 1))
                     .LogValidation<Transmittal>(ref validations, transmittalsModule.ValidateRecordItemsCount(transmittalsData.GridViewPendingName))
@@ -97,16 +97,16 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                     .LogValidation<Package>(ref validations, packagesModule.ValidateItemsAreShown(columnValuesInConditionList, packagesData.GridViewName))
                     .ClickHeaderButton<Package>(MainPaneTableHeaderButton.Refresh, true, packagesData.GridViewName);
 
-                projectDashBoard.SelectModuleMenuItem<Package>(subMenuItem: ModuleSubMenuInLeftNav.DRAFTS.ToDescription())
-                    .LogValidation<Package>(ref validations, packagesModule.ValidateSubPageIsDislayed(ModuleSubMenuInLeftNav.DRAFTS.ToDescription()))
+                projectDashBoard.SelectModuleMenuItem<Package>(subMenuItem: ModuleSubMenuInLeftNav.DRAFTS.ToDescription());
+                packagesModule.LogValidation<Package>(ref validations, packagesModule.ValidateSubPageIsDislayed(ModuleSubMenuInLeftNav.DRAFTS.ToDescription()))
                     .LogValidation<Package>(ref validations, packagesModule.ValidateDisplayedViewFilterOption(packagesData.DefaultFilter))
                     .LogValidation<Package>(ref validations, packagesModule.ValidateFilterBoxIsHighlighted(filterBoxIndex: 1))
                     .LogValidation<Package>(ref validations, packagesModule.ValidateRecordItemsCount(packagesData.GridViewName))
                     .LogValidation<Package>(ref validations, packagesModule.ValidateItemsAreShown(columnValuesInConditionList, packagesData.GridViewName))
                     .ClickHeaderButton<Package>(MainPaneTableHeaderButton.Refresh, true, packagesData.GridViewName);
 
-                projectDashBoard.SelectModuleMenuItem<Package>(subMenuItem: ModuleSubMenuInLeftNav.SENTITEMS.ToDescription())
-                    .LogValidation<Package>(ref validations, packagesModule.ValidateSubPageIsDislayed(ModuleSubMenuInLeftNav.SENTITEMS.ToDescription()))
+                projectDashBoard.SelectModuleMenuItem<Package>(subMenuItem: ModuleSubMenuInLeftNav.SENTITEMS.ToDescription());
+                packagesModule.LogValidation<Package>(ref validations, packagesModule.ValidateSubPageIsDislayed(ModuleSubMenuInLeftNav.SENTITEMS.ToDescription()))
                     .LogValidation<Package>(ref validations, packagesModule.ValidateDisplayedViewFilterOption(packagesData.DefaultFilter))
                     .LogValidation<Package>(ref validations, packagesModule.ValidateFilterBoxIsHighlighted(filterBoxIndex: 1))
                     .LogValidation<Package>(ref validations, packagesModule.ValidateRecordItemsCount(packagesData.GridViewName))
@@ -129,16 +129,16 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                     .LogValidation<Task>(ref validations, tasksModule.ValidateItemsAreShown(columnValuesInConditionList, tasksData.GridViewName))
                     .ClickHeaderButton<Task>(MainPaneTableHeaderButton.Refresh, true, tasksData.GridViewName);
 
-                projectDashBoard.SelectModuleMenuItem<Task>(subMenuItem: ModuleSubMenuInLeftNav.DRAFTS.ToDescription())
-                    .LogValidation<Task>(ref validations, tasksModule.ValidateSubPageIsDislayed(ModuleSubMenuInLeftNav.DRAFTS.ToDescription()))
+                projectDashBoard.SelectModuleMenuItem<Task>(subMenuItem: ModuleSubMenuInLeftNav.DRAFTS.ToDescription());
+                tasksModule.LogValidation<Task>(ref validations, tasksModule.ValidateSubPageIsDislayed(ModuleSubMenuInLeftNav.DRAFTS.ToDescription()))
                     .LogValidation<Task>(ref validations, tasksModule.ValidateDisplayedViewFilterOption(tasksData.DefaultFilter))
                     .LogValidation<Task>(ref validations, tasksModule.ValidateFilterBoxIsHighlighted(filterBoxIndex: 1))
                     .LogValidation<Task>(ref validations, tasksModule.ValidateRecordItemsCount(tasksData.GridViewName))
                     .LogValidation<Task>(ref validations, tasksModule.ValidateItemsAreShown(columnValuesInConditionList, tasksData.GridViewName))
                     .ClickHeaderButton<Task>(MainPaneTableHeaderButton.Refresh, true, tasksData.GridViewName);
 
-                projectDashBoard.SelectModuleMenuItem<Task>(subMenuItem: ModuleSubMenuInLeftNav.SENTITEMS.ToDescription())
-                    .LogValidation<Task>(ref validations, tasksModule.ValidateSubPageIsDislayed(ModuleSubMenuInLeftNav.SENTITEMS.ToDescription()))
+                projectDashBoard.SelectModuleMenuItem<Task>(subMenuItem: ModuleSubMenuInLeftNav.SENTITEMS.ToDescription());
+                tasksModule.LogValidation<Task>(ref validations, tasksModule.ValidateSubPageIsDislayed(ModuleSubMenuInLeftNav.SENTITEMS.ToDescription()))
                     .LogValidation<Task>(ref validations, tasksModule.ValidateDisplayedViewFilterOption(tasksData.DefaultFilter))
                     .LogValidation<Task>(ref validations, tasksModule.ValidateFilterBoxIsHighlighted(filterBoxIndex: 1))
                     .LogValidation<Task>(ref validations, tasksModule.ValidateRecordItemsCount(tasksData.GridViewName))
@@ -147,13 +147,34 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
 
                 //User Story 121328 - 119703 Navigate to Modules from the Left Nav - Part 7 - Gallery Module
                 var galleryData = new NavigateToModulesFromTheLeftNavSmoke.GalleryModules();
-                var gallery = projectDashBoard.SelectModuleMenuItem<Gallery>(galleryData.NavigatePath[0]);
+                var gallery = projectDashBoard.SelectModuleMenuItem<Gallery>(menuItem: ModuleNameInLeftNav.GALLERY.ToDescription());
 
                 gallery.LogValidation<Gallery>(ref validations, gallery.ValidateDisplayedViewFilterOption(galleryData.DefaultFilter))
                     .LogValidation<Gallery>(ref validations, gallery.ValidateFilterBoxIsHighlighted(filterBoxIndex: 4))
                     .LogValidation<Gallery>(ref validations, gallery.ValidateRecordItemsCount())
                     .LogValidation<Gallery>(ref validations, gallery.ValidateSortByValue(galleryData.SortByValue))
                     .ClickHeaderButton<Gallery>(MainPaneTableHeaderButton.Refresh, true, galleryData.GridViewName);
+
+                //User Story 121329 - 119703 Navigate to Modules from the Left Nav - Part 8 - Vendor Data
+                test = LogTest("119703 Navigate to Modules from Left Nav - Vendor Data Module");
+                var vendorDataData = new NavigateToModulesFromTheLeftNavSmoke.VendorDataModules();
+                columnValuesInConditionList = new List<KeyValuePair<string, string>> { vendorDataData.ColumnValuesInConditionList.ContractNumber};
+
+                projectDashBoard.SelectModuleMenuItem<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription())
+                    .LogValidation<ProjectsDashboard>(ref validations, projectDashBoard.ValidateDisplayedSubItemLinks(vendorDataData.SubItemMenus));
+
+                var vendorDataModule = projectDashBoard.SelectModuleMenuItem<VendorDataRegister>(subMenuItem: ModuleSubMenuInLeftNav.VENDODATAREGISTER.ToDescription());
+                vendorDataModule.LogValidation<VendorDataRegister>(ref validations, vendorDataModule.ValidateSubPageIsDislayed(vendorDataData.VendorDataRegisterPaneName))
+                    .LogValidation<VendorDataRegister>(ref validations, vendorDataModule.ValidateDisplayedViewFilterOption(vendorDataData.DefaultFilterAtVendorDataRegisterPane))
+                    .LogValidation<VendorDataRegister>(ref validations, vendorDataModule.ValidateFilterBoxIsHighlighted(filterBoxIndex: 1))
+                    .LogValidation<VendorDataRegister>(ref validations, vendorDataModule.ValidateRecordItemsCount(vendorDataData.GridViewVendorDataRegisterName))
+                    .ClickHeaderButton<VendorDataRegister>(MainPaneTableHeaderButton.Refresh, true, vendorDataData.GridViewVendorDataRegisterName);
+
+                projectDashBoard.SelectModuleMenuItem<HoldingArea>(subMenuItem: ModuleSubMenuInLeftNav.HOLDINGAREA.ToDescription());
+                vendorDataModule.LogValidation<HoldingArea>(ref validations, vendorDataModule.ValidateSubPageIsDislayed(vendorDataData.HoldingAreaPaneName))
+                    .LogValidation<HoldingArea>(ref validations, vendorDataModule.ValidateDisplayedViewFilterOption(vendorDataData.DefaultFilterAtHoldingAreaPane))
+                    .LogValidation<HoldingArea>(ref validations, vendorDataModule.ValidateFilterBoxIsHighlighted(filterBoxIndex: 1))                    
+                    .ClickHeaderButton<HoldingArea>(MainPaneTableHeaderButton.Refresh, true, vendorDataData.GridViewHoldingAreaName);
 
                 //User Story 121272 - 119703 Navigate to Modules from the Left Nav - Part 9 - Dashboard Module - Documents Module
                 string parrentWindow;

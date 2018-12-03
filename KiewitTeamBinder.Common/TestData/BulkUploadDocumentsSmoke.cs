@@ -10,8 +10,8 @@ namespace KiewitTeamBinder.Common.TestData
 {
     public class BulkUploadDocumentsSmoke
     {
-        public string[] NavigatePath = {"Vendor Data", "Vendor Data/Holding Area"};
         public string[] SubItemLinks = {"Holding Area"};
+        public string HoldingAreaPaneName = "Holding Area -";
         public string PackageModule = "Package";
         public string PackagesNode = "Packages";
         public string GridViewName = "GridViewPackage";

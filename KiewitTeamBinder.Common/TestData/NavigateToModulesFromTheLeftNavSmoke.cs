@@ -76,12 +76,27 @@ namespace KiewitTeamBinder.Common.TestData
 
         public class GalleryModules : NavigateToModulesFromTheLeftNavSmoke
         {
-            public string[] NavigatePath = { "TeamPics" };
             public string DefaultFilter = "All";
             public string GridViewName = "GridViewThumbnail";
             public string SortByValue = "Date Uploaded";
         }
 
+        public class VendorDataModules : NavigateToModulesFromTheLeftNavSmoke
+        {            
+            public string[] SubItemMenus = { "Vendor Data Register", "Holding Area" };
+            public string VendorDataRegisterPaneName = "Vendor Data";
+            public string HoldingAreaPaneName = "Holding Area -";
+            public string DefaultFilterAtVendorDataRegisterPane = "Hierarchical View";
+            public string DefaultFilterAtHoldingAreaPane = "New Documents";
+            public string GridViewVendorDataRegisterName = "GridViewContractVendor";
+            public string GridViewHoldingAreaName = "GridViewHoldingArea";
+            public ColumnValuesInCondition ColumnValuesInConditionList = new ColumnValuesInCondition();
+
+            public class ColumnValuesInCondition
+            {
+                public KeyValuePair<string, string> ContractNumber = new KeyValuePair<string, string>(MainPaneTableHeaderLabel.ContractNumber.ToDescription(), "");
+            }
+        }
     }
 
 }
