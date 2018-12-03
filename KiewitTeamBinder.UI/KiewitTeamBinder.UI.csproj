@@ -142,7 +142,6 @@
     <Compile Include="Pages\TransmittalsModule\Transmittal.cs" />
     <Compile Include="Pages\PackagesModule\Package.cs" />
     <Compile Include="Pages\VendorDataModule\HoldingArea.cs" />
-    <Compile Include="Pages\VendorDataModule\VendorDataRegister.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

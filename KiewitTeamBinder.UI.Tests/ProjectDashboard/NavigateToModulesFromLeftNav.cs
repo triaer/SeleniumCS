@@ -16,7 +16,6 @@ using KiewitTeamBinder.UI.Pages.PackagesModule;
 using KiewitTeamBinder.UI.Pages.TasksModule;
 using KiewitTeamBinder.UI.Pages.FormModule;
 using KiewitTeamBinder.UI.Pages.GalleryModule;
-using KiewitTeamBinder.UI.Pages.VendorDataModule;
  
 
 namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
@@ -164,28 +163,7 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                     .LogValidation<Gallery>(ref validations, galleryModule.ValidateRecordItemsCount())
                     .LogValidation<Gallery>(ref validations, galleryModule.ValidateSortByValue(galleryData.SortByValue))
                     .ClickHeaderButton<Gallery>(MainPaneTableHeaderButton.Refresh, true, galleryData.GridViewName);
-
-                //User Story 121329 - 119703 Navigate to Modules from the Left Nav - Part 8 - Vendor Data Modules
-                test = LogTest("119703 Navigate to Modules from Left Nav - Vendor Data Modules");
-                var vendorDataData = new NavigateToModulesFromTheLeftNavSmoke.VendorDataModules();
-                columnValuesInConditionList = new List<KeyValuePair<string, string>> { vendorDataData.ColumnValuesInConditionList.ContractNumber };
-
-                projectDashBoard.SelectModuleMenuItem<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription())
-                    .LogValidation<ProjectsDashboard>(ref validations, projectDashBoard.ValidateDisplayedSubItemLinks(vendorDataData.SubItemMenus));
-
-                VendorDataRegister vendorDataRegister = projectDashBoard.SelectModuleMenuItem<VendorDataRegister>(subMenuItem: ModuleSubMenuInLeftNav.VENDODATAREGISTER.ToDescription());
-                vendorDataRegister.LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateSubPageIsDislayed(vendorDataData.VendorDataRegisterPaneName))
-                    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateDisplayedViewFilterOption(vendorDataData.DefaultFilterAtVendorDataRegisterPane))
-                    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateFilterBoxIsHighlighted(filterBoxIndex: 1))
-                    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateRecordItemsCount(vendorDataData.GridViewVendorDataRegisterName))
-                    .ClickHeaderButton<VendorDataRegister>(MainPaneTableHeaderButton.Refresh, true, vendorDataData.GridViewVendorDataRegisterName);
-
-                HoldingArea holdingArea = projectDashBoard.SelectModuleMenuItem<HoldingArea>(subMenuItem: ModuleSubMenuInLeftNav.HOLDINGAREA.ToDescription());
-                holdingArea.LogValidation<HoldingArea>(ref validations, holdingArea.ValidateSubPageIsDislayed(vendorDataData.HoldingAreaPaneName))
-                    .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateDisplayedViewFilterOption(vendorDataData.DefaultFilterAtHoldingAreaPane))
-                    .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateFilterBoxIsHighlighted(filterBoxIndex: 1))
-                    .ClickHeaderButton<HoldingArea>(MainPaneTableHeaderButton.Refresh, true, vendorDataData.GridViewHoldingAreaName);
-                              
+                                
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);
                 Console.WriteLine(string.Join(System.Environment.NewLine, validations.ToArray()));
