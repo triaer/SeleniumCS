@@ -10,20 +10,7 @@ namespace KiewitTeamBinder.Common.TestData
 {
     public class NavigateToModulesFromTheLeftNavSmoke
     {        
-        public string ProjectName = "Automation Project 1";
-
-        public class DashboardModules : NavigateToModulesFromTheLeftNavSmoke
-        {
-            public string[] ListWidgits = {DashboardWidgit.MAIL.ToDescription(),
-                                           DashboardWidgit.PACKAGES.ToDescription()};
-        }
-
-        public class DocumentsModules : NavigateToModulesFromTheLeftNavSmoke
-        {            
-            public string DefaultFilter = "Latest Unrestrained";
-            public string GridViewName = "GridViewDocReg";
-            public string DocumentNo = "77777";
-        }
+        public string ProjectName = "Automation Project 1";       
 
         public class TransmittalsModules : NavigateToModulesFromTheLeftNavSmoke
         {

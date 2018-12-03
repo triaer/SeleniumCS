@@ -124,14 +124,12 @@
     <Compile Include="ExcelInterop\Old_ExcelHelper.cs" />
     <Compile Include="ExtentReportsHelper.cs" />
     <Compile Include="IWebElementExtensions.cs" />
-    <Compile Include="Pages\DashboardModule\Dashboard.cs" />
     <Compile Include="Pages\Dialogs\ConfirmDialog.cs" />
     <Compile Include="Pages\Dialogs\AlertDialog.cs" />
     <Compile Include="Pages\Dialogs\ApplyToNRowsDialog.cs" />
     <Compile Include="Pages\Dialogs\HelpAboutDialog.cs" />
     <Compile Include="Pages\FormModule\Form.cs" />
     <Compile Include="Pages\GalleryModule\Gallery.cs" />
-    <Compile Include="Pages\DocumentModule\Document.cs" />
     <Compile Include="Pages\Global\BulkUploadDocuments.cs" />
     <Compile Include="Pages\Global\ProjectsDashboard.cs" />
     <Compile Include="Pages\Global\LoggedInLanding.cs" />

@@ -16,9 +16,8 @@ using KiewitTeamBinder.UI.Pages.PackagesModule;
 using KiewitTeamBinder.UI.Pages.TasksModule;
 using KiewitTeamBinder.UI.Pages.FormModule;
 using KiewitTeamBinder.UI.Pages.GalleryModule;
-using KiewitTeamBinder.UI.Pages.DashboardModule;
-using KiewitTeamBinder.UI.Pages.DocumentModule;
 using KiewitTeamBinder.UI.Pages.VendorDataModule;
+ 
 
 namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
 {
@@ -186,26 +185,7 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                     .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateDisplayedViewFilterOption(vendorDataData.DefaultFilterAtHoldingAreaPane))
                     .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateFilterBoxIsHighlighted(filterBoxIndex: 1))
                     .ClickHeaderButton<HoldingArea>(MainPaneTableHeaderButton.Refresh, true, vendorDataData.GridViewHoldingAreaName);
-
-                //User Story 121272 - 119703 Navigate to Modules from the Left Nav - Part 9 - Dashboard Module - Documents Modules
-                test = LogTest("119703 Navigate to Modules from Left Nav - Dashboard Module, Documents Modules");
-                string parrentWindow;
-                var dashboardData = new NavigateToModulesFromTheLeftNavSmoke.DashboardModules();
-                var documentsData = new NavigateToModulesFromTheLeftNavSmoke.DocumentsModules();
-
-                Dashboard dashboardModule = projectDashBoard.SelectModuleMenuItem<Dashboard>(ModuleNameInLeftNav.DASHBOARD.ToDescription());
-                dashboardModule.LogValidation<Dashboard>(ref validations, dashboardModule.ValidateWidgetsOfDashboardDisplayed(dashboardData.ListWidgits));
-
-                Document documentModule = projectDashBoard.SelectModuleMenuItem<Document>(ModuleNameInLeftNav.DOCUMENTS.ToDescription());
-                documentModule.LogValidation<Document>(ref validations, documentModule.ValidateDisplayedViewFilterOption(documentsData.DefaultFilter))
-                    .LogValidation<Document>(ref validations, documentModule.ValidateRecordItemsCount(documentsData.GridViewName))
-                    .LogValidation<Document>(ref validations, documentModule.ValidateFilterBoxIsHighlighted(filterBoxIndex: 1))
-                    .OpenDocument(documentsData.DocumentNo, out parrentWindow)
-                    .LogValidation<Document>(ref validations, documentModule.ValidateDocumentsDetailIsOpened(documentsData.DocumentNo))
-                    .ClickCloseButton()
-                    .SwitchToWindow(parrentWindow)
-                    .Logout();
-
+                              
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);
                 Console.WriteLine(string.Join(System.Environment.NewLine, validations.ToArray()));
