@@ -128,7 +128,17 @@ namespace KiewitTeamBinder.Common
             [Description("Packages")]
             PACKAGES,
             [Description("Tasks")]
-            TASKS
+            TASKS,
+            [Description("Dashboard")]
+            DASHBOARD,
+            [Description("Documents")]
+            DOCUMENTS,
+            [Description("Forms")]
+            FORMS,
+            [Description("TeamPics")]
+            GALLERY,
+            [Description("VendorData")]
+            VENDORDATA
         }
 
         public enum MainPaneTableHeaderButton
@@ -160,7 +170,7 @@ namespace KiewitTeamBinder.Common
             [Description("Export")]
             Export,
             [Description("More")]
-            More            
+            More
         }
 
         public enum MainPaneTableHeaderLabel
@@ -188,8 +198,11 @@ namespace KiewitTeamBinder.Common
             [Description("To")]
             To,
             [Description("TaskCount")]
-            TaskCount
+            TaskCount,
+            [Description("Contract Number")]
+            ContractNumber
         }
+
         public enum DialogPopupButton
         {
             Yes,
@@ -197,6 +210,7 @@ namespace KiewitTeamBinder.Common
             OK
 
         }
+
         public enum ModuleSubMenuInLeftNav
         {
             [Description("Inbox")]
@@ -206,7 +220,39 @@ namespace KiewitTeamBinder.Common
             [Description("Sent Items")]
             SENTITEMS,
             [Description("Pending")]
-            PENDING
+            PENDING,            
+            [Description("Vendor Data Register")]
+            VENDODATAREGISTER,
+            [Description("Holding Area")]
+            HOLDINGAREA
+        }
+
+        public enum DashboardWidgit
+        {
+            [Description("Mail")]
+            MAIL,
+            [Description("Unregistered Mail")]
+            UNREGISTERED_MAIL,
+            [Description("Documents")]
+            DOCUMENTS,
+            [Description("Workflow")]
+            WORKFLOW,
+            [Description("Packages")]
+            PACKAGES,
+            [Description("Transmittals")]
+            TRANSMITTALS,
+            [Description("Tasks")]
+            TASKS,
+            [Description("My Statistics")]
+            MY_STATISTICS,
+            [Description("Contractor View")]
+            CONTRACTOR_VIEW,
+            [Description("Forms")]
+            FORMS,
+            [Description("Gallery")]
+            GALLERY,
+            [Description("Submission View (Vendor)")]
+            SUBMISSION_VIEW,
         }
     }
 }

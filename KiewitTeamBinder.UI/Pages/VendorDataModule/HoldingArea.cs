@@ -9,14 +9,13 @@ using static KiewitTeamBinder.UI.ExtentReportsHelper;
 using static KiewitTeamBinder.Common.KiewitTeamBinderENums;
 using KiewitTeamBinder.Common.Helper;
 
-namespace KiewitTeamBinder.UI.Pages.VendorData
+namespace KiewitTeamBinder.UI.Pages.VendorDataModule
 {
     public class HoldingArea : ProjectsDashboard
     {
         #region Entities
         private string _functionButton = "//li[@class='rtbItem rtbBtn'][a='{0}']";
         private string _filterTextBoxXpath = "//tr[@class='rgFilterRow']/td[count(//tr/th[.='{0}']/preceding-sibling::th)+1]";
-        private string _indexOfColumnByName = "count(//tr/th[.='{0}']/preceding-sibling::th)+1";
         private static By _holdingAreaLabel => By.Id("lblRegisterCaption");
         private static By _documentNoTextBox => By.XPath("//input[contains(@id,'FilterTextBox_GridColDocumentNo')]");
         private static By _holdingAreaRadGrid => By.XPath("//div[contains(@id,'_cntPhMain_GridViewHoldingArea')][contains(@class,'RadGrid')]");

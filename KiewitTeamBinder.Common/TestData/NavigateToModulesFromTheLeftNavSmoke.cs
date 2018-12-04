@@ -10,11 +10,12 @@ namespace KiewitTeamBinder.Common.TestData
 {
     public class NavigateToModulesFromTheLeftNavSmoke
     {        
-        public string ProjectName = "Automation Project 1";
+        public string ProjectName = "Automation Project 1";       
+
         public class TransmittalsModules : NavigateToModulesFromTheLeftNavSmoke
         {
             
-            public string[] SubItemLinks = { "Inbox", "Drafts", "Sent Items", "Pending" };
+            public string[] SubItemMenus = { "Inbox", "Drafts", "Sent Items", "Pending" };
             public string SubPendingTitle = "Pending Transmittals";
             public string DefaultFilter = "Personal";
             public string DefaultFilterAtPendingPane = "By Recipient";
@@ -33,7 +34,7 @@ namespace KiewitTeamBinder.Common.TestData
         public class PackagesModules : NavigateToModulesFromTheLeftNavSmoke
         {
             
-            public string[] SubItemLinks = { "Inbox", "Drafts", "Sent Items" };
+            public string[] SubItemMenus = { "Inbox", "Drafts", "Sent Items" };
             public string DefaultFilter = "All";
             public string PackageModule = "Package";
             public string PackagesNode = "Packages";
@@ -45,8 +46,27 @@ namespace KiewitTeamBinder.Common.TestData
                 public KeyValuePair<string, string> PackageID = new KeyValuePair<string, string>(MainPaneTableHeaderLabel.PackageID.ToDescription(), "74841");
                 public KeyValuePair<string, string> PackageType = new KeyValuePair<string, string>(MainPaneTableHeaderLabel.PackageType.ToDescription(), "Standard");
             }
-        }      
+        }
 
+        public class TasksModules : NavigateToModulesFromTheLeftNavSmoke
+        {
+            public string[] SubItemMenus = { "Inbox", "Drafts", "Sent Items" };
+            public string DefaultFilter = "Personal";
+            public string GridViewName = "GridViewTask";
+            public ColumnValuesInCondition ColumnValuesInConditionList = new ColumnValuesInCondition();
+
+            public class ColumnValuesInCondition
+            {
+                public KeyValuePair<string, string> Subject = new KeyValuePair<string, string>(MainPaneTableHeaderLabel.Subject.ToDescription(), "Task");
+            }
+        }
+
+        public class FormsModules : NavigateToModulesFromTheLeftNavSmoke
+        {
+            public string DefaultFilter = "Personal";
+            public string GridViewName = "GridViewForms";
+            public string FormsModule = "Forms";
+        }         
     }
 
 }

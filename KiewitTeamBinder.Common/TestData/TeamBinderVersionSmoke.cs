@@ -8,7 +8,6 @@ namespace KiewitTeamBinder.Common.TestData
 {
     public static class TeamBinderVersionSmoke
     {
-        public static string TeamBinderVersion = "18.4.07";
         public static string ProjectName = "Automation Project 1";
     }
 }

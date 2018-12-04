@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using KiewitTeamBinder.Common;
-
+using KiewitTeamBinder.Common.Helper;
 
 namespace KiewitTeamBinder.Common.TestData
 {
     public class BulkUploadDocumentsSmoke
     {
-        public string[] NavigatePath = {"Vendor Data", "Vendor Data/Holding Area"};
         public string[] SubItemLinks = {"Holding Area"};
+        public string HoldingAreaPaneName = "Holding Area -";
         public string PackageModule = "Package";
         public string PackagesNode = "Packages";
         public string GridViewName = "GridViewPackage";
@@ -29,12 +29,12 @@ namespace KiewitTeamBinder.Common.TestData
         public string DataOfComboBoxDics = "CON - Contruction";
         public string DataOfComboBoxCat = "CA - CALCULATION";
         public int NumberOfRow = 14;
-        public string DocumentNoTextboxContent = "AUTO";
+        public string DocumentNoTextboxContent = Utils.GetRandomValue("AUTO");
         public string HoverCopyAttributesItem = "All";
         public string MessageOnValidateDocumentsDialog = "Document details are successfully validated.";
         public string MessageOnSaveDocumentsDialog = "Document details saved successfully.Do you want to upload more documents?";
         public string HoldingAreaFilterByColumn = "Document No.";
-        public string FilterWithValue = "AUTO 1";
+        public string FilterWithValue = " 1";
 
 
     }

@@ -37,15 +37,15 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                 var driver = Browser.Open(teambinderTestAccount.Url, browser);
                 // and log on via Other User Login Kiewit Account
                 test.Info("Log on TeamBinder via Other User Login: " + teambinderTestAccount.Username);
-                var projectsList = new NonSsoSignOn(driver).Logon(teambinderTestAccount) as ProjectsList;
+                ProjectsList projectsList = new NonSsoSignOn(driver).Logon(teambinderTestAccount) as ProjectsList;
 
                 test.Info("Navigate to DashBoard Page of Project: " + TeamBinderVersionSmoke.ProjectName);
-                var projectDashBoard = projectsList.NavigateToProjectDashboardPage(TeamBinderVersionSmoke.ProjectName);
+                ProjectsDashboard projectDashBoard = projectsList.NavigateToProjectDashboardPage(TeamBinderVersionSmoke.ProjectName);
 
                 //when - 119693 Validate Teambinder Version No
                 test = LogTest("Validate Teambinder Version No.");
                 var aboutDialog = projectDashBoard.OpenHelpDialog(HelpMenuOptions.About.ToDescription());
-                aboutDialog.LogValidation<HelpAboutDialog>(ref validations, aboutDialog.ValidateTeamBinderVersion(TeamBinderVersionSmoke.TeamBinderVersion))
+                aboutDialog.LogValidation<HelpAboutDialog>(ref validations, aboutDialog.ValidateTeamBinderVersion(teamBinderVersion))
                     .CloseHelpDialog();
 
                 // then

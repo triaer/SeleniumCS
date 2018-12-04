@@ -48,7 +48,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             //click on the project
             var dashboard = new ProjectsDashboard(WebDriver);
             ProjectItem.Click();
-            WaitForJQueryLoad();
+            //WaitForJQueryLoad();
             WaitForElement(dashboard._dashBoardLabel);
             
 
@@ -62,10 +62,10 @@ namespace KiewitTeamBinder.UI.Pages.Global
             if (filterColumnName.Equals("Project Title"))
             {
                 ProjectTitleTextBox.InputText(filterValue);
-                ProjectTitleTextBox.SendKeys(Keys.Tab);
+                ProjectTitleTextBox.SendKeys(Keys.Enter);
                 WaitForJQueryLoad();
-                //WaitForJQueryToBeActive();
-                SelectComboboxByText(ProjectTitleImgFilter, _projectImgFilterData, FilterOptions.EqualTo.ToDescription());
+                
+                //SelectComboboxByText(ProjectTitleImgFilter, _projectImgFilterData, FilterOptions.EqualTo.ToDescription());
             }
 
             if (filterColumnName.Equals("Project No"))
@@ -74,7 +74,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 ProjectNoTextBox.SendKeys(Keys.Tab);
                 SelectComboboxByText(ProjectNoImgFilter, _projectImgFilterData, FilterOptions.EqualTo.ToDescription());
             }
-            WaitForElement(_projGridDataTable);
+            WaitForElementRefresh(_projGridDataTable);
             GetTableCellValueIndex(ProjGridDataTable, filterValue, out rowIndex, out colIndex);
 
             return TableCell(ProjGridDataTable, rowIndex, colIndex);
