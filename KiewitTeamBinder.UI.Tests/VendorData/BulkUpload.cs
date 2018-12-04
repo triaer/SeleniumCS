@@ -70,7 +70,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 applyToNextNRowsDialog.LogValidation<ApplyToNRowsDialog>(ref validations, applyToNextNRowsDialog.ValidateApplyToNRowsDialogDisplaysCorrectly(bulkUploadData.MessageOnToNextNRowsDialog))
                     .EnterNumberOfRow(bulkUploadData.NumberOfRow)
                     .ClickOKButton<BulkUploadDocuments>();
-                bulkUploadDocuments.LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocuments.ValidateDocumentPropertiesAreCopiedToAllRows_N(rowIndexOfStandardRow: 1))
+                bulkUploadDocuments.LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocuments.ValidateDocumentPropertiesAreCopiedToAllRows(rowIndexOfStandardRow: 1))
                     .EnterTextboxes(bulkUploadData.DocumentNoTextboxContent, DocBulkUploadInputText.DocumentNo.ToDescription());
 
                 AlertDialog validateDialog = bulkUploadDocuments.ClickValidateDocumentDetails(DocBulkUploadHeaderButton.Validate, methodValidations);

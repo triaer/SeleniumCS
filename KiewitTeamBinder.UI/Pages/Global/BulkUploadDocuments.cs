@@ -241,53 +241,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             return applyToNRowsDialog;
         }
 
-        private Dictionary<string, string> GetDataFromDocumentRow(int rowIndex)
-        {
-            Dictionary<string, string> data = new Dictionary<string, string>();
-            string value;
-            string[] textboxName = new string[7];
-            textboxName[0] = DocBulkUploadInputText.DocumentNo.ToDescription();
-            textboxName[1] = DocBulkUploadInputText.Title.ToDescription();
-            textboxName[2] = DocBulkUploadInputText.Due.ToDescription();
-            textboxName[3] = DocBulkUploadInputText.Actual.ToDescription();
-            textboxName[4] = DocBulkUploadInputText.Forecast.ToDescription();
-            textboxName[5] = DocBulkUploadInputText.AltDocumentNo.ToDescription();
-            textboxName[6] = DocBulkUploadInputText.IncTrnNo.ToDescription();
-
-            IReadOnlyCollection<IWebElement> DocumentDetailsTextbox;
-            for (int i = 0; i < textboxName.Length; i++)
-            {
-                DocumentDetailsTextbox = StableFindElements(By.XPath(string.Format(_documentDetailsTextbox, textboxName[i])));
-                if (DocumentDetailsTextbox.ElementAt(rowIndex).Text != null)
-                    value = DocumentDetailsTextbox.ElementAt(rowIndex).Text;
-                else
-                    value = "";
-                data.Add(textboxName[i], value);
-            }
-
-            string[] comboboxName = new string[8];
-            comboboxName[0] = DocBulkUploadDropdownType.Rev.ToDescription();
-            comboboxName[1] = DocBulkUploadDropdownType.Sts.ToDescription();
-            comboboxName[2] = DocBulkUploadDropdownType.Disc.ToDescription();
-            comboboxName[3] = DocBulkUploadDropdownType.Cat.ToDescription();
-            comboboxName[4] = DocBulkUploadDropdownType.Type.ToDescription();
-            comboboxName[5] = DocBulkUploadDropdownType.Location.ToDescription();
-            comboboxName[6] = DocBulkUploadDropdownType.SpecReference.ToDescription();
-            comboboxName[7] = DocBulkUploadDropdownType.SubType.ToDescription();
-
-            IReadOnlyCollection<SelectElement> DocumentDetailsCombobox;
-            for (int i = 0; i < comboboxName.Length; i++)
-            {
-                DocumentDetailsCombobox = GetAllComboBoxes(comboboxName[i]);
-                data.Add(comboboxName[i], DocumentDetailsCombobox.ElementAt(rowIndex).SelectedOption.Text);
-            }
-            
-            data.Add("SupersededCheckbox",AllSupersededCheckboxes.ElementAt(rowIndex).Selected.ToString());
-
-            return data;
-        }
-
-        public AlertDialog ClickValidateDocumentDetails(DocBulkUploadHeaderButton buttonName, List<KeyValuePair<string, bool>> methodValidation)
+         public AlertDialog ClickValidateDocumentDetails(DocBulkUploadHeaderButton buttonName, List<KeyValuePair<string, bool>> methodValidation)
         {
             var dialog = ClickHeaderButton<AlertDialog>(buttonName,true);
             methodValidation.Add(ValidateProgressContentMessage("Validating Documents in progress"));
@@ -422,13 +376,13 @@ namespace KiewitTeamBinder.UI.Pages.Global
         }
         //TO-DO: Currently, there is an abnormal issue relating to the Copy Properties function. Sometime, the properties are not copied to n rows as expected
         //
-        public KeyValuePair<string, bool> ValidateDocumentPropertiesAreCopiedToAllRows(int rowIndexOfStandardRow)
+        public KeyValuePair<string, bool> ValidateDocumentPropertiesAreCopiedToAllRowsOld(int rowIndexOfStandardRow)
         {
             var node = StepNode();
             rowIndexOfStandardRow = Utils.RefactorIndex(rowIndexOfStandardRow);
             try
             {
-                Dictionary<string, string>[] dataFromAllDocumentRows = GetDataFromAllDocumentRows();
+                Dictionary<string, string>[] dataFromAllDocumentRows = GetDataFromAllDocumentRowsOld();
                 Dictionary<string, string> dataOfStandardRow = dataFromAllDocumentRows[rowIndexOfStandardRow];
 
                 for (int i = 0; i < dataFromAllDocumentRows.Length; i++)
@@ -445,7 +399,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
         }
 
-        public List<KeyValuePair<string, bool>> ValidateDocumentPropertiesAreCopiedToAllRows_N(int rowIndexOfStandardRow)
+        public List<KeyValuePair<string, bool>> ValidateDocumentPropertiesAreCopiedToAllRows(int rowIndexOfStandardRow)
         {
             var node = StepNode();
             var validation = new List<KeyValuePair<string, bool>>();
@@ -454,7 +408,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             rowIndexOfStandardRow = Utils.RefactorIndex(rowIndexOfStandardRow);
             try
             {
-                allDataRows = GetDataFromAllDocumentRows_N();
+                allDataRows = GetDataFromAllDocumentRows();
                 string[] standardRow = allDataRows[rowIndexOfStandardRow];
                 //compare values
                 foreach (var row in allDataRows)
@@ -484,7 +438,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         }
 
 
-        private List<string[]> GetDataFromAllDocumentRows_N()
+        private List<string[]> GetDataFromAllDocumentRows()
         {
             //int numberOfRows = AllDocumentAttributesRows.Count;
             List<string[]> dataArray = new List<string[]> ();
@@ -538,7 +492,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
             return valueArray;
         }
-        private Dictionary<string, string>[] GetDataFromAllDocumentRows()
+        private Dictionary<string, string>[] GetDataFromAllDocumentRowsOld()
         {
             int numberOfRows = AllDocumentRows.Count;
             string value;
