@@ -14,8 +14,28 @@ namespace KiewitTeamBinder.Common.TestData
 
         public class DashboardModules : NavigateToModulesFromTheLeftNavSmoke
         {
-            public string[] ListWidgits = {DashboardWidgit.MAIL.ToDescription(),
-                                           DashboardWidgit.PACKAGES.ToDescription()};
+            public WidgitsList ListOfWidgits = new WidgitsList();
+
+            public class WidgitsList
+            {
+                public string Mail = DashboardWidgit.MAIL.ToDescription();
+                public string Documents = DashboardWidgit.DOCUMENTS.ToDescription();
+                public string UnregisteredEmail = DashboardWidgit.UNREGISTEREDMAIL.ToDescription();
+                public string Workllow = DashboardWidgit.WORKFLOW.ToDescription();
+                public string Packages = DashboardWidgit.PACKAGES.ToDescription();
+                public string Transmittals = DashboardWidgit.TRANSMITTALS.ToDescription();
+                public string Tasks = DashboardWidgit.TASKS.ToDescription();
+                public string MyStatistics = DashboardWidgit.MYSTATISTICS.ToDescription();
+                public string ContractorView = DashboardWidgit.CONTRACTORVIEW.ToDescription();
+                public string Forms = DashboardWidgit.FORMS.ToDescription();
+                public string Gallery = DashboardWidgit.GALLERY.ToDescription();
+                public string SubmissionView = DashboardWidgit.SUBMISSIONVIEW.ToDescription();
+                public string ProjectAnnouncements = DashboardWidgit.PROJECTANNOUNCEMENTS.ToDescription();
+                public string ProjectDescription = DashboardWidgit.PROJECTDESCRIPTION.ToDescription();
+                public string UsefulContacts = DashboardWidgit.USEFULCONTACTS.ToDescription();
+                public string ResponsesOutstanding = DashboardWidgit.RESPONSESOUTSTANDING.ToDescription();
+                public string DocumentBarChart = DashboardWidgit.DOCMUENTBARCHART.ToDescription();
+            }
         }
 
         public class DocumentsModules : NavigateToModulesFromTheLeftNavSmoke

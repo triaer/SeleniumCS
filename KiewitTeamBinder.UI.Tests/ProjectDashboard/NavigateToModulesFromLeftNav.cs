@@ -188,13 +188,34 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                     .ClickHeaderButton<HoldingArea>(MainPaneTableHeaderButton.Refresh, true, vendorDataData.GridViewHoldingAreaName);
 
                 //User Story 121272 - 119703 Navigate to Modules from the Left Nav - Part 9 - Dashboard Module - Documents Modules
-                test = LogTest("119703 Navigate to Modules from Left Nav - Dashboard Module, Documents Modules");
-                string parrentWindow;
+                test = LogTest("119703 Navigate to Modules from Left Nav - Dashboard Module, Documents Modules");                
                 var dashboardData = new NavigateToModulesFromTheLeftNavSmoke.DashboardModules();
-                var documentsData = new NavigateToModulesFromTheLeftNavSmoke.DocumentsModules();
+                string[] ListWidgits =
+                {
+                    dashboardData.ListOfWidgits.Mail,
+                    dashboardData.ListOfWidgits.Documents,
+                    dashboardData.ListOfWidgits.UnregisteredEmail,
+                    dashboardData.ListOfWidgits.Workllow,
+                    dashboardData.ListOfWidgits.Packages,
+                    dashboardData.ListOfWidgits.Transmittals,
+                    dashboardData.ListOfWidgits.Tasks,
+                    dashboardData.ListOfWidgits.MyStatistics,
+                    dashboardData.ListOfWidgits.ContractorView,
+                    dashboardData.ListOfWidgits.Forms,
+                    dashboardData.ListOfWidgits.Gallery,
+                    dashboardData.ListOfWidgits.SubmissionView,
+                    dashboardData.ListOfWidgits.ProjectAnnouncements,
+                    dashboardData.ListOfWidgits.ProjectDescription,
+                    dashboardData.ListOfWidgits.UsefulContacts,
+                    dashboardData.ListOfWidgits.ResponsesOutstanding,
+                    dashboardData.ListOfWidgits.DocumentBarChart
+                };                
 
                 Dashboard dashboardModule = projectDashBoard.SelectModuleMenuItem<Dashboard>(ModuleNameInLeftNav.DASHBOARD.ToDescription());
-                dashboardModule.LogValidation<Dashboard>(ref validations, dashboardModule.ValidateWidgetsOfDashboardDisplayed(dashboardData.ListWidgits));
+                dashboardModule.LogValidation<Dashboard>(ref validations, dashboardModule.ValidateWidgetsOfDashboardDisplayed(ListWidgits));
+
+                var documentsData = new NavigateToModulesFromTheLeftNavSmoke.DocumentsModules();
+                string parrentWindow;
 
                 Document documentModule = projectDashBoard.SelectModuleMenuItem<Document>(ModuleNameInLeftNav.DOCUMENTS.ToDescription());
                 documentModule.LogValidation<Document>(ref validations, documentModule.ValidateDisplayedViewFilterOption(documentsData.DefaultFilter))
