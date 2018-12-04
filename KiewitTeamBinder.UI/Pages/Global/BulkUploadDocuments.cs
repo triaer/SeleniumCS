@@ -30,12 +30,16 @@ namespace KiewitTeamBinder.UI.Pages.Global
         private static By _allRowCheckboxes => By.XPath("//input[contains(@name, 'ClientSelectColumnSelectCheckBox')]");
         private static By _allSupersededCheckboxes => By.XPath("//input[contains(@name, 'chkSuperseded')]");
         private static By _allCopyAttributesItems => By.XPath("//div[@id='RadContextMenu1_detached']/div[contains(@class,'rmScrollWrap')]//li");
+        private static By _allDocumentAttributesRows => By.XPath("//div[contains(@id,'_GridData')]/table/tbody/tr[not (contains(@id,'ViewFiles'))]");
 
         private string _allComboBoxes = "//select[@data-property-name='{0}']";
         private string _documentDetailsTextbox = "//td//*[@data-property-name='{0}']";
         private string _headerButton = "//a[span='{0}']";
         private string _toNRows = "//*[@id='RadContextMenu1_detached']/div[{0}]//a[span= '{1}']";
         private string _bottomButtonXpath = "//li[contains(@class,'rtbItem rtbBtn')]//span[text()='{0}']";
+        private string _indexOfColumnByPropertyName = "count(..//td[./*[@data-property-name='{0}']]/preceding-sibling::td)+1";
+        private string _documentTextboxByProperty = "./*[@data-property-name='{0}']";
+        private string _allDocumentRowsXpath = "//div[contains(@id,'_GridData')]/table/tbody/tr[not (contains(@id,'ViewFiles'))]";
 
         public IWebElement AddFileInBulkButton { get { return StableFindElement(_addFileInBulkButton); } }
         public IWebElement SelectAllCheckbox { get { return StableFindElement(_selectAllCheckbox); } }
@@ -48,7 +52,8 @@ namespace KiewitTeamBinder.UI.Pages.Global
         public IReadOnlyCollection<IWebElement> AllDocumentRows { get { return StableFindElements(_allDocumentRows); } }
         public IReadOnlyCollection<IWebElement> AllRowCheckboxes { get { return StableFindElements(_allRowCheckboxes); } }
         public IReadOnlyCollection<IWebElement> AllSupersededCheckboxes { get { return StableFindElements(_allSupersededCheckboxes); } }
-        
+        public IReadOnlyCollection<IWebElement> AllDocumentAttributesRows { get { return StableFindElements(_allDocumentAttributesRows); } }
+
         #endregion
 
 
@@ -292,7 +297,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
         private KeyValuePair<string, bool> ValidateProgressContentMessage(string message)
         {
             var node = StepNode();
-            WaitForLoading(_progressPopUp);
             IWebElement DialogMessage = FindElement(_progressMessage);
             var actual = DialogMessage.GetAttribute("innerHTML");
             if (actual.Contains(message))
@@ -438,9 +442,102 @@ namespace KiewitTeamBinder.UI.Pages.Global
             {
                 return SetErrorValidation(node, Validation.Document_Properties_Are_Copied_To_All_Rows, e);
             }
+
+        }
+
+        public List<KeyValuePair<string, bool>> ValidateDocumentPropertiesAreCopiedToAllRows_N(int rowIndexOfStandardRow)
+        {
+            var node = StepNode();
+            var validation = new List<KeyValuePair<string, bool>>();
+            bool result = true;
+            List<string[]> allDataRows = new List<string[]>();
+            rowIndexOfStandardRow = Utils.RefactorIndex(rowIndexOfStandardRow);
+            try
+            {
+                allDataRows = GetDataFromAllDocumentRows_N();
+                string[] standardRow = allDataRows[rowIndexOfStandardRow];
+                //compare values
+                foreach (var row in allDataRows)
+                {
+                    if (allDataRows.IndexOf(row) != rowIndexOfStandardRow)
+                    {
+                        if (!row.SequenceEqual(standardRow))
+                        {
+                            validation.Add(SetFailValidation(node, Validation.Document_Properties_Are_Copied_To_All_Rows + " - At row: " + allDataRows.IndexOf(row),
+                                                                    standardRow.ToString(), row.ToString()));
+                            result = false;
+                        }
+                    }
+                }
+                if (result)
+                    validation.Add(SetPassValidation(node, Validation.Document_Properties_Are_Copied_To_All_Rows));
+
+                return validation;
+
+            }
+            catch (Exception e)
+            {
+                validation.Add(SetErrorValidation(node, Validation.Document_Properties_Are_Copied_To_All_Rows, e));
+                return validation;
+            }
+            
         }
 
 
+        private List<string[]> GetDataFromAllDocumentRows_N()
+        {
+            //int numberOfRows = AllDocumentAttributesRows.Count;
+            List<string[]> dataArray = new List<string[]> ();
+
+            //textboxs
+            List<string> DocNoValues = GetValueListByColumn(DocBulkUploadInputText.DocumentNo.ToDescription(), "TextBox");
+            List<string> TitleValues = GetValueListByColumn(DocBulkUploadInputText.Title.ToDescription(), "TextBox");
+            List<string> DueValues = GetValueListByColumn(DocBulkUploadInputText.Due.ToDescription(), "TextBox");
+            List<string> ActualValues = GetValueListByColumn(DocBulkUploadInputText.Actual.ToDescription(), "TextBox");
+            List<string> ForecastValues = GetValueListByColumn(DocBulkUploadInputText.Forecast.ToDescription(), "TextBox");
+            List<string> AltDocNoValues = GetValueListByColumn(DocBulkUploadInputText.AltDocumentNo.ToDescription(), "TextBox");
+            List<string> IncTrnNoValues = GetValueListByColumn(DocBulkUploadInputText.IncTrnNo.ToDescription(), "TextBox");
+            //select box
+            List<string> RevValues = GetValueListByColumn(DocBulkUploadDropdownType.Rev.ToDescription());
+            List<string> StsValues = GetValueListByColumn(DocBulkUploadDropdownType.Sts.ToDescription());
+            List<string> DiscValues = GetValueListByColumn(DocBulkUploadDropdownType.Disc.ToDescription());
+            List<string> CatValues = GetValueListByColumn(DocBulkUploadDropdownType.Cat.ToDescription());
+            List<string> TypeValues = GetValueListByColumn(DocBulkUploadDropdownType.Type.ToDescription());
+            List<string> LocationValues = GetValueListByColumn(DocBulkUploadDropdownType.Location.ToDescription());
+            List<string> SpecRefValues =  GetValueListByColumn(DocBulkUploadDropdownType.SpecReference.ToDescription());
+            List<string> SubTypeValues = GetValueListByColumn(DocBulkUploadDropdownType.SubType.ToDescription());
+
+            for (int i=0; i < DocNoValues.Count; i++)
+            {
+                dataArray.Add(new string[] { DocNoValues[i], TitleValues[i], DueValues[i], ActualValues[i], ForecastValues[i], AltDocNoValues[i], IncTrnNoValues[i],
+                                RevValues[i], StsValues[i], DiscValues[i], CatValues[i], TypeValues[i], LocationValues[i], SpecRefValues[i], SubTypeValues[i]} );
+            }
+           
+
+            return dataArray;
+        }
+
+        private List<string> GetValueListByColumn(string propertyName, string type = "SelectElement")
+        {
+            List<string> valueArray = new List<string>();
+            List<IWebElement> DocumentDetailsCell, tempList;
+            List<SelectElement> DocumentDetailsCombobox;
+            string indexCol = string.Format(_indexOfColumnByPropertyName, propertyName);
+            if (type == "SelectElement")
+            {
+                tempList = StableFindElements(By.XPath(_allDocumentRowsXpath + "/td[" + indexCol + "]/select")).ToList();
+                DocumentDetailsCombobox = tempList.Select(e => new SelectElement(e)).ToList();
+                //valueArray = DocumentDetailsCombobox.Select(combobox => combobox.SelectedOption.Text).ToList();
+                valueArray = tempList.Select(combobox => combobox.GetValue()).ToList();
+            }
+            else
+            {
+                DocumentDetailsCell = StableFindElements(By.XPath(_allDocumentRowsXpath + "/td[" + indexCol + "]")).ToList();
+                valueArray = DocumentDetailsCell.Select(textbox => (textbox.Text != null) ? textbox.Text : "").ToList();
+            }
+
+            return valueArray;
+        }
         private Dictionary<string, string>[] GetDataFromAllDocumentRows()
         {
             int numberOfRows = AllDocumentRows.Count;

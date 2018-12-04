@@ -195,7 +195,12 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
             wait.Until(driver => driver.FindElement(elementDescription));
         }
-
+        internal static IWebElement WaitForElementRefresh(By elementDescription, int seconds = mediumTimeout)
+        {
+            var wait = Browser.Wait(seconds);
+            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.StalenessOf(WebDriver.FindElement(elementDescription)));
+            return FindElement(elementDescription);
+        }
         internal static void WaitForElementClickable(By elementDescription, int seconds = mediumTimeout)
         {
             IWebElement myDynamicElement = (new WebDriverWait(WebDriver, TimeSpan.FromSeconds(seconds))).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(elementDescription));
@@ -271,11 +276,11 @@ namespace KiewitTeamBinder.UI.Pages.Global
         internal static void WaitForJQueryLoad(int timeout = 30)
         {
             var wait = Browser.Wait(timeout * 2);
-            wait.Until(driver => (bool)((IJavaScriptExecutor)driver).ExecuteScript(
-                "var result = true; " +
-                "try { result = (typeof jQuery != 'undefined') ? jQuery.active == 0 : true } " +
-                "catch (e) {}; return result;"));
-            //wait.Until(driver => (bool)((IJavaScriptExecutor)driver).ExecuteScript("return (window.jQuery != null) && (jQuery.active == 0);"));
+            //wait.Until(driver => (bool)((IJavaScriptExecutor)driver).ExecuteScript(
+            //    "var result = true; " +
+            //    "try { result = (typeof jQuery != 'undefined') ? jQuery.active == 0 : true } " +
+            //    "catch (e) {}; return result;"));
+            wait.Until(driver => (bool)((IJavaScriptExecutor)driver).ExecuteScript("return (window.jQuery != null) && (jQuery.active == 0);"));
             WaitUntilJSReady(timeout);
         }
 
@@ -334,7 +339,26 @@ namespace KiewitTeamBinder.UI.Pages.Global
             IJavaScriptExecutor jse = (IJavaScriptExecutor)WebDriver;
             jse.ExecuteScript("arguments[0].scrollIntoView();", Element);
         }
-        
+
+        internal static bool RetryingFindClick(IWebElement webElement)
+        {
+            bool result = false;
+            int attempts = 0;
+            while (attempts < 2)
+            {
+                try
+                {
+                    webElement.Click();
+                    result = true;
+                    break;
+                }
+                catch (StaleElementReferenceException)
+                {  }
+                attempts++;
+            }
+            return result;
+        }
+
         /// <summary>
         /// Get index of table cell value
         /// </summary>

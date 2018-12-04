@@ -34,11 +34,11 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                 var driver = Browser.Open(teambinderTestAccount.Url, browser);
                 // and log on via Other User Login Kiewit Account
                 test.Info("Log on TeamBinder via Other User Login: " + teambinderTestAccount.Username);
-                var projectsList = new NonSsoSignOn(driver).Logon(teambinderTestAccount) as ProjectsList;
+                ProjectsList projectsList = new NonSsoSignOn(driver).Logon(teambinderTestAccount) as ProjectsList;
                 var transmittalsData = new NavigateToModulesFromTheLeftNavSmoke.TransmittalsModules();
 
                 test.Info("Navigate to DashBoard Page of Project: " + transmittalsData.ProjectName);
-                var projectDashBoard = projectsList.NavigateToProjectDashboardPage(transmittalsData.ProjectName);
+                ProjectsDashboard projectDashBoard = projectsList.NavigateToProjectDashboardPage(transmittalsData.ProjectName);
 
                 //when - 119703 Navigate to Modules from Left Nav
                 //User Story 121270 - 119703 Navigate to Modules from the Left Nav - Part 2 - Transmittals Modules 
