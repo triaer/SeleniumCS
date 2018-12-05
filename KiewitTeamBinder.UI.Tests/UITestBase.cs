@@ -27,6 +27,7 @@ namespace KiewitTeamBinder.UI.Tests
         public ExtentReports extent;
         public TestContext TestContext { get; set; }
         public static ExtentTest test;
+        protected string teamBinderVersion;
 
         [TestInitialize]
         public void TestInitialize()
@@ -39,6 +40,11 @@ namespace KiewitTeamBinder.UI.Tests
             if (TestContext.Properties.Contains("environment"))
             {
                 environment = TestContext.Properties["environment"].ToString();
+            }
+
+            if (TestContext.Properties.Contains("teamBinderVersion"))
+            {
+                teamBinderVersion = TestContext.Properties["teamBinderVersion"].ToString();
             }
 
             if (TestContext.Properties.Contains("excelUserSourcePath"))
