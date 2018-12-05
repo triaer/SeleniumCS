@@ -35,6 +35,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         private static By _subPageHeader => By.Id("lblRegisterCaption");              
         private static By _paneTable(string gridViewName) => By.XPath($"//table[contains(@id, '{gridViewName}_ctl00_Header')]/thead");
         private static By _visibleRows(string gridViewName) => By.XPath($"//div[contains(@id, '{gridViewName}_GridData')]//tr[@class != 'rgNoRecords' and not(contains(@style, 'hidden'))]");
+        private static By _headerDropdownItem(string itemName) => By.XPath($"//li[a = '{itemName}']");
 
         private static string _filterItemsXpath = "//tr[@valign='top']";
         private static string _imageOfFilterBoxXpath = "//img[contains(@id,'Link{1}{0}')]";
@@ -56,6 +57,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         public IWebElement SubPageTable(string value) => StableFindElement(_subPageTable(value));
         public IWebElement PaneTable(string gridViewName) => StableFindElement(_paneTable(gridViewName));
         public IReadOnlyCollection<IWebElement> VisibleRows(string gridViewName) => StableFindElements(_visibleRows(gridViewName));
+        public IWebElement HeaderDropdownItem(string itemName) => StableFindElement(_headerDropdownItem(itemName));
         #endregion
 
         #region Actions
@@ -126,6 +128,35 @@ namespace KiewitTeamBinder.UI.Pages.Global
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
                 
+        public T ClickHeaderDropdownItem<T>(MainPaneHeaderDropdownItem item)
+        {
+            var node = StepNode();
+            node.Info("Click the item: " + item.ToDescription());
+            HeaderDropdownItem(item.ToDescription()).Click();
+            return (T)Activator.CreateInstance(typeof(T), WebDriver);
+        }
+
+        protected IReadOnlyCollection<IWebElement> GetNonAvailableItems(string gridViewName, List<KeyValuePair<string, string>> columnValuePairList)
+        {
+            int rowIndex, colIndex = 1;
+            string itemsXpath = _filterItemsXpath;
+            GetTableCellValueIndex(PaneTable(gridViewName), columnValuePairList.ElementAt(0).Key, out rowIndex, out colIndex, "th");
+            if (colIndex < 2)
+                return null;
+            itemsXpath += $"[td[{colIndex}][not(contains(., '{columnValuePairList.ElementAt(0).Value}'))]";
+
+            for (int i = 1; i < columnValuePairList.Count; i++)
+            {
+                GetTableCellValueIndex(PaneTable(gridViewName), columnValuePairList.ElementAt(i).Key, out rowIndex, out colIndex, "th");
+                if (colIndex < 2)
+                    return null;
+                itemsXpath += $" and td[{colIndex}][not(contains(., '{columnValuePairList.ElementAt(i).Value}'))]";
+            }
+            itemsXpath += "]";
+
+            return StableFindElements(By.XPath(itemsXpath));
+        }
+                
         private IReadOnlyCollection<IWebElement> GetAvailableItems(string gridViewName, List<KeyValuePair<string, string>> columnValuePairList)
         {
             int rowIndex, colIndex = 1;
@@ -147,6 +178,15 @@ namespace KiewitTeamBinder.UI.Pages.Global
             return StableFindElements(By.XPath(itemsXpath));
         }
 
+        protected T SelectRowCheckbox<T>(IWebElement Checkbox, bool check = true)
+        {
+            if (check)
+                Checkbox.Check();
+            else
+                Checkbox.UnCheck();
+            return (T)Activator.CreateInstance(typeof(T), WebDriver);
+        }
+
         protected int GetTableItemNumberWithConditions(string gridViewName, List<KeyValuePair<string, string>> columnValuePairList)
         {
             IReadOnlyCollection<IWebElement> AvailableItems = GetAvailableItems(gridViewName, columnValuePairList);          
@@ -160,7 +200,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             }
         }
 
-        private int GetTableItemNumber(string gridViewName)
+        protected int GetTableItemNumber(string gridViewName)
         {
             var node = StepNode();
             try

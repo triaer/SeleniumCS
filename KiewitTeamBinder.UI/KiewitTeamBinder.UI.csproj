@@ -128,8 +128,10 @@
     <Compile Include="Pages\Dialogs\AlertDialog.cs" />
     <Compile Include="Pages\Dialogs\ApplyToNRowsDialog.cs" />
     <Compile Include="Pages\Dialogs\HelpAboutDialog.cs" />
+    <Compile Include="Pages\Dialogs\SelectRecipientsDialog.cs" />
     <Compile Include="Pages\FormModule\Form.cs" />
     <Compile Include="Pages\Global\BulkUploadDocuments.cs" />
+    <Compile Include="Pages\Global\NewTransmittal.cs" />
     <Compile Include="Pages\Global\ProjectsDashboard.cs" />
     <Compile Include="Pages\Global\LoggedInLanding.cs" />
     <Compile Include="Pages\Global\NonSsoSignOn.cs" />

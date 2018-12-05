@@ -7,6 +7,7 @@ using KiewitTeamBinder.UI.Pages.Global;
 using OpenQA.Selenium;
 using static KiewitTeamBinder.UI.ExtentReportsHelper;
 using static KiewitTeamBinder.Common.KiewitTeamBinderENums;
+using KiewitTeamBinder.Common.TestData;
 using KiewitTeamBinder.Common.Helper;
 
 namespace KiewitTeamBinder.UI.Pages.VendorDataModule
@@ -47,6 +48,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             DocumentNoTextBox.InputText(value);
             return this;
         }
+
         public HoldingArea FilterDocumentsByGridFilterRow(string columnName, string value, bool useFilterMenu = false, FilterOptions optionItem = FilterOptions.Contains)
         {
             IWebElement FilterCell = StableFindElement(By.XPath(string.Format(_filterTextBoxXpath,columnName)));
@@ -69,6 +71,36 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             row.StableFindElement(By.XPath("./td[1]/input")).Check();
             return this;
         }
+
+        public T SelectRowCheckboxesWithoutTransmittalNo<T>(string gridViewName, int numberOfCheckbox, bool check, ref string[] selectedDocuments)
+        {            
+            int rowIndex, colIndex = 1;
+            var conditions = new List<KeyValuePair<string, string>>
+            { 
+                new KeyValuePair<string, string>(MainPaneTableHeaderLabel.TransmittalNo.ToDescription(), "TRN-SMOKE")
+            };
+
+            IReadOnlyCollection<IWebElement> DocumentRows = GetNonAvailableItems(new TransmitDocumentSmoke().GridViewName, conditions);
+            if (numberOfCheckbox > DocumentRows.Count)
+                numberOfCheckbox = DocumentRows.Count;
+
+            for (int i = 0; i < numberOfCheckbox; i++)
+            {
+                IWebElement RowCheckBox = DocumentRows.ElementAt(i).StableFindElement(By.XPath(".//input[@type = 'checkbox']"));
+                if (check)
+                {
+                    RowCheckBox.Check();
+                    GetTableCellValueIndex(PaneTable(gridViewName), conditions.ElementAt(0).Key, out rowIndex, out colIndex, "th");
+                    selectedDocuments[i] = GetTableCellValueByIndex(PaneTable(gridViewName), rowIndex, colIndex);
+                }
+                else
+                    RowCheckBox.UnCheck();
+            }
+            
+            return (T)Activator.CreateInstance(typeof(T), WebDriver);
+        }
+
+
         public List<KeyValuePair<string, bool>> ValidateHoldingAreaGridShownDataCorrect(string filterColumn, string filterValue)
         {
             var node = StepNode();
@@ -96,6 +128,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
                 return validation;
             }
         }
+
         public KeyValuePair<string, bool> ValidateDataOfDocumentRowsInAColumn(string column, string expectedMessage, bool isEqual = false)
         {
             var node = StepNode();
@@ -130,6 +163,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
                 return SetErrorValidation(node, string.Format(Validation.Document_Data_Displays_Correct, column, expectedMessage), e);
             }
         }
+
         public KeyValuePair<string, bool> ValidateDocumentRowIsHighlighted(int indexRow)
         {
             var node = StepNode();
@@ -146,23 +180,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
                 return SetErrorValidation(node, Validation.Document_Row_Is_Highlighted, e);
             }
         }
-        public KeyValuePair<string, bool> ValidateHoldingAreaPageDisplays()
-        {
-            var node = StepNode();
-            try
-            {
-                if (StableFindElement(_holdingAreaLabel) != null)
-                    return SetPassValidation(node, Validation.Holding_Area_Page_Displays);
-                else
-                    return SetFailValidation(node, Validation.Holding_Area_Page_Displays);
-            }
-            catch (Exception e)
-            {
-                return SetErrorValidation(node, Validation.Holding_Area_Page_Displays, e);
-            }
-        }
-
-
+                
         private static class Validation
         {
             public static string Holding_Area_Page_Displays = "Validate that the Vendor Data Module Holding Area page displays";

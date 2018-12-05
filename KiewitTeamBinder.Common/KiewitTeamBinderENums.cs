@@ -17,6 +17,7 @@ namespace KiewitTeamBinder.Common
             TOMORROW,
             N_DAYS_AGO
         }
+
         public enum HelpMenuOptions
         {
             [Description("TeamBinder Help")]
@@ -170,7 +171,9 @@ namespace KiewitTeamBinder.Common
             [Description("Export")]
             Export,
             [Description("More")]
-            More
+            More,
+            [Description("Transmit")]
+            Transmit
         }
 
         public enum MainPaneTableHeaderLabel
@@ -201,6 +204,12 @@ namespace KiewitTeamBinder.Common
             TaskCount,
             [Description("Contract Number")]
             ContractNumber
+        }
+
+        public enum MainPaneHeaderDropdownItem
+        {
+            [Description("Create Transmittals")]
+            CreateTransmittals,
         }
 
         public enum DialogPopupButton
