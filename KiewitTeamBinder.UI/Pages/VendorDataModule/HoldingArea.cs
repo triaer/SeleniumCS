@@ -28,7 +28,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
         public IWebElement DocumentNoTextBox { get { return StableFindElement(_documentNoTextBox); } }
         public IWebElement HoldingAreaRadGrid { get { return StableFindElement(_holdingAreaRadGrid); } }
         public IWebElement HoldingAreaGridData { get { return StableFindElement(_holdingAreaGridData); } }
-        public IWebElement InfoPagerInHoldingAreaGrid { get { return StableFindElement(_infoPagerInHoldingAreaGrid); } }
+        public IWebElement InfoPagerInHoldingAreaGrid { get { return StableFindElement(_infoPagerInHoldingAreaGrid); } }        
         #endregion
 
         #region Actions
@@ -41,6 +41,15 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             IWebElement FunctionButton = StableFindElement(By.XPath(string.Format(_functionButton, "Bulk Upload")));
             SwitchToPopUpWindow(FunctionButton, out currentWindow, false);
             return new BulkUploadDocuments(WebDriver);
+        }
+
+        public NewTransmittal ClickCreateTransmittalsButton()
+        {
+            string currentWindow;
+            var node = StepNode();
+            node.Info("Click Create Transmittals item from Transmit dropdown list in Holding Area header");
+            SwitchToPopUpWindow(HeaderDropdownItem("Create Transmittals"), out currentWindow, false);
+            return new NewTransmittal(WebDriver);
         }
 
         public HoldingArea EnterDocumentNo(string value)
@@ -75,12 +84,13 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
         public T SelectRowCheckboxesWithoutTransmittalNo<T>(string gridViewName, int numberOfCheckbox, bool check, ref string[] selectedDocuments)
         {            
             int rowIndex, colIndex = 1;
+            GetTableCellValueIndex(PaneTable(gridViewName), "Document No.", out rowIndex, out colIndex, "th");
             var conditions = new List<KeyValuePair<string, string>>
             { 
                 new KeyValuePair<string, string>(MainPaneTableHeaderLabel.TransmittalNo.ToDescription(), "TRN-SMOKE")
             };
 
-            IReadOnlyCollection<IWebElement> DocumentRows = GetNonAvailableItems(new TransmitDocumentSmoke().GridViewName, conditions);
+            IReadOnlyCollection<IWebElement> DocumentRows = GetNonAvailableItems(new TransmitDocumentSmoke().GridViewHoldingAreaName, conditions);
             if (numberOfCheckbox > DocumentRows.Count)
                 numberOfCheckbox = DocumentRows.Count;
 
@@ -90,8 +100,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
                 if (check)
                 {
                     RowCheckBox.Check();
-                    GetTableCellValueIndex(PaneTable(gridViewName), conditions.ElementAt(0).Key, out rowIndex, out colIndex, "th");
-                    selectedDocuments[i] = GetTableCellValueByIndex(PaneTable(gridViewName), rowIndex, colIndex);
+                    selectedDocuments[i] = DocumentRows.ElementAt(i).StableFindElement(By.XPath("./td[" + colIndex + "]")).Text;
                 }
                 else
                     RowCheckBox.UnCheck();

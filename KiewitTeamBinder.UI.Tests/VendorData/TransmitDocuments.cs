@@ -36,18 +36,25 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 //User Story 120157
                 test = LogTest("Transmit Documents");
                 string[] selectedDocuments = new string[transmitDocData.NumberOfSelectedDocumentRow];
+                string[] selectedUserWithCompanyName = new string[] { transmitDocData.SelectedUserWithCompany.Admin1Kiewit };
+
                 projectDashBoard.SelectModuleMenuItem<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription());
 
                 HoldingArea holdingArea = projectDashBoard.SelectModuleMenuItem<HoldingArea>(subMenuItem: ModuleSubMenuInLeftNav.HOLDINGAREA.ToDescription());
-                holdingArea.SelectRowCheckboxesWithoutTransmittalNo<HoldingArea>(transmitDocData.GridViewName, transmitDocData.NumberOfSelectedDocumentRow, true,  ref selectedDocuments)
+                holdingArea.SelectRowCheckboxesWithoutTransmittalNo<HoldingArea>(transmitDocData.GridViewHoldingAreaName, transmitDocData.NumberOfSelectedDocumentRow, true,  ref selectedDocuments)
                     .ClickHeaderButton<HoldingArea>(MainPaneTableHeaderButton.Transmit, false);
 
-                NewTransmittal newTransmittal = holdingArea.ClickHeaderDropdownItem<NewTransmittal>(MainPaneHeaderDropdownItem.CreateTransmittals);
-                newTransmittal.LogValidation<NewTransmittal>(ref validations, newTransmittal.ValidateAllSelectedDocumentsAreListed(ref selectedDocuments));
-
+                NewTransmittal newTransmittal = holdingArea.ClickCreateTransmittalsButton();
+                newTransmittal.LogValidation<NewTransmittal>(ref validations, newTransmittal.ValidateAllSelectedDocumentsAreListed(ref selectedDocuments))
+                    .LogValidation<NewTransmittal>(ref validations, newTransmittal.ValidateRecordItemsCount(transmitDocData.GridViewTransmitDocName));
                 SelectRecipientsDialog selectRecipientsDialog = newTransmittal.ClickRecipientsButton(transmitDocData.ToButton);
-
-
+                selectRecipientsDialog.SelectCompany(transmitDocData.CompanyName)
+                    .ClickUserInLeftTable(transmitDocData.UserName)
+                    .LogValidation<SelectRecipientsDialog>(ref validations, selectRecipientsDialog.ValidateUserIsAddedToTheToTable(selectedUserWithCompanyName))
+                    .ClickOkButton<NewTransmittal>();
+                newTransmittal.LogValidation<NewTransmittal>(ref validations, newTransmittal.ValidateSelectedUsersPopulateInTheToField(selectedUserWithCompanyName))
+                    .EnterSubject(transmitDocData.Subject)
+                    .EnterMessage(transmitDocData.Message);
 
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);

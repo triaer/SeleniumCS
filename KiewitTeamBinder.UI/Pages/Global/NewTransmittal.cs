@@ -19,13 +19,23 @@ namespace KiewitTeamBinder.UI.Pages.Global
     public class NewTransmittal : ProjectsDashboard
     {
         #region Entities
-        private static By _recipientsButton(string buttonName) => By.XPath($"//a[input[contains(@id, '{buttonName}']]");
+        private static By _iframeMessage => By.XPath("//iframe[contains(@id,'RadEditorMessage_contentIframe')]");
+        private static By _recipientsButton(string buttonName) => By.XPath($"//a[input[contains(@id, '{buttonName}')]]");
         private static By _paneTable(string gridViewName) => By.XPath($"//table[contains(@id, '{gridViewName}_ctl00')]/thead");
+        private static By _selectedUsersInToField => By.XPath("//tr[@id = 'trTo']//li[contains(@id, 'bit')]");
+        private static By _selectedUsersInCcField => By.XPath("//tr[@id = 'trCc']//li[contains(@id, 'bit')]");
+        private static By _subjectTextField => By.Id("txtSubject");
+        private static By _messageTextField => By.XPath("//body[@spellcheck]");
 
         private static string _filterItemsXpath = "//tr[@valign='top']";
 
+        public IWebElement IframeMessage { get { return StableFindElement(_iframeMessage); } }
         public IWebElement RecipientsButton(string buttonName) => StableFindElement(_recipientsButton(buttonName));
-        public IWebElement PaneTable(string gridViewName) => StableFindElement(_paneTable(gridViewName));
+        public new IWebElement PaneTable(string gridViewName) => StableFindElement(_paneTable(gridViewName));
+        public IReadOnlyCollection<IWebElement> SelectedUsersInToField { get { return StableFindElements(_selectedUsersInToField); } }
+        public IReadOnlyCollection<IWebElement> SelectedUsersInCcField { get { return StableFindElements(_selectedUsersInCcField); } }
+        public IWebElement SubjectTextField { get { return StableFindElement(_subjectTextField); } }
+        public IWebElement MessageTextField { get { return StableFindElement(_messageTextField); } }
         #endregion
 
         #region Actions
@@ -34,7 +44,12 @@ namespace KiewitTeamBinder.UI.Pages.Global
         public SelectRecipientsDialog ClickRecipientsButton(string buttonName)
         {
             RecipientsButton(buttonName).Click();
-            return new SelectRecipientsDialog(WebDriver);
+
+            var selectRecipientsDialog = new SelectRecipientsDialog(WebDriver);
+            WebDriver.SwitchTo().Frame(selectRecipientsDialog.IFrameName);
+            WaitUntil(driver => selectRecipientsDialog.DropdownFilterButon != null);
+
+            return selectRecipientsDialog;
         }
 
         public int GetTableItemNumberWithConditions(string gridViewName, string selectedDocuments)
@@ -48,6 +63,21 @@ namespace KiewitTeamBinder.UI.Pages.Global
             {
                 return 0;
             }
+        }
+
+        public NewTransmittal EnterSubject(string subject)
+        {
+            SubjectTextField.InputText(subject);
+            
+            return this;
+        }
+
+        public NewTransmittal EnterMessage(string message)
+        {            
+            WebDriver.SwitchTo().Frame(IframeMessage);
+            WaitUntil(driver => this.MessageTextField != null);
+            MessageTextField.InputText(message);
+            return this;
         }
 
         private IReadOnlyCollection<IWebElement> GetAvailableItems(string gridViewName, string selectedDocument)
@@ -73,7 +103,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
                 for (int i = 0; i < selectedDocuments.Length; i++)
                 {
-                    if (GetTableItemNumberWithConditions("GridViewDocuments", selectedDocuments[i]) < 1)
+                    if (GetTableItemNumberWithConditions("GridViewDocuments", selectedDocuments[i].Trim()) < 1)
                         return SetFailValidation(node, Validation.All_Selected_Documents_Are_Listed);
                 }
                 return SetPassValidation(node, Validation.All_Selected_Documents_Are_Listed);
@@ -84,10 +114,39 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 return SetErrorValidation(node, Validation.All_Selected_Documents_Are_Listed, e);
             }
         }
+
+        public KeyValuePair<string, bool> ValidateSelectedUsersPopulateInTheToField(string[] selectedUsers)
+        {
+            var node = StepNode();
+            try
+            {
+                bool flag;
+                foreach (var selectedUser in SelectedUsersInToField)
+                {
+                    flag = false;
+                    for (int i = 0; i < selectedUsers.Length; i++)
+                    {
+                        if (selectedUsers[i] == selectedUser.Text)
+                            flag = true;
+                    }
+                    if (flag == false)                    
+                        return SetFailValidation(node, Validation.Selected_Users_Populate_In_The_To_Field);
+                    
+                }
+                return SetPassValidation(node, Validation.Selected_Users_Populate_In_The_To_Field);
+
+            }
+            catch (Exception e)
+            {
+                return SetErrorValidation(node, Validation.Selected_Users_Populate_In_The_To_Field, e);
+            }
+        }
+
         private static class Validation
         {
             public static string All_Selected_Documents_Are_Listed = "Validate that all selected documents are listed";
+            public static string Selected_Users_Populate_In_The_To_Field = "Validate that Selected users populate in the To field";
         }
-            #endregion
+        #endregion
     }
 }

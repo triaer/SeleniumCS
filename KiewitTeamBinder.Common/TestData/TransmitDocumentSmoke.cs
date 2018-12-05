@@ -11,9 +11,20 @@ namespace KiewitTeamBinder.Common.TestData
     public class TransmitDocumentSmoke
     {
         public string ProjectName = "Automation Project 1";
-        public string GridViewName = "GridViewHoldingArea";
+        public string GridViewHoldingAreaName = "GridViewHoldingArea";
+        public string GridViewTransmitDocName = "GridViewDocuments";
         public string ToButton = "toBtn";
         public int NumberOfSelectedDocumentRow = 2;
+        public string CompanyName = "Kiewit";
+        public string UserName = "Automation Admin1";
+        public SelectedUser SelectedUserWithCompany = new SelectedUser();
+        public string Subject = "Test Transmittal";
+        public string Message = "This is a test transmittal";
+
+        public class SelectedUser
+        {
+            public string Admin1Kiewit = "Automation Admin1 (Kiewit)";
+        }
     }
 
 }
