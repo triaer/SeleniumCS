@@ -28,6 +28,7 @@ namespace KiewitTeamBinder.Common.TestData
         public string DataOfTitle = "Vendor Submitted Document";
         public string DataOfComboBoxDics = "CON - Contruction";
         public string DataOfComboBoxCat = "CA - CALCULATION";
+        public string DataOfComboBoxType = "SUB - Submittal";
         public int NumberOfRow = 14;
         public string DocumentNoTextboxContent = Utils.GetRandomValue("AUTO");
         public string HoverCopyAttributesItem = "All";
