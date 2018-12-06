@@ -65,15 +65,15 @@ namespace KiewitTeamBinder.UI.Pages.DocumentModule
         {
             int index = Utils.GetRandomNumber(0, indexRandom - 1);
             IWebElement ItemDocument = StableFindElement(By.XPath(string.Format(_gridViewDocRegRowXpath, index + 1)));
-            SwitchToPopUpWindow(ItemDocument, out parrentWindow, true);
+            SwitchToPopUpWindow(ItemDocument, out parrentWindow, false, true);
 
             return this;
         }
 
-        public Document OpenDocument(string docmentNo, out string parrentWindow)
+        public Document OpenDocument(string documentNo, out string parrentWindow)
         {
-            IWebElement ItemDocument =  FindDocumentByDocumentNo(docmentNo);
-            SwitchToPopUpWindow(ItemDocument, out parrentWindow, true);
+            IWebElement ItemDocument =  FindDocumentByDocumentNo(documentNo);
+            SwitchToPopUpWindow(ItemDocument, out parrentWindow, false, true);
             return this;
         }
 

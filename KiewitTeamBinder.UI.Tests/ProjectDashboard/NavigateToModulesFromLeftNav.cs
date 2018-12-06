@@ -187,10 +187,9 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                     .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateFilterBoxIsHighlighted(filterBoxIndex: 1))
                     .ClickHeaderButton<HoldingArea>(MainPaneTableHeaderButton.Refresh, true, vendorDataData.GridViewHoldingAreaName);
 
-                //User Story 121272 - 119703 Navigate to Modules from the Left Nav - Part 9 - Dashboard Module - Documents Modules
+                //User Story 121341 - 119703 Navigate to Modules from the Left Nav - Part 9 - Dashboard Module - Documents Modules
                 test = LogTest("119703 Navigate to Modules from Left Nav - Dashboard Module, Documents Modules");                
                 var dashboardData = new NavigateToModulesFromTheLeftNavSmoke.DashboardModules();
-                            
 
                 Dashboard dashboardModule = projectDashBoard.SelectModuleMenuItem<Dashboard>(ModuleNameInLeftNav.DASHBOARD.ToDescription());
                 dashboardModule.LogValidation<Dashboard>(ref validations, dashboardModule.ValidateWidgetsOfDashboardDisplayed(dashboardData.AllWidgitsInDashboardSection));
