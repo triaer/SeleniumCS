@@ -63,7 +63,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                     .SelectDataOfDocumentPropertyDropdown(bulkUploadData.DataOfComboBoxDics, DocBulkUploadDropdownType.Disc, documentRow: 1)
                     .SelectDataOfDocumentPropertyDropdown(bulkUploadData.DataOfComboBoxCat, DocBulkUploadDropdownType.Cat, documentRow: 1)
                     .SelectDataOfDocumentPropertyDropdown(bulkUploadData.DataOfComboBoxType, DocBulkUploadDropdownType.Type, documentRow: 1)
-                    .ClickHeaderButton<BulkUploadDocuments>(DocBulkUploadHeaderButton.CopyAttributes)
+                    .ClickToolbarButton<BulkUploadDocuments>(ToolbarButton.CopyAttributes)
                     .HoverOnCopyAttributesMainItem(bulkUploadData.HoverCopyAttributesItem, ref indexOfCopyAttributeItem)
                     .LogValidation<BulkUploadDocuments>(ref validations,
                                                         bulkUploadDocuments.ValidateSubMenuDisplaysAfterHovering(ref indexOfCopyAttributeItem));
@@ -74,7 +74,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 bulkUploadDocuments.LogValidation<BulkUploadDocuments>(ref validations, bulkUploadDocuments.ValidateDocumentPropertiesAreCopiedToAllRows(rowIndexOfStandardRow: 1))
                     .EnterTextboxes(bulkUploadData.DocumentNoTextboxContent, DocBulkUploadInputText.DocumentNo.ToDescription());
 
-                AlertDialog validateDialog = bulkUploadDocuments.ClickValidateDocumentDetails(DocBulkUploadHeaderButton.Validate, methodValidations);
+                AlertDialog validateDialog = bulkUploadDocuments.ClickValidateDocumentDetails(ToolbarButton.Validate, ref methodValidations);
                 validateDialog.LogValidation<AlertDialog>(ref validations, validateDialog.ValidateMessageDialogAsExpected(bulkUploadData.MessageOnValidateDocumentsDialog))
                     .ClickOKButton<BulkUploadDocuments>();
 

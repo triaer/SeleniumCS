@@ -37,6 +37,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         private static By _visibleRows(string gridViewName) => By.XPath($"//div[contains(@id, '{gridViewName}_GridData')]//tr[@class != 'rgNoRecords' and not(contains(@style, 'hidden'))]");
         private static By _documentsTable(string gridViewName) => By.XPath($"//div[contains(@id, '{gridViewName}_GridData')]");
         private static By _headerDropdownItem(string itemName) => By.XPath($"//li[a = '{itemName}']");
+        private static By _toolbarButton(string buttonName) => By.XPath($"//div[contains(@class, 'ToolBar')]//a[span='{buttonName}']");
 
         private static string _filterItemsXpath = "//tr[@valign='top']";
         private static string _imageOfFilterBoxXpath = "//img[contains(@id,'Link{1}{0}')]";
@@ -60,6 +61,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         public IReadOnlyCollection<IWebElement> VisibleRows(string gridViewName) => StableFindElements(_visibleRows(gridViewName));
         public IWebElement HeaderDropdownItem(string itemName) => StableFindElement(_headerDropdownItem(itemName));
         public IWebElement DocumentsTable(string gridViewName) => StableFindElement(_documentsTable(gridViewName));
+        public IWebElement ToolbarButton(string buttonName) => StableFindElement(_toolbarButton(buttonName));
         #endregion
 
         #region Actions
@@ -136,6 +138,28 @@ namespace KiewitTeamBinder.UI.Pages.Global
             node.Info("Click the item: " + item.ToDescription());
             HeaderDropdownItem(item.ToDescription()).Click();
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
+        }
+
+        public T ClickToolbarButton<T>(ToolbarButton buttonName, bool checkProgressPopup = false)
+        {
+            var node = StepNode();
+            node.Info("Click the button: " + buttonName.ToDescription());
+            ToolbarButton(buttonName.ToDescription()).Click();
+            if (checkProgressPopup)
+                WaitForLoading(_progressPopUp);
+
+            return (T)Activator.CreateInstance(typeof(T), WebDriver);
+        }
+
+        protected KeyValuePair<string, bool> ValidateProgressContentMessage(string message)
+        {
+            var node = StepNode();
+            IWebElement DialogMessage = FindElement(_progressMessage);
+            var actual = DialogMessage.GetAttribute("innerHTML");
+            if (actual.Contains(message))
+                return SetPassValidation(node, Validation.Progress_Message_Is_Displayed + message);
+            else
+                return SetFailValidation(node, Validation.Progress_Message_Is_Displayed, message, actual);
         }
 
         protected IReadOnlyCollection<IWebElement> GetNonAvailableItems(string gridViewName, List<KeyValuePair<string, string>> columnValuePairList)
@@ -390,6 +414,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             public static string Number_Of_Items_Counted_Is_Valid = "Validate that number of items counted is valid";
             public static string Sub_Page_Is_Displayed = "Validate that the sub page is displayed";
             public static string Items_Are_Shown = "Validate that items on main pane are shown";
+            public static string Progress_Message_Is_Displayed = "Validate That The Progress Message Display: ";
         }
         #endregion
     }

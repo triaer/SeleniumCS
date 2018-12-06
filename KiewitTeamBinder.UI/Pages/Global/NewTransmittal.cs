@@ -7,11 +7,12 @@ using System.Threading.Tasks;
 using OpenQA.Selenium;
 using KiewitTeamBinder.UI.Pages.Global;
 using static KiewitTeamBinder.UI.ExtentReportsHelper;
-using static KiewitTeamBinder.Common.KiewitTeamBinderENums;
+using KiewitTeamBinder.Common;
 using OpenQA.Selenium.Support.UI;
 using KiewitTeamBinder.Common.Helper;
 using System.Windows.Forms;
 using KiewitTeamBinder.UI.Pages.Dialogs;
+using KiewitTeamBinder.UI.Pages.VendorDataModule;
 
 
 namespace KiewitTeamBinder.UI.Pages.Global
@@ -77,7 +78,17 @@ namespace KiewitTeamBinder.UI.Pages.Global
             WebDriver.SwitchTo().Frame(IframeMessage);
             WaitUntil(driver => this.MessageTextField != null);
             MessageTextField.InputText(message);
+            WebDriver.SwitchTo().DefaultContent();
             return this;
+        }
+
+        public TransmittalDetail ClickSendButton(ref List<KeyValuePair<string, bool>> methodValidation)
+        {
+            //string window;
+            //SwitchToPopUpWindow(ToolbarButton(KiewitTeamBinderENums.ToolbarButton.Send.ToDescription()), out window, true);
+            ToolbarButton(KiewitTeamBinderENums.ToolbarButton.Send.ToDescription()).Click();
+            methodValidation.Add(ValidateProgressContentMessage("Please wait while transmittal is being sent"));
+            return new TransmittalDetail(WebDriver);
         }
 
         private IReadOnlyCollection<IWebElement> GetAvailableItems(string gridViewName, string selectedDocument)

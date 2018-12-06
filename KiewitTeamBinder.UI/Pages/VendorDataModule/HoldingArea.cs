@@ -99,6 +99,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
                 IWebElement RowCheckBox = DocumentRows.ElementAt(i).StableFindElement(By.XPath(".//input[@type = 'checkbox']"));
                 if (check)
                 {
+                    ScrollToElement(RowCheckBox);
                     RowCheckBox.Check();
                     selectedDocuments[i] = DocumentRows.ElementAt(i).StableFindElement(By.XPath("./td[" + colIndex + "]")).Text;
                 }
@@ -108,8 +109,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
-
-
+        
         public List<KeyValuePair<string, bool>> ValidateHoldingAreaGridShownDataCorrect(string filterColumn, string filterValue)
         {
             var node = StepNode();

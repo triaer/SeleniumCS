@@ -10,6 +10,7 @@ using static KiewitTeamBinder.UI.ExtentReportsHelper;
 using KiewitTeamBinder.UI.Pages.Dialogs;
 using static KiewitTeamBinder.Common.KiewitTeamBinderENums;
 using KiewitTeamBinder.UI.Pages.Dialogs;
+using KiewitTeamBinder.UI.Pages.VendorDataModule;
 
 namespace KiewitTeamBinder.UI.Tests.VendorData
 {
@@ -55,6 +56,11 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 newTransmittal.LogValidation<NewTransmittal>(ref validations, newTransmittal.ValidateSelectedUsersPopulateInTheToField(selectedUserWithCompanyName))
                     .EnterSubject(transmitDocData.Subject)
                     .EnterMessage(transmitDocData.Message);
+                TransmittalDetail transmittalDetail = newTransmittal.ClickSendButton(ref methodValidations);
+                transmittalDetail.LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateProjectNumberIsCorrect(transmitDocData.ProjectNumber))
+                    .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateProjectNameIsCorrect(transmitDocData.ProjectName))
+                    .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateDateIsCurrentDate());
+
 
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);

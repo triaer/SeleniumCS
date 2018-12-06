@@ -74,7 +74,7 @@ namespace KiewitTeamBinder.Common
             SubType
         }
 
-        public enum DocBulkUploadHeaderButton
+        public enum ToolbarButton
         {
             [Description("New Rows")]
             NewRows,
@@ -89,7 +89,9 @@ namespace KiewitTeamBinder.Common
             [Description("Link Deliverable Items")]
             LinkDeliverableItems,
             [Description("Remove Deliverable Items")]
-            RemoveDeliverableItems
+            RemoveDeliverableItems,
+            [Description("Send")]
+            Send
         }
 
         public enum DocBulkUploadInputText
