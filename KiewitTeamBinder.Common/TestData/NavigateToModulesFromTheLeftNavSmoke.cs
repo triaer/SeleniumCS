@@ -9,7 +9,7 @@ using KiewitTeamBinder.Common.Helper;
 namespace KiewitTeamBinder.Common.TestData
 {
     public class NavigateToModulesFromTheLeftNavSmoke
-    {        
+    {
         public string ProjectName = "Automation Project 1";
 
         public class DashboardModules : NavigateToModulesFromTheLeftNavSmoke
@@ -39,7 +39,7 @@ namespace KiewitTeamBinder.Common.TestData
         }
 
         public class DocumentsModules : NavigateToModulesFromTheLeftNavSmoke
-        {            
+        {
             public string DefaultFilter = "Latest Unrestrained";
             public string GridViewName = "GridViewDocReg";
             public string DocumentNo = "77777";
@@ -47,7 +47,7 @@ namespace KiewitTeamBinder.Common.TestData
 
         public class TransmittalsModules : NavigateToModulesFromTheLeftNavSmoke
         {
-            
+
             public string[] SubItemMenus = { "Inbox", "Drafts", "Sent Items", "Pending" };
             public string SubPendingTitle = "Pending Transmittals";
             public string DefaultFilter = "Personal";
@@ -66,7 +66,7 @@ namespace KiewitTeamBinder.Common.TestData
         }
         public class PackagesModules : NavigateToModulesFromTheLeftNavSmoke
         {
-            
+
             public string[] SubItemMenus = { "Inbox", "Drafts", "Sent Items" };
             public string DefaultFilter = "All";
             public string PackageModule = "Package";
@@ -109,7 +109,7 @@ namespace KiewitTeamBinder.Common.TestData
         }
 
         public class VendorDataModules : NavigateToModulesFromTheLeftNavSmoke
-        {            
+        {
             public string[] SubItemMenus = { "Vendor Data Register", "Holding Area" };
             public string VendorDataRegisterPaneName = "Vendor Data";
             public string HoldingAreaPaneName = "Holding Area -";

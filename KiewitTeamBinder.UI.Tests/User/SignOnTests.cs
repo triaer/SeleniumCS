@@ -31,11 +31,11 @@ namespace KiewitTeamBinder.UI.Tests.User
             //119692 - Log on via Other User Login Kiewit Account
             test = LogTest("Log on via Other User Login Kiewit Account");
             test.Info("Log on TeamBinder via Other User Login: " + teambinderTestAccount.Username);
-            var projectsList = new NonSsoSignOn(driver).Logon(teambinderTestAccount) as ProjectsList;
+            ProjectsList projectsList = new NonSsoSignOn(driver).Logon(teambinderTestAccount) as ProjectsList;
             projectsList.LogValidation<ProjectsList>(ref validations, projectsList.ValidateDataInProjectListAvailable(projectName))
                             .LogValidation<ProjectsList>(ref validations, projectsList.ValidateProjectIsHighlightedWhenHovered(projectName));
             test.Info("Navigate to DashBoard Page of Project: " + projectName);
-            var projectDashBoard = projectsList.NavigateToProjectDashboardPage(projectName);
+            ProjectsDashboard projectDashBoard = projectsList.NavigateToProjectDashboardPage(projectName);
             projectDashBoard.LogValidation(ref validations, projectDashBoard.ValidateProjectIsOpened(projectName))
                 .Logout();
             // then
@@ -53,15 +53,14 @@ namespace KiewitTeamBinder.UI.Tests.User
 
             // when
             test.Info("Log on TeamBinder via Kiewit User Login: " + teambinderTestAccount.kiewitUserName);
-            var projectsList = new SsoSignOn(driver).KiewitUserLogon(teambinderTestAccount) as ProjectsList;
+            ProjectsList projectsList = new SsoSignOn(driver).KiewitUserLogon(teambinderTestAccount) as ProjectsList;
             test.Info("Navigate to DashBoard Page of Project: " + projectName);
             projectsList.NavigateToProjectDashboardPage(projectName)
                         .Logout();
 
             // then
-            //Utils.AddCollectionToCollection(validations, methodValidations);
-            //Console.WriteLine(string.Join(System.Environment.NewLine, validations.ToArray()));
-            //validations.Should().OnlyContain(validations => validations.Value).Equals(bool.TrueString);
+            Console.WriteLine(string.Join(System.Environment.NewLine, validations.ToArray()));
+            validations.Should().OnlyContain(validations => validations.Value).Equals(bool.TrueString);
         }
     }
 }
