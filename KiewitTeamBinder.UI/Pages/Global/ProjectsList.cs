@@ -74,7 +74,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 ProjectNoTextBox.SendKeys(Keys.Enter);
                 
             }
-            WaitForElementRefresh(ProjGridDataTable);
+            WaitForElementClickable(_projGridDataTable);
             GetTableCellValueIndex(ProjGridDataTable, filterValue, out rowIndex, out colIndex);
 
             return TableCell(ProjGridDataTable, rowIndex, colIndex);
