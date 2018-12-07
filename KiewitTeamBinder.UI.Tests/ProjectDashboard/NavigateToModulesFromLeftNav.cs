@@ -19,6 +19,7 @@ using KiewitTeamBinder.UI.Pages.GalleryModule;
 using KiewitTeamBinder.UI.Pages.DashboardModule;
 using KiewitTeamBinder.UI.Pages.DocumentModule;
 using KiewitTeamBinder.UI.Pages.VendorDataModule;
+using KiewitTeamBinder.UI.Pages.PublishedReportsModule;
 
 namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
 {
@@ -145,6 +146,16 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                     .LogValidation<Task>(ref validations, tasksModule.ValidateRecordItemsCount(tasksData.GridViewName))
                     .LogValidation<Task>(ref validations, tasksModule.ValidateItemsAreShown(columnValuesInConditionList, tasksData.GridViewName))
                     .ClickHeaderButton<Task>(MainPaneTableHeaderButton.Refresh, true, tasksData.GridViewName);
+
+                //User Story 121272 - 119703 Navigate to Modules from the Left Nav - Part 5 - Published Reports Module
+                test = LogTest("119703 Navigate to Modules from Left Nav - Published Reports Module");
+                var publishedReportsData = new NavigateToModulesFromTheLeftNavSmoke.PublishedReportsModules();
+                PublishedReports publishedReport = projectDashBoard.SelectModuleMenuItem<PublishedReports>(ModuleNameInLeftNav.PUBLISHEDREPORTS.ToDescription());
+                publishedReport.LogValidation<PublishedReports>(ref validations, publishedReport.ValidateButtonDisplayCorrect(publishedReportsData.ListButton))
+                    .ClickHierarchyRootButton()
+                    .LogValidation<PublishedReports>(ref validations, publishedReport.ValidateHierarchyTreeStatusIsCorrect())
+                    .ClickHierarchyRootButton()
+                    .LogValidation<PublishedReports>(ref validations, publishedReport.ValidateHierarchyTreeStatusIsCorrect(expand: true));
 
                 //User Story 121327 - 119703 Navigate to Modules from the Left Nav - Part 6 - Forms Modules
                 test = LogTest("119703 Navigate to Modules from Left Nav - Forms Module");

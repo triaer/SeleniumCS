@@ -123,6 +123,11 @@ namespace KiewitTeamBinder.Common.TestData
                 public KeyValuePair<string, string> ContractNumber = new KeyValuePair<string, string>(MainPaneTableHeaderLabel.ContractNumber.ToDescription(), "");
             }
         }
+
+        public class PublishedReportsModules : NavigateToModulesFromTheLeftNavSmoke
+        {
+            public string[] ListButton = { "Delete", "Download", "Create New Task" };
+        }
     }
 
 }
