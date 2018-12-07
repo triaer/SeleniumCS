@@ -37,7 +37,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 //User Story 120157
                 test = LogTest("Transmit Documents");
                 string[] selectedDocuments = new string[transmitDocData.NumberOfSelectedDocumentRow];
-                string[] selectedUsesrWithCompanyName = new string[] { transmitDocData.SelectedUserWithCompany.Admin1Kiewit };
+                string[] selectedUsersWithCompanyName = new string[] { transmitDocData.SelectedUserWithCompany.Admin1Kiewit };
 
                 projectDashBoard.SelectModuleMenuItem<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription());
 
@@ -51,9 +51,9 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 SelectRecipientsDialog selectRecipientsDialog = newTransmittal.ClickRecipientsButton(transmitDocData.ToButton);
                 selectRecipientsDialog.SelectCompany(transmitDocData.CompanyName)
                     .ClickUserInLeftTable(transmitDocData.UserName)
-                    .LogValidation<SelectRecipientsDialog>(ref validations, selectRecipientsDialog.ValidateUserIsAddedToTheToTable(selectedUsesrWithCompanyName))
+                    .LogValidation<SelectRecipientsDialog>(ref validations, selectRecipientsDialog.ValidateUserIsAddedToTheToTable(selectedUsersWithCompanyName))
                     .ClickOkButton<NewTransmittal>();
-                newTransmittal.LogValidation<NewTransmittal>(ref validations, newTransmittal.ValidateSelectedUsersPopulateInTheToField(selectedUsesrWithCompanyName))
+                newTransmittal.LogValidation<NewTransmittal>(ref validations, newTransmittal.ValidateSelectedUsersPopulateInTheToField(selectedUsersWithCompanyName))
                     .EnterSubject(transmitDocData.Subject)
                     .EnterMessage(transmitDocData.Message);
                 TransmittalDetail transmittalDetail = newTransmittal.ClickSendButton(ref methodValidations);
@@ -63,7 +63,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                     .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateTransmittalNoIsCorrectWithTheHeader())
                     .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateFromUserInfoIsCorrect(transmitDocData.FromUser))
                     .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateAttachedDocumentsAreDisplayed(selectedDocuments))
-                    .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateRecipentsAreDisplayed(selectedUsesrWithCompanyName))
+                    .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateRecipentsAreDisplayed(selectedUsersWithCompanyName))
                     .ClickToolbarButton<HoldingArea>(ToolbarButton.Close);
 
                 // then
