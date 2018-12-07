@@ -9,12 +9,44 @@ using KiewitTeamBinder.Common.Helper;
 namespace KiewitTeamBinder.Common.TestData
 {
     public class NavigateToModulesFromTheLeftNavSmoke
-    {        
-        public string ProjectName = "Automation Project 1";       
+    {
+        public string ProjectName = "Automation Project 1";
+
+        public class DashboardModules : NavigateToModulesFromTheLeftNavSmoke
+        {
+            public string[] AllWidgitsInDashboardSection =
+                {
+                    DashboardWidgit.MAIL.ToDescription(),
+                    DashboardWidgit.DOCUMENTS.ToDescription(),
+                    DashboardWidgit.UNREGISTEREDMAIL.ToDescription(),
+                    DashboardWidgit.WORKFLOW.ToDescription(),
+                    DashboardWidgit.PACKAGES.ToDescription(),
+                    DashboardWidgit.TRANSMITTALS.ToDescription(),
+                    DashboardWidgit.TASKS.ToDescription(),
+                    DashboardWidgit.MYSTATISTICS.ToDescription(),
+                    DashboardWidgit.CONTRACTORVIEW.ToDescription(),
+                    DashboardWidgit.FORMS.ToDescription(),
+                    DashboardWidgit.GALLERY.ToDescription(),
+                    DashboardWidgit.SUBMISSIONVIEW.ToDescription(),
+                    DashboardWidgit.PROJECTANNOUNCEMENTS.ToDescription(),
+                    DashboardWidgit.PROJECTDESCRIPTION.ToDescription(),
+                    DashboardWidgit.USEFULCONTACTS.ToDescription(),
+                    DashboardWidgit.RESPONSESOUTSTANDING.ToDescription(),
+                    DashboardWidgit.DOCMUENTBARCHART.ToDescription()
+                };
+
+        }
+
+        public class DocumentsModules : NavigateToModulesFromTheLeftNavSmoke
+        {
+            public string DefaultFilter = "Latest Unrestrained";
+            public string GridViewName = "GridViewDocReg";
+            public string DocumentNo = "77777";
+        }
 
         public class TransmittalsModules : NavigateToModulesFromTheLeftNavSmoke
         {
-            
+
             public string[] SubItemMenus = { "Inbox", "Drafts", "Sent Items", "Pending" };
             public string SubPendingTitle = "Pending Transmittals";
             public string DefaultFilter = "Personal";
@@ -33,7 +65,7 @@ namespace KiewitTeamBinder.Common.TestData
         }
         public class PackagesModules : NavigateToModulesFromTheLeftNavSmoke
         {
-            
+
             public string[] SubItemMenus = { "Inbox", "Drafts", "Sent Items" };
             public string DefaultFilter = "All";
             public string PackageModule = "Package";
@@ -66,7 +98,31 @@ namespace KiewitTeamBinder.Common.TestData
             public string DefaultFilter = "Personal";
             public string GridViewName = "GridViewForms";
             public string FormsModule = "Forms";
-        }         
+        }
+
+        public class GalleryModules : NavigateToModulesFromTheLeftNavSmoke
+        {
+            public string DefaultFilter = "All";
+            public string GridViewName = "GridViewThumbnail";
+            public string SortByValue = "Date Uploaded";
+        }
+
+        public class VendorDataModules : NavigateToModulesFromTheLeftNavSmoke
+        {
+            public string[] SubItemMenus = { "Vendor Data Register", "Holding Area" };
+            public string VendorDataRegisterPaneName = "Vendor Data";
+            public string HoldingAreaPaneName = "Holding Area -";
+            public string DefaultFilterAtVendorDataRegisterPane = "Hierarchical View";
+            public string DefaultFilterAtHoldingAreaPane = "New Documents";
+            public string GridViewVendorDataRegisterName = "GridViewContractVendor";
+            public string GridViewHoldingAreaName = "GridViewHoldingArea";
+            public ColumnValuesInCondition ColumnValuesInConditionList = new ColumnValuesInCondition();
+
+            public class ColumnValuesInCondition
+            {
+                public KeyValuePair<string, string> ContractNumber = new KeyValuePair<string, string>(MainPaneTableHeaderLabel.ContractNumber.ToDescription(), "");
+            }
+        }
     }
 
 }

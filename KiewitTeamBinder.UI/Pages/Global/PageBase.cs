@@ -195,12 +195,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
             wait.Until(driver => driver.FindElement(elementDescription));
         }
-        internal static IWebElement WaitForElementRefresh(By elementDescription, int seconds = mediumTimeout)
-        {
-            var wait = Browser.Wait(seconds);
-            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.StalenessOf(WebDriver.FindElement(elementDescription)));
-            return FindElement(elementDescription);
-        }
+        
         internal static void WaitForElementClickable(By elementDescription, int seconds = mediumTimeout)
         {
             IWebElement myDynamicElement = (new WebDriverWait(WebDriver, TimeSpan.FromSeconds(seconds))).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(elementDescription));
@@ -625,7 +620,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             excelDriver.Close();
         }
 
-        internal static void SwitchToPopUpWindow(IWebElement ElementToBeClicked, out string parentWindow, bool doubleClick = false, bool closePreviousWindow = false, int timeout = 30)
+        internal static void SwitchToPopUpWindow(IWebElement ElementToBeClicked, out string parentWindow, bool closePreviousWindow = false, bool doubleClick = false, int timeout = 30)
         {
             parentWindow = WebDriver.CurrentWindowHandle;
             ReadOnlyCollection<string> originalHandles = WebDriver.WindowHandles;

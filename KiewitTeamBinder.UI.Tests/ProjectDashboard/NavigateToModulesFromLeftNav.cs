@@ -15,7 +15,10 @@ using KiewitTeamBinder.UI.Pages.TransmittalsModule;
 using KiewitTeamBinder.UI.Pages.PackagesModule;
 using KiewitTeamBinder.UI.Pages.TasksModule;
 using KiewitTeamBinder.UI.Pages.FormModule;
- 
+using KiewitTeamBinder.UI.Pages.GalleryModule;
+using KiewitTeamBinder.UI.Pages.DashboardModule;
+using KiewitTeamBinder.UI.Pages.DocumentModule;
+using KiewitTeamBinder.UI.Pages.VendorDataModule;
 
 namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
 {
@@ -151,7 +154,59 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                     .LogValidation<Form>(ref validations, formsModule.ValidateRecordItemsCount(formsData.GridViewName))
                     .LogValidation<Form>(ref validations, formsModule.ValidateFilterBoxIsHighlighted(filterBoxIndex: 1))
                     .ClickHeaderButton<ProjectsDashboard>(MainPaneTableHeaderButton.Refresh, true, formsData.FormsModule);
-                                          
+
+                //User Story 121328 - 119703 Navigate to Modules from the Left Nav - Part 7 - Gallery Modules
+                test = LogTest("119703 Navigate to Modules from Left Nav - Gallery Module");
+                var galleryData = new NavigateToModulesFromTheLeftNavSmoke.GalleryModules();
+                Gallery galleryModule = projectDashBoard.SelectModuleMenuItem<Gallery>(menuItem: ModuleNameInLeftNav.GALLERY.ToDescription());
+
+                galleryModule.LogValidation<Gallery>(ref validations, galleryModule.ValidateDisplayedViewFilterOption(galleryData.DefaultFilter))
+                    .LogValidation<Gallery>(ref validations, galleryModule.ValidateFilterBoxIsHighlighted(filterBoxIndex: 4))
+                    .LogValidation<Gallery>(ref validations, galleryModule.ValidateRecordItemsCount())
+                    .LogValidation<Gallery>(ref validations, galleryModule.ValidateSortByValue(galleryData.SortByValue))
+                    .ClickHeaderButton<Gallery>(MainPaneTableHeaderButton.Refresh, true, galleryData.GridViewName);
+
+                //User Story 121329 - 119703 Navigate to Modules from the Left Nav - Part 8 - Vendor Data Modules
+                test = LogTest("119703 Navigate to Modules from Left Nav - Vendor Data Modules");
+                var vendorDataData = new NavigateToModulesFromTheLeftNavSmoke.VendorDataModules();
+                columnValuesInConditionList = new List<KeyValuePair<string, string>> { vendorDataData.ColumnValuesInConditionList.ContractNumber };
+
+                projectDashBoard.SelectModuleMenuItem<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription())
+                    .LogValidation<ProjectsDashboard>(ref validations, projectDashBoard.ValidateDisplayedSubItemLinks(vendorDataData.SubItemMenus));
+
+                VendorDataRegister vendorDataRegister = projectDashBoard.SelectModuleMenuItem<VendorDataRegister>(subMenuItem: ModuleSubMenuInLeftNav.VENDODATAREGISTER.ToDescription());
+                vendorDataRegister.LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateSubPageIsDislayed(vendorDataData.VendorDataRegisterPaneName))
+                    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateDisplayedViewFilterOption(vendorDataData.DefaultFilterAtVendorDataRegisterPane))
+                    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateFilterBoxIsHighlighted(filterBoxIndex: 1))
+                    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateRecordItemsCount(vendorDataData.GridViewVendorDataRegisterName))
+                    .ClickHeaderButton<VendorDataRegister>(MainPaneTableHeaderButton.Refresh, true, vendorDataData.GridViewVendorDataRegisterName);
+
+                HoldingArea holdingArea = projectDashBoard.SelectModuleMenuItem<HoldingArea>(subMenuItem: ModuleSubMenuInLeftNav.HOLDINGAREA.ToDescription());
+                holdingArea.LogValidation<HoldingArea>(ref validations, holdingArea.ValidateSubPageIsDislayed(vendorDataData.HoldingAreaPaneName))
+                    .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateDisplayedViewFilterOption(vendorDataData.DefaultFilterAtHoldingAreaPane))
+                    .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateFilterBoxIsHighlighted(filterBoxIndex: 1))
+                    .ClickHeaderButton<HoldingArea>(MainPaneTableHeaderButton.Refresh, true, vendorDataData.GridViewHoldingAreaName);
+
+                //User Story 121341 - 119703 Navigate to Modules from the Left Nav - Part 9 - Dashboard Module - Documents Modules
+                test = LogTest("119703 Navigate to Modules from Left Nav - Dashboard Module, Documents Modules");                
+                var dashboardData = new NavigateToModulesFromTheLeftNavSmoke.DashboardModules();
+
+                Dashboard dashboardModule = projectDashBoard.SelectModuleMenuItem<Dashboard>(ModuleNameInLeftNav.DASHBOARD.ToDescription());
+                dashboardModule.LogValidation<Dashboard>(ref validations, dashboardModule.ValidateWidgetsOfDashboardDisplayed(dashboardData.AllWidgitsInDashboardSection));
+
+                var documentsData = new NavigateToModulesFromTheLeftNavSmoke.DocumentsModules();
+                string parrentWindow;
+
+                Document documentModule = projectDashBoard.SelectModuleMenuItem<Document>(ModuleNameInLeftNav.DOCUMENTS.ToDescription());
+                documentModule.LogValidation<Document>(ref validations, documentModule.ValidateDisplayedViewFilterOption(documentsData.DefaultFilter))
+                    .LogValidation<Document>(ref validations, documentModule.ValidateRecordItemsCount(documentsData.GridViewName))
+                    .LogValidation<Document>(ref validations, documentModule.ValidateFilterBoxIsHighlighted(filterBoxIndex: 1))
+                    .OpenDocument(documentsData.DocumentNo, out parrentWindow)
+                    .LogValidation<Document>(ref validations, documentModule.ValidateDocumentsDetailIsOpened(documentsData.DocumentNo))
+                    .ClickCloseButton()
+                    .SwitchToWindow(parrentWindow)
+                    .Logout();
+
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);
                 Console.WriteLine(string.Join(System.Environment.NewLine, validations.ToArray()));

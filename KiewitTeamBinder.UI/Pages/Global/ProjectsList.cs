@@ -71,10 +71,10 @@ namespace KiewitTeamBinder.UI.Pages.Global
             if (filterColumnName.Equals("Project No"))
             {
                 ProjectNoTextBox.InputText(filterValue);
-                ProjectNoTextBox.SendKeys(Keys.Tab);
-                SelectComboboxByText(ProjectNoImgFilter, _projectImgFilterData, FilterOptions.EqualTo.ToDescription());
+                ProjectNoTextBox.SendKeys(Keys.Enter);
+                
             }
-            WaitForElementRefresh(_projGridDataTable);
+            WaitForElementClickable(_projGridDataTable);
             GetTableCellValueIndex(ProjGridDataTable, filterValue, out rowIndex, out colIndex);
 
             return TableCell(ProjGridDataTable, rowIndex, colIndex);
