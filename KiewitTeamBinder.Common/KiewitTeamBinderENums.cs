@@ -244,10 +244,10 @@ namespace KiewitTeamBinder.Common
         {
             [Description("Mail")]
             MAIL,
-            [Description("Unregistered Mail")]
-            UNREGISTERED_MAIL,
             [Description("Documents")]
             DOCUMENTS,
+            [Description("Unregistered Mail")]
+            UNREGISTEREDMAIL,            
             [Description("Workflow")]
             WORKFLOW,
             [Description("Packages")]
@@ -257,15 +257,25 @@ namespace KiewitTeamBinder.Common
             [Description("Tasks")]
             TASKS,
             [Description("My Statistics")]
-            MY_STATISTICS,
+            MYSTATISTICS,
             [Description("Contractor View")]
-            CONTRACTOR_VIEW,
+            CONTRACTORVIEW,
             [Description("Forms")]
             FORMS,
             [Description("Gallery")]
             GALLERY,
             [Description("Submission View (Vendor)")]
-            SUBMISSION_VIEW,
+            SUBMISSIONVIEW,
+            [Description("Project Announcements")]
+            PROJECTANNOUNCEMENTS,
+            [Description("Project Description")]
+            PROJECTDESCRIPTION,
+            [Description("Useful Contacts")]
+            USEFULCONTACTS,
+            [Description("Responses Outstanding and Overdue Mail Received")]
+            RESPONSESOUTSTANDING,
+            [Description("Document Bar Chart")]
+            DOCMUENTBARCHART
         }
     }
 }

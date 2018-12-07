@@ -195,12 +195,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
             wait.Until(driver => driver.FindElement(elementDescription));
         }
-        internal static IWebElement WaitForElementRefresh(By elementDescription, int seconds = mediumTimeout)
-        {
-            var wait = Browser.Wait(seconds);
-            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.StalenessOf(WebDriver.FindElement(elementDescription)));
-            return FindElement(elementDescription);
-        }
+        
         internal static void WaitForElementClickable(By elementDescription, int seconds = mediumTimeout)
         {
             IWebElement myDynamicElement = (new WebDriverWait(WebDriver, TimeSpan.FromSeconds(seconds))).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(elementDescription));
