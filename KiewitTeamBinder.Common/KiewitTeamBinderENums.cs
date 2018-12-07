@@ -91,7 +91,9 @@ namespace KiewitTeamBinder.Common
             [Description("Remove Deliverable Items")]
             RemoveDeliverableItems,
             [Description("Send")]
-            Send
+            Send,
+            [Description("Close")]
+            Close
         }
 
         public enum DocBulkUploadInputText

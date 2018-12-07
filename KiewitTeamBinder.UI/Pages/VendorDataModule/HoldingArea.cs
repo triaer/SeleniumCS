@@ -23,12 +23,14 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
         private static By _holdingAreaGridData => By.XPath("//div[contains(@id,'_GridViewHoldingArea_GridData')]");
         private static By _infoPagerInHoldingAreaGrid => By.XPath("//table[contains(@id,'GridViewHoldingArea')]//div[contains(@class,'rgInfoPart')]//span[contains(@id,'DSC')]");
         private static By _documentRowsVisiableOnGrid => By.XPath(".//tbody/tr[not(@class='rgNoRecords')][contains(@style,'visible')]");
+        private static By _firstRowCheckBoxInTheTable => By.XPath("//*[@id='ctl00_cntPhMain_GridViewHoldingArea_ctl00_ctl04_ClientSelectColumnSelectCheckBox']");
 
         public IWebElement HoldingAreaLabel { get { return StableFindElement(_holdingAreaLabel); } }
         public IWebElement DocumentNoTextBox { get { return StableFindElement(_documentNoTextBox); } }
         public IWebElement HoldingAreaRadGrid { get { return StableFindElement(_holdingAreaRadGrid); } }
         public IWebElement HoldingAreaGridData { get { return StableFindElement(_holdingAreaGridData); } }
-        public IWebElement InfoPagerInHoldingAreaGrid { get { return StableFindElement(_infoPagerInHoldingAreaGrid); } }        
+        public IWebElement InfoPagerInHoldingAreaGrid { get { return StableFindElement(_infoPagerInHoldingAreaGrid); } }
+        public IWebElement FirstRowCheckBoxInTheTable { get { return StableFindElement(_firstRowCheckBoxInTheTable); } }
         #endregion
 
         #region Actions
@@ -93,13 +95,14 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             IReadOnlyCollection<IWebElement> DocumentRows = GetNonAvailableItems(new TransmitDocumentSmoke().GridViewHoldingAreaName, conditions);
             if (numberOfCheckbox > DocumentRows.Count)
                 numberOfCheckbox = DocumentRows.Count;
-
+            ScrollToElement(FirstRowCheckBoxInTheTable);
+            DocumentRows.ElementAt(0).StableFindElement(By.XPath(".//input[@type = 'checkbox']"));
             for (int i = 0; i < numberOfCheckbox; i++)
             {
                 IWebElement RowCheckBox = DocumentRows.ElementAt(i).StableFindElement(By.XPath(".//input[@type = 'checkbox']"));
                 if (check)
                 {
-                    ScrollToElement(RowCheckBox);
+                    ScrollIntoView(RowCheckBox);
                     RowCheckBox.Check();
                     selectedDocuments[i] = DocumentRows.ElementAt(i).StableFindElement(By.XPath("./td[" + colIndex + "]")).Text;
                 }
@@ -189,7 +192,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
                 return SetErrorValidation(node, Validation.Document_Row_Is_Highlighted, e);
             }
         }
-                
+        
         private static class Validation
         {
             public static string Holding_Area_Page_Displays = "Validate that the Vendor Data Module Holding Area page displays";

@@ -27,6 +27,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         private static By _selectedUsersInCcField => By.XPath("//tr[@id = 'trCc']//li[contains(@id, 'bit')]");
         private static By _subjectTextField => By.Id("txtSubject");
         private static By _messageTextField => By.XPath("//body[@spellcheck]");
+        private static By _linkDocumentExpandIcon => By.Id("LinkDocumentExpandIcon");
 
         private static string _filterItemsXpath = "//tr[@valign='top']";
 
@@ -37,6 +38,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         public IReadOnlyCollection<IWebElement> SelectedUsersInCcField { get { return StableFindElements(_selectedUsersInCcField); } }
         public IWebElement SubjectTextField { get { return StableFindElement(_subjectTextField); } }
         public IWebElement MessageTextField { get { return StableFindElement(_messageTextField); } }
+        public IWebElement LinkDocumentExpandIcon { get { return StableFindElement(_linkDocumentExpandIcon); } }
         #endregion
 
         #region Actions
@@ -109,9 +111,11 @@ namespace KiewitTeamBinder.UI.Pages.Global
             var node = StepNode();
             try
             {
+                WaitForElementAttribute(LinkDocumentExpandIcon, "class", "ImageCollapse");
+
                 if (GetTableItemNumber("GridViewDocuments") != selectedDocuments.Length)
                     return SetFailValidation(node, Validation.All_Selected_Documents_Are_Listed);
-
+                
                 for (int i = 0; i < selectedDocuments.Length; i++)
                 {
                     if (GetTableItemNumberWithConditions("GridViewDocuments", selectedDocuments[i].Trim()) < 1)

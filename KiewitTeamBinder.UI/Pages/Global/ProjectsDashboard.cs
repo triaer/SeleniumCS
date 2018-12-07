@@ -126,7 +126,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             node.Info("Click the button: " + buttonName.ToDescription());
             Button.HoverAndClickWithJS();
 
-            if (!waitForLoading && tableName != null)
+            if (waitForLoading && tableName != null)
                 WaitForElement(_subPageTable(tableName));
             
             return (T)Activator.CreateInstance(typeof(T), WebDriver);

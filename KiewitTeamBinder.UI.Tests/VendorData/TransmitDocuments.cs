@@ -37,7 +37,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 //User Story 120157
                 test = LogTest("Transmit Documents");
                 string[] selectedDocuments = new string[transmitDocData.NumberOfSelectedDocumentRow];
-                string[] selectedUserWithCompanyName = new string[] { transmitDocData.SelectedUserWithCompany.Admin1Kiewit };
+                string[] selectedUsesrWithCompanyName = new string[] { transmitDocData.SelectedUserWithCompany.Admin1Kiewit };
 
                 projectDashBoard.SelectModuleMenuItem<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription());
 
@@ -51,16 +51,20 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 SelectRecipientsDialog selectRecipientsDialog = newTransmittal.ClickRecipientsButton(transmitDocData.ToButton);
                 selectRecipientsDialog.SelectCompany(transmitDocData.CompanyName)
                     .ClickUserInLeftTable(transmitDocData.UserName)
-                    .LogValidation<SelectRecipientsDialog>(ref validations, selectRecipientsDialog.ValidateUserIsAddedToTheToTable(selectedUserWithCompanyName))
+                    .LogValidation<SelectRecipientsDialog>(ref validations, selectRecipientsDialog.ValidateUserIsAddedToTheToTable(selectedUsesrWithCompanyName))
                     .ClickOkButton<NewTransmittal>();
-                newTransmittal.LogValidation<NewTransmittal>(ref validations, newTransmittal.ValidateSelectedUsersPopulateInTheToField(selectedUserWithCompanyName))
+                newTransmittal.LogValidation<NewTransmittal>(ref validations, newTransmittal.ValidateSelectedUsersPopulateInTheToField(selectedUsesrWithCompanyName))
                     .EnterSubject(transmitDocData.Subject)
                     .EnterMessage(transmitDocData.Message);
                 TransmittalDetail transmittalDetail = newTransmittal.ClickSendButton(ref methodValidations);
                 transmittalDetail.LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateProjectNumberIsCorrect(transmitDocData.ProjectNumber))
                     .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateProjectNameIsCorrect(transmitDocData.ProjectName))
-                    .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateDateIsCurrentDate());
-
+                    .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateDateIsCurrentDate())
+                    .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateTransmittalNoIsCorrectWithTheHeader())
+                    .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateFromUserInfoIsCorrect(transmitDocData.FromUser))
+                    .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateAttachedDocumentsAreDisplayed(selectedDocuments))
+                    .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateRecipentsAreDisplayed(selectedUsesrWithCompanyName))
+                    .ClickToolbarButton<HoldingArea>(ToolbarButton.Close);
 
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);

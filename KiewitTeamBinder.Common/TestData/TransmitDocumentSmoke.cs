@@ -21,6 +21,7 @@ namespace KiewitTeamBinder.Common.TestData
         public SelectedUser SelectedUserWithCompany = new SelectedUser();
         public string Subject = "Test Transmittal";
         public string Message = "This is a test transmittal";
+        public string FromUser = "Automation Admin1 (Kiewit)";
 
         public class SelectedUser
         {
