@@ -79,7 +79,7 @@ namespace KiewitTeamBinder.UI
 
                 webDriver = new ChromeDriver(options);
             }
-            else if(browserName.ToLower() == "internetexplorer")
+            else if (browserName.ToLower() == "internetexplorer")
             {
 
                 InternetExplorerOptions ieOptions = new InternetExplorerOptions();
@@ -92,9 +92,16 @@ namespace KiewitTeamBinder.UI
                 ieOptions.EnsureCleanSession = true;
                 ieOptions.AddAdditionalCapability("disable-popup-blocking", "true");
 
-                webDriver = new InternetExplorerDriver(ieOptions);
+                string ieWebDriver = Environment.GetEnvironmentVariable("IEWebDriver");
+                if (string.IsNullOrEmpty(ieWebDriver))
+                {
+                    webDriver = new InternetExplorerDriver(ieOptions);
+                }
+                else
+                {
+                    webDriver = new InternetExplorerDriver(ieWebDriver,ieOptions);
+                }
             }
-
             webDriver.Navigate().GoToUrl(server);
 
             webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
