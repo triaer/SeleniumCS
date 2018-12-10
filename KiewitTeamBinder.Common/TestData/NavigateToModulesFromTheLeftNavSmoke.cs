@@ -34,7 +34,24 @@ namespace KiewitTeamBinder.Common.TestData
                     DashboardWidgit.RESPONSESOUTSTANDING.ToDescription(),
                     DashboardWidgit.DOCMUENTBARCHART.ToDescription()
                 };
+        }
 
+        public class MailModules : NavigateToModulesFromTheLeftNavSmoke
+        {
+            public string[] SubItemMenus = { "Inbox", "Drafts", "Sent Items", "Unregistered", "Deleted Items" };
+
+            public string DefaultFilter_Personal = "Personal";
+            public string DefaultFilter_Company = "Company";
+            public string GridViewName = "GridViewMail";
+            
+
+            public MailInformation mailInformation = new MailInformation()
+            {
+                From = "Automation Admin1",
+                Type = "PCO",
+                Subject = "TestMail",
+                Date = "11-26-18 01:24 AM",
+            };
         }
 
         public class DocumentsModules : NavigateToModulesFromTheLeftNavSmoke
@@ -51,7 +68,6 @@ namespace KiewitTeamBinder.Common.TestData
             public string SubPendingTitle = "Pending Transmittals";
             public string DefaultFilter = "Personal";
             public string DefaultFilterAtPendingPane = "By Recipient";
-            public string TransmittalsModule = "Transmittals";
             public string GridViewName = "TransmittalRegisterGrid";
             public string GridViewPendingName = "RadGridRecipients";
             public ColumnValuesInCondition ColumnValuesInConditionList = new ColumnValuesInCondition();
@@ -63,13 +79,12 @@ namespace KiewitTeamBinder.Common.TestData
                 public KeyValuePair<string, string> Subject = new KeyValuePair<string, string>(MainPaneTableHeaderLabel.Subject.ToDescription(), "test subjest");
             }
         }
+
         public class PackagesModules : NavigateToModulesFromTheLeftNavSmoke
         {
 
             public string[] SubItemMenus = { "Inbox", "Drafts", "Sent Items" };
             public string DefaultFilter = "All";
-            public string PackageModule = "Package";
-            public string PackagesNode = "Packages";
             public string GridViewName = "GridViewPackage";
             public ColumnValuesInCondition ColumnValuesInConditionList = new ColumnValuesInCondition();
 
@@ -97,7 +112,6 @@ namespace KiewitTeamBinder.Common.TestData
         {
             public string DefaultFilter = "Personal";
             public string GridViewName = "GridViewForms";
-            public string FormsModule = "Forms";
         }
 
         public class GalleryModules : NavigateToModulesFromTheLeftNavSmoke
@@ -123,6 +137,13 @@ namespace KiewitTeamBinder.Common.TestData
                 public KeyValuePair<string, string> ContractNumber = new KeyValuePair<string, string>(MainPaneTableHeaderLabel.ContractNumber.ToDescription(), "");
             }
         }
+    }
+    public class MailInformation
+    {
+        public string Type { get; set; }
+        public string Date { get; set; }
+        public string Subject { get; set; }
+        public string From { get; set; }
     }
 
 }
