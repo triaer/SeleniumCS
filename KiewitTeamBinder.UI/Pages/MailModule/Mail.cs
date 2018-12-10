@@ -107,8 +107,8 @@ namespace KiewitTeamBinder.UI.Pages.MailModule
         }
         public Mail CloseMailDetailView(string windowHandle)
         {
-            CloseMailButton.Click();
             string currHandle = WebDriver.CurrentWindowHandle;
+            CloseMailButton.Click();
             WebDriver.SwitchTo().Window(windowHandle);
             return this;
             

@@ -80,7 +80,6 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                 projectDashBoard.SelectModuleMenuItem<Mail>(subMenuItem: ModuleSubMenuInLeftNav.UNREGISTERED.ToDescription());
                 mailModule.LogValidation<Mail>(ref validations, mailModule.ValidateSubPageIsDislayed(ModuleSubMenuInLeftNav.UNREGISTERED.ToDescription()))
                     .LogValidation<Mail>(ref validations, mailModule.ValidateDisplayedViewFilterOption(mailData.DefaultFilter_Company))
-                    .LogValidation<Mail>(ref validations, mailModule.ValidateFilterBoxIsHighlighted(filterBoxIndex: 2))
                     .LogValidation<Mail>(ref validations, mailModule.ValidateRecordItemsCount(mailData.GridViewName))
                     .ClickHeaderButton<Mail>(MainPaneTableHeaderButton.Refresh, true, mailData.GridViewName);
 
