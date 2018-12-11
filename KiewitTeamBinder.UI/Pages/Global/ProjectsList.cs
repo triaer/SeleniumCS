@@ -42,16 +42,14 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
         public ProjectsDashboard NavigateToProjectDashboardPage(string filterValue)
         {
-
             //Filter project by title
             IWebElement ProjectItem = FilterProjectByIDOrTitle("Project Title", filterValue);
+            WaitForElementDisplay(_walkMe);
             //click on the project
-            var dashboard = new ProjectsDashboard(WebDriver);
             ProjectItem.Click();
             //WaitForJQueryLoad();
+            var dashboard = new ProjectsDashboard(WebDriver);
             WaitForElement(dashboard._dashBoardLabel);
-            
-
             return dashboard;
         }
 
@@ -63,18 +61,16 @@ namespace KiewitTeamBinder.UI.Pages.Global
             {
                 ProjectTitleTextBox.InputText(filterValue);
                 ProjectTitleTextBox.SendKeys(Keys.Enter);
-                WaitForJQueryLoad();
-                
-                //SelectComboboxByText(ProjectTitleImgFilter, _projectImgFilterData, FilterOptions.EqualTo.ToDescription());
             }
-
             if (filterColumnName.Equals("Project No"))
             {
                 ProjectNoTextBox.InputText(filterValue);
                 ProjectNoTextBox.SendKeys(Keys.Enter);
                 
             }
-            WaitForElementClickable(_projGridDataTable);
+            WaitForJQueryLoad();
+            WaitForElementDisplay(_projGridDataTable);
+            //WaitForElementClickable(_projGridDataTable);
             GetTableCellValueIndex(ProjGridDataTable, filterValue, out rowIndex, out colIndex);
 
             return TableCell(ProjGridDataTable, rowIndex, colIndex);
@@ -86,10 +82,8 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
             try
             {
-
                 int rowIndex, colIndex;
                 GetTableCellValueIndex(ProjGridDataTable, nameProject, out rowIndex, out colIndex);
-
                 if (rowIndex == -1)
                     return SetFailValidation(node, Validation.Project_Is_Highlighted_When_Hovered);
                 else
@@ -121,7 +115,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
             {
                 int rowIndex, colIndex;
                 GetTableCellValueIndex(ProjGridDataTable, nameProject, out rowIndex, out colIndex);
-
                 if (rowIndex == -1)
                     return SetFailValidation(node, Validation.Data_In_ProjectList_Availiable);
                 else
