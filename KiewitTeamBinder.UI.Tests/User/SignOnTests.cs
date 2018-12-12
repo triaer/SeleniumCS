@@ -55,11 +55,14 @@ namespace KiewitTeamBinder.UI.Tests.User
             test.Info("Log on TeamBinder via Kiewit User Login: " + teambinderTestAccount.kiewitUserName);
             ProjectsList projectsList = new SsoSignOn(driver).KiewitUserLogon(teambinderTestAccount) as ProjectsList;
             test.Info("Navigate to DashBoard Page of Project: " + projectName);
-            projectsList.NavigateToProjectDashboardPage(projectName)
-                        .Logout();
+            ProjectsDashboard projectDashBoard = projectsList.NavigateToProjectDashboardPage(projectName);
+            projectDashBoard
+                .LogValidation(ref validations, projectDashBoard.ValidateProjectIsOpened(projectName))
+                .Logout();
 
             // then
             Console.WriteLine(string.Join(System.Environment.NewLine, validations.ToArray()));
+
             validations.Should().OnlyContain(validations => validations.Value).Equals(bool.TrueString);
         }
     }
