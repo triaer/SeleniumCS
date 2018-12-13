@@ -18,6 +18,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
     {
         #region Entities
         private string _projectListRows = "//table[contains(@id,'GridViewProjList')]//tbody/tr[@id='GridViewProjList_ctl00__{0}']";
+        private string _headerColumns = "//div[@id='GridViewProjList_GridHeader']//thead//th[.='{0}']/preceding-sibling::th";
         private static By _projListTitle => By.Id ("ProjListTitle");
         private static By _projGridDataTable => By.XPath("//div[@id='GridViewProjList_GridData']/table//tbody");
         private static By _projectTitleTextBox => By.XPath("//input[contains(@id,'ProjTitle')]");
@@ -25,6 +26,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         private static By _projectNoImgFilter => By.XPath("//img[contains(@id,'ProjNo')]");
         private static By _projectTitleImgFilter => By.XPath("//img[contains(@id,'ProjTitle')]");
         private static By _projectImgFilterData => By.XPath("//div[@id='GridViewProjList_rfltMenu_detached']/ul/li");
+        private static By _projectRows => By.XPath("//div[@id='GridViewProjList_GridData']/table/tbody/tr");
 
         public IWebElement ProjListTitle { get { return StableFindElement(_projListTitle); } }
         public IWebElement ProjGridDataTable { get { return StableFindElement(_projGridDataTable); } }
@@ -53,26 +55,25 @@ namespace KiewitTeamBinder.UI.Pages.Global
             return dashboard;
         }
 
-        public IWebElement FilterProjectByIDOrTitle(string filterColumnName, string filterValue)
+        public IWebElement FilterProjectByIDOrTitle(string filterBy, string filterValue)
         {
             int rowIndex, colIndex;
-
-            if (filterColumnName.Equals("Project Title"))
+            var numberOfProject = StableFindElements(_projectRows).Count;
+            if (filterBy.Equals("Project Title"))
             {
                 ProjectTitleTextBox.InputText(filterValue);
                 ProjectTitleTextBox.SendKeys(Keys.Enter);
             }
-            if (filterColumnName.Equals("Project No"))
+            else
             {
                 ProjectNoTextBox.InputText(filterValue);
                 ProjectNoTextBox.SendKeys(Keys.Enter);
-                
             }
-            WaitForJQueryLoad();
-            WaitForElementDisplay(_projGridDataTable);
-            //WaitForElementClickable(_projGridDataTable);
-            GetTableCellValueIndex(ProjGridDataTable, filterValue, out rowIndex, out colIndex);
 
+            WaitForAngularJSLoad();
+            Console.WriteLine(StableFindElements(_projectRows).Count);
+            rowIndex = 1;
+            colIndex = StableFindElements(By.XPath(string.Format(_headerColumns, filterBy))).Count + 1;
             return TableCell(ProjGridDataTable, rowIndex, colIndex);
         }
 

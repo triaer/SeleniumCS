@@ -275,11 +275,11 @@ namespace KiewitTeamBinder.UI.Pages.Global
             //    "var result = true; " +
             //    "try { result = (typeof jQuery != 'undefined') ? jQuery.active == 0 : true } " +
             //    "catch (e) {}; return result;"));
-            wait.Until(driver => (bool)((IJavaScriptExecutor)driver).ExecuteScript("return (window.jQuery != null) && (jQuery.active == 0);"));
+            wait.Until(driver => (bool)((IJavaScriptExecutor)driver).ExecuteScript("return (window.jQuery != null) && (jQuery.active === 0);"));
             WaitUntilJSReady(timeout);
         }
 
-        internal static void WaitForJQueryToBeActive(int timeout = 30)
+        internal static void WaitForJQueryToBeActive(int timeout = longTimeout)
         {
 
             int numOfWait = 1;
@@ -299,17 +299,17 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 }
             }
         }
-        internal static void WaitForAngularJSLoad()
+        internal static void WaitForAngularJSLoad(int timeout = mediumTimeout)
         {
             IJavaScriptExecutor js = (IJavaScriptExecutor)WebDriver;
             bool isDataLoaded = false;
             int numOfWait = 1;
             while (isDataLoaded == false)
             {
-                isDataLoaded = (bool)js.ExecuteScript("return (window.angular !== undefined) && (angular.element(document).injector() !== undefined) && (angular.element(document).injector().get('$http').pendingRequests.length === 0)");
+                isDataLoaded = (bool)js.ExecuteScript("return (window.angular != undefined) && (angular.element(document).injector() !== undefined) && (angular.element(document).injector().get('$http').pendingRequests.length === 0)");
                 Wait(1);
                 numOfWait++;
-                if (numOfWait > 60)
+                if (numOfWait > timeout)
                     break;
             }
         }

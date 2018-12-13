@@ -20,27 +20,35 @@ namespace KiewitTeamBinder.UI.Tests.User
         [TestMethod]
         public void NonSSO_ValidUserCanLogonAndLogOff()
         {
-            // given
-            var teambinderTestAccount = GetTestAccount("AdminAccount1", environment, "NonSSO");
+            try
+            {
+                // given
+                var teambinderTestAccount = GetTestAccount("AdminAccount1", environment, "NonSSO");
 
-            test.Info("Open TeamBinder Document Web Page: " + teambinderTestAccount.Url);
-            var driver = Browser.Open(teambinderTestAccount.Url, browser);
-            var projectName = OtherUserLogin.ProjectName;
+                test.Info("Open TeamBinder Document Web Page: " + teambinderTestAccount.Url);
+                var driver = Browser.Open(teambinderTestAccount.Url, browser);
+                var projectName = OtherUserLogin.ProjectName;
 
-            // when
-            //119692 - Log on via Other User Login Kiewit Account
-            test = LogTest("Log on via Other User Login Kiewit Account");
-            test.Info("Log on TeamBinder via Other User Login: " + teambinderTestAccount.Username);
-            ProjectsList projectsList = new NonSsoSignOn(driver).Logon(teambinderTestAccount) as ProjectsList;
-            projectsList.LogValidation<ProjectsList>(ref validations, projectsList.ValidateDataInProjectListAvailable(projectName))
-                            .LogValidation<ProjectsList>(ref validations, projectsList.ValidateProjectIsHighlightedWhenHovered(projectName));
-            test.Info("Navigate to DashBoard Page of Project: " + projectName);
-            ProjectsDashboard projectDashBoard = projectsList.NavigateToProjectDashboardPage(projectName);
-            projectDashBoard.LogValidation(ref validations, projectDashBoard.ValidateProjectIsOpened(projectName))
-                .Logout();
-            // then
-            Console.WriteLine(string.Join(System.Environment.NewLine, validations.ToArray()));
-            validations.Should().OnlyContain(validations => validations.Value).Equals(bool.TrueString);
+                // when
+                //119692 - Log on via Other User Login Kiewit Account
+                test = LogTest("Log on via Other User Login Kiewit Account");
+                test.Info("Log on TeamBinder via Other User Login: " + teambinderTestAccount.Username);
+                ProjectsList projectsList = new NonSsoSignOn(driver).Logon(teambinderTestAccount) as ProjectsList;
+                projectsList.LogValidation<ProjectsList>(ref validations, projectsList.ValidateDataInProjectListAvailable(projectName))
+                                .LogValidation<ProjectsList>(ref validations, projectsList.ValidateProjectIsHighlightedWhenHovered(projectName));
+                test.Info("Navigate to DashBoard Page of Project: " + projectName);
+                ProjectsDashboard projectDashBoard = projectsList.NavigateToProjectDashboardPage(projectName);
+                projectDashBoard.LogValidation(ref validations, projectDashBoard.ValidateProjectIsOpened(projectName))
+                    .Logout();
+                // then
+                Console.WriteLine(string.Join(System.Environment.NewLine, validations.ToArray()));
+                validations.Should().OnlyContain(validations => validations.Value).Equals(bool.TrueString);
+            }
+            catch (Exception e)
+            {
+                lastException = e;
+                throw;
+            }
         }
         [TestMethod]
         public void SSO_ValidUserCanLogonAndLogOff()
