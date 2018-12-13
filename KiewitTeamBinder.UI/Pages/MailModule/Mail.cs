@@ -4,6 +4,7 @@ using KiewitTeamBinder.UI.Pages.Global;
 using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -68,7 +69,32 @@ namespace KiewitTeamBinder.UI.Pages.MailModule
             return null;
         }
 
-        public Mail OpenMail(MailInformation mailInformation, out string parentWindow)//, //out string currentWindow)
+        //public IWebElement FindMailByInfomation(MailInformation mailInformation)
+        //{
+        //    int rowIndex, colType, colSubject, colDate, colFrom;
+        //    WaitForElement(_mailGridDataTable);
+        //    string[] temp = mailInformation.Date.Split(' ');
+        //    DateTime dateConvert = DateTime.ParseExact(temp[0], "MM/dd/yyyy", CultureInfo.InvariantCulture);
+        //    string date = dateConvert.ToString("MM-dd-yy") + " " + temp[1] + " " + temp[2];
+        //    GetTableCellValueIndex(MailGridDataTable, mailInformation.Type, out rowIndex, out colType);
+        //    GetTableCellValueIndex(MailGridDataTable, date, out rowIndex, out colDate);
+        //    GetTableCellValueIndex(MailGridDataTable, mailInformation.Subject, out rowIndex, out colSubject);
+        //    GetTableCellValueIndex(MailGridDataTable, mailInformation.From, out rowIndex, out colFrom);
+
+        //    for (int row = 1; row < GetTableRowNumber(MailGridDataTable); row++)
+        //    {
+        //        if (TableCell(MailGridDataTable, row, colType).GetAttribute("innerText").Trim() == mailInformation.Type
+        //            && TableCell(MailGridDataTable, row, colDate).GetAttribute("innerText").Trim() == date
+        //            && TableCell(MailGridDataTable, row, colFrom).GetAttribute("innerText").Trim() == mailInformation.From
+        //            && TableCell(MailGridDataTable, row, colSubject).GetAttribute("innerText").Trim() == mailInformation.Subject)
+        //        {
+        //            return TableCell(MailGridDataTable, row, colType);
+        //        }
+
+        //    }
+        //    return null;
+        //}
+        public Mail OpenMail(MailInformation mailInformation, out string parentWindow)
         {
             IWebElement MailItem = FindMailByInfomation(mailInformation);
             

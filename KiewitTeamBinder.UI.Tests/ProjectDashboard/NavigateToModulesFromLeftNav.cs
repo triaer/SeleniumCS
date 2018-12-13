@@ -20,6 +20,7 @@ using KiewitTeamBinder.UI.Pages.DashboardModule;
 using KiewitTeamBinder.UI.Pages.DocumentModule;
 using KiewitTeamBinder.UI.Pages.VendorDataModule;
 using KiewitTeamBinder.UI.Pages.MailModule;
+using KiewitTeamBinder.UI.Pages.PublishedReportsModule;
 
 namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
 {
@@ -32,7 +33,7 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
             try
             {
                 // given
-                var teambinderTestAccount = GetTestAccount("AdminAccount2", environment, "NonSSO");
+                var teambinderTestAccount = GetTestAccount("AdminAccount1", environment, "NonSSO");
 
                 test.Info("Open TeamBinder Web Page: " + teambinderTestAccount.Url);
                 var driver = Browser.Open(teambinderTestAccount.Url, browser);
@@ -46,7 +47,7 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
 
                 //when - 119703 Navigate to Modules from Left Nav
                 //User Story 121267 - 119703 Navigate to Modules from the Left Nav - Part 1 -  Email Modules
-                test = LogTest("119703 Navigate to Modules from Left Nav - Email Modules");
+                test = LogTest("119703 Navigate to Modules from Left Nav - Mail Modules");
                 string dashboardWindow;
                 projectDashBoard.SelectModuleMenuItem<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.MAIL.ToDescription())
                     .LogValidation<ProjectsDashboard>(ref validations, projectDashBoard.ValidateDisplayedSubItemLinks(mailData.SubItemMenus));
@@ -60,8 +61,6 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                     .OpenMail(mailData.mailInformation, out dashboardWindow)
                     .LogValidation<Mail>(ref validations, mailModule.ValidateMailDetailShow(mailData.mailInformation))
                     .CloseMailDetailView(dashboardWindow);
-
-                //.LogValidation<Mail>(ref validations, mailPage.ValidateItemSentToUserShow(mailData.mailInformation))
 
                 projectDashBoard.SelectModuleMenuItem<Mail>(subMenuItem: ModuleSubMenuInLeftNav.DRAFTS.ToDescription());
                 mailModule.LogValidation<Mail>(ref validations, mailModule.ValidateSubPageIsDislayed(ModuleSubMenuInLeftNav.DRAFTS.ToDescription()))
@@ -192,6 +191,16 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                     .LogValidation<Task>(ref validations, tasksModule.ValidateRecordItemsCount(tasksData.GridViewName))
                     .LogValidation<Task>(ref validations, tasksModule.ValidateItemsAreShown(columnValuesInConditionList, tasksData.GridViewName))
                     .ClickHeaderButton<Task>(MainPaneTableHeaderButton.Refresh, true, tasksData.GridViewName);
+
+                //User Story 121313 - 119703 Navigate to Modules from the Left Nav - Part 5 - Published Reports Module
+                test = LogTest("119703 Navigate to Modules from Left Nav - Published Reports Module");
+                var publishedReportsData = new NavigateToModulesFromTheLeftNavSmoke.PublishedReportsModules();
+                PublishedReports publishedReport = projectDashBoard.SelectModuleMenuItem<PublishedReports>(ModuleNameInLeftNav.PUBLISHEDREPORTS.ToDescription());
+                publishedReport.LogValidation<PublishedReports>(ref validations, publishedReport.ValidateButtonDisplayCorrect(publishedReportsData.ListButton))
+                    .ClickHierarchyRootButton()
+                    .LogValidation<PublishedReports>(ref validations, publishedReport.ValidateHierarchyTreeStatusIsCorrect())
+                    .ClickHierarchyRootButton()
+                    .LogValidation<PublishedReports>(ref validations, publishedReport.ValidateHierarchyTreeStatusIsCorrect(expand: true));
 
                 //User Story 121327 - 119703 Navigate to Modules from the Left Nav - Part 6 - Forms Modules
                 test = LogTest("119703 Navigate to Modules from Left Nav - Forms Module");

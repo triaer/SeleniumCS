@@ -47,10 +47,10 @@ namespace KiewitTeamBinder.Common.TestData
 
             public MailInformation mailInformation = new MailInformation()
             {
-                From = "Automation Admin1",
+                From = "Automation Admin2",
                 Type = "PCO",
                 Subject = "TestMail",
-                Date = "11-26-18 01:24 AM",
+                Date = "12-11-18 04:51 PM",
             };
         }
 
@@ -136,6 +136,11 @@ namespace KiewitTeamBinder.Common.TestData
             {
                 public KeyValuePair<string, string> ContractNumber = new KeyValuePair<string, string>(MainPaneTableHeaderLabel.ContractNumber.ToDescription(), "");
             }
+        }
+
+        public class PublishedReportsModules : NavigateToModulesFromTheLeftNavSmoke
+        {
+            public string[] ListButton = { "Delete", "Download", "Create New Task" };
         }
     }
     public class MailInformation

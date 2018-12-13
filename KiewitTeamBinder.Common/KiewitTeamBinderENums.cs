@@ -138,7 +138,9 @@ namespace KiewitTeamBinder.Common
             [Description("TeamPics")]
             GALLERY,
             [Description("VendorData")]
-            VENDORDATA
+            VENDORDATA,
+            [Description("PublishReports")]
+            PUBLISHEDREPORTS,
         }
 
         public enum MainPaneTableHeaderButton
