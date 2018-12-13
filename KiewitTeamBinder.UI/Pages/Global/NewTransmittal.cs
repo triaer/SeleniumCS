@@ -88,7 +88,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         {
             //string window;
             //SwitchToPopUpWindow(ToolbarButton(KiewitTeamBinderENums.ToolbarButton.Send.ToDescription()), out window, true);
-            ToolbarButton(KiewitTeamBinderENums.ToolbarButton.Send.ToDescription()).Click();
+            ToolBarButton(KiewitTeamBinderENums.ToolbarButton.Send.ToDescription()).Click();
             methodValidation.Add(ValidateProgressContentMessage("Please wait while transmittal is being sent"));
             return new TransmittalDetail(WebDriver);
         }

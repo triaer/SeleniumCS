@@ -5,7 +5,6 @@ using System.Collections.ObjectModel;
 using System.Text;
 using System.Threading.Tasks;
 using OpenQA.Selenium;
-using KiewitTeamBinder.UI.Pages.Global;
 using static KiewitTeamBinder.UI.ExtentReportsHelper;
 using static KiewitTeamBinder.Common.KiewitTeamBinderENums;
 using OpenQA.Selenium.Support.UI;
@@ -234,6 +233,39 @@ namespace KiewitTeamBinder.UI.Pages.Global
             return dialog;
         }
                 
+        public T CreateDataOnRow<T>(int numberOfRow)
+        {
+            string fileNames = "";
+            for (int i = 0; i < numberOfRow; i++)
+            {
+                int fileIndex = i % 15 + 1;                
+                fileNames += "\"File" + fileIndex + ".txt\" ";               
+            }
+            var methodValidations = new List<KeyValuePair<string, bool>>();
+            int indexOfCopyAttributeItem = 0;
+            BulkUploadDocuments bulkUploadDocuments = new BulkUploadDocuments(WebDriver);
+            bulkUploadDocuments.AddFilesInBulk(Utils.GetInputFilesLocalPath(), fileNames)
+                .ClickACheckboxInDocumentRow(documentRow: 1)
+                .SelectDataOfDocumentPropertyDropdown("00 - Rev 00", DocBulkUploadDropdownType.Rev, documentRow: 1)
+                .SelectDataOfDocumentPropertyDropdown("VSUB - Vendor Submission", DocBulkUploadDropdownType.Sts, documentRow: 1)
+                .EnterDataOfDocumentPropertyTextbox("Vendor Submitted Document", DocBulkUploadInputText.Title.ToDescription(), documentRow: 1)
+                .SelectDataOfDocumentPropertyDropdown("CON - Contruction", DocBulkUploadDropdownType.Disc, documentRow: 1)
+                .SelectDataOfDocumentPropertyDropdown("CA - CALCULATION", DocBulkUploadDropdownType.Cat, documentRow: 1)
+                .SelectDataOfDocumentPropertyDropdown("SUB - Submittal", DocBulkUploadDropdownType.Type, documentRow: 1)
+                .ClickToolbarButton<BulkUploadDocuments>(ToolbarButton.CopyAttributes)
+                .HoverOnCopyAttributesMainItem("All", ref indexOfCopyAttributeItem);
+
+            ApplyToNRowsDialog applyToNextNRowsDialog = ClickToNRowsItem(ref indexOfCopyAttributeItem);
+            applyToNextNRowsDialog.EnterNumberOfRow(numberOfRow - 1)
+                .ClickOKButton<BulkUploadDocuments>();
+
+            EnterTextboxes(Utils.GetRandomValue("AUTO"), DocBulkUploadInputText.DocumentNo.ToDescription());
+
+            ConfirmDialog saveDocumentDialog = ClickSaveBulkUploadDocuments(ref methodValidations);
+            saveDocumentDialog.ClickPopupButton<T>(DialogPopupButton.No, true);
+            return (T)Activator.CreateInstance(typeof(T), WebDriver);
+        }
+
         public KeyValuePair<string, bool> ValidateFilesDisplay(int numberOfFiles)
         {
             var node = StepNode();
@@ -524,7 +556,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             return dataArray;
         }
 
-        public ConfirmDialog ClickSaveBulkUploadDocuments(List<KeyValuePair<string, bool>> methodValidation)
+        public ConfirmDialog ClickSaveBulkUploadDocuments(ref List<KeyValuePair<string, bool>> methodValidation)
         {
             IWebElement SaveButton = StableFindElement(By.XPath(string.Format(_bottomButtonXpath, "Save")));
             SaveButton.Click();
