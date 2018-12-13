@@ -86,6 +86,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
         public T SelectRowCheckboxesWithoutTransmittalNo<T>(string gridViewName, int numberOfCheckbox, bool check, ref string[] selectedDocuments)
         {            
             int rowIndex, colIndex = 1;
+            SortButton(MainPaneTableHeaderLabel.TransmittalNo.ToDescription()).Click();
             GetTableCellValueIndex(PaneTable(gridViewName), "Document No.", out rowIndex, out colIndex, "th");
             var conditions = new List<KeyValuePair<string, string>>
             { 
@@ -93,9 +94,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             };
 
             IReadOnlyCollection<IWebElement> DocumentRows = GetNonAvailableItems(new TransmitDocumentSmoke().GridViewHoldingAreaName, conditions);
-            if (numberOfCheckbox > DocumentRows.Count)
-                numberOfCheckbox = DocumentRows.Count;
-            ScrollToElement(FirstRowCheckBoxInTheTable);
+            Math.Min(numberOfCheckbox, DocumentRows.Count);            
             DocumentRows.ElementAt(0).StableFindElement(By.XPath(".//input[@type = 'checkbox']"));
             for (int i = 0; i < numberOfCheckbox; i++)
             {

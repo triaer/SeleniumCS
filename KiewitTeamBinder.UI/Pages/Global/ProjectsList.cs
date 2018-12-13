@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 using static KiewitTeamBinder.Common.KiewitTeamBinderENums;
 using static KiewitTeamBinder.UI.ExtentReportsHelper;
 using OpenQA.Selenium.Interactions;
+using System.Diagnostics;
+
 
 namespace KiewitTeamBinder.UI.Pages.Global
 {
@@ -19,12 +21,13 @@ namespace KiewitTeamBinder.UI.Pages.Global
         #region Entities
         private string _projectListRows = "//table[contains(@id,'GridViewProjList')]//tbody/tr[@id='GridViewProjList_ctl00__{0}']";
         private static By _projListTitle => By.Id ("ProjListTitle");
-        private static By _projGridDataTable => By.XPath("//div[@id='GridViewProjList_GridData']/table//tbody");
+        private static By _projGridDataTable => By.XPath("//div[@id='GridViewProjList_GridData']/table/tbody");
         private static By _projectTitleTextBox => By.XPath("//input[contains(@id,'ProjTitle')]");
         private static By _projectNoTextBox => By.XPath("//input[contains(@id,'ProjNo')]");
         private static By _projectNoImgFilter => By.XPath("//img[contains(@id,'ProjNo')]");
         private static By _projectTitleImgFilter => By.XPath("//img[contains(@id,'ProjTitle')]");
         private static By _projectImgFilterData => By.XPath("//div[@id='GridViewProjList_rfltMenu_detached']/ul/li");
+        private static By _projectRows => By.XPath("//div[@id='GridViewProjList_GridData']/table/tbody/tr");
 
         public IWebElement ProjListTitle { get { return StableFindElement(_projListTitle); } }
         public IWebElement ProjGridDataTable { get { return StableFindElement(_projGridDataTable); } }
@@ -48,35 +51,31 @@ namespace KiewitTeamBinder.UI.Pages.Global
             //click on the project
             var dashboard = new ProjectsDashboard(WebDriver);
             ProjectItem.Click();
-            //WaitForJQueryLoad();
             WaitForElement(dashboard._dashBoardLabel);
             
-
             return dashboard;
         }
 
         public IWebElement FilterProjectByIDOrTitle(string filterColumnName, string filterValue)
         {
             int rowIndex, colIndex;
-
+            var numberOfProject = StableFindElements(_projectRows).Count;
             if (filterColumnName.Equals("Project Title"))
             {
                 ProjectTitleTextBox.InputText(filterValue);
                 ProjectTitleTextBox.SendKeys(Keys.Enter);
-                WaitForJQueryLoad();
-                
-                //SelectComboboxByText(ProjectTitleImgFilter, _projectImgFilterData, FilterOptions.EqualTo.ToDescription());
             }
-
-            if (filterColumnName.Equals("Project No"))
+            else if (filterColumnName.Equals("Project No"))
             {
                 ProjectNoTextBox.InputText(filterValue);
-                ProjectNoTextBox.SendKeys(Keys.Enter);
-                
+                ProjectNoTextBox.SendKeys(Keys.Enter);                
             }
-            WaitForElementClickable(_projGridDataTable);
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            while (numberOfProject == StableFindElements(By.XPath("//div[@id='GridViewProjList_GridData']/table/tbody/tr")).Count
+                   && stopwatch.ElapsedMilliseconds <= 1500) { }
+  
             GetTableCellValueIndex(ProjGridDataTable, filterValue, out rowIndex, out colIndex);
-
             return TableCell(ProjGridDataTable, rowIndex, colIndex);
         }
 
