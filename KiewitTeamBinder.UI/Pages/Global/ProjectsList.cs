@@ -56,23 +56,23 @@ namespace KiewitTeamBinder.UI.Pages.Global
             return dashboard;
         }
 
-        public IWebElement FilterProjectByIDOrTitle(string filterColumnName, string filterValue)
+        public IWebElement FilterProjectByIDOrTitle(string filterBy, string filterValue)
         {
             int rowIndex, colIndex;
             var numberOfProject = StableFindElements(_projectRows).Count;
-            if (filterColumnName.Equals("Project Title"))
+            if (filterBy.Equals("Project Title"))
             {
                 ProjectTitleTextBox.InputText(filterValue);
                 ProjectTitleTextBox.SendKeys(Keys.Enter);
             }
-            else if (filterColumnName.Equals("Project No"))
+            else
             {
                 ProjectNoTextBox.InputText(filterValue);
                 ProjectNoTextBox.SendKeys(Keys.Enter);                
             }
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
-            while (numberOfProject == StableFindElements(By.XPath("//div[@id='GridViewProjList_GridData']/table/tbody/tr")).Count
+            while (numberOfProject == StableFindElements(_projectRows).Count
                    && stopwatch.ElapsedMilliseconds <= 1500) { }
   
             GetTableCellValueIndex(ProjGridDataTable, filterValue, out rowIndex, out colIndex);
