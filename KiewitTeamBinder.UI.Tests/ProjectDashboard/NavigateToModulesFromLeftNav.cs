@@ -19,6 +19,8 @@ using KiewitTeamBinder.UI.Pages.GalleryModule;
 using KiewitTeamBinder.UI.Pages.DashboardModule;
 using KiewitTeamBinder.UI.Pages.DocumentModule;
 using KiewitTeamBinder.UI.Pages.VendorDataModule;
+using KiewitTeamBinder.UI.Pages.MailModule;
+using KiewitTeamBinder.UI.Pages.PublishedReportsModule;
 
 namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
 {
@@ -38,14 +40,58 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                 // and log on via Other User Login Kiewit Account
                 test.Info("Log on TeamBinder via Other User Login: " + teambinderTestAccount.Username);
                 ProjectsList projectsList = new NonSsoSignOn(driver).Logon(teambinderTestAccount) as ProjectsList;
-                var transmittalsData = new NavigateToModulesFromTheLeftNavSmoke.TransmittalsModules();
+                var mailData = new NavigateToModulesFromTheLeftNavSmoke.MailModules();
 
-                test.Info("Navigate to DashBoard Page of Project: " + transmittalsData.ProjectName);
-                ProjectsDashboard projectDashBoard = projectsList.NavigateToProjectDashboardPage(transmittalsData.ProjectName);
+                test.Info("Navigate to DashBoard Page of Project: " + mailData.ProjectName);
+                ProjectsDashboard projectDashBoard = projectsList.NavigateToProjectDashboardPage(mailData.ProjectName);
 
                 //when - 119703 Navigate to Modules from Left Nav
+                //User Story 121267 - 119703 Navigate to Modules from the Left Nav - Part 1 -  Email Modules
+                test = LogTest("119703 Navigate to Modules from Left Nav - Mail Modules");
+                string dashboardWindow;
+                projectDashBoard.SelectModuleMenuItem<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.MAIL.ToDescription())
+                    .LogValidation<ProjectsDashboard>(ref validations, projectDashBoard.ValidateDisplayedSubItemLinks(mailData.SubItemMenus));
+                    
+                Mail mailModule = projectDashBoard.SelectModuleMenuItem<Mail>(subMenuItem: ModuleSubMenuInLeftNav.INBOX.ToDescription());
+                mailModule.LogValidation<Mail>(ref validations, mailModule.ValidateSubPageIsDislayed(ModuleSubMenuInLeftNav.INBOX.ToDescription()))
+                    .LogValidation<Mail>(ref validations, mailModule.ValidateDisplayedViewFilterOption(mailData.DefaultFilter_Personal))
+                    .LogValidation<Mail>(ref validations, mailModule.ValidateFilterBoxIsHighlighted(filterBoxIndex: 1))
+                    .LogValidation<Mail>(ref validations, mailModule.ValidateRecordItemsCount(mailData.GridViewName))
+                    .ClickHeaderButton<Mail>(MainPaneTableHeaderButton.Refresh, true, mailData.GridViewName)
+                    .OpenMail(mailData.mailInformation, out dashboardWindow)
+                    .LogValidation<Mail>(ref validations, mailModule.ValidateMailDetailShow(mailData.mailInformation))
+                    .CloseMailDetailView(dashboardWindow);
+
+                projectDashBoard.SelectModuleMenuItem<Mail>(subMenuItem: ModuleSubMenuInLeftNav.DRAFTS.ToDescription());
+                mailModule.LogValidation<Mail>(ref validations, mailModule.ValidateSubPageIsDislayed(ModuleSubMenuInLeftNav.DRAFTS.ToDescription()))
+                    .LogValidation<Mail>(ref validations, mailModule.ValidateDisplayedViewFilterOption(mailData.DefaultFilter_Personal))
+                    .LogValidation<Mail>(ref validations, mailModule.ValidateFilterBoxIsHighlighted(filterBoxIndex: 1))
+                    .LogValidation<Mail>(ref validations, mailModule.ValidateRecordItemsCount(mailData.GridViewName))
+                    .ClickHeaderButton<Mail>(MainPaneTableHeaderButton.Refresh, true, mailData.GridViewName);
+
+                projectDashBoard.SelectModuleMenuItem<Mail>(subMenuItem: ModuleSubMenuInLeftNav.SENTITEMS.ToDescription());
+                mailModule.LogValidation<Mail>(ref validations, mailModule.ValidateSubPageIsDislayed(ModuleSubMenuInLeftNav.SENTITEMS.ToDescription()))
+                    .LogValidation<Mail>(ref validations, mailModule.ValidateDisplayedViewFilterOption(mailData.DefaultFilter_Personal))
+                    .LogValidation<Mail>(ref validations, mailModule.ValidateFilterBoxIsHighlighted(filterBoxIndex: 1))
+                    .LogValidation<Mail>(ref validations, mailModule.ValidateRecordItemsCount(mailData.GridViewName))
+                    .ClickHeaderButton<Mail>(MainPaneTableHeaderButton.Refresh, true, mailData.GridViewName);
+
+                projectDashBoard.SelectModuleMenuItem<Mail>(subMenuItem: ModuleSubMenuInLeftNav.UNREGISTERED.ToDescription());
+                mailModule.LogValidation<Mail>(ref validations, mailModule.ValidateSubPageIsDislayed(ModuleSubMenuInLeftNav.UNREGISTERED.ToDescription()))
+                    .LogValidation<Mail>(ref validations, mailModule.ValidateDisplayedViewFilterOption(mailData.DefaultFilter_Company))
+                    .LogValidation<Mail>(ref validations, mailModule.ValidateRecordItemsCount(mailData.GridViewName))
+                    .ClickHeaderButton<Mail>(MainPaneTableHeaderButton.Refresh, true, mailData.GridViewName);
+
+                projectDashBoard.SelectModuleMenuItem<Mail>(subMenuItem: ModuleSubMenuInLeftNav.DELETEDITEMS.ToDescription());
+                mailModule.LogValidation<Mail>(ref validations, mailModule.ValidateSubPageIsDislayed(ModuleSubMenuInLeftNav.DELETEDITEMS.ToDescription()))
+                    .LogValidation<Mail>(ref validations, mailModule.ValidateDisplayedViewFilterOption(mailData.DefaultFilter_Personal))
+                    .LogValidation<Mail>(ref validations, mailModule.ValidateFilterBoxIsHighlighted(filterBoxIndex: 1))
+                    .LogValidation<Mail>(ref validations, mailModule.ValidateRecordItemsCount(mailData.GridViewName))
+                    .ClickHeaderButton<Mail>(MainPaneTableHeaderButton.Refresh, true, mailData.GridViewName);
+
                 //User Story 121270 - 119703 Navigate to Modules from the Left Nav - Part 2 - Transmittals Modules 
                 test = LogTest("119703 Navigate to Modules from Left Nav - Transmittals Modules");
+                var transmittalsData = new NavigateToModulesFromTheLeftNavSmoke.TransmittalsModules();
                 var columnValuesInConditionList = new List<KeyValuePair<string, string>> { transmittalsData.ColumnValuesInConditionList.Subject };
 
                 projectDashBoard.SelectModuleMenuItem<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.TRANSMITTALS.ToDescription())
@@ -57,7 +103,7 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                     .LogValidation<Transmittal>(ref validations, transmittalsModule.ValidateFilterBoxIsHighlighted(filterBoxIndex: 1))
                     .LogValidation<Transmittal>(ref validations, transmittalsModule.ValidateRecordItemsCount(transmittalsData.GridViewName))
                     .LogValidation<Transmittal>(ref validations, transmittalsModule.ValidateItemsAreShown(columnValuesInConditionList, transmittalsData.GridViewName))
-                    .ClickHeaderButton<Transmittal>(MainPaneTableHeaderButton.Refresh, true, transmittalsData.TransmittalsModule);
+                    .ClickHeaderButton<Transmittal>(MainPaneTableHeaderButton.Refresh, true, transmittalsData.GridViewName);
 
                 projectDashBoard.SelectModuleMenuItem<Transmittal>(subMenuItem: ModuleSubMenuInLeftNav.DRAFTS.ToDescription());
                 transmittalsModule.LogValidation<Transmittal>(ref validations, transmittalsModule.ValidateSubPageIsDislayed(ModuleSubMenuInLeftNav.DRAFTS.ToDescription()))
@@ -146,6 +192,16 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                     .LogValidation<Task>(ref validations, tasksModule.ValidateItemsAreShown(columnValuesInConditionList, tasksData.GridViewName))
                     .ClickHeaderButton<Task>(MainPaneTableHeaderButton.Refresh, true, tasksData.GridViewName);
 
+                //User Story 121313 - 119703 Navigate to Modules from the Left Nav - Part 5 - Published Reports Module
+                test = LogTest("119703 Navigate to Modules from Left Nav - Published Reports Module");
+                var publishedReportsData = new NavigateToModulesFromTheLeftNavSmoke.PublishedReportsModules();
+                PublishedReports publishedReport = projectDashBoard.SelectModuleMenuItem<PublishedReports>(ModuleNameInLeftNav.PUBLISHEDREPORTS.ToDescription());
+                publishedReport.LogValidation<PublishedReports>(ref validations, publishedReport.ValidateButtonDisplayCorrect(publishedReportsData.ListButton))
+                    .ClickHierarchyRootButton()
+                    .LogValidation<PublishedReports>(ref validations, publishedReport.ValidateHierarchyTreeStatusIsCorrect())
+                    .ClickHierarchyRootButton()
+                    .LogValidation<PublishedReports>(ref validations, publishedReport.ValidateHierarchyTreeStatusIsCorrect(expand: true));
+
                 //User Story 121327 - 119703 Navigate to Modules from the Left Nav - Part 6 - Forms Modules
                 test = LogTest("119703 Navigate to Modules from Left Nav - Forms Module");
                 var formsData = new NavigateToModulesFromTheLeftNavSmoke.FormsModules();
@@ -153,7 +209,7 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                 formsModule.LogValidation<Form>(ref validations, formsModule.ValidateDisplayedViewFilterOption(formsData.DefaultFilter))
                     .LogValidation<Form>(ref validations, formsModule.ValidateRecordItemsCount(formsData.GridViewName))
                     .LogValidation<Form>(ref validations, formsModule.ValidateFilterBoxIsHighlighted(filterBoxIndex: 1))
-                    .ClickHeaderButton<ProjectsDashboard>(MainPaneTableHeaderButton.Refresh, true, formsData.FormsModule);
+                    .ClickHeaderButton<ProjectsDashboard>(MainPaneTableHeaderButton.Refresh, true, formsData.GridViewName);
 
                 //User Story 121328 - 119703 Navigate to Modules from the Left Nav - Part 7 - Gallery Modules
                 test = LogTest("119703 Navigate to Modules from Left Nav - Gallery Module");

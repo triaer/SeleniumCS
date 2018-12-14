@@ -39,6 +39,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
             //Click OtherUserLogin Button and Switch to OtherUserLogin Window
             SwitchToPopUpWindow(OtherUserLoginBtn, out logonWindow, true);
+            WaitForElementDisplay(By.Id("walkme-player"));
 
             //Fill account fields
             UserIdTextbox.InputText(account.Username);

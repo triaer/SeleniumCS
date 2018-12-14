@@ -17,6 +17,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
         #region Entities
 
+        public static By _walkMe => By.Id("walkme-player");
         private static By _userNameLable => By.XPath("//div[@id='divUserName']/span");
         private static By _logoutLink => By.Id("LogoutLabel");
         private static By _logoutYesButton => By.XPath("//div[@class='rwDialogPopup radconfirm']//a[.//span[text()='Yes']]");
@@ -29,6 +30,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         public IWebElement LogoutYesButton { get { return StableFindElement(_logoutYesButton); } }
         public IWebElement SaveChangeYesButton { get { return StableFindElement(_saveChangeYesButton); } }
         public IWebElement SaveChangeNoButton { get { return StableFindElement(_saveChangeNoButton); } }
+        public IWebElement WalkMe { get { return StableFindElement(_walkMe); } }
         #endregion
 
 

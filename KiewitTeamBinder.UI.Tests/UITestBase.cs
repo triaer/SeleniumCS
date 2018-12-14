@@ -119,27 +119,34 @@ namespace KiewitTeamBinder.UI.Tests
                 }
                 finally
                 {
-                    if (lastException == null || lastException.ToString().Contains("Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException"))
+                    try
                     {
-                        test.Fail(TestContext.TestName + " Failed - " + lastException.Message);
-                        for (int i = 0; i < validations.Count; i++)
+                        if (lastException == null || lastException.ToString().Contains("Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException"))
                         {
-                            test.Info(string.Join(Environment.NewLine, validations[i]));
-                        }
-                    }
-
-                    else
-                    {
-                        if (ExtentReportsHelper.nodeList.LastOrDefault() != null)
-                            ExtentReportsHelper.nodeList.LastOrDefault().Error(lastException.ToString(), ExtentReportsHelper.AttachScreenshot(filePath));
-                        {
-                            test.Error(TestContext.TestName + " Got Exception During Execution - " + lastException.Message + " " + lastException.StackTrace, ExtentReportsHelper.AttachScreenshot(filePath));
+                            test.Fail(TestContext.TestName + " Failed - " + lastException.Message);
                             for (int i = 0; i < validations.Count; i++)
                             {
                                 test.Info(string.Join(Environment.NewLine, validations[i]));
                             }
                         }
 
+                        else
+                        {
+                            if (ExtentReportsHelper.nodeList.LastOrDefault() != null)
+                                ExtentReportsHelper.nodeList.LastOrDefault().Error(lastException.ToString(), ExtentReportsHelper.AttachScreenshot(filePath));
+                            {
+                                test.Error(TestContext.TestName + " Got Exception During Execution - " + lastException.Message + " " + lastException.StackTrace, ExtentReportsHelper.AttachScreenshot(filePath));
+                                for (int i = 0; i < validations.Count; i++)
+                                {
+                                    test.Info(string.Join(Environment.NewLine, validations[i]));
+                                }
+                            }
+
+                        }
+                    }
+                    catch(Exception)
+                    {
+                        // do nothing
                     }
                 }
                 TestContext.AddResultFile(filePath);
