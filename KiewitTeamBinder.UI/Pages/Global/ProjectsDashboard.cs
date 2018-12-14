@@ -35,6 +35,10 @@ namespace KiewitTeamBinder.UI.Pages.Global
         private static By _subPageHeader => By.Id("lblRegisterCaption");              
         private static By _paneTable(string gridViewName) => By.XPath($"//table[contains(@id, '{gridViewName}_ctl00_Header')]/thead");
         private static By _visibleRows(string gridViewName) => By.XPath($"//div[contains(@id, '{gridViewName}_GridData')]//tr[@class != 'rgNoRecords' and not(contains(@style, 'hidden'))]");
+        private static By _documentsTable(string gridViewName) => By.XPath($"//div[contains(@id, '{gridViewName}_GridData')]");
+        private static By _headerDropdownItem(string itemName) => By.XPath($"//li[a = '{itemName}']");
+        private static By _toolBarButton(string buttonName) => By.XPath($"//div[contains(@class, 'ToolBar')]//a[span='{buttonName}']");
+        private static By _sortButton(string titleColumn) => By.XPath($"//a[text() ='{titleColumn}']");
 
         private static string _filterItemsXpath = "//tr[@valign='top']";
         private static string _imageOfFilterBoxXpath = "//img[contains(@id,'Link{1}{0}')]";
@@ -56,6 +60,10 @@ namespace KiewitTeamBinder.UI.Pages.Global
         public IWebElement SubPageTable(string value) => StableFindElement(_subPageTable(value));
         public IWebElement PaneTable(string gridViewName) => StableFindElement(_paneTable(gridViewName));
         public IReadOnlyCollection<IWebElement> VisibleRows(string gridViewName) => StableFindElements(_visibleRows(gridViewName));
+        public IWebElement HeaderDropdownItem(string itemName) => StableFindElement(_headerDropdownItem(itemName));
+        public IWebElement DocumentsTable(string gridViewName) => StableFindElement(_documentsTable(gridViewName));
+        public IWebElement ToolBarButton(string buttonName) => StableFindElement(_toolBarButton(buttonName));
+        public IWebElement SortButton(string titleColumn) => StableFindElement(_sortButton(titleColumn));
         #endregion
 
         #region Actions
@@ -126,25 +134,87 @@ namespace KiewitTeamBinder.UI.Pages.Global
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
                 
-        private IReadOnlyCollection<IWebElement> GetAvailableItems(string gridViewName, List<KeyValuePair<string, string>> columnValuePairList)
+        public T ClickHeaderDropdownItem<T>(MainPaneHeaderDropdownItem item)
+        {
+            var node = StepNode();
+            node.Info("Click the item: " + item.ToDescription());
+            HeaderDropdownItem(item.ToDescription()).Click();
+            return (T)Activator.CreateInstance(typeof(T), WebDriver);
+        }
+
+        public T ClickToolbarButton<T>(ToolbarButton buttonName, bool checkProgressPopup = false)
+        {
+            var node = StepNode();
+            node.Info("Click the button: " + buttonName.ToDescription());
+            ToolBarButton(buttonName.ToDescription()).Click();
+            if (checkProgressPopup)
+                WaitForLoading(_progressPopUp);
+
+            return (T)Activator.CreateInstance(typeof(T), WebDriver);
+        }
+
+        protected KeyValuePair<string, bool> ValidateProgressContentMessage(string message)
+        {
+            var node = StepNode();
+            IWebElement DialogMessage = FindElement(_progressMessage);
+            var actual = DialogMessage.GetAttribute("innerHTML");
+            if (actual.Contains(message))
+                return SetPassValidation(node, Validation.Progress_Message_Is_Displayed + message);
+            else
+                return SetFailValidation(node, Validation.Progress_Message_Is_Displayed, message, actual);
+        }
+
+        protected IReadOnlyCollection<IWebElement> GetNonAvailableItems(string gridViewName, List<KeyValuePair<string, string>> columnValuePairList)
         {
             int rowIndex, colIndex = 1;
             string itemsXpath = _filterItemsXpath;
             GetTableCellValueIndex(PaneTable(gridViewName), columnValuePairList.ElementAt(0).Key, out rowIndex, out colIndex, "th");
             if (colIndex < 2)
                 return null;
-            itemsXpath += $"[td[{colIndex}][contains(., '{columnValuePairList.ElementAt(0).Value}')]";
+            itemsXpath += $"[td[{colIndex}][not(contains(., '{columnValuePairList.ElementAt(0).Value}'))]";
 
             for (int i = 1; i < columnValuePairList.Count; i++)
             {
                 GetTableCellValueIndex(PaneTable(gridViewName), columnValuePairList.ElementAt(i).Key, out rowIndex, out colIndex, "th");
                 if (colIndex < 2)
                     return null;
-                itemsXpath += $" and td[{colIndex}][contains(., '{columnValuePairList.ElementAt(i).Value}')]";
+                itemsXpath += $" and td[{colIndex}][not(contains(., '{columnValuePairList.ElementAt(i).Value}'))]";
             }
             itemsXpath += "]";
 
             return StableFindElements(By.XPath(itemsXpath));
+        }
+
+        protected IReadOnlyCollection<IWebElement> GetAvailableItems(string gridViewName, List<KeyValuePair<string, string>> columnValuePairList, bool contains=true)
+        {
+            int rowIndex, colIndex = 1;
+            string itemsXpath = _filterItemsXpath;
+            GetTableCellValueIndex(PaneTable(gridViewName), columnValuePairList.ElementAt(0).Key, out rowIndex, out colIndex, "th");
+            if (colIndex < 2)
+                return null;
+            itemsXpath += (contains) ? $"[td[{colIndex}][contains(., '{columnValuePairList.ElementAt(0).Value}')]"
+                                     : $"[td[{colIndex}][not(contains(., '{columnValuePairList.ElementAt(0).Value}'))]";
+
+            for (int i = 1; i < columnValuePairList.Count; i++)
+            {
+                GetTableCellValueIndex(PaneTable(gridViewName), columnValuePairList.ElementAt(i).Key, out rowIndex, out colIndex, "th");
+                if (colIndex < 2)
+                    return null;
+                itemsXpath += (contains) ? $" and td[{colIndex}][contains(., '{columnValuePairList.ElementAt(i).Value}')]"
+                                         : $" and td[{colIndex}][not(contains(., '{columnValuePairList.ElementAt(i).Value}'))]";
+            }
+            itemsXpath += "]";
+
+            return StableFindElements(By.XPath(itemsXpath));
+        }
+
+        protected T SelectRowCheckbox<T>(IWebElement Checkbox, bool check = true)
+        {
+            if (check)
+                Checkbox.Check();
+            else
+                Checkbox.UnCheck();
+            return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 
         protected int GetTableItemNumberWithConditions(string gridViewName, List<KeyValuePair<string, string>> columnValuePairList)
@@ -160,7 +230,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             }
         }
 
-        private int GetTableItemNumber(string gridViewName)
+        protected int GetTableItemNumber(string gridViewName)
         {
             var node = StepNode();
             try
@@ -234,14 +304,13 @@ namespace KiewitTeamBinder.UI.Pages.Global
             int itemsNumber = GetTableItemNumber(gridViewName);
             var node = StepNode();
             node.Info($"Validate number of record items is equals to: {itemsNumber}");
-
             try
             {
                 var actualQuantity = ItemsNumberLabel(gridViewName).Text;
                 if (Int32.Parse(actualQuantity) == itemsNumber)
                     return SetPassValidation(node, Validation.Number_Of_Items_Counted_Is_Valid);
 
-                return SetFailValidation(node, Validation.Number_Of_Items_Counted_Is_Valid);
+                return SetFailValidation(node, Validation.Number_Of_Items_Counted_Is_Valid, itemsNumber.ToString(), actualQuantity);
             }
             catch (Exception e)
             {
@@ -348,6 +417,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             public static string Number_Of_Items_Counted_Is_Valid = "Validate that number of items counted is valid";
             public static string Sub_Page_Is_Displayed = "Validate that the sub page is displayed";
             public static string Items_Are_Shown = "Validate that items on main pane are shown";
+            public static string Progress_Message_Is_Displayed = "Validate That The Progress Message Display: ";
         }
         #endregion
     }

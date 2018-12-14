@@ -166,6 +166,21 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ScenariosInputFiles\CreateDataOnRow\File1.txt" />
+    <Content Include="ScenariosInputFiles\CreateDataOnRow\File10.txt" />
+    <Content Include="ScenariosInputFiles\CreateDataOnRow\File11.txt" />
+    <Content Include="ScenariosInputFiles\CreateDataOnRow\File12.txt" />
+    <Content Include="ScenariosInputFiles\CreateDataOnRow\File13.txt" />
+    <Content Include="ScenariosInputFiles\CreateDataOnRow\File14.txt" />
+    <Content Include="ScenariosInputFiles\CreateDataOnRow\File15.txt" />
+    <Content Include="ScenariosInputFiles\CreateDataOnRow\File2.txt" />
+    <Content Include="ScenariosInputFiles\CreateDataOnRow\File3.txt" />
+    <Content Include="ScenariosInputFiles\CreateDataOnRow\File4.txt" />
+    <Content Include="ScenariosInputFiles\CreateDataOnRow\File5.txt" />
+    <Content Include="ScenariosInputFiles\CreateDataOnRow\File6.txt" />
+    <Content Include="ScenariosInputFiles\CreateDataOnRow\File7.txt" />
+    <Content Include="ScenariosInputFiles\CreateDataOnRow\File8.txt" />
+    <Content Include="ScenariosInputFiles\CreateDataOnRow\File9.txt" />
     <Content Include="ScenariosInputFiles\BulkUploadDocuments\File1.txt" />
     <Content Include="ScenariosInputFiles\BulkUploadDocuments\File10.txt" />
     <Content Include="ScenariosInputFiles\BulkUploadDocuments\File11.txt" />

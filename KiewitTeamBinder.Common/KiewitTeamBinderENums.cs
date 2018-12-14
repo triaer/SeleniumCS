@@ -17,6 +17,7 @@ namespace KiewitTeamBinder.Common
             TOMORROW,
             N_DAYS_AGO
         }
+
         public enum HelpMenuOptions
         {
             [Description("TeamBinder Help")]
@@ -73,7 +74,7 @@ namespace KiewitTeamBinder.Common
             SubType
         }
 
-        public enum DocBulkUploadHeaderButton
+        public enum ToolbarButton
         {
             [Description("New Rows")]
             NewRows,
@@ -88,7 +89,11 @@ namespace KiewitTeamBinder.Common
             [Description("Link Deliverable Items")]
             LinkDeliverableItems,
             [Description("Remove Deliverable Items")]
-            RemoveDeliverableItems
+            RemoveDeliverableItems,
+            [Description("Send")]
+            Send,
+            [Description("Close")]
+            Close
         }
 
         public enum DocBulkUploadInputText
@@ -172,7 +177,9 @@ namespace KiewitTeamBinder.Common
             [Description("Export")]
             Export,
             [Description("More")]
-            More
+            More,
+            [Description("Transmit")]
+            Transmit
         }
 
         public enum MainPaneTableHeaderLabel
@@ -203,6 +210,12 @@ namespace KiewitTeamBinder.Common
             TaskCount,
             [Description("Contract Number")]
             ContractNumber
+        }
+
+        public enum MainPaneHeaderDropdownItem
+        {
+            [Description("Create Transmittals")]
+            CreateTransmittals,
         }
 
         public enum DialogPopupButton

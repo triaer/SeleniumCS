@@ -189,6 +189,24 @@ namespace KiewitTeamBinder.UI
             }
             Element.Click();
         }
+        public static void ClickWithHandling(this IWebElement Element)
+        {
+            var normalPageLoadTime = WebDriver.Manage().Timeouts().PageLoad;
+            
+            try
+            {
+                WebDriver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(2);
+                Element.Click();
+            }
+            catch (WebDriverException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            finally
+            {
+                WebDriver.Manage().Timeouts().PageLoad = normalPageLoadTime; 
+            }
+        }
         public static void HoverAndClickWithJS(this IWebElement Element)
         {
             IJavaScriptExecutor jse = (IJavaScriptExecutor)WebDriver;

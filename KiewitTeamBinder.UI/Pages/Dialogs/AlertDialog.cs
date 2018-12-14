@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using KiewitTeamBinder.Common;
 using OpenQA.Selenium;
-
 using SeleniumExtras.PageObjects;
 using System.Windows.Forms;
 using KiewitTeamBinder.UI.Pages.Global;
