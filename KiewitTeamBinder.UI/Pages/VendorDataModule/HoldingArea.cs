@@ -102,7 +102,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
                 IWebElement RowCheckBox = DocumentRows.ElementAt(i).StableFindElement(By.XPath(".//input[@type = 'checkbox']"));
                 if (check)
                 {
-                    ScrollIntoView(RowCheckBox);
+                    //ScrollIntoView(RowCheckBox);
                     RowCheckBox.Check();
                     selectedDocuments[i] = DocumentRows.ElementAt(i).StableFindElement(By.XPath("./td[" + colIndex + "]")).Text;
                 }
