@@ -83,8 +83,10 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             return this;
         }
 
-        public T SelectRowCheckboxesWithoutTransmittalNo<T>(string gridViewName, int numberOfCheckbox, bool check, ref string[] selectedDocuments)
-        {            
+        public HoldingArea SelectRowsWithoutTransmittalNo(string gridViewName, int numberOfCheckbox, bool check, ref string[] selectedDocuments)
+        {
+            var node = StepNode();
+            node.Info("Select checkbox of document rows without the transmittal no. value in Holding Area grid");
             int rowIndex, colIndex = 1;
             SortButton(MainPaneTableHeaderLabel.TransmittalNo.ToDescription()).Click();
             GetTableCellValueIndex(PaneTable(gridViewName), "Document No.", out rowIndex, out colIndex, "th");
@@ -93,9 +95,8 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
                 new KeyValuePair<string, string>(MainPaneTableHeaderLabel.TransmittalNo.ToDescription(), "TRN-SMOKE")
             };
 
-            IReadOnlyCollection<IWebElement> DocumentRows = GetNonAvailableItems(new TransmitDocumentSmoke().GridViewHoldingAreaName, conditions);
+            IReadOnlyCollection<IWebElement> DocumentRows = GetAvailableItems(gridViewName, conditions, false);
             Math.Min(numberOfCheckbox, DocumentRows.Count);            
-            DocumentRows.ElementAt(0).StableFindElement(By.XPath(".//input[@type = 'checkbox']"));
             for (int i = 0; i < numberOfCheckbox; i++)
             {
                 IWebElement RowCheckBox = DocumentRows.ElementAt(i).StableFindElement(By.XPath(".//input[@type = 'checkbox']"));
@@ -109,7 +110,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
                     RowCheckBox.UnCheck();
             }
             
-            return (T)Activator.CreateInstance(typeof(T), WebDriver);
+            return this;
         }
         
         public List<KeyValuePair<string, bool>> ValidateHoldingAreaGridShownDataCorrect(string filterColumn, string filterValue)

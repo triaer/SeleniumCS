@@ -117,22 +117,22 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 var transmitDocData = new TransmitDocumentSmoke();
                 test.Info("Navigate to DashBoard Page of Project: " + transmitDocData.ProjectName);
                 ProjectsDashboard projectDashBoard = projectsList.NavigateToProjectDashboardPage(transmitDocData.ProjectName);
-                projectDashBoard.SelectModuleMenuItem<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription());
 
+                test = LogTest("Pre-condition: Upload two documents");
+                projectDashBoard.SelectModuleMenuItem<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription());
                 HoldingArea holdingArea = projectDashBoard.SelectModuleMenuItem<HoldingArea>(subMenuItem: ModuleSubMenuInLeftNav.HOLDINGAREA.ToDescription());
                 BulkUploadDocuments bulkUploadDocuments = holdingArea.ClickBulkUploadButton(out currentWindow);
                 bulkUploadDocuments.CreateDataOnRow<HoldingArea>(2);
 
-                //when - 119696 Transmit Documents
-                //User Story 120157
+                //when User Story 120157 - 119696 Transmit Documents
                 test = LogTest("Transmit Documents");
                 string[] selectedDocuments = new string[transmitDocData.NumberOfSelectedDocumentRow];
                 string[] selectedUsersWithCompanyName = new string[] { transmitDocData.KiewitUser.Description };
 
-                projectDashBoard.SelectModuleMenuItem<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription());
+                //projectDashBoard.SelectModuleMenuItem<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription());
 
-                holdingArea = projectDashBoard.SelectModuleMenuItem<HoldingArea>(subMenuItem: ModuleSubMenuInLeftNav.HOLDINGAREA.ToDescription());
-                holdingArea.SelectRowCheckboxesWithoutTransmittalNo<HoldingArea>(transmitDocData.GridViewHoldingAreaName, transmitDocData.NumberOfSelectedDocumentRow, true, ref selectedDocuments)
+                //holdingArea = projectDashBoard.SelectModuleMenuItem<HoldingArea>(subMenuItem: ModuleSubMenuInLeftNav.HOLDINGAREA.ToDescription());
+                holdingArea.SelectRowsWithoutTransmittalNo(transmitDocData.GridViewHoldingAreaName, transmitDocData.NumberOfSelectedDocumentRow, true, ref selectedDocuments)
                     .ClickHeaderButton<HoldingArea>(MainPaneTableHeaderButton.Transmit, false);
 
                 NewTransmittal newTransmittal = holdingArea.ClickCreateTransmittalsButton();

@@ -184,22 +184,24 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
             return StableFindElements(By.XPath(itemsXpath));
         }
-                
-        private IReadOnlyCollection<IWebElement> GetAvailableItems(string gridViewName, List<KeyValuePair<string, string>> columnValuePairList)
+
+        protected IReadOnlyCollection<IWebElement> GetAvailableItems(string gridViewName, List<KeyValuePair<string, string>> columnValuePairList, bool contains=true)
         {
             int rowIndex, colIndex = 1;
             string itemsXpath = _filterItemsXpath;
             GetTableCellValueIndex(PaneTable(gridViewName), columnValuePairList.ElementAt(0).Key, out rowIndex, out colIndex, "th");
             if (colIndex < 2)
                 return null;
-            itemsXpath += $"[td[{colIndex}][contains(., '{columnValuePairList.ElementAt(0).Value}')]";
+            itemsXpath += (contains) ? $"[td[{colIndex}][contains(., '{columnValuePairList.ElementAt(0).Value}')]"
+                                     : $"[td[{colIndex}][not(contains(., '{columnValuePairList.ElementAt(0).Value}'))]";
 
             for (int i = 1; i < columnValuePairList.Count; i++)
             {
                 GetTableCellValueIndex(PaneTable(gridViewName), columnValuePairList.ElementAt(i).Key, out rowIndex, out colIndex, "th");
                 if (colIndex < 2)
                     return null;
-                itemsXpath += $" and td[{colIndex}][contains(., '{columnValuePairList.ElementAt(i).Value}')]";
+                itemsXpath += (contains) ? $" and td[{colIndex}][contains(., '{columnValuePairList.ElementAt(i).Value}')]"
+                                         : $" and td[{colIndex}][not(contains(., '{columnValuePairList.ElementAt(i).Value}'))]";
             }
             itemsXpath += "]";
 
@@ -302,14 +304,13 @@ namespace KiewitTeamBinder.UI.Pages.Global
             int itemsNumber = GetTableItemNumber(gridViewName);
             var node = StepNode();
             node.Info($"Validate number of record items is equals to: {itemsNumber}");
-
             try
             {
                 var actualQuantity = ItemsNumberLabel(gridViewName).Text;
                 if (Int32.Parse(actualQuantity) == itemsNumber)
                     return SetPassValidation(node, Validation.Number_Of_Items_Counted_Is_Valid);
 
-                return SetFailValidation(node, Validation.Number_Of_Items_Counted_Is_Valid);
+                return SetFailValidation(node, Validation.Number_Of_Items_Counted_Is_Valid, itemsNumber.ToString(), actualQuantity);
             }
             catch (Exception e)
             {
