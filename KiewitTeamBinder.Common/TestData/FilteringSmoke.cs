@@ -15,14 +15,20 @@ namespace KiewitTeamBinder.Common.TestData
         public string ProjectName = "Automation Project 1";
         public string ProjectNumber = "AUTO1";
         public string GridViewHoldingAreaName = "GridViewHoldingArea";
-        public string FilterValue = "AUTO";
+        public string FilterValue1 = "AUTO";
+        public string FilterValue2 = "A";
         public string ValueInHoldingProcessStatusColumn = "New";
         public string FromUser = "Automation Admin1 (Kiewit)";
 
-        public List<KeyValuePair<string, string>> ValueInDocumentNoColumn = new List<KeyValuePair<string, string>>
+        public List<KeyValuePair<string, string>> ValueInDocumentNoColumn1 = new List<KeyValuePair<string, string>>
         {
             new KeyValuePair<string, string>(MainPaneTableHeaderLabel.DocumentNo.ToDescription(), "AUTO")
         };
+        public List<KeyValuePair<string, string>> ValueInDocumentNoColumn2 = new List<KeyValuePair<string, string>>
+        {
+            new KeyValuePair<string, string>(MainPaneTableHeaderLabel.DocumentNo.ToDescription(), "A")
+        };
+
     }
 
 }

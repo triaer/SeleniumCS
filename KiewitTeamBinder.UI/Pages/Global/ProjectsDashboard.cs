@@ -42,7 +42,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         private static By _loadingPanel => By.XPath("//div[contains(@id, 'LoadingPanel')]");
         private static By _clearHyperlink => By.Id("lblClear");
         private static By _imageOfFilterOptionByIndex(string selected, string index) => By.XPath($"//img[contains(@id,'Link{selected}{index}')]");
-        private static By _imageOfFilterOptionByName(string selected, string name) => By.XPath($"//img[contains(@id,'Link{selected}') and contains(@title = '{name}')]");
+        private static By _imageOfFilterOptionByName(string selected, string name) => By.XPath($"//img[contains(@id,'Link{selected}') and contains(@title, '{name}')]");
 
         private static string _filterItemsXpath = "//tr[@valign='top' and not(contains(@style, 'hidden'))]";        
         private string _headerButtonXpath = "//a[span='{0}']";
@@ -70,7 +70,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         public IWebElement LoadingPanel { get { return StableFindElement(_loadingPanel); } }
         public IWebElement ClearHyperlink { get { return StableFindElement(_clearHyperlink); } }
         public IWebElement ImageOfFilterOptionByIndex(string selected, string index) => StableFindElement(_imageOfFilterOptionByIndex(selected, index));
-        public IWebElement ImageOfFilterOptionByName(string selected, string name) => StableFindElement(_imageOfFilterOptionByIndex(selected, name));
+        public IWebElement ImageOfFilterOptionByName(string selected, string name) => StableFindElement(_imageOfFilterOptionByName(selected, name));
         #endregion
 
         #region Actions
@@ -105,16 +105,16 @@ namespace KiewitTeamBinder.UI.Pages.Global
             WaitForElement(_subPageHeader);
         }
 
-        public T SelectFilterOption<T>(string nameOrIndex, bool byName = true)
+        public T SelectFilterOption<T>(string nameOrIndex, bool byName = true, bool waitForLoading = true)
         {
-            if (byName)
-            {
-                ImageOfFilterOptionByName("NotSelected", nameOrIndex).Click();
-            }
-            else
-            {
+            if (byName)            
+                ImageOfFilterOptionByName("NotSelected", nameOrIndex).Click();            
+            else            
                 ImageOfFilterOptionByIndex("NotSelected", nameOrIndex).Click();
-            }
+
+            if (waitForLoading)
+                WaitForLoadingPanel();
+
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 
@@ -144,7 +144,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
             WebDriver.SwitchTo().Frame(helpAboutDialog.IFrameName);
             WaitUntil(driver => helpAboutDialog.OkButton != null);
             
-
             return helpAboutDialog;
         }
 
@@ -302,7 +301,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 if (totalRecords == fileredRecords && totalRecords == expectedNumberOfRecord)
                     return SetPassValidation(node, Validation.Records_Matching_Filter_Are_Returned);
                 else
-                    return SetFailValidation(node, Validation.Records_Matching_Filter_Are_Returned);
+                    return SetFailValidation(node, Validation.Records_Matching_Filter_Are_Returned, expectedNumberOfRecord.ToString(), fileredRecords.ToString());
             }
             catch (Exception e)
             {
@@ -322,7 +321,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 if (totalRecords == numberOfCorrectRow)
                     return SetPassValidation(node, Validation.Value_In_Column_Is_Correct);
                 else
-                    return SetFailValidation(node, Validation.Value_In_Column_Is_Correct);
+                    return SetFailValidation(node, Validation.Value_In_Column_Is_Correct, totalRecords.ToString(), numberOfCorrectRow.ToString());
             }
             catch (Exception e)
             {
@@ -340,7 +339,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 if (totalRecords == expectedNumberOfClearRecord)
                     return SetPassValidation(node, Validation.Filtered_Records_Are_Cleared);
                 else
-                    return SetFailValidation(node, Validation.Filtered_Records_Are_Cleared);
+                    return SetFailValidation(node, Validation.Filtered_Records_Are_Cleared, expectedNumberOfClearRecord.ToString(), totalRecords.ToString());
             }
             catch (Exception e)
             {
