@@ -127,7 +127,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 //User Story 120157
                 test = LogTest("Transmit Documents");
                 string[] selectedDocuments = new string[transmitDocData.NumberOfSelectedDocumentRow];
-                string[] selectedUsersWithCompanyName = new string[] { transmitDocData.SelectedUserWithCompany.Admin1Kiewit };
+                string[] selectedUsersWithCompanyName = new string[] { transmitDocData.KiewitUser.Description };
 
                 projectDashBoard.SelectModuleMenuItem<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription());
 
@@ -139,8 +139,8 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 newTransmittal.LogValidation<NewTransmittal>(ref validations, newTransmittal.ValidateAllSelectedDocumentsAreListed(ref selectedDocuments))
                     .LogValidation<NewTransmittal>(ref validations, newTransmittal.ValidateRecordItemsCount(transmitDocData.GridViewTransmitDocName));
                 SelectRecipientsDialog selectRecipientsDialog = newTransmittal.ClickRecipientsButton(transmitDocData.ToButton);
-                selectRecipientsDialog.SelectCompany(transmitDocData.CompanyName)
-                    .ClickUserInLeftTable(transmitDocData.UserName)
+                selectRecipientsDialog.SelectCompany(transmitDocData.KiewitUser.CompanyName)
+                    .ClickUserInLeftTable(transmitDocData.KiewitUser.UserName)
                     .LogValidation<SelectRecipientsDialog>(ref validations, selectRecipientsDialog.ValidateUserIsAddedToTheToTable(selectedUsersWithCompanyName))
                     .ClickOkButton<NewTransmittal>();
                 newTransmittal.LogValidation<NewTransmittal>(ref validations, newTransmittal.ValidateSelectedUsersPopulateInTheToField(selectedUsersWithCompanyName))
@@ -151,10 +151,12 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                     .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateProjectNameIsCorrect(transmitDocData.ProjectName))
                     .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateDateIsCurrentDate())
                     .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateTransmittalNoIsCorrectWithTheHeader())
-                    .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateFromUserInfoIsCorrect(transmitDocData.FromUser))
+                    .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateFromUserInfoIsCorrect(transmitDocData.KiewitUser.Description))
                     .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateAttachedDocumentsAreDisplayed(selectedDocuments))
                     .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateRecipentsAreDisplayed(selectedUsersWithCompanyName))
+                    //TO-DO: Failed by bug: No hyperlink in Document number
                     .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateDocumentNumbersContainHyperlink(selectedDocuments))
+                    //TO-DO: Failed by bug: No hyperlink in "Click here to download all Transmittal files."
                     .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateDownloadHyperlinkDisplays())
                     .ClickToolbarButton<HoldingArea>(ToolbarButton.Close);
 

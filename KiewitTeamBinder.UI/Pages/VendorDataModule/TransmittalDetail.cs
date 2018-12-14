@@ -27,7 +27,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
         private static By _attachedDocumentName(string index) => By.XPath($"//tr[th[contains(text(),'Item')]]/following-sibling::tr[{index}]/td[2]");
         private static By _recipientList(string listType) => By.XPath($"//tr[td = '{listType}']/following-sibling::tr[2]//tr");
         private static By _downloadHyperlink => By.XPath("//a[text() = 'Click here to download all Transmittal files.']");
-        private static By _documentHyperlink(string documentNo) => By.XPath($"//a[text() = '{documentNo}'");
+        private static By _documentHyperlink(string documentNo) => By.XPath($"//a[text() = '{documentNo}']");
 
         public IWebElement ProjectNumberInfo { get { return StableFindElement(_projectNumberInfo); } }
         public IWebElement ProjectTitleInfo { get { return StableFindElement(_projectTitleInfo); } }

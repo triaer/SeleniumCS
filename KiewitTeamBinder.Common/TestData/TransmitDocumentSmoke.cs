@@ -15,17 +15,16 @@ namespace KiewitTeamBinder.Common.TestData
         public string GridViewHoldingAreaName = "GridViewHoldingArea";
         public string GridViewTransmitDocName = "GridViewDocuments";
         public string ToButton = "toBtn";
-        public int NumberOfSelectedDocumentRow = 1;
-        public string CompanyName = "Kiewit";
-        public string UserName = "Automation Admin1";
-        public SelectedUser SelectedUserWithCompany = new SelectedUser();
+        public int NumberOfSelectedDocumentRow = 2;        
         public string Subject = "Test Transmittal";
         public string Message = "This is a test transmittal";
-        public string FromUser = "Automation Admin1 (Kiewit)";
+        public User KiewitUser = new User();
 
-        public class SelectedUser
+        public class User
         {
-            public string Admin1Kiewit = "Automation Admin1 (Kiewit)";
+            public string UserName = "Automation Admin1";
+            public string CompanyName = "Kiewit";
+            public string Description = "Automation Admin1 (Kiewit)";
         }
     }
 
