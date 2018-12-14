@@ -89,7 +89,9 @@ namespace KiewitTeamBinder.UI.Pages.Global
             Wait(shortTimeout/3);
             SendKeys.SendWait(@"{Enter}");
             Wait(shortTimeout/3);
-            
+            int numberOfFile = fileNames.Split('.').Length - 1;
+            while (FileNames == null || FileNames.Count < numberOfFile)
+            { }
             return this;
         }
 

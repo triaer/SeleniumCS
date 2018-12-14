@@ -60,7 +60,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             return this;
         }
 
-        public HoldingArea FilterDocumentsByGridFilterRow(string columnName, string value, bool useFilterMenu = false, FilterOptions optionItem = FilterOptions.Contains)
+        public HoldingArea FilterDocumentsByGridFilterRow(string columnName, string value, bool useFilterMenu = false, FilterOptions optionItem = FilterOptions.Contains, bool waitForLoading = true)
         {
             IWebElement FilterCell = StableFindElement(By.XPath(string.Format(_filterTextBoxXpath,columnName)));
             IWebElement FilterTextBox = FilterCell.StableFindElement(By.TagName("input"));
@@ -73,6 +73,8 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
                 SelectComboboxByText(FilterMenu, _gridViewFilterListData, optionItem.ToDescription());
             }
             WaitForJQueryLoad();
+            if (waitForLoading)
+                WaitForLoadingPanel();
             return this;
         }
 

@@ -102,6 +102,60 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
         }
 
         [TestMethod]
+        public void Filtering()
+        {
+            try
+            {
+                // given
+                var teambinderTestAccount = GetTestAccount("AdminAccount1", environment, "NonSSO");
+                test.Info("Open TeamBinder Web Page: " + teambinderTestAccount.Url);
+                var driver = Browser.Open(teambinderTestAccount.Url, browser);
+                test.Info("Log on TeamBinder via Other User Login: " + teambinderTestAccount.Username);
+                ProjectsList projectsList = new NonSsoSignOn(driver).Logon(teambinderTestAccount) as ProjectsList;
+
+                var filteringData = new FilteringSmoke();
+                test.Info("Navigate to DashBoard Page of Project: " + filteringData.ProjectName);
+                ProjectsDashboard projectDashBoard = projectsList.NavigateToProjectDashboardPage(filteringData.ProjectName);
+                
+                //when - 119697 Filtering
+                //User Story 120159
+                test = LogTest("Filtering");
+                projectDashBoard.SelectModuleMenuItem<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription());
+
+                HoldingArea holdingArea = projectDashBoard.SelectModuleMenuItem<HoldingArea>(subMenuItem: ModuleSubMenuInLeftNav.HOLDINGAREA.ToDescription());
+
+                var clearRecords = holdingArea.GetTableItemNumber(filteringData.GridViewHoldingAreaName);
+                var filteredRecords = holdingArea.GetTableItemNumberWithConditions(filteringData.GridViewHoldingAreaName, filteringData.ValueInDocumentNoColumn);
+
+                holdingArea.FilterDocumentsByGridFilterRow(MainPaneTableHeaderLabel.DocumentNo.ToDescription(), filteringData.FilterValue)
+                    .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateRecordsMatchingFilterAreReturned(filteringData.GridViewHoldingAreaName,
+                                                                                                                      filteringData.ValueInDocumentNoColumn,
+                                                                                                                      filteredRecords))
+                    .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateValueInColumnIsCorrect(filteringData.GridViewHoldingAreaName,
+                                                                                                            MainPaneTableHeaderLabel.HoldProcessStatus.ToDescription(),
+                                                                                                            filteringData.ValueInHoldingProcessStatusColumn))
+                    .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateRecordItemsCount(filteringData.GridViewHoldingAreaName))
+                    .ClickClearHyperlink<HoldingArea>()
+                    .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateFilteredRecordsAreCleared(filteringData.GridViewHoldingAreaName,
+                                                                                                               clearRecords))
+                    .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateRecordItemsCount(filteringData.GridViewHoldingAreaName))
+                    .SelectFilterOption<HoldingArea>(ViewFilterOptions.All.ToDescription())
+                    .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateFilterBoxIsHighlighted(ViewFilterOptions.All.ToDescription()));
+
+                // then
+                Utils.AddCollectionToCollection(validations, methodValidations);
+                Console.WriteLine(string.Join(System.Environment.NewLine, validations.ToArray()));
+                validations.Should().OnlyContain(validations => validations.Value).Equals(bool.TrueString);
+            }
+            catch (Exception e)
+            {
+                lastException = e;
+                validations = Utils.AddCollectionToCollection(validations, methodValidations);
+                throw;
+            }
+        }
+
+        [TestMethod]
         public void TransmitDocuments()
         {
             try
