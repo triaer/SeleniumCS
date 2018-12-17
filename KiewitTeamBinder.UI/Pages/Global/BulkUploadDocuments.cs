@@ -385,29 +385,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
         }
         //TO-DO: Currently, there is an abnormal issue relating to the Copy Properties function. Sometime, the properties are not copied to n rows as expected
         //
-        public KeyValuePair<string, bool> ValidateDocumentPropertiesAreCopiedToAllRowsOld(int rowIndexOfStandardRow)
-        {
-            var node = StepNode();
-            rowIndexOfStandardRow = Utils.RefactorIndex(rowIndexOfStandardRow);
-            try
-            {
-                Dictionary<string, string>[] dataFromAllDocumentRows = GetDataFromAllDocumentRowsOld();
-                Dictionary<string, string> dataOfStandardRow = dataFromAllDocumentRows[rowIndexOfStandardRow];
-
-                for (int i = 0; i < dataFromAllDocumentRows.Length; i++)
-                    if (i != rowIndexOfStandardRow)
-                        if (!Utils.DictEquals(dataFromAllDocumentRows[i], dataOfStandardRow))
-                            return SetFailValidation(node, Validation.Document_Properties_Are_Copied_To_All_Rows);
-
-                return SetPassValidation(node, Validation.Document_Properties_Are_Copied_To_All_Rows);
-            }
-            catch (Exception e)
-            {
-                return SetErrorValidation(node, Validation.Document_Properties_Are_Copied_To_All_Rows, e);
-            }
-
-        }
-
         public List<KeyValuePair<string, bool>> ValidateDocumentPropertiesAreCopiedToAllRows(int rowIndexOfStandardRow)
         {
             var node = StepNode();
@@ -445,7 +422,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
             }
             
         }
-
 
         private List<string[]> GetDataFromAllDocumentRows()
         {
@@ -501,63 +477,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
             return valueArray;
         }
-        private Dictionary<string, string>[] GetDataFromAllDocumentRowsOld()
-        {
-            int numberOfRows = AllDocumentRows.Count;
-            string value;
-            Dictionary<string, string>[] dataArray = new Dictionary<string, string>[numberOfRows];
-            for (int i = 0; i < dataArray.Length; i++)
-            {
-                dataArray[i] = new Dictionary<string, string>();
-            }
-
-            string[] textboxName = new string[7];
-            textboxName[0] = DocBulkUploadInputText.DocumentNo.ToDescription();
-            textboxName[1] = DocBulkUploadInputText.Title.ToDescription();
-            textboxName[2] = DocBulkUploadInputText.Due.ToDescription();
-            textboxName[3] = DocBulkUploadInputText.Actual.ToDescription();
-            textboxName[4] = DocBulkUploadInputText.Forecast.ToDescription();
-            textboxName[5] = DocBulkUploadInputText.AltDocumentNo.ToDescription();
-            textboxName[6] = DocBulkUploadInputText.IncTrnNo.ToDescription();
-
-            IReadOnlyCollection<IWebElement> DocumentDetailsTextbox;
-            for (int i = 0; i < textboxName.Length; i++)
-            {
-                DocumentDetailsTextbox = StableFindElements(By.XPath(string.Format(_documentDetailsTextbox, textboxName[i])));
-                for (int j = 0; j < numberOfRows; j++)
-                {
-                    if (DocumentDetailsTextbox.ElementAt(j).Text != null)
-                        value = DocumentDetailsTextbox.ElementAt(j).Text;
-                    else
-                        value = "";
-                    dataArray[j].Add(textboxName[i], value);
-                }
-            }
-
-            string[] comboboxName = new string[8];
-            comboboxName[0] = DocBulkUploadDropdownType.Rev.ToDescription();
-            comboboxName[1] = DocBulkUploadDropdownType.Sts.ToDescription();
-            comboboxName[2] = DocBulkUploadDropdownType.Disc.ToDescription();
-            comboboxName[3] = DocBulkUploadDropdownType.Cat.ToDescription();
-            comboboxName[4] = DocBulkUploadDropdownType.Type.ToDescription();
-            comboboxName[5] = DocBulkUploadDropdownType.Location.ToDescription();
-            comboboxName[6] = DocBulkUploadDropdownType.SpecReference.ToDescription();
-            comboboxName[7] = DocBulkUploadDropdownType.SubType.ToDescription();
-
-            IReadOnlyCollection<SelectElement> DocumentDetailsCombobox;
-            for (int i = 0; i < comboboxName.Length; i++)
-            {
-                DocumentDetailsCombobox = GetAllComboBoxes(comboboxName[i]);
-                for (int j = 0; j < numberOfRows; j++)
-                    dataArray[j].Add(comboboxName[i], DocumentDetailsCombobox.ElementAt(j).SelectedOption.Text);
-            }
-
-            for (int j = 0; j < numberOfRows; j++)
-                dataArray[j].Add("SupersededCheckbox", AllSupersededCheckboxes.ElementAt(j).Selected.ToString());
-
-            return dataArray;
-        }
-
         public ConfirmDialog ClickSaveBulkUploadDocuments(ref List<KeyValuePair<string, bool>> methodValidation)
         {
             IWebElement SaveButton = StableFindElement(By.XPath(string.Format(_bottomButtonXpath, "Save")));

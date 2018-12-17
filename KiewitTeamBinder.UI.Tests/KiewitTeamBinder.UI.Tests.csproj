@@ -138,6 +138,7 @@
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VendorData\SingleDocUpload.cs" />
     <Compile Include="VendorData\BulkUpload.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -197,6 +198,7 @@
     <Content Include="ScenariosInputFiles\BulkUploadDocuments\File8.txt" />
     <Content Include="ScenariosInputFiles\BulkUploadDocuments\File9.txt" />
     <Content Include="extent-config.xml" />
+    <Content Include="ScenariosInputFiles\UploadSingleDoc\DocumentAttachFile.txt" />
   </ItemGroup>
   <ItemGroup />
   <Choose>
