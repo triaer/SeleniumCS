@@ -136,19 +136,39 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             var node = StepNode();
             node.Info("Validate that the date is current date");
             try
-            {                               
-                DateTime documentDate = DateTime.Parse(DateInfo.Text.Split('-')[0]);
-                documentDate = documentDate.AddHours(+13);
+            {
                 DateTime currentDate = DateTime.Now;
-                if (documentDate.Year == currentDate.Year &&
+                DateTime documentDate = DateTime.Parse(DateInfo.Text.Split('-')[0]);
+                TimeZone localZone = TimeZone.CurrentTimeZone;
+                TimeSpan currentOffset = localZone.GetUtcOffset(documentDate);                
+                documentDate = documentDate.AddHours(currentOffset.TotalHours + 6);
+                
+                node.Info("Document date: " + documentDate);
+                node.Info("Current date: " + currentDate);
+                node.Info("Time zone: " + currentOffset.TotalHours);
+                if (!(documentDate.Year == currentDate.Year &&
                     documentDate.Month == currentDate.Month &&
                     documentDate.Day == currentDate.Day &&
                     documentDate.Hour == currentDate.Hour &&
-                    documentDate.Minute == currentDate.Minute)
+                    documentDate.Minute == currentDate.Minute))
+                {
+                    if (DateTime.Compare(documentDate, currentDate) < 0)
+                    {
+                        if (currentDate.Subtract(documentDate) > new TimeSpan(5))
+                            return SetFailValidation(node, Validation.Date_Is_Current_Date, currentDate.ToString(), documentDate.ToString());
+                    }
+                    else //currentDate < documentDate
+                    {
+                        if (documentDate.Subtract(currentDate) > new TimeSpan(5))
+                            return SetFailValidation(node, Validation.Date_Is_Current_Date, currentDate.ToString(), documentDate.ToString());
+                    }
+                    return SetPassValidation(node, Validation.Date_Is_Current_Date);
+                }
+                else 
                 {
                     return SetPassValidation(node, Validation.Date_Is_Current_Date);
                 }
-                return SetFailValidation(node, Validation.Date_Is_Current_Date);
+                
             }
             catch (Exception e)
             {
