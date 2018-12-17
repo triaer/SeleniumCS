@@ -187,30 +187,27 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 var transmitDocData = new TransmitDocumentSmoke();
                 test.Info("Navigate to DashBoard Page of Project: " + transmitDocData.ProjectName);
                 ProjectsDashboard projectDashBoard = projectsList.NavigateToProjectDashboardPage(transmitDocData.ProjectName);
-                projectDashBoard.SelectModuleMenuItem<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription());
 
+                test = LogTest("Pre-condition: Upload two documents");
+                projectDashBoard.SelectModuleMenuItem<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription());
                 HoldingArea holdingArea = projectDashBoard.SelectModuleMenuItem<HoldingArea>(subMenuItem: ModuleSubMenuInLeftNav.HOLDINGAREA.ToDescription());
                 BulkUploadDocuments bulkUploadDocuments = holdingArea.ClickBulkUploadButton(out currentWindow);
                 bulkUploadDocuments.CreateDataOnRow<HoldingArea>(2);
 
-                //when - 119696 Transmit Documents
-                //User Story 120157
+                //when User Story 120157 - 119696 Transmit Documents
                 test = LogTest("Transmit Documents");
                 string[] selectedDocuments = new string[transmitDocData.NumberOfSelectedDocumentRow];
-                string[] selectedUsersWithCompanyName = new string[] { transmitDocData.SelectedUserWithCompany.Admin1Kiewit };
+                string[] selectedUsersWithCompanyName = new string[] { transmitDocData.KiewitUser.Description };
 
-                projectDashBoard.SelectModuleMenuItem<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription());
-
-                holdingArea = projectDashBoard.SelectModuleMenuItem<HoldingArea>(subMenuItem: ModuleSubMenuInLeftNav.HOLDINGAREA.ToDescription());
-                holdingArea.SelectRowCheckboxesWithoutTransmittalNo<HoldingArea>(transmitDocData.GridViewHoldingAreaName, transmitDocData.NumberOfSelectedDocumentRow, true, ref selectedDocuments)
+                holdingArea.SelectRowsWithoutTransmittalNo(transmitDocData.GridViewHoldingAreaName, transmitDocData.NumberOfSelectedDocumentRow, true, ref selectedDocuments)
                     .ClickHeaderButton<HoldingArea>(MainPaneTableHeaderButton.Transmit, false);
 
                 NewTransmittal newTransmittal = holdingArea.ClickCreateTransmittalsButton();
                 newTransmittal.LogValidation<NewTransmittal>(ref validations, newTransmittal.ValidateAllSelectedDocumentsAreListed(ref selectedDocuments))
                     .LogValidation<NewTransmittal>(ref validations, newTransmittal.ValidateRecordItemsCount(transmitDocData.GridViewTransmitDocName));
                 SelectRecipientsDialog selectRecipientsDialog = newTransmittal.ClickRecipientsButton(transmitDocData.ToButton);
-                selectRecipientsDialog.SelectCompany(transmitDocData.CompanyName)
-                    .ClickUserInLeftTable(transmitDocData.UserName)
+                selectRecipientsDialog.SelectCompany(transmitDocData.KiewitUser.CompanyName)
+                    .ClickUserInLeftTable(transmitDocData.KiewitUser.UserName)
                     .LogValidation<SelectRecipientsDialog>(ref validations, selectRecipientsDialog.ValidateUserIsAddedToTheToTable(selectedUsersWithCompanyName))
                     .ClickOkButton<NewTransmittal>();
                 newTransmittal.LogValidation<NewTransmittal>(ref validations, newTransmittal.ValidateSelectedUsersPopulateInTheToField(selectedUsersWithCompanyName))
@@ -221,9 +218,13 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                     .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateProjectNameIsCorrect(transmitDocData.ProjectName))
                     .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateDateIsCurrentDate())
                     .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateTransmittalNoIsCorrectWithTheHeader())
-                    .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateFromUserInfoIsCorrect(transmitDocData.FromUser))
+                    .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateFromUserInfoIsCorrect(transmitDocData.KiewitUser.Description))
                     .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateAttachedDocumentsAreDisplayed(selectedDocuments))
                     .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateRecipentsAreDisplayed(selectedUsersWithCompanyName))
+                    //TO-DO: Failed by bug: No hyperlink in Document number
+                    //.LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateDocumentNumbersContainHyperlink(selectedDocuments))
+                    //TO-DO: Failed by bug: No hyperlink in "Click here to download all Transmittal files."
+                    //.LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateDownloadHyperlinkDisplays())
                     .ClickToolbarButton<HoldingArea>(ToolbarButton.Close);
 
                 // then

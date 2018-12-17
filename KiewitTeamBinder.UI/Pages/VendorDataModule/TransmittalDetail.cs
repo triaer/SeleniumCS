@@ -26,6 +26,8 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
         private static By _fromInfo => By.XPath("//td[contains(text(), 'From:')]/following-sibling::td[1]");
         private static By _attachedDocumentName(string index) => By.XPath($"//tr[th[contains(text(),'Item')]]/following-sibling::tr[{index}]/td[2]");
         private static By _recipientList(string listType) => By.XPath($"//tr[td = '{listType}']/following-sibling::tr[2]//tr");
+        private static By _downloadHyperlink => By.XPath("//a[text() = 'Click here to download all Transmittal files.']");
+        private static By _documentHyperlink(string documentNo) => By.XPath($"//a[text() = '{documentNo}']");
 
         public IWebElement ProjectNumberInfo { get { return StableFindElement(_projectNumberInfo); } }
         public IWebElement ProjectTitleInfo { get { return StableFindElement(_projectTitleInfo); } }
@@ -36,6 +38,8 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
         public IWebElement FromInfo { get { return StableFindElement(_fromInfo); } }
         public IWebElement AttachedDocumentName(string index) => StableFindElement(_attachedDocumentName(index));
         public IReadOnlyCollection<IWebElement> RecipientList(string listType) => StableFindElements(_recipientList(listType));
+        public IWebElement DownloadHyperlink { get { return StableFindElement(_downloadHyperlink); } }
+        public IWebElement DocumentHyperlink(string documentNo) => StableFindElement(_documentHyperlink(documentNo));
         #endregion
 
         #region Actions
@@ -236,6 +240,43 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             }
         }
 
+        public KeyValuePair<string, bool> ValidateDocumentNumbersContainHyperlink(string[] documentNumbers)
+        {
+            var node = StepNode();
+            node.Info("");
+            try
+            {
+                foreach (var documentNumber in documentNumbers)
+                {
+                    string hrefAttribute = DocumentHyperlink(documentNumber).GetAttribute("href");
+                    if (hrefAttribute == null || hrefAttribute == "")
+                        return SetFailValidation(node, Validation.Document_Numbers_Contain_Hyperlink);
+                }
+                return SetPassValidation(node, Validation.Document_Numbers_Contain_Hyperlink);
+            }
+            catch (Exception e)
+            {
+                return SetErrorValidation(node, Validation.Document_Numbers_Contain_Hyperlink, e);
+            }
+        }
+
+        public KeyValuePair<string, bool> ValidateDownloadHyperlinkDisplays()
+        {
+            var node = StepNode();
+            node.Info("");
+            try
+            {               
+                string hrefAttribute = DownloadHyperlink.GetAttribute("href");
+                if (hrefAttribute == null || hrefAttribute == "")
+                    return SetFailValidation(node, Validation.Download_Hyperlink_Displays);                
+                return SetPassValidation(node, Validation.Download_Hyperlink_Displays);
+            }
+            catch (Exception e)
+            {
+                return SetErrorValidation(node, Validation.Download_Hyperlink_Displays, e);
+            }
+        }
+
         private static class Validation
         {
             public static string Project_Number_Is_Correct = "Validate that the project number is correct";
@@ -246,6 +287,8 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             public static string Attached_Documents_Are_Displayed = "Validate that the attached documents are displayed";
             public static string Recipents_Are_Displayed = "Validate that the recipents are displayed";
             public static string Transmittal_Detail_Window_Is_Closed = "Validate that the Transmittal detail window is closed";
+            public static string Document_Numbers_Contain_Hyperlink = "Validate that the document numbers contain hyperlink";
+            public static string Download_Hyperlink_Displays = "Validate that the download hyperlink displays";
         }
         #endregion
     }

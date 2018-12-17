@@ -78,7 +78,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         {
             var node = StepNode();
             node.Info("Click Add Files In Bulk button");
-            AddFilesInBulkButton.Click();
+            AddFilesInBulkButton.ClickWithHandling();
             node.Info("Choose files from window explorer form");
             node.Info("Files name: " + fileNames);
             Wait(shortTimeout/2);

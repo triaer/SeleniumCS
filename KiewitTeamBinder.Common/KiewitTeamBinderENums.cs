@@ -147,7 +147,9 @@ namespace KiewitTeamBinder.Common
             [Description("TeamPics")]
             GALLERY,
             [Description("VendorData")]
-            VENDORDATA
+            VENDORDATA,
+            [Description("PublishReports")]
+            PUBLISHEDREPORTS,
         }
 
         public enum MainPaneTableHeaderButton
@@ -241,7 +243,11 @@ namespace KiewitTeamBinder.Common
             [Description("Sent Items")]
             SENTITEMS,
             [Description("Pending")]
-            PENDING,            
+            PENDING,
+            [Description("Unregistered")]
+            UNREGISTERED,
+            [Description("Deleted Items")]
+            DELETEDITEMS,
             [Description("Vendor Data Register")]
             VENDODATAREGISTER,
             [Description("Holding Area")]

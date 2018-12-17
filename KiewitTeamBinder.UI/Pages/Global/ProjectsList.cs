@@ -11,8 +11,6 @@ using System.Threading.Tasks;
 using static KiewitTeamBinder.Common.KiewitTeamBinderENums;
 using static KiewitTeamBinder.UI.ExtentReportsHelper;
 using OpenQA.Selenium.Interactions;
-using System.Diagnostics;
-
 
 namespace KiewitTeamBinder.UI.Pages.Global
 {
@@ -20,8 +18,9 @@ namespace KiewitTeamBinder.UI.Pages.Global
     {
         #region Entities
         private string _projectListRows = "//table[contains(@id,'GridViewProjList')]//tbody/tr[@id='GridViewProjList_ctl00__{0}']";
+        private string _headerColumns = "//div[@id='GridViewProjList_GridHeader']//thead//th[.='{0}']/preceding-sibling::th";
         private static By _projListTitle => By.Id ("ProjListTitle");
-        private static By _projGridDataTable => By.XPath("//div[@id='GridViewProjList_GridData']/table/tbody");
+        private static By _projGridDataTable => By.XPath("//div[@id='GridViewProjList_GridData']/table//tbody");
         private static By _projectTitleTextBox => By.XPath("//input[contains(@id,'ProjTitle')]");
         private static By _projectNoTextBox => By.XPath("//input[contains(@id,'ProjNo')]");
         private static By _projectNoImgFilter => By.XPath("//img[contains(@id,'ProjNo')]");
@@ -45,37 +44,36 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
         public ProjectsDashboard NavigateToProjectDashboardPage(string filterValue)
         {
-
             //Filter project by title
             IWebElement ProjectItem = FilterProjectByIDOrTitle("Project Title", filterValue);
+            WaitForElementDisplay(_walkMe);
             //click on the project
-            var dashboard = new ProjectsDashboard(WebDriver);
             ProjectItem.Click();
+            //WaitForJQueryLoad();
+            var dashboard = new ProjectsDashboard(WebDriver);
             WaitForElement(dashboard._dashBoardLabel);
-            
             return dashboard;
         }
 
-        public IWebElement FilterProjectByIDOrTitle(string filterColumnName, string filterValue)
+        public IWebElement FilterProjectByIDOrTitle(string filterBy, string filterValue)
         {
             int rowIndex, colIndex;
             var numberOfProject = StableFindElements(_projectRows).Count;
-            if (filterColumnName.Equals("Project Title"))
+            if (filterBy.Equals("Project Title"))
             {
                 ProjectTitleTextBox.InputText(filterValue);
                 ProjectTitleTextBox.SendKeys(Keys.Enter);
             }
-            else if (filterColumnName.Equals("Project No"))
+            else
             {
                 ProjectNoTextBox.InputText(filterValue);
-                ProjectNoTextBox.SendKeys(Keys.Enter);                
+                ProjectNoTextBox.SendKeys(Keys.Enter);
             }
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
-            while (numberOfProject == StableFindElements(By.XPath("//div[@id='GridViewProjList_GridData']/table/tbody/tr")).Count
-                   && stopwatch.ElapsedMilliseconds <= 1500) { }
-  
-            GetTableCellValueIndex(ProjGridDataTable, filterValue, out rowIndex, out colIndex);
+
+            WaitForAngularJSLoad();
+            Console.WriteLine(StableFindElements(_projectRows).Count);
+            rowIndex = 1;
+            colIndex = StableFindElements(By.XPath(string.Format(_headerColumns, filterBy))).Count + 1;
             return TableCell(ProjGridDataTable, rowIndex, colIndex);
         }
 
@@ -85,10 +83,8 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
             try
             {
-
                 int rowIndex, colIndex;
                 GetTableCellValueIndex(ProjGridDataTable, nameProject, out rowIndex, out colIndex);
-
                 if (rowIndex == -1)
                     return SetFailValidation(node, Validation.Project_Is_Highlighted_When_Hovered);
                 else
@@ -120,7 +116,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
             {
                 int rowIndex, colIndex;
                 GetTableCellValueIndex(ProjGridDataTable, nameProject, out rowIndex, out colIndex);
-
                 if (rowIndex == -1)
                     return SetFailValidation(node, Validation.Data_In_ProjectList_Availiable);
                 else
