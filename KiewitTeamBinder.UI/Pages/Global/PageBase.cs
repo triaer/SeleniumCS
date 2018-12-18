@@ -159,7 +159,9 @@ namespace KiewitTeamBinder.UI.Pages.Global
         internal static T WaitUntil<T>(Func<IWebDriver, T> condition, int seconds = longTimeout)
         {
             var wait = Browser.Wait(seconds);
-            var ignoredExceptions = new List<Type>() { typeof(StaleElementReferenceException) };
+            var ignoredExceptions = new List<Type>() { typeof(StaleElementReferenceException),
+                                                       typeof(WebDriverTimeoutException),
+                                                       typeof(NoSuchElementException) };
 
             wait.IgnoreExceptionTypes(ignoredExceptions.ToArray());
             return wait.Until(condition);

@@ -80,6 +80,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             Element.Click();
             methodValidation.Add(ValidateItemDropdownIsHighlighted(value, id));
             ItemDropdown(value).Click();
+            Element.SendKeys(OpenQA.Selenium.Keys.Tab);
 
             return this;
         }
@@ -119,14 +120,13 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
         public DocumentDetail ClickOkButtonOnPopUp()
         {
             OkButtonOnPopUp.Click();
+            WebDriver.SwitchTo().DefaultContent();
             return this;
         }
 
         public List<KeyValuePair<string, bool>> ValidateSelectedItemShowInDropdownBoxesCorrect(SingleDocumentInfo singleDocumentInfo)
         {
-            var node = StepNode();
             var validation = new List<KeyValuePair<string, bool>>();
-
             validation.Add(ValidateItemDropdownIsSelected(singleDocumentInfo.RevStatus, RevStatusDropdown.GetAttribute("id")));
             validation.Add(ValidateItemDropdownIsSelected(singleDocumentInfo.Status, StatusDropdown.GetAttribute("id")));
             validation.Add(ValidateItemDropdownIsSelected(singleDocumentInfo.Category, CategoryDropdown.GetAttribute("id")));
@@ -153,15 +153,15 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
                         selectedText = selectedText.Replace("\"", "");
 
                         if (selectedText.Trim() == value)
-                            return SetPassValidation(node, Validation.Item_Dropdown_Is_Selected);
+                            return SetPassValidation(node, Validation.Item_Dropdown_Is_Selected + idDropdownButton);
                     }
                 }
 
-                return SetFailValidation(node, Validation.Item_Dropdown_Is_Selected);
+                return SetFailValidation(node, Validation.Item_Dropdown_Is_Selected + idDropdownButton, value, selectedText);
             }
             catch (Exception e)
             {
-                return SetErrorValidation(node, Validation.Item_Dropdown_Is_Selected, e);
+                return SetErrorValidation(node, Validation.Item_Dropdown_Is_Selected + idDropdownButton, e);
             }
         }
 
@@ -181,16 +181,14 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
 
                 ScrollToElement(ItemDropdown(value));
                 actual = ItemDropdown(value).GetAttribute("class");
-                node.Info("Attribute: " + actual);
-
                 if (actual.Contains("Hovered"))
-                    return SetPassValidation(node, Validation.Item_Dropdown_Is_Highlighted);
+                    return SetPassValidation(node, Validation.Item_Dropdown_Is_Highlighted + idDropdown);
 
-                return SetFailValidation(node, Validation.Item_Dropdown_Is_Highlighted);
+                return SetFailValidation(node, Validation.Item_Dropdown_Is_Highlighted + idDropdown);
             }
             catch (Exception e)
             {
-                return SetErrorValidation(node, Validation.Item_Dropdown_Is_Highlighted, e);
+                return SetErrorValidation(node, Validation.Item_Dropdown_Is_Highlighted + idDropdown, e);
             }
         }
 
@@ -263,11 +261,11 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             {
                 for (int i = 0; i < requiredFields.Length; i++)
                 {
-                    node.Info("Check " + requiredFields[i] + "field is marked red asterisk");
+                    node.Info("Check " + requiredFields[i] + " field is marked red asterisk");
                     if (StableFindElement(By.XPath(string.Format(_requiredFieldXpath, requiredFields[i]))) != null)
-                        validation.Add(SetPassValidation(node, Validation.Required_Fields_Are_Marked_Red_Asterisk));
+                        validation.Add(SetPassValidation(node, Validation.Required_Fields_Are_Marked_Red_Asterisk + requiredFields[i]));
                     else
-                        validation.Add(SetFailValidation(node, Validation.Required_Fields_Are_Marked_Red_Asterisk));
+                        validation.Add(SetFailValidation(node, Validation.Required_Fields_Are_Marked_Red_Asterisk + requiredFields[i]));
                 }
 
                 return validation;
@@ -305,7 +303,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             {
                 if (close == true)
                 {
-                    if (StableFindElement(_saveSingleDocPopUp) == null)
+                    if (FindElement(_saveSingleDocPopUp) == null)
                         return SetPassValidation(node, Validation.Save_SingleDoc_PopUp_Closed);
 
                     return SetFailValidation(node, Validation.Save_SingleDoc_PopUp_Closed);
@@ -350,9 +348,9 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             public static string User_Field_Color_Correct = "Validate that the Color of User Field displayed correctly";
             public static string User_Fields_Cannot_Update = "Validate that the User Field is cannot updated";
             public static string Document_No_Limit_Retained = "Validate that the Document No is retained limited";
-            public static string Required_Fields_Are_Marked_Red_Asterisk = "Validate that the Required Fields are marked red asterisk";
-            public static string Item_Dropdown_Is_Highlighted = "Validate that the Item Dropdown is highlighted";
-            public static string Item_Dropdown_Is_Selected = "Validate that the Item Dropdown is selected";
+            public static string Required_Fields_Are_Marked_Red_Asterisk = "Validate that the Required Fields are marked red asterisk: - ";
+            public static string Item_Dropdown_Is_Highlighted = "Validate that the item is highlighted when hovered or scrolled over in the dropdown: ";
+            public static string Item_Dropdown_Is_Selected = "Validate that the selected item is displayed in textbox of ";
             public static string Save_SingleDoc_PopUp_Closed = "Validate that the Save Single Document PopUp is closed";
             public static string Save_SingleDoc_PopUp_Opened = "Validate that the Save Single Document PopUp is opened";
             public static string Message_Display_Correct = "Validate that the Message is displayed correctly";

@@ -53,7 +53,8 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                                     .LogValidation<DocumentDetail>(ref validations, newDocument.ValidateSaveSingleDocPopUpStatus())
                                     .LogValidation<DocumentDetail>(ref validations, newDocument.ValidateMessageDisplayCorrect())
                                     .ClickOkButtonOnPopUp()
-                                    .LogValidation<DocumentDetail>(ref validations, newDocument.ValidateSaveSingleDocPopUpStatus(close: true));
+                                    .LogValidation<DocumentDetail>(ref validations, newDocument.ValidateSaveSingleDocPopUpStatus(close: true))
+                                    .ClickToolbarButton<HoldingArea>(ToolbarButton.Close);
 
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);
