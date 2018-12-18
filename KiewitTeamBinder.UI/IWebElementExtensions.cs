@@ -186,10 +186,12 @@ namespace KiewitTeamBinder.UI
             if (Browser.Driver.GetType() == typeof(InternetExplorerDriver))
             {
                ScrollIntoView(Element);
+               ((IJavaScriptExecutor)WebDriver).ExecuteScript("arguments[0].click();", Element);
             }
-            Element.Click();
+            else
+                Element.Click();
         }
-        public static void ClickWithHandling(this IWebElement Element)
+        public static void ClickWithHandleTimeout(this IWebElement Element)
         {
             var normalPageLoadTime = WebDriver.Manage().Timeouts().PageLoad;
             

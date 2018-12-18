@@ -54,6 +54,16 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             return new NewTransmittal(WebDriver);
         }
 
+        public DocumentDetail ClickNewButton(out string currentWindow)
+        {
+            var node = StepNode();
+            node.Info("Click New button in Holding Area Header");
+            IWebElement FunctionButton = StableFindElement(By.XPath(string.Format(_functionButton, "New")));
+            SwitchToPopUpWindow(FunctionButton, out currentWindow, false);
+            WaitForElementDisplay(By.Id("walkme-player"));
+            return new DocumentDetail(WebDriver);
+        }
+
         public HoldingArea EnterDocumentNo(string value)
         {
             DocumentNoTextBox.InputText(value);

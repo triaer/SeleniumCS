@@ -38,7 +38,7 @@ namespace KiewitTeamBinder.UI.Pages.Dialogs
         public T ClickPopupButton<T>(DialogPopupButton name, bool closeBrowser = false)
         {
             IWebElement Button = StableFindElement(By.XPath(string.Format(_button, name.ToDescription())));
-            Button.Click();
+            Button.ClickOnElement();
             if (closeBrowser)
             {
                 WebDriver.SwitchTo().Window(WebDriver.WindowHandles.Last());
