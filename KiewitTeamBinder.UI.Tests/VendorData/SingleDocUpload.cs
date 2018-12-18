@@ -45,16 +45,15 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 DocumentDetail newDocument = holdingArea.ClickNewButton(out currentWindow);
                 newDocument.LogValidation<DocumentDetail>(ref validations, newDocument.ValidateRequiredFieldsWithRedAsterisk(uploadSingleDocData.RequiredFields))
                                     .LogValidation<DocumentDetail>(ref validations, newDocument.ValidateFromUserFieldShowCorrectDataAndFormat(username, uploadSingleDocData.ColorGrey))
-                                    //.LogValidation<DocumentDetail>(ref validations, newDocument.ValidateFromUserFieldShowColorCorrect(uploadSingleDocData.ColorGrey))
-                                    //.LogValidation<DocumentDetail>(ref validations, newDocument.ValidateFromUserFieldCannotUpdated())
                                     .LogValidation<DocumentDetail>(ref validations, newDocument.ValidateDocumentNoIsLimitRetained(uploadSingleDocData.MaxLengthOfDocNo))
-                                    .EnterDocumentInformation(uploadSingleDocData.SingleDocInformation)
-                                    .ClickAttachFilesButton(Utils.GetInputFilesLocalPath(), uploadSingleDocData.FileNames);
-                //uploadSingleDocument.ClickSaveButton()
-                //                    .LogValidation<UploadSingleDocument>(ref validations, uploadSingleDocument.ValidateSaveSingleDocPopUpStatus())
-                //                    .LogValidation<UploadSingleDocument>(ref validations, uploadSingleDocument.ValidateMessageDisplayCorrect())
-                //                    .ClickOkButtonOnPopUp()
-                //                    .LogValidation<UploadSingleDocument>(ref validations, uploadSingleDocument.ValidateSaveSingleDocPopUpStatus(close: true));
+                                    .EnterDocumentInformation(uploadSingleDocData.SingleDocInformation, ref methodValidations)
+                                    .LogValidation<DocumentDetail>(ref validations, newDocument.ValidateSelectedItemShowInDropdownBoxesCorrect(uploadSingleDocData.SingleDocInformation))
+                                    .ClickAttachFilesButton(Utils.GetInputFilesLocalPath(), uploadSingleDocData.FileNames)
+                                    .ClickSaveButton()
+                                    .LogValidation<DocumentDetail>(ref validations, newDocument.ValidateSaveSingleDocPopUpStatus())
+                                    .LogValidation<DocumentDetail>(ref validations, newDocument.ValidateMessageDisplayCorrect())
+                                    .ClickOkButtonOnPopUp()
+                                    .LogValidation<DocumentDetail>(ref validations, newDocument.ValidateSaveSingleDocPopUpStatus(close: true));
 
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);

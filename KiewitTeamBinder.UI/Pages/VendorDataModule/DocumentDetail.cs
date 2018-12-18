@@ -33,6 +33,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
         private static By _saveSingleDocPopUp => By.XPath("//div[contains(@id,'RadWindowWrapper_alert')]");
         private static By _saveSingleDocMessage => By.XPath("//div[contains(@id,'RadWindowWrapper_alert')]//div[contains(@id, '_message')]");
         private static By _okButtonOnPopUp => By.XPath("//div[contains(@id,'RadWindowWrapper_alert')]//span[text()='OK']");
+        //private static By _clientStateValue(string idDropdownButton) => By.XPath($"//input[contains(@id,'{idDropdownButton}_ClientState')]");
 
         public IWebElement ItemDropdown(string dropdownListName) => StableFindElement(_itemDropdown(dropdownListName));
         public IWebElement DropdownButton(string idDropdownButton) => StableFindElement(_dropdownButton(idDropdownButton));
@@ -53,33 +54,33 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
         #region Actions
         public DocumentDetail(IWebDriver webDriver) : base(webDriver) { }
 
-        public DocumentDetail EnterDocumentInformation(SingleDocumentInfo singleDocumentInfo)
+        public DocumentDetail EnterDocumentInformation(SingleDocumentInfo singleDocumentInfo, ref List<KeyValuePair<string, bool>> methodValidation)
         {
             var node = StepNode();
-
+            node.Info($"Enter {singleDocumentInfo.DocumentNo} in Document No Field.");
             FillDataForDocument(DocumentNoTextBox, singleDocumentInfo.DocumentNo);
-            node.Info("RevStatusDropdown");
-            SelectItemInDropdown(RevStatusDropdown, singleDocumentInfo.RevStatus);
-            node.Info("StatusDropdown");
-            SelectItemInDropdown(StatusDropdown, singleDocumentInfo.Status);
+            node.Info("Click Rev Status dropdown, and select: " + singleDocumentInfo.RevStatus);
+            SelectItemInDropdown(RevStatusDropdown, singleDocumentInfo.RevStatus, ref methodValidation);
+            node.Info("Click Status dropdown, and select: " + singleDocumentInfo.Status);
+            SelectItemInDropdown(StatusDropdown, singleDocumentInfo.Status, ref methodValidation);
+            node.Info($"Enter {singleDocumentInfo.Title} in Document Title  Field.");
             FillDataForDocument(TitleTextBox, singleDocumentInfo.Title);
-            node.Info("CategoryDropdown");
-            SelectItemInDropdown(CategoryDropdown, singleDocumentInfo.Category);
-            node.Info("DisciplineDropdown");
-            SelectItemInDropdown(DisciplineDropdown, singleDocumentInfo.Discipline);
-            node.Info("TypeDropdown");
-            SelectItemInDropdown(TypeDropdown, singleDocumentInfo.Type);
+            node.Info("Click Category Type dropdown, and select: " + singleDocumentInfo.Category);
+            SelectItemInDropdown(CategoryDropdown, singleDocumentInfo.Category, ref methodValidation);
+            node.Info("Click Discipline Type dropdown, and select: " + singleDocumentInfo.Discipline);
+            SelectItemInDropdown(DisciplineDropdown, singleDocumentInfo.Discipline, ref methodValidation);
+            node.Info("Click Type dropdown, and select: " + singleDocumentInfo.Type);
+            SelectItemInDropdown(TypeDropdown, singleDocumentInfo.Type, ref methodValidation);
             return this;
         }
 
-        public DocumentDetail SelectItemInDropdown(IWebElement Element, string value)
+        public DocumentDetail SelectItemInDropdown(IWebElement Element, string value, ref List<KeyValuePair<string, bool>> methodValidation)
         {
             string id = Element.GetAttribute("id");
             Element.Click();
-            ValidateItemDropdownIsHighlighted(value, id);
+            methodValidation.Add(ValidateItemDropdownIsHighlighted(value, id));
             ItemDropdown(value).Click();
-            ValidateItemDropdownIsSelected(DropdownButton(id), value, id);
-            DropdownButton(id).Click();
+
             return this;
         }
 
@@ -121,18 +122,40 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             return this;
         }
 
-        public KeyValuePair<string, bool> ValidateItemDropdownIsSelected(IWebElement Element, string value, string idDropdownButton)
+        public List<KeyValuePair<string, bool>> ValidateSelectedItemShowInDropdownBoxesCorrect(SingleDocumentInfo singleDocumentInfo)
         {
             var node = StepNode();
+            var validation = new List<KeyValuePair<string, bool>>();
+
+            validation.Add(ValidateItemDropdownIsSelected(singleDocumentInfo.RevStatus, RevStatusDropdown.GetAttribute("id")));
+            validation.Add(ValidateItemDropdownIsSelected(singleDocumentInfo.Status, StatusDropdown.GetAttribute("id")));
+            validation.Add(ValidateItemDropdownIsSelected(singleDocumentInfo.Category, CategoryDropdown.GetAttribute("id")));
+            validation.Add(ValidateItemDropdownIsSelected(singleDocumentInfo.Discipline, DisciplineDropdown.GetAttribute("id")));
+            validation.Add(ValidateItemDropdownIsSelected(singleDocumentInfo.Type, TypeDropdown.GetAttribute("id")));
+            return validation;
+        }
+
+        public KeyValuePair<string, bool> ValidateItemDropdownIsSelected(string value, string idDropdownButton)
+        {
+            var node = StepNode();
+            string selectedText = "";
             try
             {
-                node.Info("The Dropdown: " + idDropdownButton);
-                WaitForElementClickable(_dropdownButton(idDropdownButton));
-                Element.Click();
-                string actual = ItemDropdown(value).GetAttribute("class");
-                node.Info("Attribute: " + actual);
-                if (actual.Contains("Hovered"))
-                    return SetPassValidation(node, Validation.Item_Dropdown_Is_Selected);
+                string id = idDropdownButton.Replace("Input", "ClientState");
+                node.Info("The Dropdown: " + id);
+                string clientStateValue = FindElement(By.Id(id)).GetAttribute("value");
+                string[] attributeValues = clientStateValue.Split(',');
+                foreach (var attributeValue in attributeValues)
+                {
+                    if (attributeValue.Contains("text"))
+                    {
+                        selectedText = attributeValue.Split(':')[1];
+                        selectedText = selectedText.Replace("\"", "");
+
+                        if (selectedText.Trim() == value)
+                            return SetPassValidation(node, Validation.Item_Dropdown_Is_Selected);
+                    }
+                }
 
                 return SetFailValidation(node, Validation.Item_Dropdown_Is_Selected);
             }
@@ -217,30 +240,6 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             }
         }
 
-        public KeyValuePair<string, bool> ValidateFromUserFieldShowColorCorrect(Color color)
-        {
-            var node = StepNode();
-
-            try
-            {
-                string expectColor = ConvertColorFromRGBToHex(color);
-                node.Info("Color of User field: " + expectColor);
-
-                string colorRGBA = FromUserLabel.GetCssValue("background-color");
-                string actualColor = ConvertColorFromRGBAToHex(colorRGBA);
-                node.Info("Color of User field: " + actualColor);
-
-                if (actualColor == expectColor)
-                    return SetPassValidation(node, Validation.User_Field_Color_Correct);
-
-                return SetFailValidation(node, Validation.User_Field_Color_Correct, expectColor, actualColor);
-            }
-            catch (Exception e)
-            {
-                return SetErrorValidation(node, Validation.User_Field_Color_Correct, e);
-            }
-        }
-
         public string ConvertColorFromRGBToHex(Color color)
         {
             return "#" + color.R.ToString("X2") + color.G.ToString("X2") + color.B.ToString("X2");
@@ -255,22 +254,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             Color colorConvert = Color.FromArgb(r, g, b);
             return "#" + colorConvert.R.ToString("X2") + colorConvert.G.ToString("X2") + colorConvert.B.ToString("X2");
         }
-        public KeyValuePair<string, bool> ValidateFromUserFieldCannotUpdated()
-        {
-            var node = StepNode();
 
-            try
-            {
-                if (StableFindElement(By.XPath("//input[@readonly and @id='txtUploadFromUser']")) != null)
-                    return SetPassValidation(node, Validation.User_Fields_Cannot_Update);
-
-                return SetFailValidation(node, Validation.User_Fields_Cannot_Update);
-            }
-            catch (Exception e)
-            {
-                return SetErrorValidation(node, Validation.User_Fields_Cannot_Update, e);
-            }
-        }
         public List<KeyValuePair<string, bool>> ValidateRequiredFieldsWithRedAsterisk(string[] requiredFields)
         {
             var node = StepNode();
