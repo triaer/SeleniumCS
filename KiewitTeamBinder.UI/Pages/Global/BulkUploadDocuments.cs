@@ -78,7 +78,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         {
             var node = StepNode();
             node.Info("Click Add Files In Bulk button");
-            AddFilesInBulkButton.ClickWithHandling();
+            AddFilesInBulkButton.ClickWithHandleTimeout();
             node.Info("Choose files from window explorer form");
             node.Info("Files name: " + fileNames);
             Wait(shortTimeout/2);
@@ -168,8 +168,11 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 = StableFindElements(By.XPath(string.Format(_documentDetailsTextbox, textboxName)));
             string[] data = GenerateDataForTextbox(content, DocumentDetailsTextbox.Count, unique);
 
-            for (int i = 0; i < DocumentDetailsTextbox.Count; i++)            
-                DocumentDetailsTextbox.ElementAt(i).InputText(data[i]);            
+            for (int i = 0; i < DocumentDetailsTextbox.Count; i++)
+            {
+                DocumentDetailsTextbox.ElementAt(i).InputText(data[i]);
+                DocumentDetailsTextbox.ElementAt(i).SendKeys(OpenQA.Selenium.Keys.Tab);
+            }
 
             return this;
         }
@@ -265,6 +268,8 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
             ConfirmDialog saveDocumentDialog = ClickSaveBulkUploadDocuments(ref methodValidations);
             saveDocumentDialog.ClickPopupButton<T>(DialogPopupButton.No, true);
+            //WaitForElementDisplay(_walkMe);
+            WaitForJQueryLoad();
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 
@@ -480,7 +485,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         public ConfirmDialog ClickSaveBulkUploadDocuments(ref List<KeyValuePair<string, bool>> methodValidation)
         {
             IWebElement SaveButton = StableFindElement(By.XPath(string.Format(_bottomButtonXpath, "Save")));
-            SaveButton.Click();
+            SaveButton.ClickOnElement();
             methodValidation.Add(ValidateProgressContentMessage("Saving Documents in progress"));
             return new ConfirmDialog(WebDriver);
         }

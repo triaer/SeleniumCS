@@ -96,7 +96,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
 
             var node = StepNode();
             node.Info("Click Attach Files In the header");
-            AttachFilesButton.ClickWithHandling();
+            AttachFilesButton.ClickWithHandleTimeout();
             node.Info("Choose files from window explorer form");
             node.Info("Files name: " + fileNames);
             Wait(shortTimeout / 2);
@@ -139,6 +139,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
         {
             var node = StepNode();
             string selectedText = "";
+            string message = string.Format(Validation.Item_Dropdown_Is_Selected, idDropdownButton.Split('_')[0], value);
             try
             {
                 string id = idDropdownButton.Replace("Input", "ClientState");
@@ -153,15 +154,15 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
                         selectedText = selectedText.Replace("\"", "");
 
                         if (selectedText.Trim() == value)
-                            return SetPassValidation(node, Validation.Item_Dropdown_Is_Selected + idDropdownButton);
+                            return SetPassValidation(node, message);
                     }
                 }
 
-                return SetFailValidation(node, Validation.Item_Dropdown_Is_Selected + idDropdownButton, value, selectedText);
+                return SetFailValidation(node, message, value, selectedText);
             }
             catch (Exception e)
             {
-                return SetErrorValidation(node, Validation.Item_Dropdown_Is_Selected + idDropdownButton, e);
+                return SetErrorValidation(node, message, e);
             }
         }
 
@@ -350,7 +351,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             public static string Document_No_Limit_Retained = "Validate that the Document No is retained limited";
             public static string Required_Fields_Are_Marked_Red_Asterisk = "Validate that the Required Fields are marked red asterisk: - ";
             public static string Item_Dropdown_Is_Highlighted = "Validate that the item is highlighted when hovered or scrolled over in the dropdown: ";
-            public static string Item_Dropdown_Is_Selected = "Validate that the selected item is displayed in textbox of ";
+            public static string Item_Dropdown_Is_Selected = "Validate that the {0} dropdown selected item '{1}' ";
             public static string Save_SingleDoc_PopUp_Closed = "Validate that the Save Single Document PopUp is closed";
             public static string Save_SingleDoc_PopUp_Opened = "Validate that the Save Single Document PopUp is opened";
             public static string Message_Display_Correct = "Validate that the Message is displayed correctly";

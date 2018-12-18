@@ -19,10 +19,10 @@ namespace KiewitTeamBinder.Common.TestData
 
         public SingleDocumentInfo SingleDocInformation = new SingleDocumentInfo()
         {
-            DocumentNo = Utils.GetRandomValue("LGVN_DocumentNo"),
+            DocumentNo = Utils.GetRandomValue("DocumentNo"),
             RevStatus = "01 - Rev 01",
             Status = "VSUB - Vendor Submission",
-            Title = Utils.GetRandomValue("LGVN_Title"),
+            Title = Utils.GetRandomValue("DocumentTitle"),
             Category = "BM - BILL OF MATERIAL",
             Discipline = "CON - Contruction",
             Type = "SUB - Submittal",

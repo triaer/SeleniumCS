@@ -80,6 +80,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             WebDriver.SwitchTo().Frame(IframeMessage);
             WaitUntil(driver => this.MessageTextField != null);
             MessageTextField.InputText(message);
+            MessageTextField.SendKeys(OpenQA.Selenium.Keys.Tab);
             WebDriver.SwitchTo().DefaultContent();
             return this;
         }
