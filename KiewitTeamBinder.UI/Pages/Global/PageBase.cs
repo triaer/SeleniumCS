@@ -676,12 +676,60 @@ namespace KiewitTeamBinder.UI.Pages.Global
             return elementParent.StableFindElement(By.CssSelector(string.Format("div[id$='{0}']", partID)));
         }
 
+        //internal static void SelectDateOnCalendar(string dateString, IWebElement DatePicker, By calendarLocator)
+        //{
+        //    //Format of dateString: "MM/dd/yyyy"
+        //    string[] monthList = { "JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER" };
+        //    string _dayButtonXPath = ".//td[not(contains(@class,'k-other-month'))]/a[text()='{0}']";
+        //    By _displayMonthYear = By.XPath(".//div[@class='k-header']/a[contains(@class,'k-nav-fast')]");
+
+        //    string calMonth = null;
+        //    string calYear = null;
+        //    int jumMonthBy = 0;
+
+        //    //parse the target date
+        //    string[] parts = dateString.Split('/');
+        //    int expMonth = int.Parse(parts[0]);
+        //    int expDay = int.Parse(parts[1]);
+        //    int expYear = int.Parse(parts[2]);
+
+        //    //open the calendar
+        //    DatePicker.Click();
+        //    IWebElement CalendarPopup = StableFindElement(calendarLocator);
+        //    WaitForElementAttribute(CalendarPopup, "style", "block");
+
+        //    //Retrieve current selected month / year name from date picker popup
+        //    IWebElement DispMonthYear = CalendarPopup.StableFindElement(_displayMonthYear);
+        //    calMonth = DispMonthYear.Text.Split(' ')[0];
+        //    calYear = DispMonthYear.Text.Split(' ')[1];
+
+        //    //Calculate the differ month
+        //    jumMonthBy = ((expYear - int.Parse(calYear)) * 12) + (expMonth - (monthList.ToList().IndexOf(calMonth) + 1));
+
+        //    if (jumMonthBy > 0)
+        //    {
+        //        while (jumMonthBy-- > 0) CalendarPopup.FindElement(By.XPath(".//div[@class='k-header']/a[contains(@class,'k-nav-next')]")).Click();
+        //    }
+        //    else if (jumMonthBy < 0)
+        //    {
+        //        while (jumMonthBy++ < 0) CalendarPopup.FindElement(By.XPath(".//div[@class='k-header']/a[contains(@class,'k-nav-prev')]")).Click();
+        //    }
+
+        //    WaitUntil(dr => CalendarPopup.StableFindElement(_displayMonthYear).Text.Contains(monthList[expMonth - 1]));
+        //    //click on the target day 
+        //    By dayElement = By.XPath(string.Format(_dayButtonXPath, expDay));
+        //    WaitForAngularJSLoad();
+        //    IWebElement DayButton = CalendarPopup.StableFindElement(dayElement);
+        //    DayButton.Click();
+
+        //}
+
         internal static void SelectDateOnCalendar(string dateString, IWebElement DatePicker, By calendarLocator)
         {
             //Format of dateString: "MM/dd/yyyy"
             string[] monthList = { "JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER" };
             string _dayButtonXPath = ".//td[not(contains(@class,'k-other-month'))]/a[text()='{0}']";
-            By _displayMonthYear = By.XPath(".//div[@class='k-header']/a[contains(@class,'k-nav-fast')]");
+            By _displayMonthYear = By.XPath(".//div[contains(@class,'RadCalendarPopup')]//td[@class='rcTitle']");
 
             string calMonth = null;
             string calYear = null;
@@ -695,30 +743,25 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
             //open the calendar
             DatePicker.Click();
+
             IWebElement CalendarPopup = StableFindElement(calendarLocator);
-            WaitForElementAttribute(CalendarPopup, "style", "block");
+            //WaitForElementAttribute(CalendarPopup, "style", "block");
 
             //Retrieve current selected month / year name from date picker popup
-            IWebElement DispMonthYear = CalendarPopup.StableFindElement(_displayMonthYear);
+            IWebElement DispMonthYear = StableFindElement(_displayMonthYear);
             calMonth = DispMonthYear.Text.Split(' ')[0];
             calYear = DispMonthYear.Text.Split(' ')[1];
 
             //Calculate the differ month
             jumMonthBy = ((expYear - int.Parse(calYear)) * 12) + (expMonth - (monthList.ToList().IndexOf(calMonth) + 1));
+            int countClick = jumMonthBy - expMonth;
 
-            if (jumMonthBy > 0)
+            if (jumMonthBy - expMonth > 0)
             {
-                while (jumMonthBy-- > 0) CalendarPopup.FindElement(By.XPath(".//div[@class='k-header']/a[contains(@class,'k-nav-next')]")).Click();
-            }
-            else if (jumMonthBy < 0)
-            {
-                while (jumMonthBy++ < 0) CalendarPopup.FindElement(By.XPath(".//div[@class='k-header']/a[contains(@class,'k-nav-prev')]")).Click();
+                while (expMonth-- > 0) StableFindElement(By.XPath(".//div[contains(@class,'RadCalendarPopup')]//a[contains(@class,'rcNext')]")).Click();
             }
 
-            WaitUntil(dr => CalendarPopup.StableFindElement(_displayMonthYear).Text.Contains(monthList[expMonth - 1]));
-            //click on the target day 
             By dayElement = By.XPath(string.Format(_dayButtonXPath, expDay));
-            WaitForAngularJSLoad();
             IWebElement DayButton = CalendarPopup.StableFindElement(dayElement);
             DayButton.Click();
 

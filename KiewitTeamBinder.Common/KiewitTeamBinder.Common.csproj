@@ -59,6 +59,7 @@
     <Compile Include="TestData\NavigateToModulesFromTheLeftNavSmoke.cs" />
     <Compile Include="TestData\TeamBinderLoginSmoke.cs" />
     <Compile Include="TestData\TeamBinderVersionSmoke.cs" />
+    <Compile Include="TestData\TransmitSingleDocSmoke.cs" />
     <Compile Include="TestData\UploadSingleDocSmoke.cs" />
   </ItemGroup>
   <ItemGroup>

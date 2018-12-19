@@ -176,7 +176,8 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
 
                 if (idDropdown.Contains("Rev_Input") || idDropdown.Contains("Category_Input"))
                 {
-                    ScrollToElement(ItemDropdown(value));
+                    ScrollIntoView(ItemDropdown(value));
+                    WaitForElementDisplay(_itemDropdown(value));
                     ScrollToElement(ItemDropdown(value));
                 }
 
