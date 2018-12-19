@@ -140,9 +140,9 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
                 DateTime currentDate = DateTime.Now;
                 DateTime documentDate = DateTime.Parse(DateInfo.Text.Split('-')[0]);
                 TimeZone localZone = TimeZone.CurrentTimeZone;
-                TimeSpan currentOffset = localZone.GetUtcOffset(documentDate);                
+                TimeSpan currentOffset = localZone.GetUtcOffset(documentDate);
                 documentDate = documentDate.AddHours(currentOffset.TotalHours + 6);
-                
+
                 node.Info("Document date: " + documentDate);
                 node.Info("Current date: " + currentDate);
                 node.Info("Time zone: " + currentOffset.TotalHours);
@@ -164,11 +164,10 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
                     }
                     return SetPassValidation(node, Validation.Date_Is_Current_Date);
                 }
-                else 
+                else
                 {
                     return SetPassValidation(node, Validation.Date_Is_Current_Date);
                 }
-                
             }
             catch (Exception e)
             {

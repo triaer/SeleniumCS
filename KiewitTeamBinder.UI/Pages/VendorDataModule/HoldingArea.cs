@@ -54,6 +54,16 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             return new NewTransmittal(WebDriver);
         }
 
+        public DocumentDetail ClickNewButton(out string currentWindow)
+        {
+            var node = StepNode();
+            node.Info("Click New button in Holding Area Header");
+            IWebElement FunctionButton = StableFindElement(By.XPath(string.Format(_functionButton, "New")));
+            SwitchToPopUpWindow(FunctionButton, out currentWindow, false);
+            WaitForElementDisplay(By.Id("walkme-player"));
+            return new DocumentDetail(WebDriver);
+        }
+
         public HoldingArea EnterDocumentNo(string value)
         {
             DocumentNoTextBox.InputText(value);
@@ -91,6 +101,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             node.Info("Select checkbox of document rows without the transmittal no. value in Holding Area grid");
             int rowIndex, colIndex = 1;
             SortButton(MainPaneTableHeaderLabel.TransmittalNo.ToDescription()).Click();
+            WaitForJQueryLoad();
             GetTableCellValueIndex(PaneTable(gridViewName), "Document No.", out rowIndex, out colIndex, "th");
             var conditions = new List<KeyValuePair<string, string>>
             { 

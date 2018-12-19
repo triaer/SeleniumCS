@@ -28,6 +28,12 @@ namespace KiewitTeamBinder.UI.Pages.Global
         private static By _subjectTextField => By.Id("txtSubject");
         private static By _messageTextField => By.XPath("//body[@spellcheck]");
         private static By _linkDocumentExpandIcon => By.Id("LinkDocumentExpandIcon");
+        private static By _reasonForIssueDropdown => By.Id("ctl157_cboReason_Arrow");
+        private static By _reasonForIssueData => By.XPath("//div[contains(@id,'Reason_DropDown')]//ul/li");
+        private static By _respondByMessageDropdown => By.Id("ctl157_cboRespondMessage_Arrow");
+        private static By _respondByMessageData => By.XPath("//div[contains(@id,'RespondMessage_DropDown')]//ul/li");
+        private static By _respondByDateIcon => By.Id("ctl157_RespondByDate_popupButton");
+        private static By _respondByDateData => By.Id("ctl157_RespondByDate_calendar_wrapper");
 
         private static string _filterItemsXpath = "//tr[@valign='top']";
 
@@ -39,6 +45,9 @@ namespace KiewitTeamBinder.UI.Pages.Global
         public IWebElement SubjectTextField { get { return StableFindElement(_subjectTextField); } }
         public IWebElement MessageTextField { get { return StableFindElement(_messageTextField); } }
         public IWebElement LinkDocumentExpandIcon { get { return StableFindElement(_linkDocumentExpandIcon); } }
+        public IWebElement ReasonForIssueDropdown { get { return StableFindElement(_reasonForIssueDropdown); } }
+        public IWebElement RespondByMessageDropdown { get { return StableFindElement(_respondByMessageDropdown); } }
+        public IWebElement RespondByDateIcon { get { return StableFindElement(_respondByDateIcon); } }
         #endregion
 
         #region Actions
@@ -80,10 +89,24 @@ namespace KiewitTeamBinder.UI.Pages.Global
             WebDriver.SwitchTo().Frame(IframeMessage);
             WaitUntil(driver => this.MessageTextField != null);
             MessageTextField.InputText(message);
+            MessageTextField.SendKeys(OpenQA.Selenium.Keys.Tab);
             WebDriver.SwitchTo().DefaultContent();
             return this;
         }
 
+        public NewTransmittal SelectNewTransmitDetailInforByText(string reasonForIssue, string respondByMessage, string respondByDate)
+        {
+            if (reasonForIssue != "")
+                SelectComboboxByText(ReasonForIssueDropdown, _reasonForIssueData, reasonForIssue);
+
+            if (respondByMessage != "")
+                SelectComboboxByText(RespondByMessageDropdown, _respondByMessageData, respondByMessage);
+
+            if (respondByDate != "")
+                SelectDateOnCalendar(respondByDate, RespondByDateIcon, _respondByDateData);
+
+            return this;
+        }
         public TransmittalDetail ClickSendButton(ref List<KeyValuePair<string, bool>> methodValidation)
         {
             //string window;

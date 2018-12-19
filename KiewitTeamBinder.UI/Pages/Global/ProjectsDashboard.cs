@@ -37,12 +37,12 @@ namespace KiewitTeamBinder.UI.Pages.Global
         private static By _visibleRows(string gridViewName) => By.XPath($"//div[contains(@id, '{gridViewName}_GridData')]//tr[@class != 'rgNoRecords' and not(contains(@style, 'hidden'))]");
         private static By _documentsTable(string gridViewName) => By.XPath($"//div[contains(@id, '{gridViewName}_GridData')]");
         private static By _headerDropdownItem(string itemName) => By.XPath($"//li[a = '{itemName}']");
-        private static By _toolBarButton(string buttonName) => By.XPath($"//div[contains(@class, 'ToolBar')]//a[span='{buttonName}']");
         private static By _sortButton(string titleColumn) => By.XPath($"//a[text() ='{titleColumn}']");
         private static By _loadingPanel => By.XPath("//div[contains(@id, 'LoadingPanel')]");
         private static By _clearHyperlink => By.Id("lblClear");
         private static By _imageOfFilterOptionByIndex(string selected, string index) => By.XPath($"//img[contains(@id,'Link{selected}{index}')]");
         private static By _imageOfFilterOptionByName(string selected, string name) => By.XPath($"//img[contains(@id,'Link{selected}') and contains(@title, '{name}')]");
+        private static By _userNameLabel => By.Id("divUserName");
 
         private static string _filterItemsXpath = "//tr[@valign='top' and not(contains(@style, 'hidden'))]";        
         private string _headerButtonXpath = "//a[span='{0}']";
@@ -65,12 +65,12 @@ namespace KiewitTeamBinder.UI.Pages.Global
         public IReadOnlyCollection<IWebElement> VisibleRows(string gridViewName) => StableFindElements(_visibleRows(gridViewName));
         public IWebElement HeaderDropdownItem(string itemName) => StableFindElement(_headerDropdownItem(itemName));
         public IWebElement DocumentsTable(string gridViewName) => StableFindElement(_documentsTable(gridViewName));
-        public IWebElement ToolBarButton(string buttonName) => StableFindElement(_toolBarButton(buttonName));
         public IWebElement SortButton(string titleColumn) => StableFindElement(_sortButton(titleColumn));
         public IWebElement LoadingPanel { get { return StableFindElement(_loadingPanel); } }
         public IWebElement ClearHyperlink { get { return StableFindElement(_clearHyperlink); } }
         public IWebElement ImageOfFilterOptionByIndex(string selected, string index) => StableFindElement(_imageOfFilterOptionByIndex(selected, index));
         public IWebElement ImageOfFilterOptionByName(string selected, string name) => StableFindElement(_imageOfFilterOptionByName(selected, name));
+        public IWebElement UserNameLabel { get { return StableFindElement(_userNameLabel); } }
         #endregion
 
         #region Actions
@@ -176,15 +176,9 @@ namespace KiewitTeamBinder.UI.Pages.Global
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 
-        public T ClickToolbarButton<T>(ToolbarButton buttonName, bool checkProgressPopup = false)
+        public string GetUserNameLogon()
         {
-            var node = StepNode();
-            node.Info("Click the button: " + buttonName.ToDescription());
-            ToolBarButton(buttonName.ToDescription()).Click();
-            if (checkProgressPopup)
-                WaitForLoading(_progressPopUp);
-
-            return (T)Activator.CreateInstance(typeof(T), WebDriver);
+            return UserNameLabel.Text;
         }
 
         protected KeyValuePair<string, bool> ValidateProgressContentMessage(string message)
@@ -198,26 +192,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 return SetFailValidation(node, Validation.Progress_Message_Is_Displayed, message, actual);
         }
 
-        protected IReadOnlyCollection<IWebElement> GetNonAvailableItems(string gridViewName, List<KeyValuePair<string, string>> columnValuePairList)
-        {
-            int rowIndex, colIndex = 1;
-            string itemsXpath = _filterItemsXpath;
-            GetTableCellValueIndex(PaneTable(gridViewName), columnValuePairList.ElementAt(0).Key, out rowIndex, out colIndex, "th");
-            if (colIndex < 2)
-                return null;
-            itemsXpath += $"[td[{colIndex}][not(contains(., '{columnValuePairList.ElementAt(0).Value}'))]";
-
-            for (int i = 1; i < columnValuePairList.Count; i++)
-            {
-                GetTableCellValueIndex(PaneTable(gridViewName), columnValuePairList.ElementAt(i).Key, out rowIndex, out colIndex, "th");
-                if (colIndex < 2)
-                    return null;
-                itemsXpath += $" and td[{colIndex}][not(contains(., '{columnValuePairList.ElementAt(i).Value}'))]";
-            }
-            itemsXpath += "]";
-
-            return StableFindElements(By.XPath(itemsXpath));
-        }
 
         protected IReadOnlyCollection<IWebElement> GetAvailableItems(string gridViewName, List<KeyValuePair<string, string>> columnValuePairList, bool contains=true)
         {
