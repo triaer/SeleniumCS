@@ -186,8 +186,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 test.Info("Navigate to DashBoard Page of Project: " + filteringData.ProjectName);
                 ProjectsDashboard projectDashBoard = projectsList.NavigateToProjectDashboardPage(filteringData.ProjectName);
 
-                //when - 119697 Filtering
-                //User Story 120159
+                //when User Story 120159 - 119697 Filtering
                 test = LogTest("Filtering");
                 projectDashBoard.SelectModuleMenuItem<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription());
 
