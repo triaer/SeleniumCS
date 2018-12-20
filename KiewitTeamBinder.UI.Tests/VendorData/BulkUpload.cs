@@ -192,7 +192,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
 
                 HoldingArea holdingArea = projectDashBoard.SelectModuleMenuItem<HoldingArea>(subMenuItem: ModuleSubMenuInLeftNav.HOLDINGAREA.ToDescription());
 
-                var clearRecords = holdingArea.GetTableItemNumber(filteringData.GridViewHoldingAreaName);
+                var recordsCountBeforeFilter = holdingArea.GetTotalRowsVisibleInGrid(filteringData.GridViewHoldingAreaName);
                 var filteredRecords = holdingArea.GetTableItemNumberWithConditions(filteringData.GridViewHoldingAreaName, filteringData.ValueInDocumentNoColumn1);
 
                 holdingArea.FilterDocumentsByGridFilterRow(MainPaneTableHeaderLabel.DocumentNo.ToDescription(), filteringData.FilterValue1)
@@ -205,7 +205,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                     .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateRecordItemsCount(filteringData.GridViewHoldingAreaName))
                     .ClickClearHyperlink<HoldingArea>()
                     .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateFilteredRecordsAreCleared(filteringData.GridViewHoldingAreaName,
-                                                                                                               clearRecords))
+                                                                                                               recordsCountBeforeFilter))
                     .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateRecordItemsCount(filteringData.GridViewHoldingAreaName))
                     .SelectFilterOption<HoldingArea>(ViewFilterOptions.All.ToDescription())
                     .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateFilterBoxIsHighlighted(ViewFilterOptions.All.ToDescription()));
@@ -223,7 +223,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                     .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateRecordItemsCount(filteringData.GridViewHoldingAreaName))
                     .ClickClearHyperlink<HoldingArea>()
                     .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateFilteredRecordsAreCleared(filteringData.GridViewHoldingAreaName,
-                                                                                                               clearRecords))
+                                                                                                               recordsCountBeforeFilter))
                     .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateRecordItemsCount(filteringData.GridViewHoldingAreaName));
 
                 // then

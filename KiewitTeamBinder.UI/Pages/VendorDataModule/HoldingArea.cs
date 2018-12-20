@@ -108,7 +108,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
                 new KeyValuePair<string, string>(MainPaneTableHeaderLabel.TransmittalNo.ToDescription(), "TRN-SMOKE")
             };
 
-            IReadOnlyCollection<IWebElement> DocumentRows = GetAvailableItems(gridViewName, conditions, false);
+            IReadOnlyCollection<IWebElement> DocumentRows = GetAvailableItemsOnCurrentPage(gridViewName, conditions, false);
             Math.Min(numberOfCheckbox, DocumentRows.Count);            
             for (int i = 0; i < numberOfCheckbox; i++)
             {

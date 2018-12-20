@@ -43,6 +43,8 @@ namespace KiewitTeamBinder.UI.Pages.Global
         private static By _imageOfFilterOptionByIndex(string selected, string index) => By.XPath($"//img[contains(@id,'Link{selected}{index}')]");
         private static By _imageOfFilterOptionByName(string selected, string name) => By.XPath($"//img[contains(@id,'Link{selected}') and contains(@title, '{name}')]");
         private static By _userNameLabel => By.Id("divUserName");
+        private static By _rowCountInInfoPartOfGridPager(string gridViewName) => By.XPath($"//table[contains(@id,'{gridViewName}')]//div[contains(@class,'rgInfoPart')]//span[contains(@id,'DSC')]");
+        private static By _pageCountInNumPartOfGridPager(string gridViewName) => By.XPath($"//table[contains(@id,'{gridViewName}')]//div[contains(@class,'rgNumPart')]//a");
 
         private static string _filterItemsXpath = "//tr[@valign='top' and not(contains(@style, 'hidden'))]";        
         private string _headerButtonXpath = "//a[span='{0}']";
@@ -71,6 +73,8 @@ namespace KiewitTeamBinder.UI.Pages.Global
         public IWebElement ImageOfFilterOptionByIndex(string selected, string index) => StableFindElement(_imageOfFilterOptionByIndex(selected, index));
         public IWebElement ImageOfFilterOptionByName(string selected, string name) => StableFindElement(_imageOfFilterOptionByName(selected, name));
         public IWebElement UserNameLabel { get { return StableFindElement(_userNameLabel); } }
+        public IWebElement RowCountInInfoPartOfGridPager(string gridViewName) => StableFindElement(_rowCountInInfoPartOfGridPager(gridViewName));
+        public IReadOnlyCollection<IWebElement> PageCountInNumPartOfGridPager(string gridViewName) => StableFindElements(_pageCountInNumPartOfGridPager(gridViewName));
         #endregion
 
         #region Actions
@@ -193,7 +197,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         }
 
 
-        protected IReadOnlyCollection<IWebElement> GetAvailableItems(string gridViewName, List<KeyValuePair<string, string>> columnValuePairList, bool contains=true)
+        protected IReadOnlyCollection<IWebElement> GetAvailableItemsOnCurrentPage(string gridViewName, List<KeyValuePair<string, string>> columnValuePairList, bool contains=true)
         {
             int rowIndex, colIndex = 1;
             string itemsXpath = _filterItemsXpath;
@@ -227,9 +231,28 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
         public int GetTableItemNumberWithConditions(string gridViewName, List<KeyValuePair<string, string>> columnValuePairList)
         {
-            IReadOnlyCollection<IWebElement> AvailableItems = GetAvailableItems(gridViewName, columnValuePairList);          
+            List<IWebElement> AvailableItems = new List<IWebElement> { };
             try
             {
+                //get pages count
+                List<IWebElement> GridPages = PageCountInNumPartOfGridPager(gridViewName).ToList();
+                for (int i = 0; i < GridPages.Count; i++)
+                {
+                    IReadOnlyCollection<IWebElement> matchedRows = GetAvailableItemsOnCurrentPage(gridViewName, columnValuePairList);
+                    if (matchedRows != null)
+                        AvailableItems.AddRange(matchedRows.ToList());
+                    if ((i + 1) != GridPages.Count)
+                    {
+                        GridPages[i + 1].Click();
+                        WaitForLoadingPanel();
+                    }
+                }
+                if (GridPages.Count > 1)
+                {
+                    PageCountInNumPartOfGridPager(gridViewName).First().ClickOnElement();
+                    WaitForLoadingPanel();
+                }
+
                 return AvailableItems.Count;
             }
             catch
@@ -238,14 +261,28 @@ namespace KiewitTeamBinder.UI.Pages.Global
             }
         }
 
-        public int GetTableItemNumber(string gridViewName)
+        public int GetTotalRowsVisibleInGrid(string gridViewName)
         {
             var node = StepNode();
+            int pagesCount, rowsCount;
             try
             {
-                var rows = VisibleRows(gridViewName).Count;
-                node.Info("Get number of items in table: " + rows);
-                return rows;
+                //get count of pages
+                List<IWebElement> GridPages = PageCountInNumPartOfGridPager(gridViewName).ToList();
+                pagesCount = GridPages.Count;
+                if (pagesCount > 1)
+                {
+                    GridPages.Last().ClickOnElement();
+                    WaitForLoadingPanel();
+                    rowsCount = (pagesCount - 1) * 100 + VisibleRows(gridViewName).Count;
+                    //return back 1st page
+                    PageCountInNumPartOfGridPager(gridViewName).First().ClickOnElement();
+                    WaitForLoadingPanel();
+                }
+                else
+                    rowsCount =  VisibleRows(gridViewName).Count;
+                node.Info("Get number of items in table: " + rowsCount);
+                return rowsCount;
             }
             catch
             {
@@ -271,7 +308,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             var node = StepNode();
             try
             {
-                int totalRecords = GetTableItemNumber(gridViewName);
+                int totalRecords = GetTotalRowsVisibleInGrid(gridViewName);
                 int fileredRecords = GetTableItemNumberWithConditions(gridViewName, ValueInColumn);
 
                 if (totalRecords == fileredRecords && totalRecords == expectedNumberOfRecord)
@@ -290,7 +327,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             var node = StepNode();
             try
             {
-                int totalRecords = GetTableItemNumber(gridViewName);
+                int totalRecords = GetTotalRowsVisibleInGrid(gridViewName);
                 var valueInColumn = new List<KeyValuePair<string, string>> { new KeyValuePair<string, string>(columnName, value) };
                 int numberOfCorrectRow = GetTableItemNumberWithConditions(gridViewName, valueInColumn);
 
@@ -310,7 +347,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             var node = StepNode();
             try
             {
-                int totalRecords = GetTableItemNumber(gridViewName);
+                int totalRecords = GetTotalRowsVisibleInGrid(gridViewName);
                 
                 if (totalRecords == expectedNumberOfClearRecord)
                     return SetPassValidation(node, Validation.Filtered_Records_Are_Cleared);
@@ -379,7 +416,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         // moduleName: Mail/Transmittals/Vendor Data
         public virtual KeyValuePair<string, bool> ValidateRecordItemsCount(string gridViewName)
         {
-            int itemsNumber = GetTableItemNumber(gridViewName);
+            int itemsNumber = GetTotalRowsVisibleInGrid(gridViewName);
             var node = StepNode();
             node.Info($"Validate number of record items is equals to: {itemsNumber}");
             try
