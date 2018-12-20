@@ -54,6 +54,8 @@
     <Compile Include="TestAccountAccess.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestData\FilteringSmoke.cs" />
+    <Compile Include="TestData\SendEmailSmoke.cs" />
+    <Compile Include="TestData\VerifyDocumentCountSmoke.cs" />
     <Compile Include="TestData\TransmitDocumentSmoke.cs" />
     <Compile Include="TestData\BulkUploadDocumentsSmoke.cs" />
     <Compile Include="TestData\NavigateToModulesFromTheLeftNavSmoke.cs" />

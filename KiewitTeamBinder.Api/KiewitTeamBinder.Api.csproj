@@ -7,8 +7,8 @@
     <ProjectGuid>{953E14AD-F154-426C-AD69-92A56FBDE62F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>KiewitTeamBinder.API</RootNamespace>
-    <AssemblyName>KiewitTeamBinder.API</AssemblyName>
+    <RootNamespace>KiewitTeamBinder.Api</RootNamespace>
+    <AssemblyName>KiewitTeamBinder.Api</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -44,6 +44,8 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -53,33 +55,96 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApiBase.cs" />
-    <Compile Include="Control\ControlItemApi.cs" />
-    <Compile Include="Core\Project.cs" />
     <Compile Include="Helper\NewtonsoftJsonSerializer.cs" />
-    <Compile Include="Models\AccountProjectRequest.cs" />
-    <Compile Include="Models\BudgetLockUnLock.cs" />
-    <Compile Include="Models\CostItem.cs" />
-    <Compile Include="Models\CurrentEstimateDetail.cs" />
-    <Compile Include="Models\ForecastTOQtyProp.cs" />
-    <Compile Include="Models\CostCategoryDetailsVm.cs" />
-    <Compile Include="Models\NewCostItemVm.cs" />
-    <Compile Include="Models\OdataResponse.cs" />
-    <Compile Include="Models\ProjectResponse.cs" />
-    <Compile Include="Models\WorkspaceViewData.cs" />
+    <Compile Include="Service\Mail.cs" />
+    <Compile Include="Service\Document.cs" />
+    <Compile Include="Service\Session.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service References\DocumentServiceReference\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\MailServiceReference\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\SessionServiceReference\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Plan\" />
+    <None Include="Service References\MailServiceReference\mail.disco" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
+    <None Include="Properties\DataSources\System.Data.DataSet.datasource" />
+    <None Include="Properties\DataSources\System.Data.DataTable.datasource" />
+    <None Include="Service References\DocumentServiceReference\Document.wsdl" />
+    <None Include="Service References\MailServiceReference\mail.wsdl" />
+    <None Include="Service References\SessionServiceReference\Session.wsdl" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\KiewitTeamBinder.Common\KiewitTeamBinder.Common.csproj">
       <Project>{2f0e5a22-47a2-4953-951a-2bee5a205df3}</Project>
       <Name>KiewitTeamBinder.Common</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\DocumentServiceReference\" />
+    <WCFMetadataStorage Include="Service References\MailServiceReference\" />
+    <WCFMetadataStorage Include="Service References\SessionServiceReference\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\SessionServiceReference\Session.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\SessionServiceReference\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\SessionServiceReference\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\SessionServiceReference\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\DocumentServiceReference\Document.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\DocumentServiceReference\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\DocumentServiceReference\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\DocumentServiceReference\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\MailServiceReference\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\MailServiceReference\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\MailServiceReference\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
