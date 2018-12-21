@@ -1,0 +1,994 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://www.qa-software.com/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://www.qa-software.com/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://www.qa-software.com/">
+      <s:element name="Logon">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="userID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="companyID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="projNo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="connectingProduct" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="LogonResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="LogonResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="LogonWithApplication">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="userID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="companyID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="projNo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="connectingProduct" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="LogonWithApplicationResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="LogonWithApplicationResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="LogOff">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="sessionKey" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="LogOffResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="LogoffStatus">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="sessionKey" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="LogoffStatusResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="LogoffStatusResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserProjectsList">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="userID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="companyID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserProjectsListResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetUserProjectsListResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="IsValidSession">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="sessionKey" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="IsValidSessionResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="IsValidSessionResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CheckAndGetSessionKey">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="sessionKey" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="projMasterKey" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="projectKey" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CheckAndGetSessionKeyResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CheckAndGetSessionKeyResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AutoLogin">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="guid" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AutoLoginResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AutoLoginResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AutoLoginWithApplication">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="guid" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="connectingProduct" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="loginMethod" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AutoLoginWithApplicationResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AutoLoginWithApplicationResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetSessionInformation">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="sessionKey" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetSessionInformationResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetSessionInformationResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ListLogonHistory">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="sessionKey" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="targetUserKey" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="filter" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="orderBy" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ListLogonHistoryResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ListLogonHistoryResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="string" nillable="true" type="s:string" />
+      <s:element name="DataTable" nillable="true">
+        <s:complexType>
+          <s:sequence>
+            <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+            <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="LogonSoapIn">
+    <wsdl:part name="parameters" element="tns:Logon" />
+  </wsdl:message>
+  <wsdl:message name="LogonSoapOut">
+    <wsdl:part name="parameters" element="tns:LogonResponse" />
+  </wsdl:message>
+  <wsdl:message name="LogonWithApplicationSoapIn">
+    <wsdl:part name="parameters" element="tns:LogonWithApplication" />
+  </wsdl:message>
+  <wsdl:message name="LogonWithApplicationSoapOut">
+    <wsdl:part name="parameters" element="tns:LogonWithApplicationResponse" />
+  </wsdl:message>
+  <wsdl:message name="LogOffSoapIn">
+    <wsdl:part name="parameters" element="tns:LogOff" />
+  </wsdl:message>
+  <wsdl:message name="LogOffSoapOut">
+    <wsdl:part name="parameters" element="tns:LogOffResponse" />
+  </wsdl:message>
+  <wsdl:message name="LogoffStatusSoapIn">
+    <wsdl:part name="parameters" element="tns:LogoffStatus" />
+  </wsdl:message>
+  <wsdl:message name="LogoffStatusSoapOut">
+    <wsdl:part name="parameters" element="tns:LogoffStatusResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetUserProjectsListSoapIn">
+    <wsdl:part name="parameters" element="tns:GetUserProjectsList" />
+  </wsdl:message>
+  <wsdl:message name="GetUserProjectsListSoapOut">
+    <wsdl:part name="parameters" element="tns:GetUserProjectsListResponse" />
+  </wsdl:message>
+  <wsdl:message name="IsValidSessionSoapIn">
+    <wsdl:part name="parameters" element="tns:IsValidSession" />
+  </wsdl:message>
+  <wsdl:message name="IsValidSessionSoapOut">
+    <wsdl:part name="parameters" element="tns:IsValidSessionResponse" />
+  </wsdl:message>
+  <wsdl:message name="CheckAndGetSessionKeySoapIn">
+    <wsdl:part name="parameters" element="tns:CheckAndGetSessionKey" />
+  </wsdl:message>
+  <wsdl:message name="CheckAndGetSessionKeySoapOut">
+    <wsdl:part name="parameters" element="tns:CheckAndGetSessionKeyResponse" />
+  </wsdl:message>
+  <wsdl:message name="AutoLoginSoapIn">
+    <wsdl:part name="parameters" element="tns:AutoLogin" />
+  </wsdl:message>
+  <wsdl:message name="AutoLoginSoapOut">
+    <wsdl:part name="parameters" element="tns:AutoLoginResponse" />
+  </wsdl:message>
+  <wsdl:message name="AutoLoginWithApplicationSoapIn">
+    <wsdl:part name="parameters" element="tns:AutoLoginWithApplication" />
+  </wsdl:message>
+  <wsdl:message name="AutoLoginWithApplicationSoapOut">
+    <wsdl:part name="parameters" element="tns:AutoLoginWithApplicationResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetSessionInformationSoapIn">
+    <wsdl:part name="parameters" element="tns:GetSessionInformation" />
+  </wsdl:message>
+  <wsdl:message name="GetSessionInformationSoapOut">
+    <wsdl:part name="parameters" element="tns:GetSessionInformationResponse" />
+  </wsdl:message>
+  <wsdl:message name="ListLogonHistorySoapIn">
+    <wsdl:part name="parameters" element="tns:ListLogonHistory" />
+  </wsdl:message>
+  <wsdl:message name="ListLogonHistorySoapOut">
+    <wsdl:part name="parameters" element="tns:ListLogonHistoryResponse" />
+  </wsdl:message>
+  <wsdl:message name="LogonHttpGetIn">
+    <wsdl:part name="userID" type="s:string" />
+    <wsdl:part name="companyID" type="s:string" />
+    <wsdl:part name="password" type="s:string" />
+    <wsdl:part name="projNo" type="s:string" />
+    <wsdl:part name="connectingProduct" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="LogonHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="LogonWithApplicationHttpGetIn">
+    <wsdl:part name="userID" type="s:string" />
+    <wsdl:part name="companyID" type="s:string" />
+    <wsdl:part name="password" type="s:string" />
+    <wsdl:part name="projNo" type="s:string" />
+    <wsdl:part name="connectingProduct" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="LogonWithApplicationHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="LogOffHttpGetIn">
+    <wsdl:part name="sessionKey" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="LogOffHttpGetOut" />
+  <wsdl:message name="LogoffStatusHttpGetIn">
+    <wsdl:part name="sessionKey" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="LogoffStatusHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserProjectsListHttpGetIn">
+    <wsdl:part name="userID" type="s:string" />
+    <wsdl:part name="companyID" type="s:string" />
+    <wsdl:part name="password" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserProjectsListHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="IsValidSessionHttpGetIn">
+    <wsdl:part name="sessionKey" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="IsValidSessionHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="CheckAndGetSessionKeyHttpGetIn">
+    <wsdl:part name="sessionKey" type="s:string" />
+    <wsdl:part name="projMasterKey" type="s:string" />
+    <wsdl:part name="projectKey" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="CheckAndGetSessionKeyHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="AutoLoginHttpGetIn">
+    <wsdl:part name="guid" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="AutoLoginHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="AutoLoginWithApplicationHttpGetIn">
+    <wsdl:part name="guid" type="s:string" />
+    <wsdl:part name="connectingProduct" type="s:string" />
+    <wsdl:part name="loginMethod" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="AutoLoginWithApplicationHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="GetSessionInformationHttpGetIn">
+    <wsdl:part name="sessionKey" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetSessionInformationHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="ListLogonHistoryHttpGetIn">
+    <wsdl:part name="sessionKey" type="s:string" />
+    <wsdl:part name="targetUserKey" type="s:string" />
+    <wsdl:part name="filter" type="s:string" />
+    <wsdl:part name="orderBy" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="ListLogonHistoryHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="LogonHttpPostIn">
+    <wsdl:part name="userID" type="s:string" />
+    <wsdl:part name="companyID" type="s:string" />
+    <wsdl:part name="password" type="s:string" />
+    <wsdl:part name="projNo" type="s:string" />
+    <wsdl:part name="connectingProduct" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="LogonHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="LogonWithApplicationHttpPostIn">
+    <wsdl:part name="userID" type="s:string" />
+    <wsdl:part name="companyID" type="s:string" />
+    <wsdl:part name="password" type="s:string" />
+    <wsdl:part name="projNo" type="s:string" />
+    <wsdl:part name="connectingProduct" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="LogonWithApplicationHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="LogOffHttpPostIn">
+    <wsdl:part name="sessionKey" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="LogOffHttpPostOut" />
+  <wsdl:message name="LogoffStatusHttpPostIn">
+    <wsdl:part name="sessionKey" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="LogoffStatusHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserProjectsListHttpPostIn">
+    <wsdl:part name="userID" type="s:string" />
+    <wsdl:part name="companyID" type="s:string" />
+    <wsdl:part name="password" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserProjectsListHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="IsValidSessionHttpPostIn">
+    <wsdl:part name="sessionKey" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="IsValidSessionHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="CheckAndGetSessionKeyHttpPostIn">
+    <wsdl:part name="sessionKey" type="s:string" />
+    <wsdl:part name="projMasterKey" type="s:string" />
+    <wsdl:part name="projectKey" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="CheckAndGetSessionKeyHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="AutoLoginHttpPostIn">
+    <wsdl:part name="guid" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="AutoLoginHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="AutoLoginWithApplicationHttpPostIn">
+    <wsdl:part name="guid" type="s:string" />
+    <wsdl:part name="connectingProduct" type="s:string" />
+    <wsdl:part name="loginMethod" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="AutoLoginWithApplicationHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="GetSessionInformationHttpPostIn">
+    <wsdl:part name="sessionKey" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetSessionInformationHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="ListLogonHistoryHttpPostIn">
+    <wsdl:part name="sessionKey" type="s:string" />
+    <wsdl:part name="targetUserKey" type="s:string" />
+    <wsdl:part name="filter" type="s:string" />
+    <wsdl:part name="orderBy" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="ListLogonHistoryHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:portType name="SessionWebServiceSoap">
+    <wsdl:operation name="Logon">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">***** DEPRECATED - DO NOT USE THIS METHOD ***** Use LogonWithApplication instead</wsdl:documentation>
+      <wsdl:input message="tns:LogonSoapIn" />
+      <wsdl:output message="tns:LogonSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="LogonWithApplication">
+      <wsdl:input message="tns:LogonWithApplicationSoapIn" />
+      <wsdl:output message="tns:LogonWithApplicationSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="LogOff">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">***** DEPRECATED - DO NOT USE THIS METHOD ***** Use LogoffStatus instead</wsdl:documentation>
+      <wsdl:input message="tns:LogOffSoapIn" />
+      <wsdl:output message="tns:LogOffSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="LogoffStatus">
+      <wsdl:input message="tns:LogoffStatusSoapIn" />
+      <wsdl:output message="tns:LogoffStatusSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserProjectsList">
+      <wsdl:input message="tns:GetUserProjectsListSoapIn" />
+      <wsdl:output message="tns:GetUserProjectsListSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="IsValidSession">
+      <wsdl:input message="tns:IsValidSessionSoapIn" />
+      <wsdl:output message="tns:IsValidSessionSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CheckAndGetSessionKey">
+      <wsdl:input message="tns:CheckAndGetSessionKeySoapIn" />
+      <wsdl:output message="tns:CheckAndGetSessionKeySoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AutoLogin">
+      <wsdl:input message="tns:AutoLoginSoapIn" />
+      <wsdl:output message="tns:AutoLoginSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AutoLoginWithApplication">
+      <wsdl:input message="tns:AutoLoginWithApplicationSoapIn" />
+      <wsdl:output message="tns:AutoLoginWithApplicationSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetSessionInformation">
+      <wsdl:input message="tns:GetSessionInformationSoapIn" />
+      <wsdl:output message="tns:GetSessionInformationSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ListLogonHistory">
+      <wsdl:input message="tns:ListLogonHistorySoapIn" />
+      <wsdl:output message="tns:ListLogonHistorySoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="SessionWebServiceHttpGet">
+    <wsdl:operation name="Logon">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">***** DEPRECATED - DO NOT USE THIS METHOD ***** Use LogonWithApplication instead</wsdl:documentation>
+      <wsdl:input message="tns:LogonHttpGetIn" />
+      <wsdl:output message="tns:LogonHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="LogonWithApplication">
+      <wsdl:input message="tns:LogonWithApplicationHttpGetIn" />
+      <wsdl:output message="tns:LogonWithApplicationHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="LogOff">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">***** DEPRECATED - DO NOT USE THIS METHOD ***** Use LogoffStatus instead</wsdl:documentation>
+      <wsdl:input message="tns:LogOffHttpGetIn" />
+      <wsdl:output message="tns:LogOffHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="LogoffStatus">
+      <wsdl:input message="tns:LogoffStatusHttpGetIn" />
+      <wsdl:output message="tns:LogoffStatusHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserProjectsList">
+      <wsdl:input message="tns:GetUserProjectsListHttpGetIn" />
+      <wsdl:output message="tns:GetUserProjectsListHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="IsValidSession">
+      <wsdl:input message="tns:IsValidSessionHttpGetIn" />
+      <wsdl:output message="tns:IsValidSessionHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CheckAndGetSessionKey">
+      <wsdl:input message="tns:CheckAndGetSessionKeyHttpGetIn" />
+      <wsdl:output message="tns:CheckAndGetSessionKeyHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AutoLogin">
+      <wsdl:input message="tns:AutoLoginHttpGetIn" />
+      <wsdl:output message="tns:AutoLoginHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AutoLoginWithApplication">
+      <wsdl:input message="tns:AutoLoginWithApplicationHttpGetIn" />
+      <wsdl:output message="tns:AutoLoginWithApplicationHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetSessionInformation">
+      <wsdl:input message="tns:GetSessionInformationHttpGetIn" />
+      <wsdl:output message="tns:GetSessionInformationHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ListLogonHistory">
+      <wsdl:input message="tns:ListLogonHistoryHttpGetIn" />
+      <wsdl:output message="tns:ListLogonHistoryHttpGetOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="SessionWebServiceHttpPost">
+    <wsdl:operation name="Logon">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">***** DEPRECATED - DO NOT USE THIS METHOD ***** Use LogonWithApplication instead</wsdl:documentation>
+      <wsdl:input message="tns:LogonHttpPostIn" />
+      <wsdl:output message="tns:LogonHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="LogonWithApplication">
+      <wsdl:input message="tns:LogonWithApplicationHttpPostIn" />
+      <wsdl:output message="tns:LogonWithApplicationHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="LogOff">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">***** DEPRECATED - DO NOT USE THIS METHOD ***** Use LogoffStatus instead</wsdl:documentation>
+      <wsdl:input message="tns:LogOffHttpPostIn" />
+      <wsdl:output message="tns:LogOffHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="LogoffStatus">
+      <wsdl:input message="tns:LogoffStatusHttpPostIn" />
+      <wsdl:output message="tns:LogoffStatusHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserProjectsList">
+      <wsdl:input message="tns:GetUserProjectsListHttpPostIn" />
+      <wsdl:output message="tns:GetUserProjectsListHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="IsValidSession">
+      <wsdl:input message="tns:IsValidSessionHttpPostIn" />
+      <wsdl:output message="tns:IsValidSessionHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CheckAndGetSessionKey">
+      <wsdl:input message="tns:CheckAndGetSessionKeyHttpPostIn" />
+      <wsdl:output message="tns:CheckAndGetSessionKeyHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AutoLogin">
+      <wsdl:input message="tns:AutoLoginHttpPostIn" />
+      <wsdl:output message="tns:AutoLoginHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AutoLoginWithApplication">
+      <wsdl:input message="tns:AutoLoginWithApplicationHttpPostIn" />
+      <wsdl:output message="tns:AutoLoginWithApplicationHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetSessionInformation">
+      <wsdl:input message="tns:GetSessionInformationHttpPostIn" />
+      <wsdl:output message="tns:GetSessionInformationHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ListLogonHistory">
+      <wsdl:input message="tns:ListLogonHistoryHttpPostIn" />
+      <wsdl:output message="tns:ListLogonHistoryHttpPostOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="SessionWebServiceSoap" type="tns:SessionWebServiceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="Logon">
+      <soap:operation soapAction="http://www.qa-software.com/Logon" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LogonWithApplication">
+      <soap:operation soapAction="http://www.qa-software.com/LogonWithApplication" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LogOff">
+      <soap:operation soapAction="http://www.qa-software.com/LogOff" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LogoffStatus">
+      <soap:operation soapAction="http://www.qa-software.com/LogoffStatus" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserProjectsList">
+      <soap:operation soapAction="http://www.qa-software.com/GetUserProjectsList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsValidSession">
+      <soap:operation soapAction="http://www.qa-software.com/IsValidSession" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CheckAndGetSessionKey">
+      <soap:operation soapAction="http://www.qa-software.com/CheckAndGetSessionKey" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AutoLogin">
+      <soap:operation soapAction="http://www.qa-software.com/AutoLogin" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AutoLoginWithApplication">
+      <soap:operation soapAction="http://www.qa-software.com/AutoLoginWithApplication" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSessionInformation">
+      <soap:operation soapAction="http://www.qa-software.com/GetSessionInformation" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListLogonHistory">
+      <soap:operation soapAction="http://www.qa-software.com/ListLogonHistory" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="SessionWebServiceSoap12" type="tns:SessionWebServiceSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="Logon">
+      <soap12:operation soapAction="http://www.qa-software.com/Logon" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LogonWithApplication">
+      <soap12:operation soapAction="http://www.qa-software.com/LogonWithApplication" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LogOff">
+      <soap12:operation soapAction="http://www.qa-software.com/LogOff" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LogoffStatus">
+      <soap12:operation soapAction="http://www.qa-software.com/LogoffStatus" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserProjectsList">
+      <soap12:operation soapAction="http://www.qa-software.com/GetUserProjectsList" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsValidSession">
+      <soap12:operation soapAction="http://www.qa-software.com/IsValidSession" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CheckAndGetSessionKey">
+      <soap12:operation soapAction="http://www.qa-software.com/CheckAndGetSessionKey" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AutoLogin">
+      <soap12:operation soapAction="http://www.qa-software.com/AutoLogin" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AutoLoginWithApplication">
+      <soap12:operation soapAction="http://www.qa-software.com/AutoLoginWithApplication" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSessionInformation">
+      <soap12:operation soapAction="http://www.qa-software.com/GetSessionInformation" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListLogonHistory">
+      <soap12:operation soapAction="http://www.qa-software.com/ListLogonHistory" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="SessionWebServiceHttpGet" type="tns:SessionWebServiceHttpGet">
+    <http:binding verb="GET" />
+    <wsdl:operation name="Logon">
+      <http:operation location="/Logon" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LogonWithApplication">
+      <http:operation location="/LogonWithApplication" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LogOff">
+      <http:operation location="/LogOff" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output />
+    </wsdl:operation>
+    <wsdl:operation name="LogoffStatus">
+      <http:operation location="/LogoffStatus" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserProjectsList">
+      <http:operation location="/GetUserProjectsList" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsValidSession">
+      <http:operation location="/IsValidSession" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CheckAndGetSessionKey">
+      <http:operation location="/CheckAndGetSessionKey" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AutoLogin">
+      <http:operation location="/AutoLogin" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AutoLoginWithApplication">
+      <http:operation location="/AutoLoginWithApplication" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSessionInformation">
+      <http:operation location="/GetSessionInformation" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListLogonHistory">
+      <http:operation location="/ListLogonHistory" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="SessionWebServiceHttpPost" type="tns:SessionWebServiceHttpPost">
+    <http:binding verb="POST" />
+    <wsdl:operation name="Logon">
+      <http:operation location="/Logon" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LogonWithApplication">
+      <http:operation location="/LogonWithApplication" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LogOff">
+      <http:operation location="/LogOff" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output />
+    </wsdl:operation>
+    <wsdl:operation name="LogoffStatus">
+      <http:operation location="/LogoffStatus" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserProjectsList">
+      <http:operation location="/GetUserProjectsList" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsValidSession">
+      <http:operation location="/IsValidSession" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CheckAndGetSessionKey">
+      <http:operation location="/CheckAndGetSessionKey" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AutoLogin">
+      <http:operation location="/AutoLogin" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AutoLoginWithApplication">
+      <http:operation location="/AutoLoginWithApplication" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSessionInformation">
+      <http:operation location="/GetSessionInformation" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListLogonHistory">
+      <http:operation location="/ListLogonHistory" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="SessionWebService">
+    <wsdl:port name="SessionWebServiceSoap" binding="tns:SessionWebServiceSoap">
+      <soap:address location="https://kiewittest.teambinder.com/TBWS/Session.asmx" />
+    </wsdl:port>
+    <wsdl:port name="SessionWebServiceSoap12" binding="tns:SessionWebServiceSoap12">
+      <soap12:address location="https://kiewittest.teambinder.com/TBWS/Session.asmx" />
+    </wsdl:port>
+    <wsdl:port name="SessionWebServiceHttpGet" binding="tns:SessionWebServiceHttpGet">
+      <http:address location="https://kiewittest.teambinder.com/TBWS/Session.asmx" />
+    </wsdl:port>
+    <wsdl:port name="SessionWebServiceHttpPost" binding="tns:SessionWebServiceHttpPost">
+      <http:address location="https://kiewittest.teambinder.com/TBWS/Session.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
