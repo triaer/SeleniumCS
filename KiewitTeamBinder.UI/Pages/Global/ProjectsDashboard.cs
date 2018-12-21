@@ -97,6 +97,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         public void WaitForLoadingPanel()
         {
             WaitForLoading(_loadingPanel);
+            WaitForElementEnable(By.XPath("//div[contains(@id,'_GridData')]"));
         }
             
         private void ClickMenuItem(string menuItem)
@@ -251,6 +252,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
                     {
                         GridPages[i + 1].Click();
                         WaitForLoadingPanel();
+                        GridPages = PageCountInNumPartOfGridPager(gridViewName).ToList();
                     }
                 }
                 if (GridPages.Count > 1)

@@ -16,7 +16,7 @@ namespace KiewitTeamBinder.Common.TestData
         public string ProjectNumber = "AUTO1";
         public string GridViewHoldingAreaName = "GridViewHoldingArea";
         public static string FilterValue1 = "AUTO 3";
-        public static string FilterValue2 = "AUTO 1";
+        public static string FilterValue2 = "AUTO 2";
         public string ValueInHoldingProcessStatusColumn = "New";
         public string FromUser = "Automation Admin1 (Kiewit)";
 
