@@ -28,7 +28,7 @@ namespace KiewitTeamBinder.Api.Service
             try
             {
                 if (!sessionKey.ToUpper().Contains("ERROR"))
-                    return new KeyValuePair<string, bool>(Validation.Logon_With_Application_Successfully, true);
+                    return new KeyValuePair<string, bool>(Validation.Logon_With_Application_Successfully + sessionKey, true);
                 return new KeyValuePair<string, bool>(Validation.Logon_With_Application_Successfully + ", " + sessionKey, false);
             }
             catch (Exception e)
@@ -53,7 +53,7 @@ namespace KiewitTeamBinder.Api.Service
 
         private static class Validation
         {
-            public static string Logon_With_Application_Successfully = "Validate that logon with application successfully";
+            public static string Logon_With_Application_Successfully = "Validate that logon with application successfully. Returned sessionKey: ";
             public static string Logoff_Status_Successfully = "Validate that logoff status successfully";
         }
         #endregion
