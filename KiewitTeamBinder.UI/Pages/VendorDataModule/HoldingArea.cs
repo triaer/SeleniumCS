@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using KiewitTeamBinder.UI.Pages.Global;
+using KiewitTeamBinder.UI.Pages.PopupWindows;
 using OpenQA.Selenium;
 using static KiewitTeamBinder.UI.ExtentReportsHelper;
 using static KiewitTeamBinder.Common.KiewitTeamBinderENums;

@@ -7,7 +7,6 @@ using KiewitTeamBinder.Common;
 using OpenQA.Selenium;
 using SeleniumExtras.PageObjects;
 using System.Windows.Forms;
-using KiewitTeamBinder.UI.Pages.Global;
 
 namespace KiewitTeamBinder.UI.Pages.Global
 {

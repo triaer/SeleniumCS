@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using FluentAssertions;
 using KiewitTeamBinder.Common.Helper;
+using KiewitTeamBinder.UI.Pages.PopupWindows;
 using KiewitTeamBinder.UI.Pages.Global;
 using KiewitTeamBinder.UI.Pages.VendorDataModule;
 using KiewitTeamBinder.Common.TestData;
@@ -119,11 +120,11 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 ProjectsDashboard projectDashBoard = projectsList.NavigateToProjectDashboardPage(transmitDocData.ProjectName);
 
                 test = LogTest("Pre-condition: Upload two documents");
-                projectDashBoard.SelectModuleMenuItem<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription());
+                projectDashBoard.SelectModuleMenuItem<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription(), waitForLoading: false);
                 HoldingArea holdingArea = projectDashBoard.SelectModuleMenuItem<HoldingArea>(subMenuItem: ModuleSubMenuInLeftNav.HOLDINGAREA.ToDescription());
                 BulkUploadDocuments bulkUploadDocuments = holdingArea.ClickBulkUploadButton(out currentWindow);
                 bulkUploadDocuments.CreateDataOnRow<HoldingArea>(2);
-                
+
                 //when User Story 120157 - 119696 Transmit Documents
                 test = LogTest("Transmit Documents");
                 string[] selectedDocuments = new string[transmitDocData.NumberOfSelectedDocumentRow];

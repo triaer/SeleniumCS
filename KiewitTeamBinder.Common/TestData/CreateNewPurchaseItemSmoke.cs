@@ -18,7 +18,7 @@ namespace KiewitTeamBinder.Common.TestData
         public KeyValuePair<string, string> Description = new KeyValuePair<string, string>("Description", "Description content");
         public KeyValuePair<string, string> ContractNumber = new KeyValuePair<string, string>("Contract Number", "1234567");
         public KeyValuePair<string, string> Status = new KeyValuePair<string, string>("Status", "OPEN - OPEN");
-        
+        public string SaveMessage = "Saved Successfully";
         //public PurchasedItemInfo ItemInformation = new PurchasedItemInfo()
         //{
         //    ItemID = new KeyValuePair<string, string>("Item ID", Utils.GetRandomValue("ItemID")),

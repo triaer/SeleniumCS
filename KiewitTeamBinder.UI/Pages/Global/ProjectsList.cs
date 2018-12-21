@@ -1,6 +1,5 @@
 ﻿using KiewitTeamBinder.Common.Helper;
 using KiewitTeamBinder.UI.Pages;
-using KiewitTeamBinder.UI.Pages.Global;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using System;

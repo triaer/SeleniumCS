@@ -5,7 +5,6 @@ using System.Collections.ObjectModel;
 using System.Text;
 using System.Threading.Tasks;
 using OpenQA.Selenium;
-using KiewitTeamBinder.UI.Pages.Global;
 using static KiewitTeamBinder.UI.ExtentReportsHelper;
 using KiewitTeamBinder.Common;
 using OpenQA.Selenium.Support.UI;
@@ -15,9 +14,9 @@ using KiewitTeamBinder.UI.Pages.Dialogs;
 using KiewitTeamBinder.UI.Pages.VendorDataModule;
 
 
-namespace KiewitTeamBinder.UI.Pages.Global
+namespace KiewitTeamBinder.UI.Pages.PopupWindows
 {
-    public class NewTransmittal : ProjectsDashboard
+    public class NewTransmittal : PopupWindow
     {
         #region Entities
         private static By _iframeMessage => By.XPath("//iframe[contains(@id,'RadEditorMessage_contentIframe')]");
@@ -28,14 +27,14 @@ namespace KiewitTeamBinder.UI.Pages.Global
         private static By _subjectTextField => By.Id("txtSubject");
         private static By _messageTextField => By.XPath("//body[@spellcheck]");
         private static By _linkDocumentExpandIcon => By.Id("LinkDocumentExpandIcon");
-        private static By _reasonForIssueDropdown => By.Id("ctl157_cboReason_Arrow");
+        private static By _reasonForIssueDropdown => By.XPath("//a[contains(@id, 'cboReason_Arrow')]");
         private static By _reasonForIssueData => By.XPath("//div[contains(@id,'Reason_DropDown')]//ul/li");
-        private static By _respondByMessageDropdown => By.Id("ctl157_cboRespondMessage_Arrow");
+        private static By _respondByMessageDropdown => By.XPath("//a[contains(@id, 'cboRespondMessage_Arrow')]");
         private static By _respondByMessageData => By.XPath("//div[contains(@id,'RespondMessage_DropDown')]//ul/li");
-        private static By _respondByDateIcon => By.Id("ctl157_RespondByDate_popupButton");
-        private static By _respondByDateData => By.Id("ctl157_RespondByDate_calendar_wrapper");
+        private static By _respondByDateIcon => By.XPath("//a[contains(@id, 'RespondByDate_popupButton')]");
+        private static By _respondByDateData => By.XPath("//div[contains(@id, 'RespondByDate_calendar_wrapper')]");
 
-        private static string _filterItemsXpath = "//tr[@valign='top']";
+        private static string _filterItemsXpath = "//tr[@valign='top' and not(contains(@style, 'hidden'))]";
 
         public IWebElement IframeMessage { get { return StableFindElement(_iframeMessage); } }
         public IWebElement RecipientsButton(string buttonName) => StableFindElement(_recipientsButton(buttonName));
@@ -107,11 +106,10 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
             return this;
         }
+
         public TransmittalDetail ClickSendButton(ref List<KeyValuePair<string, bool>> methodValidation)
-        {
-            //string window;
-            //SwitchToPopUpWindow(ToolbarButton(KiewitTeamBinderENums.ToolbarButton.Send.ToDescription()), out window, true);
-            ToolBarButton(KiewitTeamBinderENums.ToolbarButton.Send.ToDescription()).Click();
+        {            
+            ClickToolbarButton<TransmittalDetail>(KiewitTeamBinderENums.ToolbarButton.Send);
             methodValidation.Add(ValidateProgressContentMessage("Please wait while transmittal is being sent"));
             return new TransmittalDetail(WebDriver);
         }
