@@ -43,7 +43,9 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
             //Fill account fields
             UserIdTextbox.InputText(account.Username);
+            WaitForElementEnable(_companyIdTextbox);
             CompanyIdTextbox.InputText(account.Company);
+            WaitForElementEnable(_passwordTextbox);
             PasswordTextbox.InputText(account.Password);
 
             //Click LogIn button

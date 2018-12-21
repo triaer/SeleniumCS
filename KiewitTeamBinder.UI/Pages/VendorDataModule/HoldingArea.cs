@@ -72,6 +72,8 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
 
         public HoldingArea FilterDocumentsByGridFilterRow(string columnName, string value, bool useFilterMenu = false, FilterOptions optionItem = FilterOptions.Contains, bool waitForLoading = true)
         {
+            var node = StepNode();
+            node.Info($"Filter the '{columnName}' column with value '{value}'");
             IWebElement FilterCell = StableFindElement(By.XPath(string.Format(_filterTextBoxXpath,columnName)));
             IWebElement FilterTextBox = FilterCell.StableFindElement(By.TagName("input"));
             FilterTextBox.InputText(value);

@@ -263,6 +263,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 //skip the action
             }
         }
+        
         internal static void WaitUntilJSReady(int timeoutSec = mediumTimeout)
         {
             var wait = Browser.Wait(timeoutSec);
