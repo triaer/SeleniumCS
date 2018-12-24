@@ -41,7 +41,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             var node = StepNode();
             node.Info("Click Bulk Upload button in Holding Area header");
             IWebElement FunctionButton = StableFindElement(By.XPath(string.Format(_functionButton, "Bulk Upload")));
-            SwitchToPopUpWindow(FunctionButton, out currentWindow, false);
+            SwitchToNewPopUpWindow(FunctionButton, out currentWindow, false);
             return new BulkUploadDocuments(WebDriver);
         }
 
@@ -50,7 +50,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             string currentWindow;
             var node = StepNode();
             node.Info("Click Create Transmittals item from Transmit dropdown list in Holding Area header");
-            SwitchToPopUpWindow(HeaderDropdownItem("Create Transmittals"), out currentWindow, false);
+            SwitchToNewPopUpWindow(HeaderDropdownItem("Create Transmittals"), out currentWindow, false);
             return new NewTransmittal(WebDriver);
         }
 
@@ -59,7 +59,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             var node = StepNode();
             node.Info("Click New button in Holding Area Header");
             IWebElement FunctionButton = StableFindElement(By.XPath(string.Format(_functionButton, "New")));
-            SwitchToPopUpWindow(FunctionButton, out currentWindow, false);
+            SwitchToNewPopUpWindow(FunctionButton, out currentWindow, false);
             WaitForElementDisplay(By.Id("walkme-player"));
             return new DocumentDetail(WebDriver);
         }

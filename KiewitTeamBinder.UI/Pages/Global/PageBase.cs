@@ -623,7 +623,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             excelDriver.Close();
         }
 
-        internal static void SwitchToPopUpWindow(IWebElement ElementToBeClicked, out string parentWindow, bool closePreviousWindow = false, bool doubleClick = false, int timeout = 30)
+        internal static void SwitchToNewPopUpWindow(IWebElement ElementToBeClicked, out string parentWindow, bool closePreviousWindow = false, bool doubleClick = false, int timeout = 30)
         {
             parentWindow = WebDriver.CurrentWindowHandle;
             ReadOnlyCollection<string> originalHandles = WebDriver.WindowHandles;
@@ -653,6 +653,41 @@ namespace KiewitTeamBinder.UI.Pages.Global
             }
             WebDriver.SwitchTo().Window(popUpWindowHandle);
             WebDriver.Manage().Window.Maximize();
+        }
+
+        internal static void SwitchToPopUpWindowByTitle(IWebElement ElementToBeClicked, string windowTitle)
+        {
+            string winHandleBefore = WebDriver.CurrentWindowHandle;
+            int previousWinCount = WebDriver.WindowHandles.Count;
+
+            // Perform the action to open a new Window
+            ElementToBeClicked.ClickOnElement();
+
+            WaitUntil(driver => driver.WindowHandles.Count != previousWinCount);
+
+            var normalPageLoadTime = WebDriver.Manage().Timeouts().PageLoad;
+            WebDriver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(5);
+            foreach (string handle in WebDriver.WindowHandles)
+            {
+                if (handle != winHandleBefore)
+                {
+                    try
+                    {
+                        WebDriver.SwitchTo().Window(handle);
+                        Console.WriteLine(WebDriver.Title);
+                    }
+                    catch (Exception e)
+                    {
+                        System.Diagnostics.Debug.WriteLine(WebDriver.Title);
+                        System.Diagnostics.Debug.WriteLine(e);
+                    }
+                    if (WebDriver.Title.Contains(windowTitle))
+                        break;
+                }
+
+            }
+            WebDriver.Manage().Timeouts().PageLoad = normalPageLoadTime;
+            //string currHandle = WebDriver.CurrentWindowHandle;
         }
 
         internal static void OpenURLInNewTab(string url, out string parentWindow, int timeout = 30)

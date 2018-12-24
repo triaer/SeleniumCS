@@ -46,7 +46,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             string signinWindow;
 
             //Click KiewitUserLogin Button and Switch to OtherUserLogin Window
-            SwitchToPopUpWindow(KiewitUserLoginBtn, out signinWindow, true);
+            SwitchToNewPopUpWindow(KiewitUserLoginBtn, out signinWindow, true);
 
             //Fill Kiewit account fields
             Email.InputText(account.kiewitUserName);
