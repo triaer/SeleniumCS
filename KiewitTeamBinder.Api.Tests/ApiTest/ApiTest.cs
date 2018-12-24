@@ -13,11 +13,8 @@ using KiewitTeamBinder.Api.Service;
 namespace KiewitTeamBinder.Api.Tests.ApiTest
 {
     [TestClass]
-    public class ApiTest
+    public class ApiTest : ApiTestBase
     {
-        private List<KeyValuePair<string, bool>> validations = new List<KeyValuePair<string, bool>>();
-        private List<KeyValuePair<string, bool>> methodValidations = new List<KeyValuePair<string, bool>>();        
-
         [TestMethod]
         public void SimpleLogon()
         {
@@ -26,7 +23,11 @@ namespace KiewitTeamBinder.Api.Tests.ApiTest
             try
             {
                 //given
-                sessionKey = sessionRequest.LogonWithApplication();
+                var simpleLogonData = new SimpleLogonSmoke();
+                var teambinderTestAccount = GetTestAccount("AdminAccount1", environment, "NonSSO");
+
+                //when
+                sessionKey = sessionRequest.LogonWithApplication(teambinderTestAccount.Username, teambinderTestAccount.Company, teambinderTestAccount.Password, simpleLogonData.ProjectNumber, simpleLogonData.ConnectingProduct);
                 validations.Add(sessionRequest.ValidateLogonWithApplicationSuccessfully(sessionKey));
 
                 string respone = sessionRequest.LogoffStatus(sessionKey);
@@ -39,13 +40,10 @@ namespace KiewitTeamBinder.Api.Tests.ApiTest
             }
             catch (Exception e)
             {
+                validations.Add(new KeyValuePair<string, bool>("Release " + sessionKey, sessionRequest.ValidateLogoffStatusSuccessfully(sessionRequest.LogoffStatus(sessionKey)).Value));
                 methodValidations.Add(new KeyValuePair<string, bool>("Error: " + e, false));
                 validations = Utils.AddCollectionToCollection(validations, methodValidations);
                 throw;
-            }
-            finally
-            {
-                Console.WriteLine("Logoff: " + sessionKey + ", " + sessionRequest.LogoffStatus(sessionKey));
             }
         }
         

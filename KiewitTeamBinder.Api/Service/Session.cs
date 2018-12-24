@@ -11,7 +11,7 @@ namespace KiewitTeamBinder.Api.Service
         #endregion
 
         #region Actions
-        public string LogonWithApplication(string userID = "ADMIN1", string companyID = "KIEWIT", string password = "kiewit", string projectNumber = "AUTO1", string connectingProduct = "KiewitApiTest")
+        public string LogonWithApplication(string userID , string companyID, string password, string projectNumber, string connectingProduct)
         {            
             string sessionKey = request.LogonWithApplication(userID, companyID, password, projectNumber, connectingProduct);
             return sessionKey;
