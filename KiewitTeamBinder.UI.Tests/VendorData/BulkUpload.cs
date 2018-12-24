@@ -99,7 +99,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 validations = Utils.AddCollectionToCollection(validations, methodValidations);
                 throw;
             }
-        }
+        }               
 
         [TestMethod]
         public void TransmitDocuments()
@@ -123,7 +123,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 HoldingArea holdingArea = projectDashBoard.SelectModuleMenuItem<HoldingArea>(subMenuItem: ModuleSubMenuInLeftNav.HOLDINGAREA.ToDescription());
                 BulkUploadDocuments bulkUploadDocuments = holdingArea.ClickBulkUploadButton(out currentWindow);
                 bulkUploadDocuments.CreateDataOnRow<HoldingArea>(2);
-
+                
                 //when User Story 120157 - 119696 Transmit Documents
                 test = LogTest("Transmit Documents");
                 string[] selectedDocuments = new string[transmitDocData.NumberOfSelectedDocumentRow];
@@ -146,7 +146,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 TransmittalDetail transmittalDetail = newTransmittal.ClickSendButton(ref methodValidations);
                 transmittalDetail.LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateDateIsCurrentDate())
                     .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateProjectNumberIsCorrect(transmitDocData.ProjectNumber))
-                    .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateProjectNameIsCorrect(transmitDocData.ProjectName))
+                    .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateProjectNameIsCorrect(transmitDocData.ProjectName))                    
                     .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateTransmittalNoIsCorrectWithTheHeader())
                     .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateFromUserInfoIsCorrect(transmitDocData.KiewitUser.Description))
                     .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateAttachedDocumentsAreDisplayed(selectedDocuments))
@@ -156,6 +156,78 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                     //TO-DO: Failed by bug: No hyperlink in "Click here to download all Transmittal files."
                     //.LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateDownloadHyperlinkDisplays())
                     .ClickToolbarButton<HoldingArea>(ToolbarButton.Close);
+
+                // then
+                Utils.AddCollectionToCollection(validations, methodValidations);
+                Console.WriteLine(string.Join(System.Environment.NewLine, validations.ToArray()));
+                validations.Should().OnlyContain(validations => validations.Value).Equals(bool.TrueString);
+            }
+            catch (Exception e)
+            {
+                lastException = e;
+                validations = Utils.AddCollectionToCollection(validations, methodValidations);
+                throw;
+            }
+        }
+
+        [TestMethod]
+        public void Filtering()
+        {
+            try
+            {
+                // given
+                var teambinderTestAccount = GetTestAccount("AdminAccount1", environment, "NonSSO");
+                test.Info("Open TeamBinder Web Page: " + teambinderTestAccount.Url);
+                var driver = Browser.Open(teambinderTestAccount.Url, browser);
+                test.Info("Log on TeamBinder via Other User Login: " + teambinderTestAccount.Username);
+                ProjectsList projectsList = new NonSsoSignOn(driver).Logon(teambinderTestAccount) as ProjectsList;
+
+                var filteringData = new FilteringSmoke();
+                test.Info("Navigate to DashBoard Page of Project: " + filteringData.ProjectName);
+                ProjectsDashboard projectDashBoard = projectsList.NavigateToProjectDashboardPage(filteringData.ProjectName);
+
+                //when User Story 120159 - 119697 Filtering
+                test = LogTest("Filtering");
+                projectDashBoard.SelectModuleMenuItem<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription());
+
+                HoldingArea holdingArea = projectDashBoard.SelectModuleMenuItem<HoldingArea>(subMenuItem: ModuleSubMenuInLeftNav.HOLDINGAREA.ToDescription());
+
+                test.Info($"Firstly, Set Document No. Filter with data '{FilteringSmoke.FilterValue1}'");
+                var filteredRecords = holdingArea.GetTableItemNumberWithConditions(filteringData.GridViewHoldingAreaName, filteringData.ValueInDocumentNoColumn1);
+                var recordsCountBeforeFilter = holdingArea.GetTotalRowsVisibleInGrid(filteringData.GridViewHoldingAreaName);
+                holdingArea.FilterDocumentsByGridFilterRow(MainPaneTableHeaderLabel.DocumentNo.ToDescription(), FilteringSmoke.FilterValue1)
+                    .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateRecordsMatchingFilterAreReturned(filteringData.GridViewHoldingAreaName,
+                                                                                                                      filteringData.ValueInDocumentNoColumn1,
+                                                                                                                      filteredRecords))
+                    .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateValueInColumnIsCorrect(filteringData.GridViewHoldingAreaName,
+                                                                                                            MainPaneTableHeaderLabel.HoldProcessStatus.ToDescription(),
+                                                                                                            filteringData.ValueInHoldingProcessStatusColumn))
+                    .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateRecordItemsCount(filteringData.GridViewHoldingAreaName))
+                    .ClickClearHyperlink<HoldingArea>()
+                    .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateFilteredRecordsAreCleared(filteringData.GridViewHoldingAreaName,
+                                                                                                               recordsCountBeforeFilter))
+                    .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateRecordItemsCount(filteringData.GridViewHoldingAreaName));
+
+                holdingArea.SelectFilterOption<HoldingArea>(ViewFilterOptions.All.ToDescription())
+                    .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateFilterBoxIsHighlighted(ViewFilterOptions.All.ToDescription()))
+                    .SelectFilterOption<HoldingArea>(ViewFilterOptions.NewDocument.ToDescription())
+                    .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateFilterBoxIsHighlighted(ViewFilterOptions.NewDocument.ToDescription()));
+
+                test.Info($"Secondly, Set Document No. Filter with data '{FilteringSmoke.FilterValue2}'");
+                filteredRecords = holdingArea.GetTableItemNumberWithConditions(filteringData.GridViewHoldingAreaName, filteringData.ValueInDocumentNoColumn2);
+                recordsCountBeforeFilter = holdingArea.GetTotalRowsVisibleInGrid(filteringData.GridViewHoldingAreaName);
+                holdingArea.FilterDocumentsByGridFilterRow(MainPaneTableHeaderLabel.DocumentNo.ToDescription(), FilteringSmoke.FilterValue2)
+                    .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateRecordsMatchingFilterAreReturned(filteringData.GridViewHoldingAreaName,
+                                                                                                                      filteringData.ValueInDocumentNoColumn2,
+                                                                                                                      filteredRecords))
+                    .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateValueInColumnIsCorrect(filteringData.GridViewHoldingAreaName,
+                                                                                                            MainPaneTableHeaderLabel.HoldProcessStatus.ToDescription(),
+                                                                                                            filteringData.ValueInHoldingProcessStatusColumn))
+                    .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateRecordItemsCount(filteringData.GridViewHoldingAreaName))
+                    .ClickClearHyperlink<HoldingArea>()
+                    .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateFilteredRecordsAreCleared(filteringData.GridViewHoldingAreaName,
+                                                                                                               recordsCountBeforeFilter))
+                    .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateRecordItemsCount(filteringData.GridViewHoldingAreaName));
 
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);

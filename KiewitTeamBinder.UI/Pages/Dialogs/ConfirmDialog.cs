@@ -31,21 +31,20 @@ namespace KiewitTeamBinder.UI.Pages.Dialogs
         #region Actions
         public ConfirmDialog(IWebDriver webDriver) : base(webDriver)
         {
-            webDriver.SwitchTo().ActiveElement();
-            
+            //webDriver.SwitchTo().ActiveElement();
+            WebDriver.SwitchTo().DefaultContent();
         }
 
-        public T ClickPopupButton<T>(DialogPopupButton name, bool closeBrowser = false)
+        public T ClickPopupButton<T>(DialogPopupButton name, bool closeBrowser = false, string parentWindowTitle = "Automation Project 1")
         {
             IWebElement Button = StableFindElement(By.XPath(string.Format(_button, name.ToDescription())));
-            Button.ClickOnElement();
             if (closeBrowser)
             {
-                WebDriver.SwitchTo().Window(WebDriver.WindowHandles.Last());
+                SwitchToPopUpWindowByTitle(Button, parentWindowTitle);
             }
             else
             {
-                
+                Button.ClickOnElement();
                 WebDriver.SwitchTo().DefaultContent();
             }
             return (T)Activator.CreateInstance(typeof(T), WebDriver);

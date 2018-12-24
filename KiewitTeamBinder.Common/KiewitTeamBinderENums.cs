@@ -121,7 +121,11 @@ namespace KiewitTeamBinder.Common
             [Description("Personal")]
             Personal,
             [Description("Company")]
-            Company
+            Company,
+            [Description("New Documents")]
+            NewDocument,
+            [Description("All")]
+            All
         }
 
         public enum ModuleNameInLeftNav
@@ -209,7 +213,11 @@ namespace KiewitTeamBinder.Common
             [Description("TaskCount")]
             TaskCount,
             [Description("Contract Number")]
-            ContractNumber
+            ContractNumber,
+            [Description("Document No.")]
+            DocumentNo,
+            [Description("Hold Process Status")]
+            HoldProcessStatus
         }
 
         public enum MainPaneHeaderDropdownItem
