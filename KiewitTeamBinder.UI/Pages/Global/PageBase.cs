@@ -663,14 +663,14 @@ namespace KiewitTeamBinder.UI.Pages.Global
         {
             string winHandleBefore = WebDriver.CurrentWindowHandle;
             int previousWinCount = WebDriver.WindowHandles.Count;
-
+            
             // Perform the action to open a new Window
             ElementToBeClicked.ClickOnElement();
 
             WaitUntil(driver => driver.WindowHandles.Count != previousWinCount);
 
             var normalPageLoadTime = WebDriver.Manage().Timeouts().PageLoad;
-            WebDriver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(5);
+            WebDriver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(shortTimeout);
             foreach (string handle in WebDriver.WindowHandles)
             {
                 if (handle != winHandleBefore)
@@ -678,7 +678,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
                     try
                     {
                         WebDriver.SwitchTo().Window(handle);
-                        Console.WriteLine(WebDriver.Title);
+                        Console.WriteLine("CurrentWindow:" + WebDriver.Title);
                     }
                     catch (Exception e)
                     {

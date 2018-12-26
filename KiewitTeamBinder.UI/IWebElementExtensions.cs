@@ -181,16 +181,50 @@ namespace KiewitTeamBinder.UI
             Actions actions = new Actions(WebDriver);
             actions.DoubleClick(Element).Perform();
         }
-        
+
+        //public static void ClickOnElement(this IWebElement Element)
+        //{
+        //    var normalPageLoadTime = WebDriver.Manage().Timeouts().PageLoad;
+        //    if (Browser.Driver.GetType() == typeof(InternetExplorerDriver))
+        //    {
+        //        try
+        //        {
+        //            ScrollIntoView(Element);
+        //            WebDriver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(longTimeout);
+        //            ((IJavaScriptExecutor)WebDriver).ExecuteScript("arguments[0].click();", Element);
+        //        }
+        //        catch (WebDriverTimeoutException e)
+        //        {
+        //            Console.WriteLine(e.Message);
+        //        }
+        //        finally
+        //        {
+        //            WebDriver.Manage().Timeouts().PageLoad = normalPageLoadTime;
+        //        }
+        //    }
+        //    else
+        //        Element.Click();
+        //}
         public static void ClickOnElement(this IWebElement Element)
         {
-            if (Browser.Driver.GetType() == typeof(InternetExplorerDriver))
+            var normalPageLoadTime = WebDriver.Manage().Timeouts().PageLoad;
+            
+            try
             {
-               ScrollIntoView(Element);
-               ((IJavaScriptExecutor)WebDriver).ExecuteScript("arguments[0].click();", Element);
-            }
-            else
+                if (Browser.Driver.GetType() == typeof(InternetExplorerDriver))
+                    ScrollIntoView(Element);
+                WebDriver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(longTimeout);
                 Element.Click();
+            }
+            catch (WebDriverTimeoutException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            finally
+            {
+                WebDriver.Manage().Timeouts().PageLoad = normalPageLoadTime;
+            }
+                        
         }
         public static void ClickWithHandleTimeout(this IWebElement Element)
         {
@@ -198,7 +232,7 @@ namespace KiewitTeamBinder.UI
             
             try
             {
-                WebDriver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(2);
+                WebDriver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(shortTimeout);
                 Element.Click();
             }
             catch (WebDriverException e)
