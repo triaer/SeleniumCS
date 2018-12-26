@@ -628,8 +628,12 @@ namespace KiewitTeamBinder.UI.Pages.Global
             parentWindow = WebDriver.CurrentWindowHandle;
             ReadOnlyCollection<string> originalHandles = WebDriver.WindowHandles;
 
+           
             if(doubleClick == true)
+            {
+                ScrollIntoView(ElementToBeClicked);
                 ElementToBeClicked.ClickTwice();
+            }
             else
                 ElementToBeClicked.ActionsClick();
 
@@ -678,8 +682,8 @@ namespace KiewitTeamBinder.UI.Pages.Global
                     }
                     catch (Exception e)
                     {
-                        System.Diagnostics.Debug.WriteLine(WebDriver.Title);
-                        System.Diagnostics.Debug.WriteLine(e);
+                        Console.WriteLine(handle);
+                        Console.WriteLine(e);
                     }
                     if (WebDriver.Title.Contains(windowTitle))
                         break;

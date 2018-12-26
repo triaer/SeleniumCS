@@ -131,6 +131,7 @@
   <ItemGroup>
     <Compile Include="ProjectDashboard\NavigateToModulesFromLeftNav.cs" />
     <Compile Include="ProjectDashboard\VersionNumber.cs" />
+    <Compile Include="Transmittals\ProcessingDocs.cs" />
     <Compile Include="UITestBase.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>

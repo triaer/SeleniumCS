@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static KiewitTeamBinder.Common.Models.LoggedUserInfo;
 
 namespace KiewitTeamBinder.Common.TestData
 {
@@ -19,13 +20,11 @@ namespace KiewitTeamBinder.Common.TestData
         public string ReasonForIssue = "For Information";
         public string RespondByMessage = "Response required by";
         public string RespondByDate = DateTime.Now.AddDays(7).ToString("MM/dd/yyyy");
-        public User KiewitUser = new User();
-
-        public class User
+        public User KiewitUser = new User()
         {
-            public string UserName = "Automation Admin1";
-            public string CompanyName = "Kiewit";
-            public string Description = "Automation Admin1 (Kiewit)";
-        }
+            UserName = "Automation Admin1",
+            CompanyName = "Kiewit",
+            Description = "Automation Admin1 (Kiewit)"
+        };
     }
 }
