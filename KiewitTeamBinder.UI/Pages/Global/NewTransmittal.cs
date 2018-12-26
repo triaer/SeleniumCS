@@ -136,7 +136,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             {
                 WaitForElementAttribute(LinkDocumentExpandIcon, "class", "ImageCollapse");
 
-                if (GetTableItemNumber("GridViewDocuments") != selectedDocuments.Length)
+                if (GetTotalRowsVisibleInGrid("GridViewDocuments") != selectedDocuments.Length)
                     return SetFailValidation(node, Validation.All_Selected_Documents_Are_Listed);
                 
                 for (int i = 0; i < selectedDocuments.Length; i++)

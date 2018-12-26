@@ -192,10 +192,10 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
 
                 HoldingArea holdingArea = projectDashBoard.SelectModuleMenuItem<HoldingArea>(subMenuItem: ModuleSubMenuInLeftNav.HOLDINGAREA.ToDescription());
 
-                var clearRecords = holdingArea.GetTableItemNumber(filteringData.GridViewHoldingAreaName);
+                test.Info($"Firstly, Set Document No. Filter with data '{FilteringSmoke.FilterValue1}'");
                 var filteredRecords = holdingArea.GetTableItemNumberWithConditions(filteringData.GridViewHoldingAreaName, filteringData.ValueInDocumentNoColumn1);
-
-                holdingArea.FilterDocumentsByGridFilterRow(MainPaneTableHeaderLabel.DocumentNo.ToDescription(), filteringData.FilterValue1)
+                var recordsCountBeforeFilter = holdingArea.GetTotalRowsVisibleInGrid(filteringData.GridViewHoldingAreaName);
+                holdingArea.FilterDocumentsByGridFilterRow(MainPaneTableHeaderLabel.DocumentNo.ToDescription(), FilteringSmoke.FilterValue1)
                     .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateRecordsMatchingFilterAreReturned(filteringData.GridViewHoldingAreaName,
                                                                                                                       filteringData.ValueInDocumentNoColumn1,
                                                                                                                       filteredRecords))
@@ -205,15 +205,18 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                     .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateRecordItemsCount(filteringData.GridViewHoldingAreaName))
                     .ClickClearHyperlink<HoldingArea>()
                     .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateFilteredRecordsAreCleared(filteringData.GridViewHoldingAreaName,
-                                                                                                               clearRecords))
-                    .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateRecordItemsCount(filteringData.GridViewHoldingAreaName))
-                    .SelectFilterOption<HoldingArea>(ViewFilterOptions.All.ToDescription())
-                    .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateFilterBoxIsHighlighted(ViewFilterOptions.All.ToDescription()));
+                                                                                                               recordsCountBeforeFilter))
+                    .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateRecordItemsCount(filteringData.GridViewHoldingAreaName));
 
-                holdingArea.SelectFilterOption<HoldingArea>(ViewFilterOptions.NewDocument.ToDescription());
+                holdingArea.SelectFilterOption<HoldingArea>(ViewFilterOptions.All.ToDescription())
+                    .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateFilterBoxIsHighlighted(ViewFilterOptions.All.ToDescription()))
+                    .SelectFilterOption<HoldingArea>(ViewFilterOptions.NewDocument.ToDescription())
+                    .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateFilterBoxIsHighlighted(ViewFilterOptions.NewDocument.ToDescription()));
+
+                test.Info($"Secondly, Set Document No. Filter with data '{FilteringSmoke.FilterValue2}'");
                 filteredRecords = holdingArea.GetTableItemNumberWithConditions(filteringData.GridViewHoldingAreaName, filteringData.ValueInDocumentNoColumn2);
-                holdingArea.FilterDocumentsByGridFilterRow(MainPaneTableHeaderLabel.DocumentNo.ToDescription(), filteringData.FilterValue2)
-                    .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateFilterBoxIsHighlighted(ViewFilterOptions.NewDocument.ToDescription()))
+                recordsCountBeforeFilter = holdingArea.GetTotalRowsVisibleInGrid(filteringData.GridViewHoldingAreaName);
+                holdingArea.FilterDocumentsByGridFilterRow(MainPaneTableHeaderLabel.DocumentNo.ToDescription(), FilteringSmoke.FilterValue2)
                     .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateRecordsMatchingFilterAreReturned(filteringData.GridViewHoldingAreaName,
                                                                                                                       filteringData.ValueInDocumentNoColumn2,
                                                                                                                       filteredRecords))
@@ -223,7 +226,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                     .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateRecordItemsCount(filteringData.GridViewHoldingAreaName))
                     .ClickClearHyperlink<HoldingArea>()
                     .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateFilteredRecordsAreCleared(filteringData.GridViewHoldingAreaName,
-                                                                                                               clearRecords))
+                                                                                                               recordsCountBeforeFilter))
                     .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateRecordItemsCount(filteringData.GridViewHoldingAreaName));
 
                 // then

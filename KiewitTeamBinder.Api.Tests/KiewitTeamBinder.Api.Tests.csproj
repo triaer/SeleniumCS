@@ -50,6 +50,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
     <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ValueTuple.4.4.0\lib\net461\System.ValueTuple.dll</HintPath>
     </Reference>
@@ -57,8 +58,9 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Control\WBSTests.cs" />
+    <Compile Include="UserLogon\SessionLogon.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ApiTestBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -67,6 +69,10 @@
     <ProjectReference Include="..\KiewitTeamBinder.Api\KiewitTeamBinder.Api.csproj">
       <Project>{953E14AD-F154-426C-AD69-92A56FBDE62F}</Project>
       <Name>KiewitTeamBinder.Api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\KiewitTeamBinder.Common\KiewitTeamBinder.Common.csproj">
+      <Project>{2f0e5a22-47a2-4953-951a-2bee5a205df3}</Project>
+      <Name>KiewitTeamBinder.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />

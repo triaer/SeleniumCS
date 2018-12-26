@@ -38,12 +38,14 @@ namespace KiewitTeamBinder.UI.Pages.Global
             string logonWindow;
 
             //Click OtherUserLogin Button and Switch to OtherUserLogin Window
-            SwitchToPopUpWindow(OtherUserLoginBtn, out logonWindow, true);
+            SwitchToNewPopUpWindow(OtherUserLoginBtn, out logonWindow, true);
             WaitForElementDisplay(By.Id("walkme-player"));
 
             //Fill account fields
             UserIdTextbox.InputText(account.Username);
+            WaitForElementEnable(_companyIdTextbox);
             CompanyIdTextbox.InputText(account.Company);
+            WaitForElementEnable(_passwordTextbox);
             PasswordTextbox.InputText(account.Password);
 
             //Click LogIn button
