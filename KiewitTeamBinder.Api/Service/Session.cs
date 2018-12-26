@@ -7,19 +7,24 @@ namespace KiewitTeamBinder.Api.Service
     public class SessionApi
     {
         #region Entities
-        public SessionServiceReference.SessionWebServiceSoapClient request = new SessionServiceReference.SessionWebServiceSoapClient("SessionWebServiceSoap");
+        private SessionServiceReference.SessionWebServiceSoapClient _request;
         #endregion
 
         #region Actions
+        public SessionApi()
+        {
+            _request = new SessionServiceReference.SessionWebServiceSoapClient("SessionWebServiceSoap");
+        }
+
         public string LogonWithApplication(string userID , string companyID, string password, string projectNumber, string connectingProduct)
         {            
-            string sessionKey = request.LogonWithApplication(userID, companyID, password, projectNumber, connectingProduct);
+            string sessionKey = _request.LogonWithApplication(userID, companyID, password, projectNumber, connectingProduct);
             return sessionKey;
         }
 
         public string LogoffStatus(string sessionKey)
         {            
-            string response = request.LogoffStatus(sessionKey);
+            string response = _request.LogoffStatus(sessionKey);
             return response;
         }
 

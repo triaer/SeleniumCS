@@ -18,6 +18,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         #region Entities              
         public By _dashBoardLabel => By.XPath("//span[.='Dashboard']");
         public By _gridViewFilterListData => By.XPath("//div[substring(@id, string-length(@id) - string-length('_rfltMenu_detached') +1) = '_rfltMenu_detached'][contains(@style,'block')]/ul/li");
+        public By _sortButton(string titleColumn) => By.XPath($"//a[text() ='{titleColumn}']");
         private static By _nameProjectLabel => By.Id("projectInput");
         private static By _projectListDropdown => By.Id("btnShowProjectList");
         private static By _projectListSumary => By.Id("divProjectSummary");
@@ -37,7 +38,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
         private static By _visibleRows(string gridViewName) => By.XPath($"//div[contains(@id, '{gridViewName}_GridData')]//tr[@class != 'rgNoRecords' and not(contains(@style, 'hidden'))]");
         private static By _documentsTable(string gridViewName) => By.XPath($"//div[contains(@id, '{gridViewName}_GridData')]");
         private static By _headerDropdownItem(string itemName) => By.XPath($"//li[a = '{itemName}']");
-        private static By _sortButton(string titleColumn) => By.XPath($"//a[text() ='{titleColumn}']");
         private static By _loadingPanel => By.XPath("//div[contains(@id, 'LoadingPanel')]");
         private static By _clearHyperlink => By.Id("lblClear");
         private static By _imageOfFilterOptionByIndex(string selected, string index) => By.XPath($"//img[contains(@id,'Link{selected}{index}')]");
@@ -150,6 +150,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
         public HelpAboutDialog OpenHelpDialog(string option)
         {
+            WaitForElementClickable(_helpButtonDropdown);
             SelectComboboxByText(HelpButtonDropDown, _helpButtonDropDownData, option);
             var helpAboutDialog = new HelpAboutDialog(WebDriver);
             WebDriver.SwitchTo().Frame(helpAboutDialog.IFrameName);
