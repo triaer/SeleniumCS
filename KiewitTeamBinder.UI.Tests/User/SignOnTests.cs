@@ -17,7 +17,7 @@ namespace KiewitTeamBinder.UI.Tests.User
     [TestClass]
     public class SignOnTests : UITestBase
     {
-        [TestMethod]
+       // [TestMethod]
         public void NonSSO_ValidUserCanLogonAndLogOff()
         {
             try
@@ -50,7 +50,8 @@ namespace KiewitTeamBinder.UI.Tests.User
                 throw;
             }
         }
-        [TestMethod]
+
+        //[TestMethod]
         public void SSO_ValidUserCanLogonAndLogOff()
         {
             // given

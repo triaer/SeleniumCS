@@ -19,7 +19,7 @@ namespace KiewitTeamBinder.UI.Tests.Transmittals
     [TestClass]
     public class ProcessingDocs : UITestBase
     {
-        [TestMethod]
+        //[TestMethod]
         public void ValidateTransmittalReceipt()
         {
             try

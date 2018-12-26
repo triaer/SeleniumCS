@@ -19,7 +19,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
     [TestClass]
     public class BulkUpload : UITestBase
     {
-        [TestMethod]
+        //[TestMethod]
         public void BulkUploadDocuments()
         {
             try
@@ -170,7 +170,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
             }
         }
 
-        [TestMethod]
+        //[TestMethod]
         public void Filtering()
         {
             try
