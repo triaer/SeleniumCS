@@ -18,7 +18,7 @@ namespace KiewitTeamBinder.UI
     {
         public static void InputText(this IWebElement Element, string text)
         {
-            Element.Click();
+            Element.SendKeys("");
             Element.Clear();
             Element.SendKeys(text);
         }

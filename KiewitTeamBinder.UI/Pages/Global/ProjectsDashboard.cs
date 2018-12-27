@@ -258,7 +258,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 }
                 if (GridPages.Count > 1)
                 {
-                    ArrowFirstPageInGridPager(gridViewName).ClickOnElement();
+                    ArrowFirstPageInGridPager(gridViewName).Click();
                     WaitForLoadingPanel();
                 }
 
@@ -280,11 +280,11 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 pagesCount = int.Parse(NumberPagesInfoOfGridPager(gridViewName).Text);
                 if (pagesCount > 1)
                 {
-                    ArrowLastPageInGridPager(gridViewName).ClickOnElement();
+                    ArrowLastPageInGridPager(gridViewName).Click();
                     WaitForLoadingPanel();
                     rowsCount = (pagesCount - 1) * 100 + VisibleRows(gridViewName).Count;
                     //return back 1st page
-                    ArrowFirstPageInGridPager(gridViewName).ClickOnElement();
+                    ArrowFirstPageInGridPager(gridViewName).Click();
                     WaitForLoadingPanel();
                 }
                 else
