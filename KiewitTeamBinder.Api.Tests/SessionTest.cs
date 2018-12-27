@@ -25,7 +25,7 @@ namespace KiewitTeamBinder.Api.Tests.ApiTest
             {
                 //given
                 var simpleLogonData = new SimpleLogonSmoke();
-                var teambinderTestAccount = GetTestAccount("AdminAccount1", environment, "NonSSO");
+                var teambinderTestAccount = GetTestAccount("AdminAccount2", environment, "NonSSO");
 
                 //when
                 sessionKey = sessionRequest.LogonWithApplication(teambinderTestAccount.Username, teambinderTestAccount.Company, teambinderTestAccount.Password, simpleLogonData.ProjectNumber, simpleLogonData.ConnectingProduct);
