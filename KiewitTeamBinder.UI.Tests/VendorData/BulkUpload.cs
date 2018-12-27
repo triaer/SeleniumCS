@@ -83,7 +83,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                     .ClickPopupButton<HoldingArea>(DialogPopupButton.No, true);
 
                 string filterValue = bulkUploadData.DocumentNoTextboxContent + bulkUploadData.FilterWithValue;
-                holdingArea.FilterDocumentsByGridFilterRow(bulkUploadData.HoldingAreaFilterByColumn, filterValue)
+                holdingArea.FilterDocumentsByGridFilterRow<HoldingArea>(bulkUploadData.GridViewHoldingAreaName, bulkUploadData.HoldingAreaFilterByColumn, filterValue)
                     .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateHoldingAreaGridShownDataCorrect(bulkUploadData.HoldingAreaFilterByColumn, filterValue))
                     .ClickCheckboxOfDocumentAtRow(indexRow: 1)
                     .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateDocumentRowIsHighlighted(indexRow: 1));
@@ -188,14 +188,14 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
 
                 //when User Story 120159 - 119697 Filtering
                 test = LogTest("Filtering");
-                projectDashBoard.SelectModuleMenuItem<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription());
+                projectDashBoard.SelectModuleMenuItem<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription(), waitForLoading: false);
 
                 HoldingArea holdingArea = projectDashBoard.SelectModuleMenuItem<HoldingArea>(subMenuItem: ModuleSubMenuInLeftNav.HOLDINGAREA.ToDescription());
 
                 test.Info($"Firstly, Set Document No. Filter with data '{FilteringSmoke.FilterValue1}'");
                 var filteredRecords = holdingArea.GetTableItemNumberWithConditions(filteringData.GridViewHoldingAreaName, filteringData.ValueInDocumentNoColumn1);
-                var recordsCountBeforeFilter = holdingArea.GetTotalRowsVisibleInGrid(filteringData.GridViewHoldingAreaName);
-                holdingArea.FilterDocumentsByGridFilterRow(MainPaneTableHeaderLabel.DocumentNo.ToDescription(), FilteringSmoke.FilterValue1)
+                var recordsCountBeforeFilter =  holdingArea.GetTotalRowsVisibleInGrid(filteringData.GridViewHoldingAreaName);
+                holdingArea.FilterDocumentsByGridFilterRow<HoldingArea>(filteringData.GridViewHoldingAreaName, MainPaneTableHeaderLabel.DocumentNo.ToDescription(), FilteringSmoke.FilterValue1)
                     .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateRecordsMatchingFilterAreReturned(filteringData.GridViewHoldingAreaName,
                                                                                                                       filteringData.ValueInDocumentNoColumn1,
                                                                                                                       filteredRecords))
@@ -216,7 +216,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 test.Info($"Secondly, Set Document No. Filter with data '{FilteringSmoke.FilterValue2}'");
                 filteredRecords = holdingArea.GetTableItemNumberWithConditions(filteringData.GridViewHoldingAreaName, filteringData.ValueInDocumentNoColumn2);
                 recordsCountBeforeFilter = holdingArea.GetTotalRowsVisibleInGrid(filteringData.GridViewHoldingAreaName);
-                holdingArea.FilterDocumentsByGridFilterRow(MainPaneTableHeaderLabel.DocumentNo.ToDescription(), FilteringSmoke.FilterValue2)
+                holdingArea.FilterDocumentsByGridFilterRow<HoldingArea>(filteringData.GridViewHoldingAreaName, MainPaneTableHeaderLabel.DocumentNo.ToDescription(), FilteringSmoke.FilterValue2)
                     .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateRecordsMatchingFilterAreReturned(filteringData.GridViewHoldingAreaName,
                                                                                                                       filteringData.ValueInDocumentNoColumn2,
                                                                                                                       filteredRecords))

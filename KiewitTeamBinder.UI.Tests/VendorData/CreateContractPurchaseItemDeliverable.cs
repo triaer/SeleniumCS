@@ -66,6 +66,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
             }
         }
 
+        [TestMethod]
         public void ValidatePurchaseItemUnderContract()
         {
             try
@@ -77,17 +78,27 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 test.Info("Log on TeamBinder via Other User Login: " + teambinderTestAccount.Username);
                 ProjectsList projectsList = new NonSsoSignOn(driver).Logon(teambinderTestAccount) as ProjectsList;
 
-                var createNewPurchaseItemdData = new CreateNewPurchaseItemSmoke();
-                test.Info("Navigate to DashBoard Page of Project: " + createNewPurchaseItemdData.ProjectName);
-                ProjectsDashboard projectDashBoard = projectsList.NavigateToProjectDashboardPage(createNewPurchaseItemdData.ProjectName);
+                var validatePurchaseItemData = new ValidatePurchaseItemUnderContractSmoke();
+                var columnValuePairList1 = new List<KeyValuePair<string, string>> { validatePurchaseItemData.ContractNumber };
+                var columnValuePairList2 = new List<KeyValuePair<string, string>> { validatePurchaseItemData.ItemID,
+                                                                                    validatePurchaseItemData.Description,
+                                                                                    validatePurchaseItemData.Status };
+                test.Info("Navigate to DashBoard Page of Project: " + validatePurchaseItemData.ProjectName);
+                ProjectsDashboard projectDashBoard = projectsList.NavigateToProjectDashboardPage(validatePurchaseItemData.ProjectName);
 
                 //when - 120795 Validate Purchase Item under Contract
                 //User Story 121991
                 test = LogTest("Validate Purchase Item under Contract");
 
                 projectDashBoard.SelectModuleMenuItem<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription(), waitForLoading: false);
-                HoldingArea holdingArea = projectDashBoard.SelectModuleMenuItem<HoldingArea>(subMenuItem: ModuleSubMenuInLeftNav.VENDODATAREGISTER.ToDescription());
-                
+                VendorDataRegister holdingArea = projectDashBoard.SelectModuleMenuItem<VendorDataRegister>(subMenuItem: ModuleSubMenuInLeftNav.VENDODATAREGISTER.ToDescription());
+                holdingArea.FilterDocumentsByGridFilterRow<VendorDataRegister>(validatePurchaseItemData.GridViewName,
+                                                                               validatePurchaseItemData.ContractNumber.Key,
+                                                                               validatePurchaseItemData.ContractNumber.Value)
+                    //.LogValidation<VendorDataRegister>(ref validations, holdingArea.ValidateItemsAreShown(columnValuePairList1, validatePurchaseItemData.GridViewName))
+                    .ClickExpandButton(validatePurchaseItemData.expandButtonIndex)
+                    .LogValidation<VendorDataRegister>(ref validations, holdingArea.ValidatePurchaseItemsAreShown(columnValuePairList2));
+
 
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);

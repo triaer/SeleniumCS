@@ -18,18 +18,74 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
     public class VendorDataRegister : ProjectsDashboard
     {
         #region Entities
-        
+        private static By _expandButton => By.XPath("//td[@class = 'rgExpandCol']/input");
+        private static By _purchaseTable => By.XPath("//table[contains(@id,'GridViewItemsVendor')]/thead");
+
+        private static string _filterItemsXpath = "//table[contains(@id,'GridViewItemsVendor')]//tr[@valign='top']";
+
+        public IReadOnlyCollection<IWebElement> ExpandButton { get { return StableFindElements(_expandButton); } }
+        public IWebElement PurchaseTable { get { return StableFindElement(_purchaseTable); } }
         #endregion
 
         #region Actions
         public VendorDataRegister(IWebDriver webDriver) : base(webDriver)
         {
-        }        
+        }
+
+        public VendorDataRegister ClickExpandButton(int index, bool waitForLoading = true)
+        {
+            var node = StepNode();
+            node.Info("Click the expand button");
+            index = Utils.RefactorIndex(index);
+            ExpandButton.ElementAt(index).Click();
+            if (waitForLoading)
+            {
+                WaitForLoadingPanel(10);
+            }
+            return this;
+        }
+
+        private IReadOnlyCollection<IWebElement> GetAvailablePurchaseItems(List<KeyValuePair<string, string>> columnValuePairList)
+        {
+            int rowIndex, colIndex = 1;
+            string itemsXpath = _filterItemsXpath;
+            GetTableCellValueIndex(PurchaseTable, columnValuePairList.ElementAt(0).Key, out rowIndex, out colIndex, "th");
+            if (colIndex < 2)
+                return null;
+            itemsXpath += $"[td[{colIndex}][contains(., '{columnValuePairList.ElementAt(0).Value}')]";                                    
+
+            for (int i = 1; i < columnValuePairList.Count; i++)
+            {
+                GetTableCellValueIndex(PurchaseTable, columnValuePairList.ElementAt(i).Key, out rowIndex, out colIndex, "th");
+                if (colIndex < 2)
+                    return null;
+                itemsXpath += $" and td[{colIndex}][contains(., '{columnValuePairList.ElementAt(i).Value}')]";                                        
+            }
+            itemsXpath += "]";
+
+            return StableFindElements(By.XPath(itemsXpath));
+        }
+
+        public KeyValuePair<string, bool> ValidatePurchaseItemsAreShown(List<KeyValuePair<string, string>> columnValuePairList)
+        {
+            var node = StepNode();
+            try
+            {
+                var PurchaseItemsList = GetAvailablePurchaseItems(columnValuePairList);
+                if (PurchaseItemsList.Count > 0)
+                    return SetPassValidation(node, Validation.Purchase_Items_Are_Shown);
+                return SetFailValidation(node, Validation.Purchase_Items_Are_Shown);
+            }
+            catch (Exception e)
+            {
+                return SetErrorValidation(node, Validation.Purchase_Items_Are_Shown, e);
+            }
+        }
 
         private static class Validation
         {
-            
+            public static string Purchase_Items_Are_Shown = "Validate that purchase items are shown";
         }
-            #endregion
+        #endregion
     }
 }

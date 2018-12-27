@@ -15,8 +15,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
     public class HoldingArea : ProjectsDashboard
     {
         #region Entities
-        private string _functionButton = "//li[@class='rtbItem rtbBtn'][a='{0}']";
-        private string _filterTextBoxXpath = "//tr[@class='rgFilterRow']/td[count(//tr/th[.='{0}']/preceding-sibling::th)+1]";
+        private string _functionButton = "//li[@class='rtbItem rtbBtn'][a='{0}']";        
         private static By _holdingAreaLabel => By.Id("lblRegisterCaption");
         private static By _documentNoTextBox => By.XPath("//input[contains(@id,'FilterTextBox_GridColDocumentNo')]");
         private static By _holdingAreaRadGrid => By.XPath("//div[contains(@id,'_cntPhMain_GridViewHoldingArea')][contains(@class,'RadGrid')]");
@@ -68,27 +67,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
         {
             DocumentNoTextBox.InputText(value);
             return this;
-        }
-
-        public HoldingArea FilterDocumentsByGridFilterRow(string columnName, string value, bool useFilterMenu = false, FilterOptions optionItem = FilterOptions.Contains, bool waitForLoading = true)
-        {
-            var node = StepNode();
-            node.Info($"Filter the '{columnName}' column with value '{value}'");
-            IWebElement FilterCell = StableFindElement(By.XPath(string.Format(_filterTextBoxXpath,columnName)));
-            IWebElement FilterTextBox = FilterCell.StableFindElement(By.TagName("input"));
-            FilterTextBox.InputText(value);
-            if (!useFilterMenu)
-                FilterTextBox.SendKeys(Keys.Enter);
-            else
-            {
-                IWebElement FilterMenu = FilterCell.StableFindElement(By.TagName("img"));
-                SelectComboboxByText(FilterMenu, _gridViewFilterListData, optionItem.ToDescription());
-            }
-            WaitForJQueryLoad();
-            if (waitForLoading)
-                WaitForLoadingPanel();
-            return this;
-        }
+        }               
 
         public HoldingArea ClickCheckboxOfDocumentAtRow(int indexRow)
         {

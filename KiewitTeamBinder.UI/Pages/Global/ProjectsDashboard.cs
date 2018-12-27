@@ -48,9 +48,10 @@ namespace KiewitTeamBinder.UI.Pages.Global
         private static By _pageCountInNumPartOfGridPager(string gridViewName) => By.XPath($"//table[contains(@id,'{gridViewName}')]//div[contains(@class,'rgNumPart')]//a");
         private static By _arrowFirstPageInGridPager(string gridViewName) => By.XPath($"//table[contains(@id,'{gridViewName}')]//img[@title='First Page']");
         private static By _arrowLastPageInGridPager(string gridViewName) => By.XPath($"//table[contains(@id,'{gridViewName}')]//img[@title='Last Page']");
-
+       
         private static string _filterItemsXpath = "//tr[@valign='top' and not(contains(@style, 'hidden'))]";        
-        private string _headerButtonXpath = "//a[span='{0}']";
+        private static string _headerButtonXpath = "//a[span='{0}']";
+        private static string _filterTextBoxXpath = "//table[contains(@id,'{0}')]//tr[@class='rgFilterRow']/td[{1}]";//count(//tr/th[.='{0}']/preceding-sibling::th)+1]";
 
         public IWebElement FormTitle { get { return StableFindElement(_formTitle); } }        
         public IWebElement ViewFilter { get { return StableFindElement(_viewFilter); } }
@@ -80,7 +81,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         public IReadOnlyCollection<IWebElement> PageCountInNumPartOfGridPager(string gridViewName) => StableFindElements(_pageCountInNumPartOfGridPager(gridViewName));
         public IWebElement NumberPagesInfoOfGridPager(string gridViewName) => StableFindElement(_numberPagesInfoOfGridPager(gridViewName));
         public IWebElement ArrowFirstPageInGridPager(string gridViewName) => StableFindElement(_arrowFirstPageInGridPager(gridViewName));
-        public IWebElement ArrowLastPageInGridPager(string gridViewName) => StableFindElement(_arrowLastPageInGridPager(gridViewName));
+        public IWebElement ArrowLastPageInGridPager(string gridViewName) => StableFindElement(_arrowLastPageInGridPager(gridViewName));        
         #endregion
 
         #region Actions
@@ -94,9 +95,9 @@ namespace KiewitTeamBinder.UI.Pages.Global
             return this;
         }       
         
-        public void WaitForLoadingPanel()
+        public void WaitForLoadingPanel(int timeout = 5)
         {
-            WaitForLoading(_loadingPanel);
+            WaitForLoading(_loadingPanel, timeout);
             WaitForElementEnable(By.XPath("//div[contains(@id,'_GridData')]"));
         }
             
@@ -186,30 +187,41 @@ namespace KiewitTeamBinder.UI.Pages.Global
             if (switchWindow)
             {
                 string currentWindow;
-                SwitchToPopUpWindow(HeaderDropdownItem(item.ToDescription()), out currentWindow, false);
+                SwitchToNewPopUpWindow(HeaderDropdownItem(item.ToDescription()), out currentWindow, false);
             }                
             else
                 HeaderDropdownItem(item.ToDescription()).Click();
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
-        }
+        }               
 
         public string GetUserNameLogon()
         {
             return UserNameLabel.Text;
         }
 
-        protected KeyValuePair<string, bool> ValidateProgressContentMessage(string message)
+        public T FilterDocumentsByGridFilterRow<T>(string gridViewName, string columnName, string value, bool useFilterMenu = false, FilterOptions optionItem = FilterOptions.Contains, bool waitForLoading = true)
         {
             var node = StepNode();
-            IWebElement DialogMessage = FindElement(_progressMessage);
-            var actual = DialogMessage.GetAttribute("innerHTML");
-            if (actual.Contains(message))
-                return SetPassValidation(node, Validation.Progress_Message_Is_Displayed + message);
+            node.Info($"Filter the '{columnName}' column with value '{value}'");
+            int rowIndex, colIndex = 1;
+            GetTableCellValueIndex(PaneTable(gridViewName), columnName, out rowIndex, out colIndex, "th");
+
+            IWebElement FilterCell = StableFindElement(By.XPath(string.Format(_filterTextBoxXpath, gridViewName, colIndex)));
+            IWebElement FilterTextBox = FilterCell.StableFindElement(By.TagName("input"));
+            FilterTextBox.InputText(value);
+            if (!useFilterMenu)
+                FilterTextBox.SendKeys(Keys.Enter);
             else
-                return SetFailValidation(node, Validation.Progress_Message_Is_Displayed, message, actual);
+            {
+                IWebElement FilterMenu = FilterCell.StableFindElement(By.TagName("img"));
+                SelectComboboxByText(FilterMenu, _gridViewFilterListData, optionItem.ToDescription());
+            }
+            WaitForJQueryLoad();
+            if (waitForLoading)
+                WaitForLoadingPanel();
+            return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
-
-
+        
         protected IReadOnlyCollection<IWebElement> GetAvailableItemsOnCurrentPage(string gridViewName, List<KeyValuePair<string, string>> columnValuePairList, bool contains=true)
         {
             int rowIndex, colIndex = 1;
@@ -314,6 +326,17 @@ namespace KiewitTeamBinder.UI.Pages.Global
             {
                 return -1;
             }
+        }
+
+        protected KeyValuePair<string, bool> ValidateProgressContentMessage(string message)
+        {
+            var node = StepNode();
+            IWebElement DialogMessage = FindElement(_progressMessage);
+            var actual = DialogMessage.GetAttribute("innerHTML");
+            if (actual.Contains(message))
+                return SetPassValidation(node, Validation.Progress_Message_Is_Displayed + message);
+            else
+                return SetFailValidation(node, Validation.Progress_Message_Is_Displayed, message, actual);
         }
 
         public KeyValuePair<string, bool> ValidateRecordsMatchingFilterAreReturned(string gridViewName, List<KeyValuePair<string, string>> ValueInColumn, int expectedNumberOfRecord)
