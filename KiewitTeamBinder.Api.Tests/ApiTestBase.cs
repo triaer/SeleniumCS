@@ -15,7 +15,6 @@ namespace KiewitTeamBinder.Api.Tests
         private string excelUserSourcePath = string.Empty;
         private string localTempExcelUserTargetPath = string.Empty;
         protected string environment = string.Empty;
-        protected string captureLocation = "c:\\temp\\testresults\\";
         protected List<KeyValuePair<string, bool>> validations = new List<KeyValuePair<string, bool>>();
         protected List<KeyValuePair<string, bool>> methodValidations = new List<KeyValuePair<string, bool>>();
         public TestContext TestContext { get; set; }
@@ -23,7 +22,7 @@ namespace KiewitTeamBinder.Api.Tests
 
         [TestInitialize]
         public void TestInitialize()
-        {            
+        {
             if (TestContext.Properties.Contains("teamBinderVersion"))
             {
                 teamBinderVersion = TestContext.Properties["teamBinderVersion"].ToString();
@@ -38,18 +37,13 @@ namespace KiewitTeamBinder.Api.Tests
             {
                 localTempExcelUserTargetPath = TestContext.Properties["localTempExcelUserTargetPath"].ToString();
             }
-           
-            if (!Directory.Exists(captureLocation))
-            {
-                Directory.CreateDirectory(captureLocation);
-            }
 
             if (TestContext.Properties.Contains("environment"))
             {
                 environment = TestContext.Properties["environment"].ToString();
             }
         }
-        
+
         protected TestAccount GetTestAccount(string role, string environment, string type, string tbUserRole = "AdminAccount1")
         {
             string sourceFilePath = excelUserSourcePath; // @"C:\working\DT_CommonDataKiewitTeamBinder.xls";
@@ -58,7 +52,16 @@ namespace KiewitTeamBinder.Api.Tests
 
             return user;
         }
-                
+
+        protected ServiceInfo GetServiceInfo(string serviceName)
+        {
+            string sourceFilePath = excelUserSourcePath; // @"C:\working\DT_CommonDataKiewitTeamBinder.xls";
+            string localTempFilePath = localTempExcelUserTargetPath;
+            var info = ServiceInfoAccess.GetServiceInfo(serviceName, sourceFilePath, localTempFilePath);
+
+            return info;
+        }
+
         [TestCleanup]
         public void TestCleanup()
         {

@@ -13,12 +13,13 @@ using KiewitTeamBinder.Api.Service;
 namespace KiewitTeamBinder.Api.Tests.ApiTest
 {
     [TestClass]
-    public class SessionLogon : ApiTestBase
+    public class SessionTest : ApiTestBase
     {
         [TestMethod]
         public void SimpleLogon()
         {
-            SessionApi sessionRequest = new SessionApi();
+            var serviceInfo = GetServiceInfo("Session");
+            SessionApi sessionRequest = new SessionApi(serviceInfo.EndpointName, serviceInfo.Url);
             string sessionKey = "";
             try
             {
@@ -46,7 +47,5 @@ namespace KiewitTeamBinder.Api.Tests.ApiTest
                 throw;
             }
         }
-        
-        
     }
 }
