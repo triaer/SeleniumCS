@@ -11,7 +11,7 @@ namespace KiewitTeamBinder.Common.TestData
 {
     public class TransmittalReceiptSmoke
     {
-        public string ProjectName = "Automation Project 1";
+        public string ProjectName = "Automation Project 2";
         public string DefaultFilter = "Personal";
         public string[] SubItemMenus = { "Inbox", "Drafts", "Sent Items", "Pending" };
         public string GridViewName = "TransmittalRegisterGrid";
@@ -26,19 +26,19 @@ namespace KiewitTeamBinder.Common.TestData
         };
         public class ColumnValuesInCondition
         {
-            public KeyValuePair<string, string> Subject = new KeyValuePair<string, string>(MainPaneTableHeaderLabel.Subject.ToDescription(), "test subjest");
-            public KeyValuePair<string, string> DocumentNo = new KeyValuePair<string, string>(MainPaneTableHeaderLabel.DocumentNo.ToDescription(), "AUTO 13");
+            public KeyValuePair<string, string> Subject = new KeyValuePair<string, string>(MainPaneTableHeaderLabel.Subject.ToDescription(), "Test Transmit Subject");
+            public KeyValuePair<string, string> DocumentNo = new KeyValuePair<string, string>(MainPaneTableHeaderLabel.DocumentNo.ToDescription(), "TESTDOC");
         }
 
         public TransmittalMailInformation transmittalMailInformation = new TransmittalMailInformation()
         {
             FromUser = "Automation Admin1",
-            ProjectNumber = "AUTO1",
-            ProjectTitle = "Automation Project 1",
-            TransmittalDate = "12/06/2018",
-            TransmittalNo = "TRN-SMOKE-00039",
-            DocumentNo = "AUTO 13",
-            AttachedDocumentInfor = new string[] { "AUTO 13"},
+            ProjectNumber = "AUTO2",
+            ProjectTitle = "Automation Project 2",
+            TransmittalDate = "12/27/2018",
+            TransmittalNo = "TRN-SMOKE-00003",
+            DocumentNo = "TESTDOC",
+            AttachedDocumentInfor = new string[] { "TESTDOC" },
         };
     }
     public class TransmittalMailInformation
