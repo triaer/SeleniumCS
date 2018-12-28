@@ -43,11 +43,16 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
         public PopupWindow(IWebDriver webDriver) : base(webDriver)
         { }
 
-        public T ClickToolbarButton<T>(ToolbarButton buttonName, bool checkProgressPopup = false)
+        public T ClickToolbarButton<T>(ToolbarButton buttonName, bool checkProgressPopup = false, bool isDisappear = false)
         {
             var node = StepNode();
             node.Info("Click the button: " + buttonName.ToDescription());
-            ToolBarButton(buttonName.ToDescription()).Click();
+
+            if (isDisappear == true)
+                IWebElementExtensions.HoverAndClickWithJS(ToolBarButton(buttonName.ToDescription()));   
+            else 
+                ToolBarButton(buttonName.ToDescription()).Click();
+
             if (checkProgressPopup)
                 WaitForLoading(_progressPopUp);
 

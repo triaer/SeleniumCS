@@ -101,7 +101,9 @@ namespace KiewitTeamBinder.Common
             [Description("Close")]
             Close,
             [Description("Save")]
-            Save
+            Save,
+            [Description("More")]
+            More
         }
 
         public enum DocBulkUploadInputText
@@ -235,7 +237,9 @@ namespace KiewitTeamBinder.Common
             [Description("Create Transmittals")]
             CreateTransmittals,
             [Description("Item Purchased")]
-            ItemPurchased
+            ItemPurchased,
+            [Description("Link Items")]
+            LinkItems
         }
 
         public enum DialogPopupButton
@@ -302,6 +306,24 @@ namespace KiewitTeamBinder.Common
             RESPONSESOUTSTANDING,
             [Description("Document Bar Chart")]
             DOCMUENTBARCHART
+        }
+
+        public enum DeliverableField
+        {
+            [Description("Contract Number")]
+            ContractNumber,
+            [Description("Item ID")]
+            ItemID,
+            [Description("Deliverable Type")]
+            DeliverableType,
+            [Description("Criticality")]
+            Criticality,
+            [Description("Status")]
+            Status,
+            [Description("Deliverable Line Item Number")]
+            LineItemNumber,
+            [Description("Description")]
+            Description
         }
     }
 }

@@ -53,6 +53,7 @@
     <Compile Include="Models\Control\WBSCostItemInput .cs" />
     <Compile Include="Models\Control\WBSCostItemOutput.cs" />
     <Compile Include="Models\LoggedUserInfo.cs" />
+    <Compile Include="Models\VendorData\DeliverableItemInfo.cs" />
     <Compile Include="Models\VendorData\SingleDocumentInfo.cs" />
     <Compile Include="TestAccountAccess.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -135,6 +135,7 @@
     <Compile Include="Pages\DocumentModule\Document.cs" />
     <Compile Include="Pages\PopupWindows\BulkUploadDocuments.cs" />
     <Compile Include="Pages\PopupWindows\DeliverableItemDetail.cs" />
+    <Compile Include="Pages\PopupWindows\LinkItem.cs" />
     <Compile Include="Pages\PopupWindows\NewTransmittal.cs" />
     <Compile Include="Pages\Global\ProjectsDashboard.cs" />
     <Compile Include="Pages\Global\LoggedInLanding.cs" />

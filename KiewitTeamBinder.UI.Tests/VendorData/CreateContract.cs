@@ -1,7 +1,9 @@
 ﻿using FluentAssertions;
 using KiewitTeamBinder.Common.Helper;
 using KiewitTeamBinder.Common.TestData;
+using KiewitTeamBinder.UI.Pages.Dialogs;
 using KiewitTeamBinder.UI.Pages.Global;
+using KiewitTeamBinder.UI.Pages.PopupWindows;
 using KiewitTeamBinder.UI.Pages.VendorDataModule;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -42,8 +44,21 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                                   .LogValidation<VendorDataRegister>(ref validations, projectDashBoard.ValidateDisplayedSubItemLinks(createNewDeliverable.SubItemMenus));
 
                 DeliverableItemDetail deliverableItemDetail = vendorDataRegister.OpenDeliverableLineItemTemplate(out parrentWindow);
-                deliverableItemDetail.LogValidation<DeliverableItemDetail>(ref validations, deliverableItemDetail.ValidateWindowIsOpened(createNewDeliverable.WindowTitle));
-           //                          .LogValidation<DeliverableItemDetail>(ref validations, deliverableItemDetail.V);
+
+                string currentWindow = deliverableItemDetail.GetCurrentWindow();
+                deliverableItemDetail.LogValidation<DeliverableItemDetail>(ref validations, deliverableItemDetail.ValidateWindowIsOpened(createNewDeliverable.DeliverableWindowTitle))
+                                     .LogValidation<DeliverableItemDetail>(ref validations, deliverableItemDetail.ValidateRequiredFieldsWithRedAsterisk(createNewDeliverable.RequiredField))
+                                     .EnterDeliverableItemInfo(createNewDeliverable.DeliverableItemInfo, ref methodValidations)
+                                     .LogValidation<DeliverableItemDetail>(ref validations, deliverableItemDetail.ValidateSelectedItemShowInDropdownBoxesCorrect(createNewDeliverable.DeliverableItemInfo));
+                AlertDialog alertDialog = deliverableItemDetail.ClickToolbarButton<AlertDialog>(ToolbarButton.Save);
+                alertDialog.LogValidation<AlertDialog>(ref validations, deliverableItemDetail.ValidateMessageDisplayCorrect(createNewDeliverable.SaveMessage))
+                           .ClickOKButton<DeliverableItemDetail>();
+
+                deliverableItemDetail.ClickToolbarButton<DeliverableItemDetail>(ToolbarButton.More, checkProgressPopup: false, isDisappear: true)
+                                     .LogValidation<DeliverableItemDetail>(ref validations, deliverableItemDetail.ValidateDisplayedSubItemLinks(createNewDeliverable.SubItemOfMoreFunction));
+                                     
+                LinkItem linkItem = deliverableItemDetail.ClickHeaderDropdownItem<LinkItem>(MainPaneHeaderDropdownItem.LinkItems, true);
+                linkItem.LogValidation<LinkItem>(ref validations, linkItem.ValidateWindowIsOpened(createNewDeliverable.LinkItemsWindowTitle));
 
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);
