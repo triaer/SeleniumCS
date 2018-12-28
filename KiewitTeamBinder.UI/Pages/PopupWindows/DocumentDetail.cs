@@ -5,21 +5,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using static KiewitTeamBinder.UI.ExtentReportsHelper;
-using OpenQA.Selenium.Interactions;
+using static KiewitTeamBinder.Common.KiewitTeamBinderENums;
 using System.Drawing;
-using KiewitTeamBinder.UI.Pages.Global;
 
-namespace KiewitTeamBinder.UI.Pages.VendorDataModule
+
+namespace KiewitTeamBinder.UI.Pages.PopupWindows
 {
-    public class DocumentDetail : ProjectsDashboard
+    public class DocumentDetail : PopupWindow
     {
         #region Entities
-        private string _requiredFieldXpath = "//span[text()='{0}']/following::span[1]";
         private static By _itemDropdown(string dropdownListName) => By.XPath($"//ul/li[text()='{dropdownListName}']");
-        private static By _dropdownButton(string idDropdownButton) => By.XPath($"//input[@id='{idDropdownButton}']/following::a[1]");
         private static By _documentNoTextBox => By.Id("txtDocumentNo");
         private static By _revStatusDropdown => By.Id("ComboDocumentRev_Input");
         private static By _statusDropdown => By.Id("ComboDocumentSts_Input");
@@ -27,28 +24,17 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
         private static By _categoryDropdown => By.Id("ComboDocumentCategory_Input");
         private static By _disciplineDropdown => By.Id("ComboDocumentDisc_Input");
         private static By _typeDropdown => By.Id("ComboDocumentType_Input");
-        private static By _attachFilesButton => By.Id("fileUpload");
-        private static By _saveDocButton => By.Id("SaveDocToolBar");
+        private static By _attachFilesButton => By.Id("fileUpload");       
         private static By _fromUserLabel => By.Id("txtUploadFromUser");
-        private static By _saveSingleDocPopUp => By.XPath("//div[contains(@id,'RadWindowWrapper_alert')]");
-        private static By _saveSingleDocMessage => By.XPath("//div[contains(@id,'RadWindowWrapper_alert')]//div[contains(@id, '_message')]");
-        private static By _okButtonOnPopUp => By.XPath("//div[contains(@id,'RadWindowWrapper_alert')]//span[text()='OK']");
-        //private static By _clientStateValue(string idDropdownButton) => By.XPath($"//input[contains(@id,'{idDropdownButton}_ClientState')]");
-
-        public IWebElement ItemDropdown(string dropdownListName) => StableFindElement(_itemDropdown(dropdownListName));
-        public IWebElement DropdownButton(string idDropdownButton) => StableFindElement(_dropdownButton(idDropdownButton));
+        
         public IWebElement DocumentNoTextBox { get { return StableFindElement(_documentNoTextBox); } }
         public IWebElement RevStatusDropdown { get { return StableFindElement(_revStatusDropdown); } }
         public IWebElement StatusDropdown { get { return StableFindElement(_statusDropdown); } }
-        public IWebElement TitleTextBox { get { return StableFindElement(_titleTextBox); } }
         public IWebElement CategoryDropdown { get { return StableFindElement(_categoryDropdown); } }
         public IWebElement DisciplineDropdown { get { return StableFindElement(_disciplineDropdown); } }
         public IWebElement TypeDropdown { get { return StableFindElement(_typeDropdown); } }
         public IWebElement AttachFilesButton { get { return StableFindElement(_attachFilesButton); } }
-        public IWebElement SaveDocButton { get { return StableFindElement(_saveDocButton); } }
         public IWebElement FromUserLabel { get { return StableFindElement(_fromUserLabel); } }
-        public IWebElement SaveSingleDocMessage { get { return StableFindElement(_saveSingleDocMessage); } }
-        public IWebElement OkButtonOnPopUp { get { return StableFindElement(_okButtonOnPopUp); } }
         #endregion
 
         #region Actions
@@ -58,71 +44,32 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
         {
             var node = StepNode();
             node.Info($"Enter {singleDocumentInfo.DocumentNo} in Document No Field.");
-            FillDataForDocument(DocumentNoTextBox, singleDocumentInfo.DocumentNo);
+            EnterTextField<DocumentDetail>("Document No.", singleDocumentInfo.DocumentNo);
             node.Info("Click Rev Status dropdown, and select: " + singleDocumentInfo.RevStatus);
-            SelectItemInDropdown(RevStatusDropdown, singleDocumentInfo.RevStatus, ref methodValidation);
+            SelectItemInDropdown<DocumentDetail>("Rev", singleDocumentInfo.RevStatus, ref methodValidation);
             node.Info("Click Status dropdown, and select: " + singleDocumentInfo.Status);
-            SelectItemInDropdown(StatusDropdown, singleDocumentInfo.Status, ref methodValidation);
+            SelectItemInDropdown<DocumentDetail>("Status", singleDocumentInfo.Status, ref methodValidation);
             node.Info($"Enter {singleDocumentInfo.Title} in Document Title  Field.");
-            FillDataForDocument(TitleTextBox, singleDocumentInfo.Title);
+            EnterTextField<DocumentDetail>("Title", singleDocumentInfo.Title);
             node.Info("Click Category Type dropdown, and select: " + singleDocumentInfo.Category);
-            SelectItemInDropdown(CategoryDropdown, singleDocumentInfo.Category, ref methodValidation);
+            SelectItemInDropdown<DocumentDetail>("Category", singleDocumentInfo.Category, ref methodValidation);
             node.Info("Click Discipline Type dropdown, and select: " + singleDocumentInfo.Discipline);
-            SelectItemInDropdown(DisciplineDropdown, singleDocumentInfo.Discipline, ref methodValidation);
+            SelectItemInDropdown<DocumentDetail>("Discipline", singleDocumentInfo.Discipline, ref methodValidation);
             node.Info("Click Type dropdown, and select: " + singleDocumentInfo.Type);
-            SelectItemInDropdown(TypeDropdown, singleDocumentInfo.Type, ref methodValidation);
+            SelectItemInDropdown<DocumentDetail>("Type", singleDocumentInfo.Type, ref methodValidation);
             return this;
-        }
-
-        public DocumentDetail SelectItemInDropdown(IWebElement Element, string value, ref List<KeyValuePair<string, bool>> methodValidation)
-        {
-            string id = Element.GetAttribute("id");
-            Element.Click();
-            methodValidation.Add(ValidateItemDropdownIsHighlighted(value, id));
-            ItemDropdown(value).Click();
-            Element.SendKeys(OpenQA.Selenium.Keys.Tab);
-
-            return this;
-        }
-
-        public DocumentDetail FillDataForDocument(IWebElement Element, string value)
-        {
-            Element.InputText(value);
-            return this;
-        }
+        }              
 
         public DocumentDetail ClickAttachFilesButton(string filePath, string fileNames)
         {
-
             var node = StepNode();
             node.Info("Click Attach Files In the header");
             AttachFilesButton.ClickWithHandleTimeout();
             node.Info("Choose files from window explorer form");
             node.Info("Files name: " + fileNames);
-            Wait(shortTimeout / 2);
-            SendKeys.SendWait(@filePath);
-            SendKeys.SendWait(@"{Enter}");
-            Wait(shortTimeout / 2);
-            SendKeys.SendWait(@fileNames);
-            Wait(shortTimeout / 3);
-            SendKeys.SendWait(@"{Enter}");
-            Wait(shortTimeout / 3);
-            
+            UploadFiles(filePath, fileNames);
             return this;
-        }
-
-        public DocumentDetail ClickSaveButton()
-        {
-            SaveDocButton.Click();
-            WebDriver.SwitchTo().ActiveElement();
-            return this;
-        }
-        public DocumentDetail ClickOkButtonOnPopUp()
-        {
-            OkButtonOnPopUp.Click();
-            WebDriver.SwitchTo().DefaultContent();
-            return this;
-        }
+        }        
 
         public List<KeyValuePair<string, bool>> ValidateSelectedItemShowInDropdownBoxesCorrect(SingleDocumentInfo singleDocumentInfo)
         {
@@ -166,7 +113,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             }
         }
 
-        public KeyValuePair<string, bool> ValidateItemDropdownIsHighlighted(string value, string idDropdown)
+        public override KeyValuePair<string, bool> ValidateItemDropdownIsHighlighted(string value, string idDropdown)
         {
             var node = StepNode();
             try
@@ -240,12 +187,12 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             }
         }
 
-        public string ConvertColorFromRGBToHex(Color color)
+        private string ConvertColorFromRGBToHex(Color color)
         {
             return "#" + color.R.ToString("X2") + color.G.ToString("X2") + color.B.ToString("X2");
         }
 
-        public string ConvertColorFromRGBAToHex(string color)
+        private string ConvertColorFromRGBAToHex(string color)
         {
             string[] listValue = color.Substring(5).Replace(')', ' ').Split(',');
             int r = Int32.Parse(listValue[0].Trim());
@@ -253,42 +200,17 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             int b = Int32.Parse(listValue[2].Trim());
             Color colorConvert = Color.FromArgb(r, g, b);
             return "#" + colorConvert.R.ToString("X2") + colorConvert.G.ToString("X2") + colorConvert.B.ToString("X2");
-        }
-
-        public List<KeyValuePair<string, bool>> ValidateRequiredFieldsWithRedAsterisk(string[] requiredFields)
-        {
-            var node = StepNode();
-            var validation = new List<KeyValuePair<string, bool>>();
-            try
-            {
-                for (int i = 0; i < requiredFields.Length; i++)
-                {
-                    node.Info("Check " + requiredFields[i] + " field is marked red asterisk");
-                    if (StableFindElement(By.XPath(string.Format(_requiredFieldXpath, requiredFields[i]))) != null)
-                        validation.Add(SetPassValidation(node, Validation.Required_Fields_Are_Marked_Red_Asterisk + requiredFields[i]));
-                    else
-                        validation.Add(SetFailValidation(node, Validation.Required_Fields_Are_Marked_Red_Asterisk + requiredFields[i]));
-                }
-
-                return validation;
-            }
-            catch (Exception e)
-            {
-                validation.Add(SetErrorValidation(node, Validation.Required_Fields_Are_Marked_Red_Asterisk, e));
-            }
-            return validation;
-        }
+        }               
 
         public KeyValuePair<string, bool> ValidateDocumentNoIsLimitRetained(int maxLength)
         {
             var node = StepNode();
-
             try
             {
                 string actual = DocumentNoTextBox.GetAttribute("maxlength");
                 if (actual == maxLength.ToString())
                     return SetPassValidation(node, Validation.Document_No_Limit_Retained);
-
+                else
                 return SetFailValidation(node, Validation.Document_No_Limit_Retained, maxLength.ToString(), actual);
             }
             catch (Exception e)
@@ -296,66 +218,16 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
                 return SetErrorValidation(node, Validation.Document_No_Limit_Retained, e);
             }
         }
-
-        public KeyValuePair<string, bool> ValidateSaveSingleDocPopUpStatus(bool close = false)
-        {
-            var node = StepNode();
-
-            try
-            {
-                if (close == true)
-                {
-                    if (FindElement(_saveSingleDocPopUp) == null)
-                        return SetPassValidation(node, Validation.Save_SingleDoc_PopUp_Closed);
-
-                    return SetFailValidation(node, Validation.Save_SingleDoc_PopUp_Closed);
-                }
-
-                if (StableFindElement(_saveSingleDocPopUp) != null)
-                    return SetPassValidation(node, Validation.Save_SingleDoc_PopUp_Opened);
-
-                return SetFailValidation(node, Validation.Save_SingleDoc_PopUp_Opened);
-            }
-            catch (Exception e)
-            {
-                if (close == true)
-                    return SetFailValidation(node, Validation.Save_SingleDoc_PopUp_Closed);
-
-                return SetErrorValidation(node, Validation.Document_No_Limit_Retained, e);
-            }
-        }
-
-        public KeyValuePair<string, bool> ValidateMessageDisplayCorrect()
-        {
-            var node = StepNode();
-
-            try
-            {
-                string message = "Document details saved successfully.";
-                string actual = SaveSingleDocMessage.Text.Trim();
-                if (actual == message)
-                    return SetPassValidation(node, Validation.Message_Display_Correct);
-
-                return SetFailValidation(node, Validation.Message_Display_Correct, message, actual);
-            }
-            catch (Exception e)
-            {
-                return SetErrorValidation(node, Validation.Message_Display_Correct, e);
-            }
-        }
-        #endregion
+        
         private static class Validation
         {
             public static string User_Field_Display_Correct = "Validate that the User Field is displayed correctly";
             public static string User_Field_Color_Correct = "Validate that the Color of User Field displayed correctly";
             public static string User_Fields_Cannot_Update = "Validate that the User Field is cannot updated";
             public static string Document_No_Limit_Retained = "Validate that the Document No is retained limited";
-            public static string Required_Fields_Are_Marked_Red_Asterisk = "Validate that the Required Fields are marked red asterisk: - ";
             public static string Item_Dropdown_Is_Highlighted = "Validate that the item is highlighted when hovered or scrolled over in the dropdown: ";
             public static string Item_Dropdown_Is_Selected = "Validate that the {0} dropdown selected item '{1}' ";
-            public static string Save_SingleDoc_PopUp_Closed = "Validate that the Save Single Document PopUp is closed";
-            public static string Save_SingleDoc_PopUp_Opened = "Validate that the Save Single Document PopUp is opened";
-            public static string Message_Display_Correct = "Validate that the Message is displayed correctly";
         }
+        #endregion
     }
 }

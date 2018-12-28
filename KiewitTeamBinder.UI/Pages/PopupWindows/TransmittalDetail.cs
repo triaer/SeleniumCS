@@ -12,9 +12,12 @@ using KiewitTeamBinder.Common.Helper;
 using System.Timers;
 
 
-namespace KiewitTeamBinder.UI.Pages.VendorDataModule
+namespace KiewitTeamBinder.UI.Pages.PopupWindows
 {
-    public class TransmittalDetail : ProjectsDashboard
+    /// <summary>
+    /// This page displays after click Send button on New Transmital page
+    /// </summary>
+    public class TransmittalDetail : PopupWindow
     {
         #region Entities
         private static By _projectNumberInfo => By.XPath("//td[contains(text(), 'Project Number:')]/following-sibling::td[1]");

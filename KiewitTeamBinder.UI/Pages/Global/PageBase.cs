@@ -847,6 +847,18 @@ namespace KiewitTeamBinder.UI.Pages.Global
             return screenshotFilePath;
         }
 
+        internal static void UploadFiles(string filePath, string fileNames)
+        {
+            Wait(shortTimeout / 2);
+            SendKeys.SendWait(@filePath);
+            SendKeys.SendWait(@"{Enter}");
+            Wait(shortTimeout / 2);
+            SendKeys.SendWait(@fileNames);
+            Wait(shortTimeout / 3);
+            SendKeys.SendWait(@"{Enter}");
+            Wait(shortTimeout / 3);
+        }
+
         internal static void TakeScreenshot(out string filePath, IWebElement HightLightElement = null, string captureLocation = "c:\\temp\\testresults\\")
         {
 
