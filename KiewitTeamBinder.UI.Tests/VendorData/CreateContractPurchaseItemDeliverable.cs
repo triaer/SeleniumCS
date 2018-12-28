@@ -95,7 +95,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 holdingArea.FilterDocumentsByGridFilterRow<VendorDataRegister>(validatePurchaseItemData.GridViewName,
                                                                                validatePurchaseItemData.ContractNumber.Key,
                                                                                validatePurchaseItemData.ContractNumber.Value)
-                    //.LogValidation<VendorDataRegister>(ref validations, holdingArea.ValidateItemsAreShown(columnValuePairList1, validatePurchaseItemData.GridViewName))
+                    .LogValidation<VendorDataRegister>(ref validations, holdingArea.ValidateItemsAreShown(columnValuePairList1, validatePurchaseItemData.GridViewName))
                     .ClickExpandButton(validatePurchaseItemData.expandButtonIndex)
                     .LogValidation<VendorDataRegister>(ref validations, holdingArea.ValidatePurchaseItemsAreShown(columnValuePairList2));
                 ItemDetail itemDetail = holdingArea.OpenItem(columnValuePairList2);
