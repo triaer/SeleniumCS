@@ -189,7 +189,9 @@ namespace KiewitTeamBinder.Common
             [Description("More")]
             More,
             [Description("Transmit")]
-            Transmit
+            Transmit,
+            [Description("New")]
+            New,
         }
 
         public enum MainPaneTableHeaderLabel

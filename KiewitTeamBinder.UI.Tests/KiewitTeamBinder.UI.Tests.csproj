@@ -139,6 +139,7 @@
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VendorData\CreateContract.cs" />
     <Compile Include="VendorData\SingleDocUpload.cs" />
     <Compile Include="VendorData\BulkUpload.cs" />
   </ItemGroup>

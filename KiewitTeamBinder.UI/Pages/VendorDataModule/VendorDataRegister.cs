@@ -18,13 +18,21 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
     public class VendorDataRegister : ProjectsDashboard
     {
         #region Entities
-        
+        private static By _deliverableLineItem => By.XPath("//span[(text()='Deliverable Line Item')]");
+
+        public IWebElement DeliverableLineItem => StableFindElement(_deliverableLineItem);
         #endregion
 
         #region Actions
         public VendorDataRegister(IWebDriver webDriver) : base(webDriver)
         {
         }        
+
+        public DeliverableItemDetail OpenDeliverableLineItemTemplate(out string parrentWindow)
+        {
+            SwitchToNewPopUpWindow(DeliverableLineItem, out parrentWindow, true);
+            return new DeliverableItemDetail(WebDriver);
+        }
 
         private static class Validation
         {

@@ -137,7 +137,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             if (subMenuItem != "")
                 ClickSubMenuItem(subMenuItem);
 
-            return this;
+                return this;
         }
 
         public T SelectModuleMenuItem<T>(string menuItem = "", string subMenuItem = "", bool waitForLoading = true)
