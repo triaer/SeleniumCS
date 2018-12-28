@@ -7,13 +7,15 @@ namespace KiewitTeamBinder.Api.Service
     public class SessionApi
     {
         #region Entities
+        private static string ServiceName = "/Session.asmx";
+        private static string EndpointName = "SessionWebServiceSoap";
         private SessionServiceReference.SessionWebServiceSoapClient _request;
         #endregion
 
         #region Actions
-        public SessionApi(string endpointName, string url)
+        public SessionApi(string url)
         {
-            _request = new SessionServiceReference.SessionWebServiceSoapClient(endpointName, url);
+            _request = new SessionServiceReference.SessionWebServiceSoapClient(EndpointName, url + ServiceName);
         }
 
         public string LogonWithApplication(string userID, string companyID, string password, string projectNumber, string connectingProduct)
