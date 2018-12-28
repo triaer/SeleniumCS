@@ -19,6 +19,7 @@ namespace KiewitTeamBinder.Api.Tests
         protected List<KeyValuePair<string, bool>> methodValidations = new List<KeyValuePair<string, bool>>();
         public TestContext TestContext { get; set; }
         protected string teamBinderVersion;
+        private string webServiceBase = "/TBWS";
 
         [TestInitialize]
         public void TestInitialize()
@@ -53,13 +54,11 @@ namespace KiewitTeamBinder.Api.Tests
             return user;
         }
 
-        protected ServiceInfo GetServiceInfo(string serviceName)
+        protected string GetServiceUrl(string url)
         {
-            string sourceFilePath = excelUserSourcePath; // @"C:\working\DT_CommonDataKiewitTeamBinder.xls";
-            string localTempFilePath = localTempExcelUserTargetPath;
-            var info = ServiceInfoAccess.GetServiceInfo(serviceName, sourceFilePath, localTempFilePath);
-
-            return info;
+            string splitString = ".com";
+            var index = url.IndexOf(splitString);            
+            return url.Substring(0, index + splitString.Length) + webServiceBase;
         }
 
         [TestCleanup]

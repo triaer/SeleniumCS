@@ -99,7 +99,9 @@ namespace KiewitTeamBinder.Common
             [Description("Send")]
             Send,
             [Description("Close")]
-            Close
+            Close,
+            [Description("Save")]
+            Save
         }
 
         public enum DocBulkUploadInputText
@@ -160,6 +162,8 @@ namespace KiewitTeamBinder.Common
 
         public enum MainPaneTableHeaderButton
         {
+            [Description("New")]
+            New,
             [Description("New Rows")]
             NewRows,
             [Description("Copy Attributes")]
@@ -189,9 +193,7 @@ namespace KiewitTeamBinder.Common
             [Description("More")]
             More,
             [Description("Transmit")]
-            Transmit,
-            [Description("New")]
-            New,
+            Transmit
         }
 
         public enum MainPaneTableHeaderLabel
@@ -232,6 +234,8 @@ namespace KiewitTeamBinder.Common
         {
             [Description("Create Transmittals")]
             CreateTransmittals,
+            [Description("Item Purchased")]
+            ItemPurchased
         }
 
         public enum DialogPopupButton

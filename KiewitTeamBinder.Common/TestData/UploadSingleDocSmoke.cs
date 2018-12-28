@@ -16,7 +16,7 @@ namespace KiewitTeamBinder.Common.TestData
         public string[] RequiredFields = { "Document No.", "Rev", "Status", "Title", "Category", "Discipline" };
         public Color ColorGrey = Color.FromArgb(207,207,207);
         public int MaxLengthOfDocNo = 40;
-
+        public string SaveMessage = "Document details saved successfully.";
         public SingleDocumentInfo SingleDocInformation = new SingleDocumentInfo()
         {
             DocumentNo = Utils.GetRandomValue("DocumentNo"),

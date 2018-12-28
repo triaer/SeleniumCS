@@ -42,8 +42,8 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                                   .LogValidation<VendorDataRegister>(ref validations, projectDashBoard.ValidateDisplayedSubItemLinks(createNewDeliverable.SubItemMenus));
 
                 DeliverableItemDetail deliverableItemDetail = vendorDataRegister.OpenDeliverableLineItemTemplate(out parrentWindow);
-                deliverableItemDetail.LogValidation<DeliverableItemDetail>(ref validations, deliverableItemDetail.ValidateWindowIsOpened(createNewDeliverable.WindowTitle))
-                                     .LogValidation<DeliverableItemDetail>(ref validations, deliverableItemDetail.V);
+                deliverableItemDetail.LogValidation<DeliverableItemDetail>(ref validations, deliverableItemDetail.ValidateWindowIsOpened(createNewDeliverable.WindowTitle));
+           //                          .LogValidation<DeliverableItemDetail>(ref validations, deliverableItemDetail.V);
 
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);

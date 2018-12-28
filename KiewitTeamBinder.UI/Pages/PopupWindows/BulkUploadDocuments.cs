@@ -13,9 +13,9 @@ using System.Windows.Forms;
 using KiewitTeamBinder.UI.Pages.Dialogs;
 
 
-namespace KiewitTeamBinder.UI.Pages.Global
+namespace KiewitTeamBinder.UI.Pages.PopupWindows
 {
-    public class BulkUploadDocuments : ProjectsDashboard
+    public class BulkUploadDocuments : PopupWindow
     {
         #region Entities
         private static By _addFileInBulkButton => By.Id("addBulkFlashWrapper");
@@ -36,7 +36,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
         private string _toNRows = "//*[@id='RadContextMenu1_detached']/div[{0}]//a[span= '{1}']";
         private string _bottomButtonXpath = "//li[contains(@class,'rtbItem rtbBtn')]//span[text()='{0}']";
         private string _indexOfColumnByPropertyName = "count(..//td[./*[@data-property-name='{0}']]/preceding-sibling::td)+1";
-        private string _documentTextboxByProperty = "./*[@data-property-name='{0}']";
         private string _allDocumentRowsXpath = "//div[contains(@id,'_GridData')]/table/tbody/tr[not (contains(@id,'ViewFiles'))]";
 
         public IWebElement AddFileInBulkButton { get { return StableFindElement(_addFileInBulkButton); } }
@@ -59,8 +58,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         
         public IReadOnlyCollection<SelectElement> GetAllComboBoxes(string comboBoxName)
         {
-            IReadOnlyCollection<IWebElement> AllComboBoxes = StableFindElements(By.XPath(string.Format(_allComboBoxes, 
-                                                                                                       comboBoxName)));
+            IReadOnlyCollection<IWebElement> AllComboBoxes = StableFindElements(By.XPath(string.Format(_allComboBoxes, comboBoxName)));
             Collection<SelectElement> AllSelectComboBoxes = new Collection<SelectElement>();
             for (int i = 0; i < AllComboBoxes.Count; i++)
             {
@@ -71,9 +69,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
             return AllSelectComboBoxes;
         }
 
-        // We have to use hard code waiting time cause this is Windows native control
-        // In order to type in multi-file names we need to separate the filePath and fileNames
-        // filePath = "C:\Working", fileNames = {\"File1.txt\" \"File2.txt\" \"File3.txt\...."}
         public BulkUploadDocuments AddFilesInBulk(string filePath, string fileNames)
         {
             var node = StepNode();
@@ -81,14 +76,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             AddFilesInBulkButton.ClickWithHandleTimeout();
             node.Info("Choose files from window explorer form");
             node.Info("Files name: " + fileNames);
-            Wait(shortTimeout/2);
-            SendKeys.SendWait(@filePath);
-            SendKeys.SendWait(@"{Enter}");
-            Wait(shortTimeout/2);
-            SendKeys.SendWait(@fileNames);
-            Wait(shortTimeout/3);
-            SendKeys.SendWait(@"{Enter}");
-            Wait(shortTimeout/3);
+            UploadFiles(filePath, fileNames);
             int numberOfFile = fileNames.Split('.').Length - 1;
             while (FileNames == null || FileNames.Count < numberOfFile)
             { }
@@ -243,8 +231,9 @@ namespace KiewitTeamBinder.UI.Pages.Global
             string fileNames = "";
             for (int i = 0; i < numberOfRow; i++)
             {
-                int fileIndex = i % 15 + 1;                
-                fileNames += "\"File" + fileIndex + ".txt\" ";               
+                //int fileIndex = i % 15 + 1;                
+                //fileNames += "\"File" + fileIndex + ".txt\" ";               
+                fileNames += "\"File" + (i + 1) + ".txt\" ";
             }
             var methodValidations = new List<KeyValuePair<string, bool>>();
             int indexOfCopyAttributeItem = 0;
