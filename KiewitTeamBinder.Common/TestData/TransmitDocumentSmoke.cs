@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using KiewitTeamBinder.Common;
-
+using static KiewitTeamBinder.Common.Models.LoggedUserInfo;
 
 namespace KiewitTeamBinder.Common.TestData
 {
@@ -18,14 +18,12 @@ namespace KiewitTeamBinder.Common.TestData
         public int NumberOfSelectedDocumentRow = 2;        
         public string Subject = "Test Transmittal";
         public string Message = "This is a test transmittal";
-        public User KiewitUser = new User();
-
-        public class User
+        public User KiewitUser = new User()
         {
-            public string UserName = "Automation Admin1";
-            public string CompanyName = "Kiewit";
-            public string Description = "Automation Admin1 (Kiewit)";
-        }
+            UserName = "Automation Admin1",
+            CompanyName = "Kiewit",
+            Description = "Automation Admin1 (Kiewit)"
+        };
     }
 
 }

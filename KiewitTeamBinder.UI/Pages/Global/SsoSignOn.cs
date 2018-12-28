@@ -49,6 +49,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             SwitchToNewPopUpWindow(KiewitUserLoginBtn, out signinWindow, true);
 
             //Fill Kiewit account fields
+            WaitForElementEnable(_email);
             Email.InputText(account.kiewitUserName);
             NextButton.Click();
             WaitUntil(driver => Username != null);

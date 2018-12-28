@@ -45,11 +45,11 @@ namespace KiewitTeamBinder.UI.Pages.Global
         {
             //Filter project by title
             IWebElement ProjectItem = FilterProjectByIDOrTitle("Project Title", filterValue);
-            WaitForElementDisplay(_walkMe);
             //click on the project
             ProjectItem.Click();
             //WaitForJQueryLoad();
             var dashboard = new ProjectsDashboard(WebDriver);
+            WaitForElementDisplay(_walkMe);
             WaitForElement(dashboard._dashBoardLabel);
             return dashboard;
         }

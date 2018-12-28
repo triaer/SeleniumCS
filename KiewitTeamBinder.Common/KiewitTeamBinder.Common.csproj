@@ -52,6 +52,7 @@
     <Compile Include="Models\Control\GLAccountDocumentInput.cs" />
     <Compile Include="Models\Control\WBSCostItemInput .cs" />
     <Compile Include="Models\Control\WBSCostItemOutput.cs" />
+    <Compile Include="Models\LoggedUserInfo.cs" />
     <Compile Include="Models\VendorData\SingleDocumentInfo.cs" />
     <Compile Include="TestAccountAccess.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -64,6 +65,7 @@
     <Compile Include="TestData\TeamBinderLoginSmoke.cs" />
     <Compile Include="TestData\TeamBinderVersionSmoke.cs" />
     <Compile Include="TestData\TransmitSingleDocSmoke.cs" />
+    <Compile Include="TestData\TransmittalReceiptSmoke.cs" />
     <Compile Include="TestData\UploadSingleDocSmoke.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -7,28 +7,35 @@ namespace KiewitTeamBinder.Api.Service
     public class SessionApi
     {
         #region Entities
-        public SessionServiceReference.SessionWebServiceSoapClient request = new SessionServiceReference.SessionWebServiceSoapClient("SessionWebServiceSoap");
+        private static string ServiceName = "/Session.asmx";
+        private static string EndpointName = "SessionWebServiceSoap";
+        private SessionServiceReference.SessionWebServiceSoapClient _request;
         #endregion
 
         #region Actions
-        public string LogonWithApplication(string userID , string companyID, string password, string projectNumber, string connectingProduct)
-        {            
-            string sessionKey = request.LogonWithApplication(userID, companyID, password, projectNumber, connectingProduct);
+        public SessionApi(string url)
+        {
+            _request = new SessionServiceReference.SessionWebServiceSoapClient(EndpointName, url + ServiceName);
+        }
+
+        public string LogonWithApplication(string userID, string companyID, string password, string projectNumber, string connectingProduct)
+        {
+            string sessionKey = _request.LogonWithApplication(userID, companyID, password, projectNumber, connectingProduct);
             return sessionKey;
         }
 
         public string LogoffStatus(string sessionKey)
-        {            
-            string response = request.LogoffStatus(sessionKey);
+        {
+            string response = _request.LogoffStatus(sessionKey);
             return response;
         }
 
         public KeyValuePair<string, bool> ValidateLogonWithApplicationSuccessfully(string sessionKey)
-        {            
+        {
             try
             {
                 if (!sessionKey.ToUpper().Contains("ERROR"))
-                    return new KeyValuePair<string, bool>(Validation.Logon_With_Application_Successfully + sessionKey, true);
+                    return new KeyValuePair<string, bool>(Validation.Logon_With_Application_Successfully, true);
                 return new KeyValuePair<string, bool>(Validation.Logon_With_Application_Successfully + ", " + sessionKey, false);
             }
             catch (Exception e)
@@ -53,7 +60,7 @@ namespace KiewitTeamBinder.Api.Service
 
         private static class Validation
         {
-            public static string Logon_With_Application_Successfully = "Validate that logon with application successfully. Returned sessionKey: ";
+            public static string Logon_With_Application_Successfully = "Validate that logon with application successfully";
             public static string Logoff_Status_Successfully = "Validate that logoff status successfully";
         }
         #endregion

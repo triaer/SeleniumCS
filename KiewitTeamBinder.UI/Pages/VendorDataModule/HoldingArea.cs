@@ -75,8 +75,11 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
         {
             var node = StepNode();
             node.Info($"Filter the '{columnName}' column with value '{value}'");
+            WaitForElementEnable(By.XPath(string.Format(_filterTextBoxXpath, columnName)));
+
             IWebElement FilterCell = StableFindElement(By.XPath(string.Format(_filterTextBoxXpath,columnName)));
             IWebElement FilterTextBox = FilterCell.StableFindElement(By.TagName("input"));
+            
             FilterTextBox.InputText(value);
             if (!useFilterMenu)
                 FilterTextBox.SendKeys(Keys.Enter);
@@ -103,6 +106,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             var node = StepNode();
             node.Info("Select checkbox of document rows without the transmittal no. value in Holding Area grid");
             int rowIndex, colIndex = 1;
+            WaitForElementClickable(_sortButton(MainPaneTableHeaderLabel.TransmittalNo.ToDescription()));
             SortButton(MainPaneTableHeaderLabel.TransmittalNo.ToDescription()).Click();
             WaitForJQueryLoad();
             GetTableCellValueIndex(PaneTable(gridViewName), "Document No.", out rowIndex, out colIndex, "th");

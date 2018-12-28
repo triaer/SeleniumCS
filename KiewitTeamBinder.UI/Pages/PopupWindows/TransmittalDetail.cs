@@ -10,6 +10,7 @@ using KiewitTeamBinder.Common;
 using KiewitTeamBinder.Common.TestData;
 using KiewitTeamBinder.Common.Helper;
 using System.Timers;
+using System.Globalization;
 
 
 namespace KiewitTeamBinder.UI.Pages.PopupWindows
@@ -29,9 +30,20 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
         private static By _fromInfo => By.XPath("//td[contains(text(), 'From:')]/following-sibling::td[1]");
         private static By _attachedDocumentName(string index) => By.XPath($"//tr[th[contains(text(),'Item')]]/following-sibling::tr[{index}]/td[2]");
         private static By _recipientList(string listType) => By.XPath($"//tr[td = '{listType}']/following-sibling::tr[2]//tr");
+        private static By _transmittalNoHeaderLabel(string inforHeader) => By.XPath($"//td[contains(text(),'{inforHeader}') and @valign='top']");
+        private static By _detailInfoLabel(string infor) => By.XPath($"//td[contains(text(),'{infor}')]");
+        private static By _dateLabel => By.XPath("//td[contains(text(),'Date:')]/following::td[1]");
+        private static By _linkText(string text) => By.XPath($"//a[text() = '{text}']");
+        private static By _tabMenu(string nameMenu) => By.XPath($"//li//span[text()='{nameMenu}']");
+        private static By _gridViewDocuments = By.Id("GridViewDocuments_ctl00");
+        private static By _closeButtonInBottomPage = By.XPath("//div[@id='divTransmittalDetailFooter']//span[text()='Close']");
         private static By _downloadHyperlink => By.XPath("//a[text() = 'Click here to download all Transmittal files.']");
         private static By _documentHyperlink(string documentNo) => By.XPath($"//a[text() = '{documentNo}']");
-
+        public IWebElement CloseButtonInBottomPage { get { return StableFindElement(_closeButtonInBottomPage); } }
+        public IWebElement TabMenu(string nameMenu) => StableFindElement(_tabMenu(nameMenu));
+        public IWebElement LinkText(string text) => StableFindElement(_linkText(text));
+        public IWebElement DetailInfoLabel(string infor) => StableFindElement(_detailInfoLabel(infor));
+        public IWebElement TransmittalNoHeaderLabel(string infor) => StableFindElement(_transmittalNoHeaderLabel(infor));
         public IWebElement ProjectNumberInfo { get { return StableFindElement(_projectNumberInfo); } }
         public IWebElement ProjectTitleInfo { get { return StableFindElement(_projectTitleInfo); } }
         public IWebElement DateInfo { get { return StableFindElement(_dateInfo); } }
@@ -48,12 +60,24 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
         #region Actions
         public TransmittalDetail(IWebDriver webDriver) : base(webDriver) { }
 
+        public T ClickCloseInBottomPage<T>()
+        {
+            CloseButtonInBottomPage.Click();
+            return (T)Activator.CreateInstance(typeof(T), WebDriver);
+        }
         public T ClickCloseButton<T> (ref List<KeyValuePair<string, bool>> methodValidations)
         {
             ClickToolbarButton<T>(KiewitTeamBinderENums.ToolbarButton.Close);
             methodValidations.Add(ValidateTransmittalDetailWindowIsClosed());
             WebDriver.SwitchTo().Window(WebDriver.WindowHandles.Last());
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
+        }
+
+        public TransmittalDetail ClickTabMenu(string tabName)
+        {
+            TabMenu(tabName).Click();
+            WaitForElementDisplay(_gridViewDocuments);
+            return this;
         }
 
         private string[] GetRecipientList(bool ccList)
@@ -85,7 +109,76 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             return selectedUsersWithCompanyName.Replace(", ", " (") + ")";
         }
 
-        private KeyValuePair<string, bool> ValidateTransmittalDetailWindowIsClosed()
+        public List<KeyValuePair<string, bool>> ValidateTransmittalDetailDiplayCorrect(TransmittalMailInformation transmittalMailInfor)
+        {
+            var node = StepNode();
+            var validation = new List<KeyValuePair<string, bool>>();
+
+            string date = transmittalMailInfor.TransmittalDate;
+            DateTime dateConvert = DateTime.ParseExact(date, "MM/dd/yyyy", CultureInfo.InvariantCulture);
+            date = dateConvert.ToString("dd-MMMM-yyyy").Replace('-', ' ');
+            node.Info("Transmittal Date: " + date);
+            List<string> listTransmittalInfor = new List<string>();
+            listTransmittalInfor.Add(transmittalMailInfor.FromUser);
+            listTransmittalInfor.Add(transmittalMailInfor.ProjectNumber);
+            listTransmittalInfor.Add(transmittalMailInfor.ProjectTitle);
+            try
+            {
+                if (TransmittalNoHeaderLabel(transmittalMailInfor.TransmittalNo) != null)
+                    validation.Add(SetPassValidation(node, Validation.Information_Transmittal_Detail_Display_Correct + transmittalMailInfor.TransmittalNo));
+                else
+                    validation.Add(SetFailValidation(node, Validation.Information_Transmittal_Detail_Display_Correct + transmittalMailInfor.TransmittalNo));
+
+                string[] actualDate = StableFindElement(_dateLabel).Text.Trim().Split(',');
+                node.Info("Actual Date: " + actualDate[0]);
+                if (actualDate[0].Equals(date))
+                    validation.Add(SetPassValidation(node, Validation.Information_Transmittal_Detail_Display_Correct + date));
+                else
+                    validation.Add(SetFailValidation(node, Validation.Information_Transmittal_Detail_Display_Correct + date));
+
+                foreach (var item in listTransmittalInfor)
+                {
+                    if (DetailInfoLabel(item) != null)
+                        validation.Add(SetPassValidation(node, Validation.Information_Transmittal_Detail_Display_Correct + item));
+                    else
+                        validation.Add(SetFailValidation(node, Validation.Information_Transmittal_Detail_Display_Correct + item));
+                }
+
+                return validation;
+            }
+            catch (Exception e)
+            {
+                validation.Add(SetErrorValidation(node, Validation.Information_Transmittal_Detail_Display_Correct, e));
+                return validation;
+            }
+        }
+
+        public List<KeyValuePair<string, bool>> ValidateTransmittalDetailCotainsHyperLink(TransmittalMailInformation transmittalMailInfor)
+        {
+            var node = StepNode();
+            var validation = new List<KeyValuePair<string, bool>>();
+            string hyperLink = "Click here to download all Transmittal files.";
+            string[] listItemLinkText = { transmittalMailInfor.DocumentNo, hyperLink };
+            try
+            {
+                for (int i = 0; i < listItemLinkText.Length; i++)
+                {
+                    if (LinkText(listItemLinkText[i]).GetAttribute("href").Contains("https://kiewittest.teambinder.com/"))
+                        validation.Add(SetPassValidation(node, Validation.HyperLink_Is_Contained_In_Transmittal_Detail + listItemLinkText[i]));
+                    else
+                        validation.Add(SetFailValidation(node, Validation.HyperLink_Is_Contained_In_Transmittal_Detail + listItemLinkText[i]));
+                }
+
+                return validation;
+            }
+            catch (Exception e)
+            {
+                validation.Add(SetErrorValidation(node, Validation.HyperLink_Is_Contained_In_Transmittal_Detail, e));
+                return validation;
+            }
+        }
+
+        public KeyValuePair<string, bool> ValidateTransmittalDetailWindowIsClosed()
         {
             var node = StepNode();
             try
@@ -309,6 +402,8 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             public static string Attached_Documents_Are_Displayed = "Validate that the attached documents are displayed";
             public static string Recipents_Are_Displayed = "Validate that the recipents are displayed";
             public static string Transmittal_Detail_Window_Is_Closed = "Validate that the Transmittal detail window is closed";
+            public static string HyperLink_Is_Contained_In_Transmittal_Detail = "Validate that the hyperlink is contained in trasmittal detail page: ";
+            public static string Information_Transmittal_Detail_Display_Correct = "Validate that the information transmittal detail display correctly: ";
             public static string Document_Numbers_Contain_Hyperlink = "Validate that the document numbers contain hyperlink";
             public static string Download_Hyperlink_Displays = "Validate that the download hyperlink displays";
         }
