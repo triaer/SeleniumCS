@@ -187,7 +187,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             if (switchWindow)
             {
                 string currentWindow;
-                SwitchToPopUpWindow(HeaderDropdownItem(item.ToDescription()), out currentWindow, false);
+                SwitchToNewPopUpWindow(HeaderDropdownItem(item.ToDescription()), out currentWindow, false);
             }                
             else
                 HeaderDropdownItem(item.ToDescription()).Click();
