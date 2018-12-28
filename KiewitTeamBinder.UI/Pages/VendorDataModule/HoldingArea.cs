@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using KiewitTeamBinder.UI.Pages.Global;
+using KiewitTeamBinder.UI.Pages.PopupWindows;
 using OpenQA.Selenium;
 using static KiewitTeamBinder.UI.ExtentReportsHelper;
 using static KiewitTeamBinder.Common.KiewitTeamBinderENums;
@@ -15,7 +16,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
     public class HoldingArea : ProjectsDashboard
     {
         #region Entities
-        private string _functionButton = "//li[@class='rtbItem rtbBtn'][a='{0}']";        
+        private string _functionButton = "//li[@class='rtbItem rtbBtn'][a='{0}']";
         private static By _holdingAreaLabel => By.Id("lblRegisterCaption");
         private static By _documentNoTextBox => By.XPath("//input[contains(@id,'FilterTextBox_GridColDocumentNo')]");
         private static By _holdingAreaRadGrid => By.XPath("//div[contains(@id,'_cntPhMain_GridViewHoldingArea')][contains(@class,'RadGrid')]");
@@ -29,7 +30,6 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
         public IWebElement HoldingAreaRadGrid { get { return StableFindElement(_holdingAreaRadGrid); } }
         public IWebElement HoldingAreaGridData { get { return StableFindElement(_holdingAreaGridData); } }
         public IWebElement InfoPagerInHoldingAreaGrid { get { return StableFindElement(_infoPagerInHoldingAreaGrid); } }
-        public IWebElement FirstRowCheckBoxInTheTable { get { return StableFindElement(_firstRowCheckBoxInTheTable); } }
         #endregion
 
         #region Actions
@@ -67,7 +67,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
         {
             DocumentNoTextBox.InputText(value);
             return this;
-        }               
+        }        
 
         public HoldingArea ClickCheckboxOfDocumentAtRow(int indexRow)
         {
@@ -81,6 +81,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             var node = StepNode();
             node.Info("Select checkbox of document rows without the transmittal no. value in Holding Area grid");
             int rowIndex, colIndex = 1;
+            WaitForElementClickable(_sortButton(MainPaneTableHeaderLabel.TransmittalNo.ToDescription()));
             SortButton(MainPaneTableHeaderLabel.TransmittalNo.ToDescription()).Click();
             WaitForJQueryLoad();
             GetTableCellValueIndex(PaneTable(gridViewName), "Document No.", out rowIndex, out colIndex, "th");

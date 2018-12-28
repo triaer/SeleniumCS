@@ -25,15 +25,13 @@ namespace KiewitTeamBinder.UI.Pages.Global
         private static By _alertPopup => By.Id("kendoAlertWindow");
         private static By _saveChangeYesButton => By.Id("Yes");
         private static By _saveChangeNoButton => By.Id("No");
-        private static By _toolBarButton(string buttonName) => By.XPath($"//div[contains(@class, 'ToolBar')]//a[span='{buttonName}']");
-
-
+        
+        
         public IWebElement LogoutLink { get { return StableFindElement(_logoutLink); } }
         public IWebElement LogoutYesButton { get { return StableFindElement(_logoutYesButton); } }
         public IWebElement SaveChangeYesButton { get { return StableFindElement(_saveChangeYesButton); } }
         public IWebElement SaveChangeNoButton { get { return StableFindElement(_saveChangeNoButton); } }
-        public IWebElement WalkMe { get { return StableFindElement(_walkMe); } }
-        public IWebElement ToolBarButton(string buttonName) => StableFindElement(_toolBarButton(buttonName));
+        public IWebElement WalkMe { get { return StableFindElement(_walkMe); } }        
         #endregion
 
 
@@ -50,21 +48,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             LogoutYesButton.Click();
             return new NonSsoSignOn(WebDriver);
         }
-
-
-        public T ClickToolbarButton<T>(ToolbarButton buttonName, bool checkProgressPopup = false)
-        {
-            var node = StepNode();
-            node.Info("Click the button: " + buttonName.ToDescription());
-            ToolBarButton(buttonName.ToDescription()).Click();
-            if (checkProgressPopup)
-                WaitForLoading(_progressPopUp);
-
-            return (T)Activator.CreateInstance(typeof(T), WebDriver);
-        }
-
-
-
+                
         public T ReloadPage<T>()
         {
             Reload();
@@ -78,7 +62,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
             {
                 Browser.Close();
             }
-
             WebDriver.SwitchTo().Window(window);
             return this;
         }

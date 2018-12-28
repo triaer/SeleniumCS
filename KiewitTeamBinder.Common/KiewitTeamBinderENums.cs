@@ -18,6 +18,12 @@ namespace KiewitTeamBinder.Common
             N_DAYS_AGO
         }
 
+        public enum TabMenuInTransmittalDetail
+        {
+            Message,
+            Documents
+        }
+
         public enum HelpMenuOptions
         {
             [Description("TeamBinder Help")]

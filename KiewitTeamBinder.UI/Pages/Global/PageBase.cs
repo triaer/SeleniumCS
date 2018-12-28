@@ -628,8 +628,12 @@ namespace KiewitTeamBinder.UI.Pages.Global
             parentWindow = WebDriver.CurrentWindowHandle;
             ReadOnlyCollection<string> originalHandles = WebDriver.WindowHandles;
 
+           
             if(doubleClick == true)
+            {
+                ScrollIntoView(ElementToBeClicked);
                 ElementToBeClicked.ClickTwice();
+            }
             else
                 ElementToBeClicked.ActionsClick();
 
@@ -659,14 +663,14 @@ namespace KiewitTeamBinder.UI.Pages.Global
         {
             string winHandleBefore = WebDriver.CurrentWindowHandle;
             int previousWinCount = WebDriver.WindowHandles.Count;
-
+            
             // Perform the action to open a new Window
             ElementToBeClicked.ClickOnElement();
 
             WaitUntil(driver => driver.WindowHandles.Count != previousWinCount);
 
             var normalPageLoadTime = WebDriver.Manage().Timeouts().PageLoad;
-            WebDriver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(5);
+            WebDriver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(shortTimeout);
             foreach (string handle in WebDriver.WindowHandles)
             {
                 if (handle != winHandleBefore)
@@ -674,12 +678,12 @@ namespace KiewitTeamBinder.UI.Pages.Global
                     try
                     {
                         WebDriver.SwitchTo().Window(handle);
-                        Console.WriteLine(WebDriver.Title);
+                        Console.WriteLine("CurrentWindow:" + WebDriver.Title);
                     }
                     catch (Exception e)
                     {
-                        System.Diagnostics.Debug.WriteLine(WebDriver.Title);
-                        System.Diagnostics.Debug.WriteLine(e);
+                        Console.WriteLine(handle);
+                        Console.WriteLine(e);
                     }
                     if (WebDriver.Title.Contains(windowTitle))
                         break;
@@ -845,6 +849,18 @@ namespace KiewitTeamBinder.UI.Pages.Global
             string screenshotFilePath;
             TakeScreenshot(out screenshotFilePath, HightLightElement);
             return screenshotFilePath;
+        }
+
+        internal static void UploadFiles(string filePath, string fileNames)
+        {
+            Wait(shortTimeout / 2);
+            SendKeys.SendWait(@filePath);
+            SendKeys.SendWait(@"{Enter}");
+            Wait(shortTimeout / 2);
+            SendKeys.SendWait(@fileNames);
+            Wait(shortTimeout / 3);
+            SendKeys.SendWait(@"{Enter}");
+            Wait(shortTimeout / 3);
         }
 
         internal static void TakeScreenshot(out string filePath, IWebElement HightLightElement = null, string captureLocation = "c:\\temp\\testresults\\")

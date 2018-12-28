@@ -11,6 +11,7 @@ using KiewitTeamBinder.Common;
 using KiewitTeamBinder.Common.Helper;
 using static KiewitTeamBinder.Common.KiewitTeamBinderENums;
 using KiewitTeamBinder.UI.Pages.Global;
+using KiewitTeamBinder.UI.Pages.PopupWindows;
 
 
 namespace KiewitTeamBinder.UI.Pages.VendorDataModule
@@ -30,6 +31,15 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
         #region Actions
         public VendorDataRegister(IWebDriver webDriver) : base(webDriver)
         {
+        }
+
+        public ItemDetail OpenItem(List<KeyValuePair<string, string>> columnValuePairList)
+        {
+            var PurchaseItemsList = GetAvailablePurchaseItems(columnValuePairList);
+            var item = PurchaseItemsList.ElementAt(0).StableFindElement(By.XPath("./td[3]"));
+            string currentWindow;
+            SwitchToNewPopUpWindow(item, out currentWindow, doubleClick: true);
+            return new ItemDetail(WebDriver);
         }
 
         public VendorDataRegister ClickExpandButton(int index, bool waitForLoading = true)
@@ -71,6 +81,16 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             var node = StepNode();
             try
             {
+                foreach (var columnValuePair in columnValuePairList)
+                {
+                    if (columnValuePair.Key == "Status")
+                    {
+                        string status = columnValuePair.Value.Split('-')[0].Trim();
+                        columnValuePairList.Remove(columnValuePair);
+                        columnValuePairList.Add(new KeyValuePair<string, string>("Status", status));
+                        break;
+                    }
+                }
                 var PurchaseItemsList = GetAvailablePurchaseItems(columnValuePairList);
                 if (PurchaseItemsList.Count > 0)
                     return SetPassValidation(node, Validation.Purchase_Items_Are_Shown);

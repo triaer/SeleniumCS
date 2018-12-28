@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using static KiewitTeamBinder.Common.KiewitTeamBinderENums;
+using System.Reflection;
 
 namespace KiewitTeamBinder.Common.Helper
 {
@@ -96,19 +97,25 @@ namespace KiewitTeamBinder.Common.Helper
             string outMessage = verifiedPoint + " - Expected Value: " + expectedValue + " ,Actual Value: " + actualValue;
             return outMessage;
         }
+
         public static string ReportExceptionInValidation(string verifiedPoint, Exception e)
         {
             string outMessage = verifiedPoint + " Failed With Exception - " + e.Message + " " + e.StackTrace;
             return outMessage;
         }
 
-        public static string GetProjectPath()
+        public static string GetProjectPath(bool includeBinFolder = false)
         {
-            string path = System.Reflection.Assembly.GetCallingAssembly().CodeBase;
-            string actualPath = path.Substring(0, path.LastIndexOf("bin"));
+            string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\";
+            string actualPath = path;
+            if (!includeBinFolder)
+            {
+                actualPath = path.Substring(0, path.LastIndexOf("bin"));
+            }
             string projectPath = new Uri(actualPath).LocalPath; // project path of your solution
             return projectPath;
         }
+
         public static string ImageToBase64(string imagePath)
         {
             string base64String;
@@ -123,6 +130,7 @@ namespace KiewitTeamBinder.Common.Helper
                 }
             }
         }
+
         public static string GetUserDefaultDownloadsPath()
         {
             if (Environment.OSVersion.Version.Major < 6) throw new NotSupportedException();
@@ -137,9 +145,12 @@ namespace KiewitTeamBinder.Common.Helper
                 Marshal.FreeCoTaskMem(pathPtr);
             }
         }
+
         private static Guid FolderDownloads = new Guid("374DE290-123F-4565-9164-39C4925E467B");
         [DllImport("shell32.dll", CharSet = CharSet.Auto)]
+
         private static extern int SHGetKnownFolderPath(ref Guid id, int flags, IntPtr token, out IntPtr path);
+
         public static DateTime ToDateTime(this GetDateTime option, int days = 0)
         {
             {
@@ -188,7 +199,7 @@ namespace KiewitTeamBinder.Common.Helper
 
         public static string GetInputFilesLocalPath([CallerMemberName]string memberName = "")
         {
-            var path = GetProjectPath() + string.Format(@"ScenariosInputFiles\{0}", memberName);
+            var path = GetProjectPath(true) + string.Format(@"ScenariosInputFiles\{0}", memberName);
             return path;
         }
     }

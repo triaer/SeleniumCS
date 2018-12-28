@@ -10,7 +10,7 @@ using KiewitTeamBinder.Common.TestData;
 using static KiewitTeamBinder.UI.ExtentReportsHelper;
 using System.Threading;
 using KiewitTeamBinder.UI;
-using KiewitTeamBinder.UI.Pages.Dialogs;
+using KiewitTeamBinder.UI.Pages.PopupWindows;
 using static KiewitTeamBinder.Common.KiewitTeamBinderENums;
 
 namespace KiewitTeamBinder.UI.Tests.VendorData
@@ -43,13 +43,13 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 holdingArea.ClickHeaderButton<HoldingArea>(MainPaneTableHeaderButton.New, false);
                 ItemDetail itemDetail = holdingArea.ClickHeaderDropdownItem<ItemDetail>(MainPaneHeaderDropdownItem.ItemPurchased, true);
                 itemDetail.LogValidation<ItemDetail>(ref validations, itemDetail.ValidateRequiredFieldsWithRedAsterisk(createNewPurchaseItemdData.RequiredFields))
-                    .EnterTextField(createNewPurchaseItemdData.ItemID.Key, createNewPurchaseItemdData.ItemID.Value)
-                    .EnterTextField(createNewPurchaseItemdData.Description.Key, createNewPurchaseItemdData.Description.Value)
-                    .SelectItemInDropdown(createNewPurchaseItemdData.ContractNumber.Key, createNewPurchaseItemdData.ContractNumber.Value, ref methodValidations)
-                    .SelectItemInDropdown(createNewPurchaseItemdData.Status.Key, createNewPurchaseItemdData.Status.Value, ref methodValidations)
-                    .ClickSaveButton()
-                    .LogValidation<ItemDetail>(ref validations, itemDetail.ValidateMessageDisplayCorrect())
-                    .ClickOkButtonOnPopUp()
+                    .EnterTextField<ItemDetail>(createNewPurchaseItemdData.ItemID.Key, createNewPurchaseItemdData.ItemID.Value)
+                    .EnterTextField<ItemDetail>(createNewPurchaseItemdData.Description.Key, createNewPurchaseItemdData.Description.Value)
+                    .SelectItemInDropdown<ItemDetail>(createNewPurchaseItemdData.ContractNumber.Key, createNewPurchaseItemdData.ContractNumber.Value, ref methodValidations)
+                    .SelectItemInDropdown<ItemDetail>(createNewPurchaseItemdData.Status.Key, createNewPurchaseItemdData.Status.Value, ref methodValidations)
+                    .ClickSaveButton<ItemDetail>()
+                    .LogValidation<ItemDetail>(ref validations, itemDetail.ValidateMessageDisplayCorrect(createNewPurchaseItemdData.SaveMessage))
+                    .ClickOkButtonOnPopUp<ItemDetail>()
                     .LogValidation<ItemDetail>(ref validations, itemDetail.ValidateSaveDialogStatus(true))
                     .ClickToolbarButton<HoldingArea>(ToolbarButton.Close);
 
@@ -98,7 +98,9 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                     //.LogValidation<VendorDataRegister>(ref validations, holdingArea.ValidateItemsAreShown(columnValuePairList1, validatePurchaseItemData.GridViewName))
                     .ClickExpandButton(validatePurchaseItemData.expandButtonIndex)
                     .LogValidation<VendorDataRegister>(ref validations, holdingArea.ValidatePurchaseItemsAreShown(columnValuePairList2));
-
+                ItemDetail itemDetail = holdingArea.OpenItem(columnValuePairList2);
+                itemDetail.LogValidation<ItemDetail>(ref validations, itemDetail.ValidateHeaderIsCorrect(validatePurchaseItemData.ItemID.Value))
+                    .ClickToolbarButton<ItemDetail>(ToolbarButton.Close);
 
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);

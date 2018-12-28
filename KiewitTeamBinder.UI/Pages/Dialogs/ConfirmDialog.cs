@@ -35,7 +35,7 @@ namespace KiewitTeamBinder.UI.Pages.Dialogs
             WebDriver.SwitchTo().DefaultContent();
         }
 
-        public T ClickPopupButton<T>(DialogPopupButton name, bool closeBrowser = false, string parentWindowTitle = "Automation Project 1")
+        public T ClickPopupButton<T>(DialogPopupButton name, bool closeBrowser = false, string parentWindowTitle = "Automation Project")
         {
             IWebElement Button = StableFindElement(By.XPath(string.Format(_button, name.ToDescription())));
             if (closeBrowser)
