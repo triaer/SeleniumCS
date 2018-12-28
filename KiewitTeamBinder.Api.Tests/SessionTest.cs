@@ -13,19 +13,19 @@ using KiewitTeamBinder.Api.Service;
 namespace KiewitTeamBinder.Api.Tests.ApiTest
 {
     [TestClass]
-    public class SessionLogon : ApiTestBase
+    public class SessionTest : ApiTestBase
     {
         [TestMethod]
         public void SimpleLogon()
         {
-            SessionApi sessionRequest = new SessionApi();
+            SessionApi sessionRequest = null;
             string sessionKey = "";
             try
             {
                 //given
                 var simpleLogonData = new SimpleLogonSmoke();
                 var teambinderTestAccount = GetTestAccount("AdminAccount2", environment, "NonSSO");
-
+                sessionRequest = new SessionApi(GetServiceUrl(teambinderTestAccount.Url));
                 //when
                 sessionKey = sessionRequest.LogonWithApplication(teambinderTestAccount.Username, teambinderTestAccount.Company, teambinderTestAccount.Password, simpleLogonData.ProjectNumber, simpleLogonData.ConnectingProduct);
                 validations.Add(sessionRequest.ValidateLogonWithApplicationSuccessfully(sessionKey));
@@ -46,7 +46,5 @@ namespace KiewitTeamBinder.Api.Tests.ApiTest
                 throw;
             }
         }
-        
-        
     }
 }

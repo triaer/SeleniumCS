@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using static KiewitTeamBinder.Common.KiewitTeamBinderENums;
+using System.Reflection;
 
 namespace KiewitTeamBinder.Common.Helper
 {
@@ -102,10 +103,14 @@ namespace KiewitTeamBinder.Common.Helper
             return outMessage;
         }
 
-        public static string GetProjectPath()
+        public static string GetProjectPath(bool includeBinFolder = false)
         {
-            string path = System.Reflection.Assembly.GetCallingAssembly().CodeBase;
-            string actualPath = path.Substring(0, path.LastIndexOf("bin"));
+            string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\";
+            string actualPath = path;
+            if (!includeBinFolder)
+            {
+                actualPath = path.Substring(0, path.LastIndexOf("bin"));
+            }
             string projectPath = new Uri(actualPath).LocalPath; // project path of your solution
             return projectPath;
         }
@@ -188,7 +193,7 @@ namespace KiewitTeamBinder.Common.Helper
 
         public static string GetInputFilesLocalPath([CallerMemberName]string memberName = "")
         {
-            var path = GetProjectPath() + string.Format(@"ScenariosInputFiles\{0}", memberName);
+            var path = GetProjectPath(true) + string.Format(@"ScenariosInputFiles\{0}", memberName);
             return path;
         }
     }

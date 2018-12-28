@@ -50,6 +50,7 @@ namespace KiewitTeamBinder.UI.Tests.User
                 throw;
             }
         }
+
         [TestMethod]
         public void SSO_ValidUserCanLogonAndLogOff()
         {

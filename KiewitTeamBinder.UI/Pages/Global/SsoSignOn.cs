@@ -49,6 +49,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             SwitchToNewPopUpWindow(KiewitUserLoginBtn, out signinWindow, true);
 
             //Fill Kiewit account fields
+            WaitForElementEnable(_email);
             Email.InputText(account.kiewitUserName);
             NextButton.Click();
             WaitUntil(driver => Username != null);
@@ -62,9 +63,9 @@ namespace KiewitTeamBinder.UI.Pages.Global
             //Fill TeamBinder account fields
             if (FindElement(By.Id("txtUserId"), mediumTimeout) != null)
             {
-                UserIdTextbox.InputText(account.Username);
-                CompanyIdTextbox.InputText(account.Company);
-                PasswordTextbox.InputText(account.Password);
+                UserIdTextbox.InputText(account.Username, true);
+                CompanyIdTextbox.InputText(account.Company, true);
+                PasswordTextbox.InputText(account.Password, true);
                 //Click LogIn button
                 RegisterButton.Click();
             }
