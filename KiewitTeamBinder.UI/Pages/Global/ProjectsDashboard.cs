@@ -10,6 +10,8 @@ using KiewitTeamBinder.UI.Pages.Dialogs;
 using KiewitTeamBinder.Common;
 using KiewitTeamBinder.Common.Helper;
 using static KiewitTeamBinder.Common.KiewitTeamBinderENums;
+using KiewitTeamBinder.UI.Pages.PopupWindows;
+
 
 namespace KiewitTeamBinder.UI.Pages.Global
 {
@@ -48,7 +50,8 @@ namespace KiewitTeamBinder.UI.Pages.Global
         private static By _pageCountInNumPartOfGridPager(string gridViewName) => By.XPath($"//table[contains(@id,'{gridViewName}')]//div[contains(@class,'rgNumPart')]//a");
         private static By _arrowFirstPageInGridPager(string gridViewName) => By.XPath($"//table[contains(@id,'{gridViewName}')]//img[@title='First Page']");
         private static By _arrowLastPageInGridPager(string gridViewName) => By.XPath($"//table[contains(@id,'{gridViewName}')]//img[@title='Last Page']");
-       
+        private static By _reportsButton => By.Id("btnReports");
+
         private static string _filterItemsXpath = "//tr[@valign='top' and not(contains(@style, 'hidden'))]";        
         private static string _headerButtonXpath = "//a[span='{0}']";
         private static string _filterTextBoxXpath = "//table[contains(@id,'{0}')]//tr[@class='rgFilterRow']/td[{1}]";//count(//tr/th[.='{0}']/preceding-sibling::th)+1]";
@@ -81,7 +84,8 @@ namespace KiewitTeamBinder.UI.Pages.Global
         public IReadOnlyCollection<IWebElement> PageCountInNumPartOfGridPager(string gridViewName) => StableFindElements(_pageCountInNumPartOfGridPager(gridViewName));
         public IWebElement NumberPagesInfoOfGridPager(string gridViewName) => StableFindElement(_numberPagesInfoOfGridPager(gridViewName));
         public IWebElement ArrowFirstPageInGridPager(string gridViewName) => StableFindElement(_arrowFirstPageInGridPager(gridViewName));
-        public IWebElement ArrowLastPageInGridPager(string gridViewName) => StableFindElement(_arrowLastPageInGridPager(gridViewName));        
+        public IWebElement ArrowLastPageInGridPager(string gridViewName) => StableFindElement(_arrowLastPageInGridPager(gridViewName));
+        public IWebElement ReportsButton { get { return StableFindElement(_reportsButton); } }
         #endregion
 
         #region Actions
@@ -106,7 +110,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             var node = StepNode();
             node.Info($"Click on the root node: {menuItem}");
             ModuleButton(menuItem).Click();
-            WaitForElement(_divSubMenu);
+            WaitForElement(_divSubMenu, shortTimeout);
         }
 
         private void ClickSubMenuItem(string subMenuItem)
@@ -158,6 +162,13 @@ namespace KiewitTeamBinder.UI.Pages.Global
             WaitUntil(driver => helpAboutDialog.OkButton != null);
             
             return helpAboutDialog;
+        }
+
+        public StandardReports OpenStandardReportsWindow()
+        {
+            string currentWindow;
+            SwitchToNewPopUpWindow(ReportsButton, out currentWindow);
+            return new StandardReports(WebDriver);
         }
 
         public T ClickClearHyperlink<T>(bool waitForLoading = true)

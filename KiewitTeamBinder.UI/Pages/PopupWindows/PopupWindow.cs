@@ -21,8 +21,8 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
         private static By _headerLabel => By.Id("LabelType");
         private static By _toolBarButton(string buttonName) => By.XPath($"//div[contains(@class, 'ToolBar')]//a[span='{buttonName}']");
         private static By _asteriskLabel(string fieldLabel) => By.XPath($"//span[text()='{fieldLabel}']/following::span[1]");
-        private static By _textField(string fieldLabel) => By.XPath($"//*[span[(text()= '{fieldLabel}')]]/following-sibling::*[2]//*[contains(@class,'Text')]");
-        private static By _dropdownList(string fieldLabel, string type) => By.XPath($"//*[span[(text()= '{fieldLabel}')]]/following-sibling::*[2]//input[contains(@id, '{type}')]");
+        private static By _textField(string fieldLabel) => By.XPath($"//*[span[(text()= '{fieldLabel}')]]/following-sibling::*[*]//*[contains(@class,'Text')]");
+        private static By _dropdownList(string fieldLabel, string type) => By.XPath($"//*[span[(text()= '{fieldLabel}')]]/following-sibling::*[*]//input[contains(@id, '{type}')]");
         private static By _itemDropdown(string dropdownListName) => By.XPath($"//ul/li[text()='{dropdownListName}']");
         private static By _saveDocButton => By.Id("SaveDocToolBar");
         private static By _okButtonOnPopUp => By.XPath("//div[contains(@id,'RadWindowWrapper_alert')]//span[text()='OK']");
