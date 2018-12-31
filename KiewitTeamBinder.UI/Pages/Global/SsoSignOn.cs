@@ -46,6 +46,8 @@ namespace KiewitTeamBinder.UI.Pages.Global
             string signinWindow;
 
             //Click KiewitUserLogin Button and Switch to OtherUserLogin Window
+            if (KiewitUserLoginBtn == null)
+                Browser.MaximizeWindow();
             SwitchToNewPopUpWindow(KiewitUserLoginBtn, out signinWindow, true);
 
             //Fill Kiewit account fields
