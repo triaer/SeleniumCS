@@ -12,6 +12,8 @@ using System.Threading;
 using KiewitTeamBinder.UI;
 using KiewitTeamBinder.UI.Pages.PopupWindows;
 using static KiewitTeamBinder.Common.KiewitTeamBinderENums;
+using KiewitTeamBinder.UI.Pages.DashboardModule;
+
 
 namespace KiewitTeamBinder.UI.Tests.VendorData
 {
@@ -95,7 +97,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 holdingArea.FilterDocumentsByGridFilterRow<VendorDataRegister>(validatePurchaseItemData.GridViewName,
                                                                                validatePurchaseItemData.ContractNumber.Key,
                                                                                validatePurchaseItemData.ContractNumber.Value)
-                    //.LogValidation<VendorDataRegister>(ref validations, holdingArea.ValidateItemsAreShown(columnValuePairList1, validatePurchaseItemData.GridViewName))
+                    .LogValidation<VendorDataRegister>(ref validations, holdingArea.ValidateItemsAreShown(columnValuePairList1, validatePurchaseItemData.GridViewName))
                     .ClickExpandButton(validatePurchaseItemData.expandButtonIndex)
                     .LogValidation<VendorDataRegister>(ref validations, holdingArea.ValidatePurchaseItemsAreShown(columnValuePairList2));
                 ItemDetail itemDetail = holdingArea.OpenItem(columnValuePairList2);
@@ -127,16 +129,17 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 test.Info("Log on TeamBinder via Other User Login: " + teambinderTestAccount.Username);
                 ProjectsList projectsList = new NonSsoSignOn(driver).Logon(teambinderTestAccount) as ProjectsList;
 
-                var validatePurchaseItemData = new ValidatePurchaseItemUnderContractSmoke();
-                test.Info("Navigate to DashBoard Page of Project: " + validatePurchaseItemData.ProjectName);
-                ProjectsDashboard projectDashBoard = projectsList.NavigateToProjectDashboardPage(validatePurchaseItemData.ProjectName);
+                var validateCountData = new ValidateContractorWidgetCountSmoke();
+                test.Info("Navigate to DashBoard Page of Project: " + validateCountData.ProjectName);
+                ProjectsDashboard projectDashBoard = projectsList.NavigateToProjectDashboardPage(validateCountData.ProjectName);
 
                 //when - 120798 Validate Contractor Widget Counts
                 //User Story 122010
                 test = LogTest("Validate Contractor Widget Counts");
-
-                projectDashBoard.SelectModuleMenuItem<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.DASHBOARD.ToDescription());
-                
+                int CountOfDeliverables = 28;
+                Dashboard dashboard =  projectDashBoard.SelectModuleMenuItem<Dashboard>(menuItem: ModuleNameInLeftNav.DASHBOARD.ToDescription());
+                dashboard.ClickMoreOrLessButton(validateCountData.WidgetName, true)
+                    .LogValidation<Dashboard>(ref validations, dashboard.ValidateCountValueIsCorrect(validateCountData.WidgetName, validateCountData.RowName, CountOfDeliverables + 1));
 
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);
