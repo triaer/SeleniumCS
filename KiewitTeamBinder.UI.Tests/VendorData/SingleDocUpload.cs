@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using FluentAssertions;
 using KiewitTeamBinder.Common.Helper;
 using KiewitTeamBinder.UI.Pages.Global;
+using KiewitTeamBinder.UI.Pages.PopupWindows;
 using KiewitTeamBinder.UI.Pages.VendorDataModule;
 using KiewitTeamBinder.Common.TestData;
 using static KiewitTeamBinder.UI.ExtentReportsHelper;
@@ -12,7 +13,6 @@ using System.Threading;
 using KiewitTeamBinder.UI;
 using KiewitTeamBinder.UI.Pages.Dialogs;
 using static KiewitTeamBinder.Common.KiewitTeamBinderENums;
-
 
 namespace KiewitTeamBinder.UI.Tests.VendorData
 {
@@ -39,22 +39,22 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 test = LogTest("Upload Single Doc");
                 string username = projectDashBoard.GetUserNameLogon();
                 string currentWindow;
-                projectDashBoard.SelectModuleMenuItem<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription());
+                projectDashBoard.SelectModuleMenuItem<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription(), waitForLoading: false);
                 HoldingArea holdingArea = projectDashBoard.SelectModuleMenuItem<HoldingArea>(subMenuItem: ModuleSubMenuInLeftNav.HOLDINGAREA.ToDescription());
 
                 DocumentDetail newDocument = holdingArea.ClickNewButton(out currentWindow);
                 newDocument.LogValidation<DocumentDetail>(ref validations, newDocument.ValidateRequiredFieldsWithRedAsterisk(uploadSingleDocData.RequiredFields))
-                                    .LogValidation<DocumentDetail>(ref validations, newDocument.ValidateFromUserFieldShowCorrectDataAndFormat(username, uploadSingleDocData.ColorGrey))
-                                    .LogValidation<DocumentDetail>(ref validations, newDocument.ValidateDocumentNoIsLimitRetained(uploadSingleDocData.MaxLengthOfDocNo))
-                                    .EnterDocumentInformation(uploadSingleDocData.SingleDocInformation, ref methodValidations)
-                                    .LogValidation<DocumentDetail>(ref validations, newDocument.ValidateSelectedItemShowInDropdownBoxesCorrect(uploadSingleDocData.SingleDocInformation))
-                                    .ClickAttachFilesButton(Utils.GetInputFilesLocalPath(), uploadSingleDocData.FileNames)
-                                    .ClickSaveButton()
-                                    .LogValidation<DocumentDetail>(ref validations, newDocument.ValidateSaveSingleDocPopUpStatus())
-                                    .LogValidation<DocumentDetail>(ref validations, newDocument.ValidateMessageDisplayCorrect())
-                                    .ClickOkButtonOnPopUp()
-                                    .LogValidation<DocumentDetail>(ref validations, newDocument.ValidateSaveSingleDocPopUpStatus(close: true))
-                                    .ClickToolbarButton<HoldingArea>(ToolbarButton.Close);
+                    .LogValidation<DocumentDetail>(ref validations, newDocument.ValidateFromUserFieldShowCorrectDataAndFormat(username, uploadSingleDocData.ColorGrey))
+                    .LogValidation<DocumentDetail>(ref validations, newDocument.ValidateDocumentNoIsLimitRetained(uploadSingleDocData.MaxLengthOfDocNo))
+                    .EnterDocumentInformation(uploadSingleDocData.SingleDocInformation, ref methodValidations)
+                    .LogValidation<DocumentDetail>(ref validations, newDocument.ValidateSelectedItemShowInDropdownBoxesCorrect(uploadSingleDocData.SingleDocInformation))
+                    .ClickAttachFilesButton(Utils.GetInputFilesLocalPath(), uploadSingleDocData.FileNames)
+                    .ClickSaveButton<DocumentDetail>()
+                    .LogValidation<DocumentDetail>(ref validations, newDocument.ValidateSaveDialogStatus(close: false))
+                    .LogValidation<DocumentDetail>(ref validations, newDocument.ValidateMessageDisplayCorrect(uploadSingleDocData.SaveMessage))
+                    .ClickOkButtonOnPopUp<DocumentDetail>()
+                    .LogValidation<DocumentDetail>(ref validations, newDocument.ValidateSaveDialogStatus(close: true))
+                    .ClickToolbarButton<HoldingArea>(ToolbarButton.Close);
 
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);

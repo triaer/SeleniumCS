@@ -180,11 +180,17 @@ namespace KiewitTeamBinder.UI.Pages.Global
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
                 
-        public T ClickHeaderDropdownItem<T>(MainPaneHeaderDropdownItem item)
+        public T ClickHeaderDropdownItem<T>(MainPaneHeaderDropdownItem item, bool switchWindow)
         {
             var node = StepNode();
             node.Info("Click the item: " + item.ToDescription());
-            HeaderDropdownItem(item.ToDescription()).Click();
+            if (switchWindow)
+            {
+                string currentWindow;
+                SwitchToNewPopUpWindow(HeaderDropdownItem(item.ToDescription()), out currentWindow, false);
+            }                
+            else
+                HeaderDropdownItem(item.ToDescription()).Click();
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 

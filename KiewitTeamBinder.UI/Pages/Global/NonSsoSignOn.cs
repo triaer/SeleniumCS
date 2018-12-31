@@ -7,7 +7,6 @@ using KiewitTeamBinder.Common;
 using OpenQA.Selenium;
 using SeleniumExtras.PageObjects;
 using System.Windows.Forms;
-using KiewitTeamBinder.UI.Pages.Global;
 
 namespace KiewitTeamBinder.UI.Pages.Global
 {
@@ -38,6 +37,8 @@ namespace KiewitTeamBinder.UI.Pages.Global
             string logonWindow;
 
             //Click OtherUserLogin Button and Switch to OtherUserLogin Window
+            if (OtherUserLoginBtn == null)
+                Browser.MaximizeWindow();
             SwitchToNewPopUpWindow(OtherUserLoginBtn, out logonWindow, true);
             WaitForElementDisplay(By.Id("walkme-player"));
 

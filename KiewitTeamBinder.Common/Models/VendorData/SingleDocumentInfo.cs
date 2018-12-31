@@ -16,4 +16,12 @@ namespace KiewitTeamBinder.Common.Models.VendorData
         public string Discipline { get; set; }
         public string Type { get; set; }
     }
+
+    public class PurchasedItemInfo
+    {
+        public KeyValuePair<string, string> ItemID { get; set; }
+        public KeyValuePair<string, string> Description { get; set; }
+        public KeyValuePair<string, string> ContractNumber { get; set; }
+        public KeyValuePair<string, string> Status { get; set; }
+    }
 }

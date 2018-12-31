@@ -133,8 +133,8 @@
     <Compile Include="Pages\FormModule\Form.cs" />
     <Compile Include="Pages\GalleryModule\Gallery.cs" />
     <Compile Include="Pages\DocumentModule\Document.cs" />
-    <Compile Include="Pages\Global\BulkUploadDocuments.cs" />
-    <Compile Include="Pages\Global\NewTransmittal.cs" />
+    <Compile Include="Pages\PopupWindows\BulkUploadDocuments.cs" />
+    <Compile Include="Pages\PopupWindows\NewTransmittal.cs" />
     <Compile Include="Pages\Global\ProjectsDashboard.cs" />
     <Compile Include="Pages\Global\LoggedInLanding.cs" />
     <Compile Include="Pages\Global\NonSsoSignOn.cs" />
@@ -143,12 +143,14 @@
     <Compile Include="Pages\Global\NotLoggedInLanding.cs" />
     <Compile Include="Pages\Global\PageBase.cs" />
     <Compile Include="Pages\MailModule\Mail.cs" />
+    <Compile Include="Pages\PopupWindows\PopupWindow.cs" />
     <Compile Include="Pages\PublishedReportsModule\PublishedReports.cs" />
     <Compile Include="Pages\TasksModule\Task.cs" />
     <Compile Include="Pages\TransmittalsModule\Transmittal.cs" />
     <Compile Include="Pages\PackagesModule\Package.cs" />
-    <Compile Include="Pages\VendorDataModule\DocumentDetail.cs" />
-    <Compile Include="Pages\VendorDataModule\TransmittalDetail.cs" />
+    <Compile Include="Pages\PopupWindows\ItemDetail.cs" />
+    <Compile Include="Pages\PopupWindows\DocumentDetail.cs" />
+    <Compile Include="Pages\PopupWindows\TransmittalDetail.cs" />
     <Compile Include="Pages\VendorDataModule\HoldingArea.cs" />
     <Compile Include="Pages\VendorDataModule\VendorDataRegister.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -97,6 +97,7 @@ namespace KiewitTeamBinder.Common.Helper
             string outMessage = verifiedPoint + " - Expected Value: " + expectedValue + " ,Actual Value: " + actualValue;
             return outMessage;
         }
+
         public static string ReportExceptionInValidation(string verifiedPoint, Exception e)
         {
             string outMessage = verifiedPoint + " Failed With Exception - " + e.Message + " " + e.StackTrace;
@@ -114,6 +115,7 @@ namespace KiewitTeamBinder.Common.Helper
             string projectPath = new Uri(actualPath).LocalPath; // project path of your solution
             return projectPath;
         }
+
         public static string ImageToBase64(string imagePath)
         {
             string base64String;
@@ -128,6 +130,7 @@ namespace KiewitTeamBinder.Common.Helper
                 }
             }
         }
+
         public static string GetUserDefaultDownloadsPath()
         {
             if (Environment.OSVersion.Version.Major < 6) throw new NotSupportedException();
@@ -142,9 +145,12 @@ namespace KiewitTeamBinder.Common.Helper
                 Marshal.FreeCoTaskMem(pathPtr);
             }
         }
+
         private static Guid FolderDownloads = new Guid("374DE290-123F-4565-9164-39C4925E467B");
         [DllImport("shell32.dll", CharSet = CharSet.Auto)]
+
         private static extern int SHGetKnownFolderPath(ref Guid id, int flags, IntPtr token, out IntPtr path);
+
         public static DateTime ToDateTime(this GetDateTime option, int days = 0)
         {
             {
