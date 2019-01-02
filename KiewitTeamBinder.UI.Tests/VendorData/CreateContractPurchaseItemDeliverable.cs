@@ -36,8 +36,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 test.Info("Navigate to DashBoard Page of Project: " + createNewPurchaseItemdData.ProjectName);
                 ProjectsDashboard projectDashBoard = projectsList.NavigateToProjectDashboardPage(createNewPurchaseItemdData.ProjectName);
 
-                //when - 120794 Create New Purchase Item
-                //User Story 121990
+                //when - User Story 121990 - 120794 Create New Purchase Item
                 test = LogTest("Create New Purchase Item");
 
                 projectDashBoard.SelectModuleMenuItem<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription(), waitForLoading: false);

@@ -237,8 +237,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             }
             var methodValidations = new List<KeyValuePair<string, bool>>();
             int indexOfCopyAttributeItem = 0;
-            BulkUploadDocuments bulkUploadDocuments = new BulkUploadDocuments(WebDriver);
-            bulkUploadDocuments.AddFilesInBulk(Utils.GetInputFilesLocalPath(), fileNames)
+            AddFilesInBulk(Utils.GetInputFilesLocalPath(), fileNames)
                 .ClickACheckboxInDocumentRow(documentRow: 1)
                 .SelectDataOfDocumentPropertyDropdown("00 - Rev 00", DocBulkUploadDropdownType.Rev, documentRow: 1)
                 .SelectDataOfDocumentPropertyDropdown("VSUB - Vendor Submission", DocBulkUploadDropdownType.Sts, documentRow: 1)
