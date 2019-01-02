@@ -38,7 +38,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
         private static By _visibleRows(string gridViewName) => By.XPath($"//div[contains(@id, '{gridViewName}_GridData')]//tr[@class != 'rgNoRecords' and not(contains(@style, 'hidden'))]");
         private static By _documentsTable(string gridViewName) => By.XPath($"//div[contains(@id, '{gridViewName}_GridData')]");
         private static By _headerDropdownItem(string itemName) => By.XPath($"//li[a = '{itemName}']");
-        private static By _loadingPanel => By.XPath("//div[contains(@id, 'LoadingPanel')]");
         private static By _clearHyperlink => By.Id("lblClear");
         private static By _imageOfFilterOptionByIndex(string selected, string index) => By.XPath($"//img[contains(@id,'Link{selected}{index}')]");
         private static By _imageOfFilterOptionByName(string selected, string name) => By.XPath($"//img[contains(@id,'Link{selected}') and contains(@title, '{name}')]");
@@ -48,9 +47,9 @@ namespace KiewitTeamBinder.UI.Pages.Global
         private static By _pageCountInNumPartOfGridPager(string gridViewName) => By.XPath($"//table[contains(@id,'{gridViewName}')]//div[contains(@class,'rgNumPart')]//a");
         private static By _arrowFirstPageInGridPager(string gridViewName) => By.XPath($"//table[contains(@id,'{gridViewName}')]//img[@title='First Page']");
         private static By _arrowLastPageInGridPager(string gridViewName) => By.XPath($"//table[contains(@id,'{gridViewName}')]//img[@title='Last Page']");
-
         private static string _filterItemsXpath = "//tr[@valign='top' and not(contains(@style, 'hidden'))]";        
         private string _headerButtonXpath = "//a[span='{0}']";
+        private static string _filterTextBoxXpath = "//table[contains(@id,'{0}')]//tr[@class='rgFilterRow']/td[{1}]";
 
         public IWebElement FormTitle { get { return StableFindElement(_formTitle); } }        
         public IWebElement ViewFilter { get { return StableFindElement(_viewFilter); } }
@@ -71,7 +70,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
         public IWebElement HeaderDropdownItem(string itemName) => StableFindElement(_headerDropdownItem(itemName));
         public IWebElement DocumentsTable(string gridViewName) => StableFindElement(_documentsTable(gridViewName));
         public IWebElement SortButton(string titleColumn) => StableFindElement(_sortButton(titleColumn));
-        public IWebElement LoadingPanel { get { return StableFindElement(_loadingPanel); } }
         public IWebElement ClearHyperlink { get { return StableFindElement(_clearHyperlink); } }
         public IWebElement ImageOfFilterOptionByIndex(string selected, string index) => StableFindElement(_imageOfFilterOptionByIndex(selected, index));
         public IWebElement ImageOfFilterOptionByName(string selected, string name) => StableFindElement(_imageOfFilterOptionByName(selected, name));
@@ -197,6 +195,29 @@ namespace KiewitTeamBinder.UI.Pages.Global
         public string GetUserNameLogon()
         {
             return UserNameLabel.Text;
+        }
+
+        public T FilterDocumentsByGridFilterRow<T>(string gridViewName, string columnName, string value, bool useFilterMenu = false, FilterOptions optionItem = FilterOptions.Contains, bool waitForLoading = true)
+        {
+            var node = StepNode();
+            node.Info($"Filter the '{columnName}' column with value '{value}'");
+            int rowIndex, colIndex = 1;
+            GetTableCellValueIndex(PaneTable(gridViewName), columnName, out rowIndex, out colIndex, "th");
+
+            IWebElement FilterCell = StableFindElement(By.XPath(string.Format(_filterTextBoxXpath, gridViewName, colIndex)));
+            IWebElement FilterTextBox = FilterCell.StableFindElement(By.TagName("input"));
+            FilterTextBox.InputText(value);
+            if (!useFilterMenu)
+                FilterTextBox.SendKeys(Keys.Enter);
+            else
+            {
+                IWebElement FilterMenu = FilterCell.StableFindElement(By.TagName("img"));
+                SelectComboboxByText(FilterMenu, _gridViewFilterListData, optionItem.ToDescription());
+            }
+            WaitForJQueryLoad();
+            if (waitForLoading)
+                WaitForLoadingPanel();
+            return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 
         protected KeyValuePair<string, bool> ValidateProgressContentMessage(string message)
@@ -537,6 +558,22 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 return SetErrorValidation(node, Validation.Sub_Page_Is_Displayed, e);
             }
         }
+        public KeyValuePair<string, bool> ValidateItemsAreNotShown(string columnName, string value, string gridViewName)
+        {
+            var node = StepNode();
+            FilterDocumentsByGridFilterRow(columnName, value);
+            int itemsNumber = GetTotalRowsVisibleInGrid(gridViewName);
+            try
+            {
+                if (itemsNumber > 0)
+                    return SetFailValidation(node, Validation.Item_Is_Not_Displayed);
+                return SetPassValidation(node, Validation.Item_Is_Not_Displayed);
+            }
+            catch (Exception e)
+            {
+                return SetErrorValidation(node, Validation.Item_Is_Not_Displayed, e);
+            }
+        }
 
         public KeyValuePair<string, bool> ValidateItemsAreShown(List<KeyValuePair<string, string>> columnValuePairList, string gridViewName)
         {
@@ -555,7 +592,8 @@ namespace KiewitTeamBinder.UI.Pages.Global
         
         private static class Validation
         {
-			public static string Project_Is_Opened = "Validate that the project is opened";
+            public static string Item_Is_Not_Displayed = "Validate that item on main pane is not displayed";
+            public static string Project_Is_Opened = "Validate that the project is opened";
             public static string Vendor_Data_Menus_Display = "Validate that the vendor data sub-menus display correct";
             public static string Default_Filter_Display = "Validate that the view filter in upper right corner is defaulted to the {0}";
             public static string Filter_Box_Is_Highlighted = "Validate that the {0} filter box is highlighted";

@@ -36,6 +36,7 @@ namespace KiewitTeamBinder.Common.TestData
         public string MessageOnSaveDocumentsDialog = "Document details saved successfully.Do you want to upload more documents?";
         public string HoldingAreaFilterByColumn = "Document No.";
         public string FilterWithValue = " 1";
+        public string MessageOnValidationDiaglog = "Validating Documents in progress";
 
 
     }

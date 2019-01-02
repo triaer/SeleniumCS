@@ -219,12 +219,6 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             return applyToNRowsDialog;
         }
 
-        public AlertDialog ClickValidateDocumentDetails(ToolbarButton buttonName, ref List<KeyValuePair<string, bool>> methodValidation)
-        {
-            var dialog = ClickToolbarButton<AlertDialog>(buttonName,true);
-            methodValidation.Add(ValidateProgressContentMessage("Validating Documents in progress"));
-            return dialog;
-        }
                 
         public T CreateDataOnRow<T>(int numberOfRow)
         {

@@ -14,6 +14,7 @@ using KiewitTeamBinder.UI;
 using KiewitTeamBinder.UI.Pages.Dialogs;
 using static KiewitTeamBinder.Common.KiewitTeamBinderENums;
 using KiewitTeamBinder.UI.Pages.TransmittalsModule;
+using KiewitTeamBinder.UI.Pages.DocumentModule;
 
 namespace KiewitTeamBinder.UI.Tests.Transmittals
 {
@@ -62,6 +63,87 @@ namespace KiewitTeamBinder.UI.Tests.Transmittals
                     .LogValidation<TransmittalDetail>(ref validations, transmittal.ValidateItemsAreShown(columnValuesInConditionList, transmittalReceiptData.GridViewDocumentName))
                     .ClickCloseInBottomPage<Transmittal>()
                     .LogValidation<Transmittal>(ref validations, transmittalDetail.ValidateTransmittalDetailWindowIsClosed());
+
+                // then
+                Utils.AddCollectionToCollection(validations, methodValidations);
+                Console.WriteLine(string.Join(System.Environment.NewLine, validations.ToArray()));
+                validations.Should().OnlyContain(validations => validations.Value).Equals(bool.TrueString);
+            }
+            catch (Exception e)
+            {
+                lastException = e;
+                validations = Utils.AddCollectionToCollection(validations, methodValidations);
+                throw;
+            }
+        }
+
+        [TestMethod]
+        public void ProcessDocument()
+        {
+            try
+            {
+                // given
+                var teambinderTestAccount = GetTestAccount("AdminAccount1", environment, "NonSSO");
+                test.Info("Open TeamBinder Web Page: " + teambinderTestAccount.Url);
+                var driver = Browser.Open(teambinderTestAccount.Url, browser);
+                test.Info("Log on TeamBinder via Other User Login: " + teambinderTestAccount.Username);
+                ProjectsList projectsList = new NonSsoSignOn(driver).Logon(teambinderTestAccount) as ProjectsList;
+
+                var processDocumentData = new ProcessDocumentSmoke();
+                test.Info("Navigate to DashBoard Page of Project: " + processDocumentData.ProjectName);
+                ProjectsDashboard projectDashBoard = projectsList.NavigateToProjectDashboardPage(processDocumentData.ProjectName);
+
+                //when
+                //Pre-Condition Upload Single Document
+                string currentWindow;
+
+                HoldingArea holdingArea = projectDashBoard.SelectModuleMenuItem<HoldingArea>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription(), subMenuItem: ModuleSubMenuInLeftNav.HOLDINGAREA.ToDescription());
+                DocumentDetail newDocument = holdingArea.ClickNewButton(out currentWindow);
+                newDocument.EnterDocumentInformation(processDocumentData.SingleDocInformation, ref methodValidations)
+                           .ClickSaveButton<DocumentDetail>()
+                           .ClickOkButtonOnPopUp<DocumentDetail>()
+                           .ClickToolbarButton<HoldingArea>(ToolbarButton.Close)
+                           .SwitchToWindow(currentWindow);
+
+                //User Story 120013 - Process Document
+                var columnValuesInConditionList = new List<KeyValuePair<string, string>> { processDocumentData.ColumnValuesInConditionList.DocumentNo };
+
+                holdingArea.LogValidation<HoldingArea>(ref validations, holdingArea.ValidateDisplayedViewFilterOption(processDocumentData.DefaultFilterAtHoldingAreaPane))
+                                              .EnterDocumentNo(processDocumentData.SingleDocInformation.DocumentNo)
+                                              .PressEnterKey()
+                                              .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateRecordItemsCount(processDocumentData.GridViewHoldingAreaName))
+                                              .ClickCheckboxOfDocumentAtRow(indexRow: 1)
+                                              .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateDocumentRowIsHighlighted(indexRow: 1))
+                                              .EnterDocumentTitle(processDocumentData.SingleDocInformation.Title)
+                                              .PressEnterKey()
+                                              .ClickCheckboxOfDocumentAtRow(indexRow: 1)
+                                              .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateDocumentRowIsHighlighted(indexRow: 1));
+
+                ProcessDocuments processDocuments = holdingArea.ClickProcessDocumentButton(MainPaneTableHeaderButton.ProcessDocuments.ToDescription(), out currentWindow);
+                processDocuments.LogValidation<ProcessDocuments>(ref validations, processDocuments.ValidateWindowIsOpened(processDocumentData.WindowTitle))
+                                .LogValidation<ProcessDocuments>(ref validations, processDocuments.ValidateDocumentDetailDisplayCorrect(processDocumentData.SingleDocInformation, processDocumentData.listHeader));
+
+                int countWindow = processDocuments.GetCountWindow();
+                AlertDialog validateDialog = processDocuments.ClickValidateDocumentDetails(ToolbarButton.Validate, ref methodValidations, processDocumentData.ProcessMessage);
+                validateDialog.LogValidation<AlertDialog>(ref validations, validateDialog.ValidateMessageDialogAsExpected(processDocumentData.MessageOnValidateDocumentsDialog))
+                              .ClickOKButton<ProcessDocuments>();
+
+                DocumentReceivedDateDialog receivedDateDialog = processDocuments.ClickProcessDocumentDetails(ToolbarButton.Process);
+                receivedDateDialog.SelectDate<DocumentReceivedDateDialog>(processDocumentData.RecetveddDate);
+
+                ConfirmDialog confirmDialog = receivedDateDialog.ClickYesButton();
+                confirmDialog.LogValidation<ConfirmDialog>(ref validations, confirmDialog.ValidateMessageDialogAsExpected(processDocumentData.MessageOnSaveDocumentsDialog))
+                             .ClickPopupButton<HoldingArea>(DialogPopupButton.No, true)
+                             .LogValidation<HoldingArea>(ref validations, processDocuments.ValidateProcessDocumentlWindowIsClosed(countWindow));
+
+                holdingArea.LogValidation<HoldingArea>(ref validations, holdingArea.ValidateItemsAreNotShown(processDocumentData.ColumnNameFilter, processDocumentData.SingleDocInformation.DocumentNo, processDocumentData.GridViewHoldingAreaName))
+                           .SelectFilterOption<HoldingArea>(processDocumentData.AcceptedOptionFilterInHoldingArea)
+                           .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateItemsAreShown(columnValuesInConditionList, processDocumentData.GridViewHoldingAreaName));
+
+                Document documentModule = projectDashBoard.SelectModuleMenuItem<Document>(ModuleNameInLeftNav.DOCUMENTS.ToDescription());
+                documentModule.SelectFilterOption<Document>(processDocumentData.IndexOptionFilterInDocument, false)
+                              .LogValidation<Document>(ref validations, documentModule.ValidateItemsAreShown(columnValuesInConditionList, processDocumentData.GridViewDocumentName))
+                              .Logout();
 
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);

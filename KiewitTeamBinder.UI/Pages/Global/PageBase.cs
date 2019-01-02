@@ -28,6 +28,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         internal static string Url { get; set; }
         internal static IWebDriver WebDriver { get; set; }
 
+        internal static By _loadingPanel => By.XPath("//div[contains(@id, 'LoadingPanel')]");
         internal static By _progressPopUp => By.Id("divProgressWindow");
         internal static By _progressMessage => By.Id("spanProgressMsg");
         internal static By overlayWindow = By.XPath("//div[@class = 'k-overlay']");

@@ -85,6 +85,12 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             WebDriver.SwitchTo().DefaultContent();
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
+        public AlertDialog ClickValidateDocumentDetails(ToolbarButton buttonName, ref List<KeyValuePair<string, bool>> methodValidation, string processMessage)
+        {
+            var dialog = ClickToolbarButton<AlertDialog>(buttonName, true);
+            methodValidation.Add(ValidateProgressContentMessage(processMessage));
+            return dialog;
+        }
 
         public virtual KeyValuePair<string, bool> ValidateItemDropdownIsHighlighted(string value, string idDropdown)
         {

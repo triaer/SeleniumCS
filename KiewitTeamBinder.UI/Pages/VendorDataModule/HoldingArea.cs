@@ -64,33 +64,17 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             WaitForElementDisplay(By.Id("walkme-player"));
             return new DocumentDetail(WebDriver);
         }
-
+        public ProcessDocuments ClickProcessDocumentButton(string nameButton, out string currentWindow)
+        {
+            var node = StepNode();
+            node.Info("Click Process Document button in Holding Area header");
+            IWebElement FunctionButton = StableFindElement(By.XPath(string.Format(_functionButton, nameButton)));
+            SwitchToNewPopUpWindow(FunctionButton, out currentWindow, false);
+            return new ProcessDocuments(WebDriver);
+        }
         public HoldingArea EnterDocumentNo(string value)
         {
             DocumentNoTextBox.InputText(value);
-            return this;
-        }
-
-        public HoldingArea FilterDocumentsByGridFilterRow(string columnName, string value, bool useFilterMenu = false, FilterOptions optionItem = FilterOptions.Contains, bool waitForLoading = true)
-        {
-            var node = StepNode();
-            node.Info($"Filter the '{columnName}' column with value '{value}'");
-            WaitForElementEnable(By.XPath(string.Format(_filterTextBoxXpath, columnName)));
-
-            IWebElement FilterCell = StableFindElement(By.XPath(string.Format(_filterTextBoxXpath,columnName)));
-            IWebElement FilterTextBox = FilterCell.StableFindElement(By.TagName("input"));
-            
-            FilterTextBox.InputText(value);
-            if (!useFilterMenu)
-                FilterTextBox.SendKeys(Keys.Enter);
-            else
-            {
-                IWebElement FilterMenu = FilterCell.StableFindElement(By.TagName("img"));
-                SelectComboboxByText(FilterMenu, _gridViewFilterListData, optionItem.ToDescription());
-            }
-            WaitForJQueryLoad();
-            if (waitForLoading)
-                WaitForLoadingPanel();
             return this;
         }
 
