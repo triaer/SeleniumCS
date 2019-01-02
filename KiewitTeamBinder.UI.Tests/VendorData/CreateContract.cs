@@ -44,8 +44,6 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                                   .LogValidation<VendorDataRegister>(ref validations, projectDashBoard.ValidateDisplayedSubItemLinks(createNewDeliverable.SubItemMenus));
 
                 DeliverableItemDetail deliverableItemDetail = vendorDataRegister.OpenDeliverableLineItemTemplate(out parrentWindow);
-
-                string currentWindow = deliverableItemDetail.GetCurrentWindow();
                 deliverableItemDetail.LogValidation<DeliverableItemDetail>(ref validations, deliverableItemDetail.ValidateWindowIsOpened(createNewDeliverable.DeliverableWindowTitle))
                                      .LogValidation<DeliverableItemDetail>(ref validations, deliverableItemDetail.ValidateRequiredFieldsWithRedAsterisk(createNewDeliverable.RequiredField))
                                      .EnterDeliverableItemInfo(createNewDeliverable.DeliverableItemInfo, ref methodValidations)
@@ -58,7 +56,16 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                                      .LogValidation<DeliverableItemDetail>(ref validations, deliverableItemDetail.ValidateDisplayedSubItemLinks(createNewDeliverable.SubItemOfMoreFunction));
                                      
                 LinkItem linkItem = deliverableItemDetail.ClickHeaderDropdownItem<LinkItem>(MainPaneHeaderDropdownItem.LinkItems, true);
-                linkItem.LogValidation<LinkItem>(ref validations, linkItem.ValidateWindowIsOpened(createNewDeliverable.LinkItemsWindowTitle));
+                linkItem.LogValidation<LinkItem>(ref validations, linkItem.ValidateWindowIsOpened(createNewDeliverable.LinkItemsWindowTitle))
+                        .ClickToolbarButton<DeliverableItemDetail>(ToolbarButton.Add, checkProgressPopup: false)
+                        .LogValidation<DeliverableItemDetail>(ref validations, linkItem.ValidateDisplayedSubItemLinks(createNewDeliverable.SubItemOfAddFunction));
+
+                AddDocument addDocument = linkItem.ClickHeaderDropdownItem<AddDocument>(MainPaneHeaderDropdownItem.Documents, false);
+                addDocument.EnterAltDocumentNo(createNewDeliverable.DocumentNo)
+                           .ClickToobarBottomButton<AddDocument>(ToolbarButton.Search.ToDescription(), createNewDeliverable.GridViewAddDocName)
+                           //Switch Frame
+                           .SelectItemByDocumentNo<AddDocument>(createNewDeliverable.DocumentNo)
+                           ;
 
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);

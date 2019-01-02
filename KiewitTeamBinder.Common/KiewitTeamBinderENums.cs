@@ -103,7 +103,13 @@ namespace KiewitTeamBinder.Common
             [Description("Save")]
             Save,
             [Description("More")]
-            More
+            More,
+            [Description("Add")]
+            Add,
+            [Description("Search")]
+            Search,
+            [Description("OK")]
+            OK
         }
 
         public enum DocBulkUploadInputText
@@ -239,7 +245,9 @@ namespace KiewitTeamBinder.Common
             [Description("Item Purchased")]
             ItemPurchased,
             [Description("Link Items")]
-            LinkItems
+            LinkItems,
+            [Description("Documents")]
+            Documents
         }
 
         public enum DialogPopupButton
@@ -324,6 +332,25 @@ namespace KiewitTeamBinder.Common
             LineItemNumber,
             [Description("Description")]
             Description
+        }
+        public enum ModuleSubMenuInAddFunction
+        {
+            [Description("Mail")]
+            Mail,
+            [Description("Documents")]
+            Documents,
+            [Description("Transmittals")]
+            Transmittals,
+            [Description("Packages")]
+            Packages,
+            [Description("Forms")]
+            Forms,
+            [Description("Gallery")]
+            Gallery,
+            [Description("Deliverables")]
+            Deliverables,
+            [Description("Holding Area")]
+            HoldingArea
         }
     }
 }

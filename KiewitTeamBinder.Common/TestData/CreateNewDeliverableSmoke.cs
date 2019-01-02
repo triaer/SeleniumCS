@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static KiewitTeamBinder.Common.KiewitTeamBinderENums;
 
 namespace KiewitTeamBinder.Common.TestData
 {
@@ -17,7 +18,18 @@ namespace KiewitTeamBinder.Common.TestData
         public string LinkItemsWindowTitle = "Link Items";
         public string[] RequiredField = { "Item ID", "Deliverable Line Item Number", "Description", "Deliverable Type", "Criticality" };
         public string SaveMessage = "Saved Successfully";
-
+        public string[] SubItemOfAddFunction = {
+            ModuleSubMenuInAddFunction.Mail.ToDescription(),
+            ModuleSubMenuInAddFunction.Documents.ToDescription(),
+            ModuleSubMenuInAddFunction.Transmittals.ToDescription(),
+            ModuleSubMenuInAddFunction.Packages.ToDescription(),
+            ModuleSubMenuInAddFunction.Forms.ToDescription(),
+            ModuleSubMenuInAddFunction.Gallery.ToDescription(),
+            ModuleSubMenuInAddFunction.Deliverables.ToDescription(),
+            ModuleSubMenuInAddFunction.HoldingArea.ToDescription()
+        };
+        public string DocumentNo = "AUTO1";
+        public string GridViewAddDocName = "GridView_GridData";
         public DeliverableItemInfo DeliverableItemInfo = new DeliverableItemInfo()
         {
             ContractNumber = "2018-12-005",

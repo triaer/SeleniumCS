@@ -22,11 +22,6 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
         {
         }
 
-        public string GetCurrentWindow()
-        {
-            return WebDriver.CurrentWindowHandle;
-        }
-
         public DeliverableItemDetail EnterDeliverableItemInfo(DeliverableItemInfo deliverableItemInfo, ref List<KeyValuePair<string, bool>> methodValidation)
         {
             var node = StepNode();
