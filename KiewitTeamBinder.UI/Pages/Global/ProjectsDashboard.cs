@@ -95,7 +95,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             return this;
         }       
         
-        public void WaitForLoadingPanel(int timeout = 5)
+        public void WaitForLoadingPanel(int timeout = shortTimeout)
         {
             WaitForLoading(_loadingPanel, timeout);
             WaitForElementEnable(By.XPath("//div[contains(@id,'_GridData')]"));

@@ -88,6 +88,14 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 
+        public T ClickCloseButtonOnPopUp<T>()
+        {
+            ClickToolbarButton<T>(ToolbarButton.Close);
+            WebDriver.SwitchTo().Window(WebDriver.WindowHandles.Last());
+            WaitForLoadingPanel();
+            return (T)Activator.CreateInstance(typeof(T), WebDriver);
+        }
+
         public virtual KeyValuePair<string, bool> ValidateItemDropdownIsHighlighted(string value, string idDropdown)
         {
             var node = StepNode();
