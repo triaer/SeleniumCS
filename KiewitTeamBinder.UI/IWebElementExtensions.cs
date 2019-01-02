@@ -16,11 +16,25 @@ namespace KiewitTeamBinder.UI
 {
     public static class IWebElementExtensions
     {
-        public static void InputText(this IWebElement Element, string text)
+        public static void InputText(this IWebElement Element, string text, bool byJS = false)
         {
-            Element.SendKeys("");
-            Element.Clear();
-            Element.SendKeys(text);
+            if (byJS)
+            {
+                try
+                {
+                    ((IJavaScriptExecutor)WebDriver).ExecuteScript("arguments[0].value = arguments[1];", Element, text);
+                }
+                catch (TimeoutException e)
+                {
+                    throw new Exception($"{Element.TagName} - Element not visible within timeout period - Message: {e.Message}");
+                }
+            }
+            else
+            {
+                Element.SendKeys("");
+                Element.Clear();
+                Element.SendKeys(text);
+            }
         }
 
         public static void Check(this IWebElement Element)
