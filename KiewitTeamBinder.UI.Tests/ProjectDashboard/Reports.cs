@@ -44,7 +44,8 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                 standardReports.SelectReportModule(runReportData.ModuleName)
                     .LogValidation<StandardReports>(ref validations, standardReports.ValidateAvailableReportsDisplay(runReportData.ModuleName, runReportData.AvailableReports))
                     .SelectReportModuleItem(runReportData.ModuleName, runReportData.ModuleItemName)
-                    .SelectItemInDropdown(runReportData.ContractNumberDropdownList, runReportData.ContractNumberItem, ref methodValidations);
+                    .SelectItemInDropdown(runReportData.ContractNumberDropdownList, runReportData.ContractNumberItem, ref methodValidations)
+                    .ClickSearchButton();
 
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);

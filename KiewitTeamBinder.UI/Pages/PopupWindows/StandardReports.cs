@@ -13,10 +13,14 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
         private static By _iframeFilter => By.XPath("//iframe[@id='ifrmFilter']");
         private static By _reportModuleButton(string moduleName) => By.XPath($"//span[contains(text(), '{moduleName}')]/ancestor::a[contains(@class, 'RootLink')]");
         private static By _reportSubMenuItemLink(string subMenuItem) => By.XPath($"./following-sibling::div//a[span = '{subMenuItem}']");
+        private static By _searchButton => By.Id("ButtonSearch");
+        private static By _resultTable(string columnName) => By.XPath($"//div[text() = '{columnName}']/ancestor::table[1]");
 
         public IWebElement IframeFilter { get { return StableFindElement(_iframeFilter); } }
         public IWebElement ReportModuleButton(string moduleName) => StableFindElement(_reportModuleButton(moduleName));
         public IWebElement ReportSubMenuItemLink(string moduleName, string subMenuItem) => ReportModuleButton(moduleName).StableFindElement(_reportSubMenuItemLink(subMenuItem));
+        public IWebElement SearchButton { get { return StableFindElement(_searchButton); } }
+        public IWebElement ResultTable(string columnName) => StableFindElement(_resultTable(columnName));
         #endregion
 
         #region Actions
@@ -34,6 +38,21 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             var node = StepNode();
             node.Info($"Click on the sub node: {subMenuItem}");
             ReportSubMenuItemLink(menuItem, subMenuItem).Click();
+        }
+
+        private string[] GetValueFromVendorDataDetailsTable(string valueKey)
+        {
+            int rowIndex, colIndex = -1;
+            GetTableCellValueIndex(ResultTable(valueKey), valueKey, out rowIndex, out colIndex);
+
+        }
+
+        public StandardReports ClickSearchButton(bool waitForLoading = true)
+        {
+            SearchButton.Click();
+            if (waitForLoading)
+                WaitForLoadingPanel();
+            return this;
         }
 
         public StandardReports SelectReportModule(string moduleName = null, bool waitForLoading = true)
