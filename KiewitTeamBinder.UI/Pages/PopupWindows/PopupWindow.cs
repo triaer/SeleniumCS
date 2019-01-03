@@ -17,7 +17,8 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
 {
     public class PopupWindow : ProjectsDashboard
     {
-        #region Entities        
+        #region Entities     
+        private static By _headerLabel => By.Id("LabelType");
         private static By _toolBarButton(string buttonName) => By.XPath($"//div[contains(@class, 'ToolBar')]//a[span='{buttonName}']");
         private static By _asteriskLabel(string fieldLabel) => By.XPath($"//span[text()='{fieldLabel}']/following::span[1]");
         private static By _textField(string fieldLabel) => By.XPath($"//*[span[(text()= '{fieldLabel}')]]/following-sibling::*[2]//*[contains(@class,'Text')]");
@@ -27,7 +28,8 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
         private static By _okButtonOnPopUp => By.XPath("//div[contains(@id,'RadWindowWrapper_alert')]//span[text()='OK']");
         private static By _saveItemPopUp => By.XPath("//div[contains(@id,'RadWindowWrapper_alert')]");
         private static By _saveItemMessage => By.XPath("//div[contains(@id,'RadWindowWrapper_alert')]//div[contains(@id, '_message')]");
-        
+
+        public IWebElement HeaderLabel { get { return StableFindElement(_headerLabel); } }
         public IWebElement DropdownListInput(string fieldLabel, string idType = "") => StableFindElement(_dropdownList(fieldLabel, idType + "_Input"));
         public IWebElement DropdownListClientState(string fieldLabel, string idType = "") => StableFindElement(_dropdownList(fieldLabel, idType + "_ClientState"));
         public IWebElement TextField(string fieldLabel) => StableFindElement(_textField(fieldLabel));
@@ -90,6 +92,14 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             var dialog = ClickToolbarButton<AlertDialog>(buttonName, true);
             methodValidation.Add(ValidateProgressContentMessage(processMessage));
             return dialog;
+        }
+
+        public T ClickCloseButtonOnPopUp<T>()
+        {
+            ClickToolbarButton<T>(ToolbarButton.Close);
+            WebDriver.SwitchTo().Window(WebDriver.WindowHandles.Last());
+            WaitForLoadingPanel();
+            return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 
         public virtual KeyValuePair<string, bool> ValidateItemDropdownIsHighlighted(string value, string idDropdown)
@@ -186,6 +196,23 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             }
         }
 
+        public KeyValuePair<string, bool> ValidateHeaderIsCorrect(string expectedHeader)
+        {
+            var node = StepNode();
+            try
+            {
+                string actualHeader = HeaderLabel.Text.Trim();
+                if (actualHeader == expectedHeader)
+                    return SetPassValidation(node, Validation.Header_Is_Correct);
+                else
+                    return SetFailValidation(node, Validation.Header_Is_Correct, expectedHeader, actualHeader);
+            }
+            catch (Exception e)
+            {
+                return SetErrorValidation(node, Validation.Header_Is_Correct, e);
+            }
+        }
+
         private static class Validation
         {
             public static string Required_Fields_Are_Marked_Red_Asterisk = "Validate that the Required Fields are marked red asterisk: - ";
@@ -193,6 +220,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             public static string Save_PopUp_Closed = "Validate that the save popup is closed";
             public static string Save_PopUp_Opened = "Validate that the save popup is opened";
             public static string Message_Display_Correct = "Validate that the message is displayed correctly";
+            public static string Header_Is_Correct = "Validate that the header is correct";
         }
         #endregion
     }

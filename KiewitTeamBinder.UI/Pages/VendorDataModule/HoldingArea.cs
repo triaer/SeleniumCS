@@ -25,14 +25,12 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
         private static By _holdingAreaGridData => By.XPath("//div[contains(@id,'_GridViewHoldingArea_GridData')]");
         private static By _infoPagerInHoldingAreaGrid => By.XPath("//table[contains(@id,'GridViewHoldingArea')]//div[contains(@class,'rgInfoPart')]//span[contains(@id,'DSC')]");
         private static By _documentRowsVisiableOnGrid => By.XPath(".//tbody/tr[not(@class='rgNoRecords')][contains(@style,'visible')]");
-        private static By _firstRowCheckBoxInTheTable => By.XPath("//*[@id='ctl00_cntPhMain_GridViewHoldingArea_ctl00_ctl04_ClientSelectColumnSelectCheckBox']");
 
         public IWebElement HoldingAreaLabel { get { return StableFindElement(_holdingAreaLabel); } }
         public IWebElement DocumentNoTextBox { get { return StableFindElement(_documentNoTextBox); } }
         public IWebElement HoldingAreaRadGrid { get { return StableFindElement(_holdingAreaRadGrid); } }
         public IWebElement HoldingAreaGridData { get { return StableFindElement(_holdingAreaGridData); } }
         public IWebElement InfoPagerInHoldingAreaGrid { get { return StableFindElement(_infoPagerInHoldingAreaGrid); } }
-        public IWebElement FirstRowCheckBoxInTheTable { get { return StableFindElement(_firstRowCheckBoxInTheTable); } }
         #endregion
 
         #region Actions
@@ -77,7 +75,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
         {
             DocumentNoTextBox.InputText(value);
             return this;
-        }
+        }        
 
         public HoldingArea ClickCheckboxOfDocumentAtRow(int indexRow)
         {

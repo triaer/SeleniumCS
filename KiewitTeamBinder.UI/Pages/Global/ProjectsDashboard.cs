@@ -47,9 +47,10 @@ namespace KiewitTeamBinder.UI.Pages.Global
         private static By _pageCountInNumPartOfGridPager(string gridViewName) => By.XPath($"//table[contains(@id,'{gridViewName}')]//div[contains(@class,'rgNumPart')]//a");
         private static By _arrowFirstPageInGridPager(string gridViewName) => By.XPath($"//table[contains(@id,'{gridViewName}')]//img[@title='First Page']");
         private static By _arrowLastPageInGridPager(string gridViewName) => By.XPath($"//table[contains(@id,'{gridViewName}')]//img[@title='Last Page']");
+       
         private static string _filterItemsXpath = "//tr[@valign='top' and not(contains(@style, 'hidden'))]";        
-        private string _headerButtonXpath = "//a[span='{0}']";
-        private static string _filterTextBoxXpath = "//table[contains(@id,'{0}')]//tr[@class='rgFilterRow']/td[{1}]";
+        private static string _headerButtonXpath = "//a[span='{0}']";
+        private static string _filterTextBoxXpath = "//table[contains(@id,'{0}')]//tr[@class='rgFilterRow']/td[{1}]";//count(//tr/th[.='{0}']/preceding-sibling::th)+1]";
 
         public IWebElement FormTitle { get { return StableFindElement(_formTitle); } }        
         public IWebElement ViewFilter { get { return StableFindElement(_viewFilter); } }
@@ -78,7 +79,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         public IReadOnlyCollection<IWebElement> PageCountInNumPartOfGridPager(string gridViewName) => StableFindElements(_pageCountInNumPartOfGridPager(gridViewName));
         public IWebElement NumberPagesInfoOfGridPager(string gridViewName) => StableFindElement(_numberPagesInfoOfGridPager(gridViewName));
         public IWebElement ArrowFirstPageInGridPager(string gridViewName) => StableFindElement(_arrowFirstPageInGridPager(gridViewName));
-        public IWebElement ArrowLastPageInGridPager(string gridViewName) => StableFindElement(_arrowLastPageInGridPager(gridViewName));
+        public IWebElement ArrowLastPageInGridPager(string gridViewName) => StableFindElement(_arrowLastPageInGridPager(gridViewName));        
         #endregion
 
         #region Actions
@@ -92,9 +93,9 @@ namespace KiewitTeamBinder.UI.Pages.Global
             return this;
         }       
         
-        public void WaitForLoadingPanel()
+        public void WaitForLoadingPanel(int timeout = shortTimeout)
         {
-            WaitForLoading(_loadingPanel);
+            WaitForLoading(_loadingPanel, timeout);
             WaitForElementEnable(By.XPath("//div[contains(@id,'_GridData')]"));
         }
             
@@ -190,7 +191,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             else
                 HeaderDropdownItem(item.ToDescription()).Click();
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
-        }
+        }               
 
         public string GetUserNameLogon()
         {
@@ -230,8 +231,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             else
                 return SetFailValidation(node, Validation.Progress_Message_Is_Displayed, message, actual);
         }
-
-
+        
         protected IReadOnlyCollection<IWebElement> GetAvailableItemsOnCurrentPage(string gridViewName, List<KeyValuePair<string, string>> columnValuePairList, bool contains=true)
         {
             int rowIndex, colIndex = 1;
