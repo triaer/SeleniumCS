@@ -19,13 +19,12 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
         public string[] listHeader = { "Document No.", "Title", "Rev", "Sts", "Discipline", "Category" };
         public string MessageOnValidateDocumentsDialog = "Document details are successfully validated.";
         public string ProcessMessage = "Processing Hold Documents in progress";
-        public string RecetveddDate = DateTime.Now.AddDays(-7).ToString("MM/dd/yyyy");
+        public string ReceivedDate = DateTime.Now.AddDays(-7).ToString("MM/dd/yyyy");
         public string MessageOnProcessSaveDocumentsDialog = "Document details saved successfully.";
         public string MessageOnSaveDocumentsDialog = "Document details saved successfully.Do you want to start document review with the saved documents?";
         public string ColumnNameFilter = "Document No.";                                         
         public string IndexOptionFilterInDocument = "1";
         public string AcceptedOptionFilterInHoldingArea = "Accepted";
-        public string NewDocumentsOptionFilterInHoldingArea = "New Documents";
 
         public ColumnValuesInCondition ColumnValuesInConditionList = new ColumnValuesInCondition();
 
@@ -36,12 +35,13 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
 
         public SingleDocumentInfo SingleDocInformation = new SingleDocumentInfo()
         {
-            DocumentNo = Utils.GetRandomValue("LGVN_DOCUMENTNO"),
+            DocumentNo = Utils.GetRandomValue("DOCUMENTNO"),
             RevStatus = "01 - Rev 01",
             Status = "VSUB - Vendor Submission",
-            Title = Utils.GetRandomValue("LGVN_Title"),
+            Title = Utils.GetRandomValue("Title"),
             Category = "BM - BILL OF MATERIAL",
             Discipline = "CON - Contruction",
+            Type = "SUB - Submittal"
         };
     }
 }

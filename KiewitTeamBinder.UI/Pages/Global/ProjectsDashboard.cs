@@ -561,7 +561,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         public KeyValuePair<string, bool> ValidateItemsAreNotShown(string columnName, string value, string gridViewName)
         {
             var node = StepNode();
-            FilterDocumentsByGridFilterRow(columnName, value);
+            FilterDocumentsByGridFilterRow<ProjectsDashboard>(gridViewName, columnName, value);
             int itemsNumber = GetTotalRowsVisibleInGrid(gridViewName);
             try
             {

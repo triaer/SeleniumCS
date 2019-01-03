@@ -18,6 +18,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
         #region Entities
         private string _functionButton = "//li[@class='rtbItem rtbBtn'][a='{0}']";
         private string _filterTextBoxXpath = "//tr[@class='rgFilterRow']/td[count(//tr/th[.='{0}']/preceding-sibling::th)+1]";
+        private string _checkboxInFirstColAtRow = ".//tbody/tr[{0}]/td[1]/input";
         private static By _holdingAreaLabel => By.Id("lblRegisterCaption");
         private static By _documentNoTextBox => By.XPath("//input[contains(@id,'FilterTextBox_GridColDocumentNo')]");
         private static By _holdingAreaRadGrid => By.XPath("//div[contains(@id,'_cntPhMain_GridViewHoldingArea')][contains(@class,'RadGrid')]");
@@ -80,8 +81,9 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
 
         public HoldingArea ClickCheckboxOfDocumentAtRow(int indexRow)
         {
-            IWebElement row = HoldingAreaGridData.StableFindElement(By.XPath(".//tbody/tr[" + indexRow + "]"));
-            row.StableFindElement(By.XPath("./td[1]/input")).Check();
+            IWebElement checkboxAtRow = HoldingAreaGridData.StableFindElement(By.XPath(string.Format(_checkboxInFirstColAtRow, indexRow )));
+            ScrollIntoView(checkboxAtRow);
+            checkboxAtRow.Check();
             return this;
         }
 

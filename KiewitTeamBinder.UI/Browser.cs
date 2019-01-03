@@ -116,6 +116,11 @@ namespace KiewitTeamBinder.UI
             webDriver.Manage().Window.Maximize();
         }
 
+        internal static void MinimizeWindow()
+        {
+            webDriver.Manage().Window.Minimize();
+        }
+
         public static void Quit()
         {
             webDriver.Quit();

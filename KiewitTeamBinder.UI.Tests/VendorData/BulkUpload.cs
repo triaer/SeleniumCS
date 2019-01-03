@@ -196,7 +196,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 test.Info($"Firstly, Set Document No. Filter with data '{FilteringSmoke.FilterValue1}'");
                 var filteredRecords = holdingArea.GetTableItemNumberWithConditions(filteringData.GridViewHoldingAreaName, filteringData.ValueInDocumentNoColumn1);
                 var recordsCountBeforeFilter = holdingArea.GetTotalRowsVisibleInGrid(filteringData.GridViewHoldingAreaName);
-                holdingArea.FilterDocumentsByGridFilterRow(MainPaneTableHeaderLabel.DocumentNo.ToDescription(), FilteringSmoke.FilterValue1)
+                holdingArea.FilterDocumentsByGridFilterRow<HoldingArea>(filteringData.GridViewHoldingAreaName, MainPaneTableHeaderLabel.DocumentNo.ToDescription(), FilteringSmoke.FilterValue1)
                     .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateRecordsMatchingFilterAreReturned(filteringData.GridViewHoldingAreaName,
                                                                                                                       filteringData.ValueInDocumentNoColumn1,
                                                                                                                       filteredRecords))
@@ -217,7 +217,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 test.Info($"Secondly, Set Document No. Filter with data '{FilteringSmoke.FilterValue2}'");
                 filteredRecords = holdingArea.GetTableItemNumberWithConditions(filteringData.GridViewHoldingAreaName, filteringData.ValueInDocumentNoColumn2);
                 recordsCountBeforeFilter = holdingArea.GetTotalRowsVisibleInGrid(filteringData.GridViewHoldingAreaName);
-                holdingArea.FilterDocumentsByGridFilterRow(MainPaneTableHeaderLabel.DocumentNo.ToDescription(), FilteringSmoke.FilterValue2)
+                holdingArea.FilterDocumentsByGridFilterRow<HoldingArea>(filteringData.GridViewHoldingAreaName, MainPaneTableHeaderLabel.DocumentNo.ToDescription(), FilteringSmoke.FilterValue2)
                     .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateRecordsMatchingFilterAreReturned(filteringData.GridViewHoldingAreaName,
                                                                                                                       filteringData.ValueInDocumentNoColumn2,
                                                                                                                       filteredRecords))

@@ -74,7 +74,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
 
         public T ClickSaveButton<T>()
         {
-            ToolBarButton(ToolbarButton.Save.ToDescription()).Click();
+            ClickToolbarButton<T>(ToolbarButton.Save, true);
             WebDriver.SwitchTo().ActiveElement();
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }

@@ -109,15 +109,13 @@ namespace KiewitTeamBinder.UI.Tests.Transmittals
                 var columnValuesInConditionList = new List<KeyValuePair<string, string>> { processDocumentData.ColumnValuesInConditionList.DocumentNo };
 
                 holdingArea.LogValidation<HoldingArea>(ref validations, holdingArea.ValidateDisplayedViewFilterOption(processDocumentData.DefaultFilterAtHoldingAreaPane))
-                                              .EnterDocumentNo(processDocumentData.SingleDocInformation.DocumentNo)
-                                              .PressEnterKey()
-                                              .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateRecordItemsCount(processDocumentData.GridViewHoldingAreaName))
-                                              .ClickCheckboxOfDocumentAtRow(indexRow: 1)
-                                              .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateDocumentRowIsHighlighted(indexRow: 1))
-                                              .EnterDocumentTitle(processDocumentData.SingleDocInformation.Title)
-                                              .PressEnterKey()
-                                              .ClickCheckboxOfDocumentAtRow(indexRow: 1)
-                                              .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateDocumentRowIsHighlighted(indexRow: 1));
+                           .FilterDocumentsByGridFilterRow < HoldingArea >(processDocumentData.GridViewHoldingAreaName, MainPaneTableHeaderLabel.DocumentNo.ToDescription(), processDocumentData.SingleDocInformation.DocumentNo)
+                           .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateRecordItemsCount(processDocumentData.GridViewHoldingAreaName))
+                           .ClickCheckboxOfDocumentAtRow(indexRow: 1)
+                           .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateDocumentRowIsHighlighted(indexRow: 1))
+                           .FilterDocumentsByGridFilterRow<HoldingArea>(processDocumentData.GridViewHoldingAreaName, MainPaneTableHeaderLabel.Title.ToDescription(), processDocumentData.SingleDocInformation.Title)
+                           .ClickCheckboxOfDocumentAtRow(indexRow: 1)
+                           .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateDocumentRowIsHighlighted(indexRow: 1));
 
                 ProcessDocuments processDocuments = holdingArea.ClickProcessDocumentButton(MainPaneTableHeaderButton.ProcessDocuments.ToDescription(), out currentWindow);
                 processDocuments.LogValidation<ProcessDocuments>(ref validations, processDocuments.ValidateWindowIsOpened(processDocumentData.WindowTitle))
@@ -129,7 +127,7 @@ namespace KiewitTeamBinder.UI.Tests.Transmittals
                               .ClickOKButton<ProcessDocuments>();
 
                 DocumentReceivedDateDialog receivedDateDialog = processDocuments.ClickProcessDocumentDetails(ToolbarButton.Process);
-                receivedDateDialog.SelectDate<DocumentReceivedDateDialog>(processDocumentData.RecetveddDate);
+                receivedDateDialog.SelectDate<DocumentReceivedDateDialog>(processDocumentData.ReceivedDate);
 
                 ConfirmDialog confirmDialog = receivedDateDialog.ClickYesButton();
                 confirmDialog.LogValidation<ConfirmDialog>(ref validations, confirmDialog.ValidateMessageDialogAsExpected(processDocumentData.MessageOnSaveDocumentsDialog))
