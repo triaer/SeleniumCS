@@ -19,7 +19,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
     public class CreateContractPurchaseItemDeliverable : UITestBase
     {
         [TestMethod]
-        public void CreateNewPurchaseItem()
+        public void VendorDataRegister_CreateNewPurchaseItem_UI()
         {
             try
             {
@@ -35,7 +35,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 ProjectsDashboard projectDashBoard = projectsList.NavigateToProjectDashboardPage(createPurchaseItemData.ProjectName);
 
                 //when - User Story 121990 - 120794 Create New Purchase Item
-                test = LogTest("Create New Purchase Item");
+                test = LogTest("US 121990 - 120794 Create New Purchase Item");
 
                 projectDashBoard.SelectModuleMenuItem<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription(), waitForLoading: false);
                 VendorDataRegister vendorDataRegister = projectDashBoard.SelectModuleMenuItem<VendorDataRegister>(subMenuItem: ModuleSubMenuInLeftNav.VENDODATAREGISTER.ToDescription());
@@ -53,7 +53,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                     .ClickCloseButtonOnPopUp<VendorDataRegister>();
 
                 //when - User Story 121991 - 120795 Validate Purchase Item under Contract
-                test = LogTest("Validate Purchase Item under Contract");
+                test = LogTest("US 121991 - 120795 Validate Purchase Item under Contract");
 
                 var columnValuePairList1 = new List<KeyValuePair<string, string>> { createPurchaseItemData.ContractNumber };
                 var columnValuePairList2 = new List<KeyValuePair<string, string>> { createPurchaseItemData.ItemID,

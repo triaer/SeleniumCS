@@ -22,7 +22,7 @@ namespace KiewitTeamBinder.UI.Tests.Transmittals
     public class ProcessingDocs : UITestBase
     {
         [TestMethod]
-        public void ValidateTransmittalReceipt()
+        public void Transmittal_ValidateTransmittalReceipt_UI()
         {
             try
             {
@@ -78,7 +78,7 @@ namespace KiewitTeamBinder.UI.Tests.Transmittals
         }
 
         [TestMethod]
-        public void ProcessDocument()
+        public void HoldingArea_ProcessDocument_UI()
         {
             try
             {
