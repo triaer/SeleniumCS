@@ -39,8 +39,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         private static By _paneTable(string gridViewName) => By.XPath($"//table[contains(@id, '{gridViewName}_ctl00_Header')]/thead");
         private static By _visibleRows(string gridViewName) => By.XPath($"//div[contains(@id, '{gridViewName}_GridData')]//tr[@class != 'rgNoRecords' and not(contains(@style, 'hidden'))]");
         private static By _documentsTable(string gridViewName) => By.XPath($"//div[contains(@id, '{gridViewName}_GridData')]");
-        private static By _headerDropdownItem(string itemName) => By.XPath($"//li[a = '{itemName}']");
-        private static By _loadingPanel => By.XPath("//div[contains(@id, 'LoadingPanel')]");
+        private static By _headerDropdownItem(string itemName) => By.XPath($"//li[a = '{itemName}']");        
         private static By _clearHyperlink => By.Id("lblClear");
         private static By _imageOfFilterOptionByIndex(string selected, string index) => By.XPath($"//img[contains(@id,'Link{selected}{index}')]");
         private static By _imageOfFilterOptionByName(string selected, string name) => By.XPath($"//img[contains(@id,'Link{selected}') and contains(@title, '{name}')]");
@@ -75,7 +74,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
         public IWebElement HeaderDropdownItem(string itemName) => StableFindElement(_headerDropdownItem(itemName));
         public IWebElement DocumentsTable(string gridViewName) => StableFindElement(_documentsTable(gridViewName));
         public IWebElement SortButton(string titleColumn) => StableFindElement(_sortButton(titleColumn));
-        public IWebElement LoadingPanel { get { return StableFindElement(_loadingPanel); } }
         public IWebElement ClearHyperlink { get { return StableFindElement(_clearHyperlink); } }
         public IWebElement ImageOfFilterOptionByIndex(string selected, string index) => StableFindElement(_imageOfFilterOptionByIndex(selected, index));
         public IWebElement ImageOfFilterOptionByName(string selected, string name) => StableFindElement(_imageOfFilterOptionByName(selected, name));
@@ -97,14 +95,8 @@ namespace KiewitTeamBinder.UI.Pages.Global
             ProjectListDropdown.Click();
             WaitForElementAttribute(ProjectListSumary, "display", "block");
             return this;
-        }       
-        
-        public void WaitForLoadingPanel(int timeout = 5)
-        {
-            WaitForLoading(_loadingPanel, timeout);
-            WaitForElementEnable(By.XPath("//div[contains(@id,'_GridData')]"));
         }
-            
+           
         private void ClickMenuItem(string menuItem)
         {
             var node = StepNode();

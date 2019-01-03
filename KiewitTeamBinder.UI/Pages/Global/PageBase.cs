@@ -28,6 +28,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         internal static string Url { get; set; }
         internal static IWebDriver WebDriver { get; set; }
 
+        internal static By _loadingPanel => By.XPath("//div[contains(@id, 'LoadingPanel')]");
         internal static By _progressPopUp => By.Id("divProgressWindow");
         internal static By _progressMessage => By.Id("spanProgressMsg");
         internal static By overlayWindow = By.XPath("//div[@class = 'k-overlay']");
@@ -86,6 +87,12 @@ namespace KiewitTeamBinder.UI.Pages.Global
                     Box.Click();
             
             StableFindElement(textbox).InputText(value);
+        }
+
+        public void WaitForLoadingPanel(int timeout = 5)
+        {
+            WaitForLoading(_loadingPanel, timeout);
+            WaitForElementEnable(By.XPath("//div[contains(@id,'_GridData')]"));
         }
 
         internal static IWebElement StableFindElement(By by, long timeout = longTimeout)
