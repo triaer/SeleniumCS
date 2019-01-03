@@ -100,6 +100,8 @@ namespace KiewitTeamBinder.Common
             Send,
             [Description("Close")]
             Close,
+			[Description("Process")]
+            Process,
             [Description("Save")]
             Save
         }
@@ -193,7 +195,9 @@ namespace KiewitTeamBinder.Common
             [Description("More")]
             More,
             [Description("Transmit")]
-            Transmit
+            Transmit,
+            [Description("Process Documents")]
+            ProcessDocuments,
         }
 
         public enum MainPaneTableHeaderLabel
@@ -302,6 +306,36 @@ namespace KiewitTeamBinder.Common
             RESPONSESOUTSTANDING,
             [Description("Document Bar Chart")]
             DOCMUENTBARCHART
+        }
+
+        public enum DocumentDetailHeader
+        {
+            [Description("Document No.")]
+            DocumentNo,
+            [Description("Link")]
+            Link,
+            [Description("Description")]
+            Description,
+            [Description("Superseded Rev")]
+            SupersededRev,
+            [Description("Rev")]
+            Rev,
+            [Description("Disc")]
+            Discipline,
+            [Description("Version")]
+            Version,
+            [Description("Sts")]
+            Status,
+            [Description("Title")]
+            Title,
+            [Description("Received")]
+            Received,
+            [Description("Cat")]
+            Category,
+            [Description("Area")]
+            Area,
+            [Description("Type")]
+            Type,
         }
     }
 }

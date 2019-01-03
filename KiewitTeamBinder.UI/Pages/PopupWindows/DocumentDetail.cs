@@ -121,7 +121,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
                 node.Info("The Dropdown: " + idDropdown);
                 string actual;
 
-                if (idDropdown.Contains("Rev_Input") || idDropdown.Contains("Category_Input"))
+                if (idDropdown.Contains("Rev") || idDropdown.Contains("Category"))
                 {
                     ScrollIntoView(ItemDropdown(value));
                     WaitForElementDisplay(_itemDropdown(value));

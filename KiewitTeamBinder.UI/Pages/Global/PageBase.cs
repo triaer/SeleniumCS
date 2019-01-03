@@ -28,6 +28,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         internal static string Url { get; set; }
         internal static IWebDriver WebDriver { get; set; }
 
+        internal static By _loadingPanel => By.XPath("//div[contains(@id, 'LoadingPanel')]");
         internal static By _progressPopUp => By.Id("divProgressWindow");
         internal static By _progressMessage => By.Id("spanProgressMsg");
         internal static By overlayWindow = By.XPath("//div[@class = 'k-overlay']");
@@ -767,7 +768,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         internal static void SelectDateOnCalendar(string dateString, IWebElement DatePicker, By calendarLocator)
         {
             //Format of dateString: "MM/dd/yyyy"
-            string[] monthList = { "JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER" };
+            string[] monthList = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
             string _dayButtonXPath = ".//td[not(contains(@class,'k-other-month'))]/a[text()='{0}']";
             By _displayMonthYear = By.XPath(".//div[contains(@class,'RadCalendarPopup')]//td[@class='rcTitle']");
 
@@ -793,12 +794,16 @@ namespace KiewitTeamBinder.UI.Pages.Global
             calYear = DispMonthYear.Text.Split(' ')[1];
 
             //Calculate the differ month
-            jumMonthBy = ((expYear - int.Parse(calYear)) * 12) + (expMonth - (monthList.ToList().IndexOf(calMonth) + 1));
-            int countClick = jumMonthBy - expMonth;
+            jumMonthBy = ((expYear - int.Parse(calYear)) * 12) + (expMonth - (Array.IndexOf(monthList, calMonth) + 1));
 
-            if (jumMonthBy - expMonth > 0)
+            if (jumMonthBy > 0)
             {
-                while (expMonth-- > 0) StableFindElement(By.XPath(".//div[contains(@class,'RadCalendarPopup')]//a[contains(@class,'rcNext')]")).Click();
+                while (jumMonthBy-- > 0) StableFindElement(By.XPath(".//div[contains(@class,'RadCalendarPopup')]//a[contains(@class,'rcNext')]")).Click();
+            }
+
+            if (jumMonthBy < 0)
+            {
+                while (jumMonthBy++ < 0) StableFindElement(By.XPath(".//div[contains(@class,'RadCalendarPopup')]//a[contains(@class,'rcPrev')]")).Click();
             }
 
             By dayElement = By.XPath(string.Format(_dayButtonXPath, expDay));
