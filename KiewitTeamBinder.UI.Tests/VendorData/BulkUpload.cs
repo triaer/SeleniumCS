@@ -21,7 +21,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
     public class BulkUpload : UITestBase
     {
         //[TestMethod]
-        //public void BulkUploadDocuments()
+        //public void HoldingArea_BulkUploadDocuments_UI()
         //{
         //    try
         //    {
@@ -103,7 +103,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
         //}               
 
         //[TestMethod]
-        //public void TransmitDocuments()
+        //public void HoldingArea_TransmitDocuments_UI()
         //{
         //    try
         //    {
@@ -124,7 +124,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
         //        HoldingArea holdingArea = projectDashBoard.SelectModuleMenuItem<HoldingArea>(subMenuItem: ModuleSubMenuInLeftNav.HOLDINGAREA.ToDescription());
         //        BulkUploadDocuments bulkUploadDocuments = holdingArea.ClickBulkUploadButton(out currentWindow);
         //        bulkUploadDocuments.CreateDataOnRow<HoldingArea>(2);
-                
+
         //        //when User Story 120157 - 119696 Transmit Documents
         //        test = LogTest("Transmit Documents");
         //        string[] selectedDocuments = new string[transmitDocData.NumberOfSelectedDocumentRow];
@@ -172,7 +172,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
         //}
 
         [TestMethod]
-        public void Filtering()
+        public void HoldingArea_DocumentNoFiltering_UI()
         {
             try
             {
@@ -195,7 +195,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
 
                 test.Info($"Firstly, Set Document No. Filter with data '{FilteringSmoke.FilterValue1}'");
                 var filteredRecords = holdingArea.GetTableItemNumberWithConditions(filteringData.GridViewHoldingAreaName, filteringData.ValueInDocumentNoColumn1);
-                var recordsCountBeforeFilter =  holdingArea.GetTotalRowsVisibleInGrid(filteringData.GridViewHoldingAreaName);
+                var recordsCountBeforeFilter = holdingArea.GetTotalRowsVisibleInGrid(filteringData.GridViewHoldingAreaName);
                 holdingArea.FilterDocumentsByGridFilterRow<HoldingArea>(filteringData.GridViewHoldingAreaName, MainPaneTableHeaderLabel.DocumentNo.ToDescription(), FilteringSmoke.FilterValue1)
                     .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateRecordsMatchingFilterAreReturned(filteringData.GridViewHoldingAreaName,
                                                                                                                       filteringData.ValueInDocumentNoColumn1,

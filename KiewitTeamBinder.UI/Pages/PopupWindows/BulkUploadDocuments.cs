@@ -219,12 +219,6 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             return applyToNRowsDialog;
         }
 
-        public AlertDialog ClickValidateDocumentDetails(ToolbarButton buttonName, ref List<KeyValuePair<string, bool>> methodValidation)
-        {
-            var dialog = ClickToolbarButton<AlertDialog>(buttonName,true);
-            methodValidation.Add(ValidateProgressContentMessage("Validating Documents in progress"));
-            return dialog;
-        }
                 
         public T CreateDataOnRow<T>(int numberOfRow)
         {
@@ -237,8 +231,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             }
             var methodValidations = new List<KeyValuePair<string, bool>>();
             int indexOfCopyAttributeItem = 0;
-            BulkUploadDocuments bulkUploadDocuments = new BulkUploadDocuments(WebDriver);
-            bulkUploadDocuments.AddFilesInBulk(Utils.GetInputFilesLocalPath(), fileNames)
+            AddFilesInBulk(Utils.GetInputFilesLocalPath(), fileNames)
                 .ClickACheckboxInDocumentRow(documentRow: 1)
                 .SelectDataOfDocumentPropertyDropdown("00 - Rev 00", DocBulkUploadDropdownType.Rev, documentRow: 1)
                 .SelectDataOfDocumentPropertyDropdown("VSUB - Vendor Submission", DocBulkUploadDropdownType.Sts, documentRow: 1)

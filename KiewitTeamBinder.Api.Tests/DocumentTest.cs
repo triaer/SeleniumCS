@@ -13,25 +13,30 @@ using KiewitTeamBinder.Api.Service;
 namespace KiewitTeamBinder.Api.Tests.ApiTest
 {
     [TestClass]
-    public class SessionTest : ApiTestBase
+    public class DocumentTest : ApiTestBase
     {
         [TestMethod]
-        public void General_NonSSOValidUserSignon_API()
+        public void Documents_VerifyDocumentCount_API()
         {
             SessionApi sessionRequest = null;
             string sessionKey = "";
             try
             {
                 //given
-                var simpleLogonData = new SimpleLogonSmoke();
+                var verifyDocumentCountData = new VerifyDocumentCountSmoke();
+                string[] fieldNamesWithValues = new string[] { verifyDocumentCountData.FilterOption.DocumentNo };
                 var teambinderTestAccount = GetTestAccount("AdminAccount2", environment, "NonSSO");
                 sessionRequest = new SessionApi(GetServiceUrl(teambinderTestAccount.Url));
-                //when
-                sessionKey = sessionRequest.LogonWithApplication(teambinderTestAccount.Username, teambinderTestAccount.Company, teambinderTestAccount.Password, simpleLogonData.ProjectNumber, simpleLogonData.ConnectingProduct);
-                validations.Add(sessionRequest.ValidateLogonWithApplicationSuccessfully(sessionKey));
 
-                string respone = sessionRequest.LogoffStatus(sessionKey);
-                validations.Add(sessionRequest.ValidateLogoffStatusSuccessfully(respone));
+                //when
+                sessionKey = sessionRequest.LogonWithApplication(teambinderTestAccount.Username, teambinderTestAccount.Company, teambinderTestAccount.Password, verifyDocumentCountData.ProjectNumber, verifyDocumentCountData.ConnectingProduct);
+                validations.Add(sessionRequest.ValidateLogonWithApplicationSuccessfully(sessionKey));
+                
+                DocumentApi documentRequest = new DocumentApi(GetServiceUrl(teambinderTestAccount.Url));
+                DataTable respone = documentRequest.ListDocumentsAll(sessionKey, fieldNamesWithValues);
+                validations.Add(documentRequest.ValidateRecordCountIsCorrect(respone, verifyDocumentCountData.ExpectedRecordCount));
+
+                validations.Add(new KeyValuePair<string, bool>("Release " + sessionKey, sessionRequest.ValidateLogoffStatusSuccessfully(sessionRequest.LogoffStatus(sessionKey)).Value));
 
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);

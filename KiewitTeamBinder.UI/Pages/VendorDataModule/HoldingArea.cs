@@ -17,13 +17,14 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
     {
         #region Entities
         private string _functionButton = "//li[@class='rtbItem rtbBtn'][a='{0}']";
+        private string _filterTextBoxXpath = "//tr[@class='rgFilterRow']/td[count(//tr/th[.='{0}']/preceding-sibling::th)+1]";
+        private string _checkboxInFirstColAtRow = ".//tbody/tr[{0}]/td[1]/input";
         private static By _holdingAreaLabel => By.Id("lblRegisterCaption");
         private static By _documentNoTextBox => By.XPath("//input[contains(@id,'FilterTextBox_GridColDocumentNo')]");
         private static By _holdingAreaRadGrid => By.XPath("//div[contains(@id,'_cntPhMain_GridViewHoldingArea')][contains(@class,'RadGrid')]");
         private static By _holdingAreaGridData => By.XPath("//div[contains(@id,'_GridViewHoldingArea_GridData')]");
         private static By _infoPagerInHoldingAreaGrid => By.XPath("//table[contains(@id,'GridViewHoldingArea')]//div[contains(@class,'rgInfoPart')]//span[contains(@id,'DSC')]");
         private static By _documentRowsVisiableOnGrid => By.XPath(".//tbody/tr[not(@class='rgNoRecords')][contains(@style,'visible')]");
-        private static By _firstRowCheckBoxInTheTable => By.XPath("//*[@id='ctl00_cntPhMain_GridViewHoldingArea_ctl00_ctl04_ClientSelectColumnSelectCheckBox']");
 
         public IWebElement HoldingAreaLabel { get { return StableFindElement(_holdingAreaLabel); } }
         public IWebElement DocumentNoTextBox { get { return StableFindElement(_documentNoTextBox); } }
@@ -62,7 +63,14 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             WaitForElementDisplay(By.Id("walkme-player"));
             return new DocumentDetail(WebDriver);
         }
-
+        public ProcessDocuments ClickProcessDocumentButton(string nameButton, out string currentWindow)
+        {
+            var node = StepNode();
+            node.Info("Click Process Document button in Holding Area header");
+            IWebElement FunctionButton = StableFindElement(By.XPath(string.Format(_functionButton, nameButton)));
+            SwitchToNewPopUpWindow(FunctionButton, out currentWindow, false);
+            return new ProcessDocuments(WebDriver);
+        }
         public HoldingArea EnterDocumentNo(string value)
         {
             DocumentNoTextBox.InputText(value);
@@ -71,8 +79,9 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
 
         public HoldingArea ClickCheckboxOfDocumentAtRow(int indexRow)
         {
-            IWebElement row = HoldingAreaGridData.StableFindElement(By.XPath(".//tbody/tr[" + indexRow + "]"));
-            row.StableFindElement(By.XPath("./td[1]/input")).Check();
+            IWebElement checkboxAtRow = HoldingAreaGridData.StableFindElement(By.XPath(string.Format(_checkboxInFirstColAtRow, indexRow )));
+            ScrollIntoView(checkboxAtRow);
+            checkboxAtRow.Check();
             return this;
         }
 

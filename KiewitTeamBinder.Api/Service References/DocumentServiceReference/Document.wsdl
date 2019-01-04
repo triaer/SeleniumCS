@@ -1,0 +1,1085 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://www.qa-software.com/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://www.qa-software.com/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://www.qa-software.com/">
+      <s:element name="ListDocument">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="sessionKey" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="documentFilter" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="orderBy" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="startRowPosition" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="noOfRows" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ListDocumentResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ListDocumentResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ListDocumentsAll">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="sessionKey" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="documentFilter" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="registerView" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="orderBy" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="startRowPosition" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="noOfRows" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ListDocumentsAllResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ListDocumentsAllResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetDocumentDetails">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="sessionKey" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="documentKey" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetDocumentDetailsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetDocumentDetailsResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetDownloadLink">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="sessionKey" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="int_viewFile" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetDownloadLinkResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetDownloadLinkResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SaveDocument">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="sessionKey" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="documentDetailsXml" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SaveDocumentResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SaveDocumentResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ListDeletedDocuments">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="sessionKey" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="documentFilter" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="orderBy" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="startRowPosition" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="noOfRows" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ListDeletedDocumentsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ListDeletedDocumentsResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ListDocumentsForAllProjects">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="sessionKey" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="documentFilter" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="registerView" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="orderBy" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="startRowPosition" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="noOfRows" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ListDocumentsForAllProjectsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ListDocumentsForAllProjectsResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ListDocumentsForAllProjectsAsynchronous">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="sessionKey" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="filter" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="registerView" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="orderBy" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="startRowPosition" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="noOfRows" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ListDocumentsForAllProjectsAsynchronousResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ListDocumentsForAllProjectsAsynchronousResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetDocumentDetailsFromProject">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="sessionKey" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="documentKey" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="masterProjectKey" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetDocumentDetailsFromProjectResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetDocumentDetailsFromProjectResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetDownloadLinkFromProject">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="sessionKey" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="int_viewFile" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="masterProjectKey" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetDownloadLinkFromProjectResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetDownloadLinkFromProjectResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetDocumentReviewStatus">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="sessionKey" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="documentKey" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetDocumentReviewStatusResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetDocumentReviewStatusResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DataTable" nillable="true">
+        <s:complexType>
+          <s:sequence>
+            <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+            <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DataSet" nillable="true">
+        <s:complexType>
+          <s:sequence>
+            <s:element ref="s:schema" />
+            <s:any />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="string" nillable="true" type="s:string" />
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="ListDocumentSoapIn">
+    <wsdl:part name="parameters" element="tns:ListDocument" />
+  </wsdl:message>
+  <wsdl:message name="ListDocumentSoapOut">
+    <wsdl:part name="parameters" element="tns:ListDocumentResponse" />
+  </wsdl:message>
+  <wsdl:message name="ListDocumentsAllSoapIn">
+    <wsdl:part name="parameters" element="tns:ListDocumentsAll" />
+  </wsdl:message>
+  <wsdl:message name="ListDocumentsAllSoapOut">
+    <wsdl:part name="parameters" element="tns:ListDocumentsAllResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetDocumentDetailsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetDocumentDetails" />
+  </wsdl:message>
+  <wsdl:message name="GetDocumentDetailsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetDocumentDetailsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetDownloadLinkSoapIn">
+    <wsdl:part name="parameters" element="tns:GetDownloadLink" />
+  </wsdl:message>
+  <wsdl:message name="GetDownloadLinkSoapOut">
+    <wsdl:part name="parameters" element="tns:GetDownloadLinkResponse" />
+  </wsdl:message>
+  <wsdl:message name="SaveDocumentSoapIn">
+    <wsdl:part name="parameters" element="tns:SaveDocument" />
+  </wsdl:message>
+  <wsdl:message name="SaveDocumentSoapOut">
+    <wsdl:part name="parameters" element="tns:SaveDocumentResponse" />
+  </wsdl:message>
+  <wsdl:message name="ListDeletedDocumentsSoapIn">
+    <wsdl:part name="parameters" element="tns:ListDeletedDocuments" />
+  </wsdl:message>
+  <wsdl:message name="ListDeletedDocumentsSoapOut">
+    <wsdl:part name="parameters" element="tns:ListDeletedDocumentsResponse" />
+  </wsdl:message>
+  <wsdl:message name="ListDocumentsForAllProjectsSoapIn">
+    <wsdl:part name="parameters" element="tns:ListDocumentsForAllProjects" />
+  </wsdl:message>
+  <wsdl:message name="ListDocumentsForAllProjectsSoapOut">
+    <wsdl:part name="parameters" element="tns:ListDocumentsForAllProjectsResponse" />
+  </wsdl:message>
+  <wsdl:message name="ListDocumentsForAllProjectsAsynchronousSoapIn">
+    <wsdl:part name="parameters" element="tns:ListDocumentsForAllProjectsAsynchronous" />
+  </wsdl:message>
+  <wsdl:message name="ListDocumentsForAllProjectsAsynchronousSoapOut">
+    <wsdl:part name="parameters" element="tns:ListDocumentsForAllProjectsAsynchronousResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetDocumentDetailsFromProjectSoapIn">
+    <wsdl:part name="parameters" element="tns:GetDocumentDetailsFromProject" />
+  </wsdl:message>
+  <wsdl:message name="GetDocumentDetailsFromProjectSoapOut">
+    <wsdl:part name="parameters" element="tns:GetDocumentDetailsFromProjectResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetDownloadLinkFromProjectSoapIn">
+    <wsdl:part name="parameters" element="tns:GetDownloadLinkFromProject" />
+  </wsdl:message>
+  <wsdl:message name="GetDownloadLinkFromProjectSoapOut">
+    <wsdl:part name="parameters" element="tns:GetDownloadLinkFromProjectResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetDocumentReviewStatusSoapIn">
+    <wsdl:part name="parameters" element="tns:GetDocumentReviewStatus" />
+  </wsdl:message>
+  <wsdl:message name="GetDocumentReviewStatusSoapOut">
+    <wsdl:part name="parameters" element="tns:GetDocumentReviewStatusResponse" />
+  </wsdl:message>
+  <wsdl:message name="ListDocumentHttpGetIn">
+    <wsdl:part name="sessionKey" type="s:string" />
+    <wsdl:part name="documentFilter" type="s:string" />
+    <wsdl:part name="orderBy" type="s:string" />
+    <wsdl:part name="startRowPosition" type="s:string" />
+    <wsdl:part name="noOfRows" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="ListDocumentHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="ListDocumentsAllHttpGetIn">
+    <wsdl:part name="sessionKey" type="s:string" />
+    <wsdl:part name="documentFilter" type="s:string" />
+    <wsdl:part name="registerView" type="s:string" />
+    <wsdl:part name="orderBy" type="s:string" />
+    <wsdl:part name="startRowPosition" type="s:string" />
+    <wsdl:part name="noOfRows" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="ListDocumentsAllHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="GetDocumentDetailsHttpGetIn">
+    <wsdl:part name="sessionKey" type="s:string" />
+    <wsdl:part name="documentKey" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetDocumentDetailsHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataSet" />
+  </wsdl:message>
+  <wsdl:message name="GetDownloadLinkHttpGetIn">
+    <wsdl:part name="sessionKey" type="s:string" />
+    <wsdl:part name="int_viewFile" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetDownloadLinkHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="SaveDocumentHttpGetIn">
+    <wsdl:part name="sessionKey" type="s:string" />
+    <wsdl:part name="documentDetailsXml" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="SaveDocumentHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataSet" />
+  </wsdl:message>
+  <wsdl:message name="ListDeletedDocumentsHttpGetIn">
+    <wsdl:part name="sessionKey" type="s:string" />
+    <wsdl:part name="documentFilter" type="s:string" />
+    <wsdl:part name="orderBy" type="s:string" />
+    <wsdl:part name="startRowPosition" type="s:string" />
+    <wsdl:part name="noOfRows" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="ListDeletedDocumentsHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="ListDocumentsForAllProjectsHttpGetIn">
+    <wsdl:part name="sessionKey" type="s:string" />
+    <wsdl:part name="documentFilter" type="s:string" />
+    <wsdl:part name="registerView" type="s:string" />
+    <wsdl:part name="orderBy" type="s:string" />
+    <wsdl:part name="startRowPosition" type="s:string" />
+    <wsdl:part name="noOfRows" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="ListDocumentsForAllProjectsHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="ListDocumentsForAllProjectsAsynchronousHttpGetIn">
+    <wsdl:part name="sessionKey" type="s:string" />
+    <wsdl:part name="filter" type="s:string" />
+    <wsdl:part name="registerView" type="s:string" />
+    <wsdl:part name="orderBy" type="s:string" />
+    <wsdl:part name="startRowPosition" type="s:string" />
+    <wsdl:part name="noOfRows" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="ListDocumentsForAllProjectsAsynchronousHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="GetDocumentDetailsFromProjectHttpGetIn">
+    <wsdl:part name="sessionKey" type="s:string" />
+    <wsdl:part name="documentKey" type="s:string" />
+    <wsdl:part name="masterProjectKey" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetDocumentDetailsFromProjectHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataSet" />
+  </wsdl:message>
+  <wsdl:message name="GetDownloadLinkFromProjectHttpGetIn">
+    <wsdl:part name="sessionKey" type="s:string" />
+    <wsdl:part name="int_viewFile" type="s:string" />
+    <wsdl:part name="masterProjectKey" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetDownloadLinkFromProjectHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="GetDocumentReviewStatusHttpGetIn">
+    <wsdl:part name="sessionKey" type="s:string" />
+    <wsdl:part name="documentKey" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetDocumentReviewStatusHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataSet" />
+  </wsdl:message>
+  <wsdl:message name="ListDocumentHttpPostIn">
+    <wsdl:part name="sessionKey" type="s:string" />
+    <wsdl:part name="documentFilter" type="s:string" />
+    <wsdl:part name="orderBy" type="s:string" />
+    <wsdl:part name="startRowPosition" type="s:string" />
+    <wsdl:part name="noOfRows" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="ListDocumentHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="ListDocumentsAllHttpPostIn">
+    <wsdl:part name="sessionKey" type="s:string" />
+    <wsdl:part name="documentFilter" type="s:string" />
+    <wsdl:part name="registerView" type="s:string" />
+    <wsdl:part name="orderBy" type="s:string" />
+    <wsdl:part name="startRowPosition" type="s:string" />
+    <wsdl:part name="noOfRows" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="ListDocumentsAllHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="GetDocumentDetailsHttpPostIn">
+    <wsdl:part name="sessionKey" type="s:string" />
+    <wsdl:part name="documentKey" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetDocumentDetailsHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataSet" />
+  </wsdl:message>
+  <wsdl:message name="GetDownloadLinkHttpPostIn">
+    <wsdl:part name="sessionKey" type="s:string" />
+    <wsdl:part name="int_viewFile" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetDownloadLinkHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="SaveDocumentHttpPostIn">
+    <wsdl:part name="sessionKey" type="s:string" />
+    <wsdl:part name="documentDetailsXml" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="SaveDocumentHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataSet" />
+  </wsdl:message>
+  <wsdl:message name="ListDeletedDocumentsHttpPostIn">
+    <wsdl:part name="sessionKey" type="s:string" />
+    <wsdl:part name="documentFilter" type="s:string" />
+    <wsdl:part name="orderBy" type="s:string" />
+    <wsdl:part name="startRowPosition" type="s:string" />
+    <wsdl:part name="noOfRows" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="ListDeletedDocumentsHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="ListDocumentsForAllProjectsHttpPostIn">
+    <wsdl:part name="sessionKey" type="s:string" />
+    <wsdl:part name="documentFilter" type="s:string" />
+    <wsdl:part name="registerView" type="s:string" />
+    <wsdl:part name="orderBy" type="s:string" />
+    <wsdl:part name="startRowPosition" type="s:string" />
+    <wsdl:part name="noOfRows" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="ListDocumentsForAllProjectsHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="ListDocumentsForAllProjectsAsynchronousHttpPostIn">
+    <wsdl:part name="sessionKey" type="s:string" />
+    <wsdl:part name="filter" type="s:string" />
+    <wsdl:part name="registerView" type="s:string" />
+    <wsdl:part name="orderBy" type="s:string" />
+    <wsdl:part name="startRowPosition" type="s:string" />
+    <wsdl:part name="noOfRows" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="ListDocumentsForAllProjectsAsynchronousHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="GetDocumentDetailsFromProjectHttpPostIn">
+    <wsdl:part name="sessionKey" type="s:string" />
+    <wsdl:part name="documentKey" type="s:string" />
+    <wsdl:part name="masterProjectKey" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetDocumentDetailsFromProjectHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataSet" />
+  </wsdl:message>
+  <wsdl:message name="GetDownloadLinkFromProjectHttpPostIn">
+    <wsdl:part name="sessionKey" type="s:string" />
+    <wsdl:part name="int_viewFile" type="s:string" />
+    <wsdl:part name="masterProjectKey" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetDownloadLinkFromProjectHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="GetDocumentReviewStatusHttpPostIn">
+    <wsdl:part name="sessionKey" type="s:string" />
+    <wsdl:part name="documentKey" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetDocumentReviewStatusHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataSet" />
+  </wsdl:message>
+  <wsdl:portType name="DocumentWebServiceSoap">
+    <wsdl:operation name="ListDocument">
+      <wsdl:input message="tns:ListDocumentSoapIn" />
+      <wsdl:output message="tns:ListDocumentSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ListDocumentsAll">
+      <wsdl:input message="tns:ListDocumentsAllSoapIn" />
+      <wsdl:output message="tns:ListDocumentsAllSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDocumentDetails">
+      <wsdl:input message="tns:GetDocumentDetailsSoapIn" />
+      <wsdl:output message="tns:GetDocumentDetailsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDownloadLink">
+      <wsdl:input message="tns:GetDownloadLinkSoapIn" />
+      <wsdl:output message="tns:GetDownloadLinkSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SaveDocument">
+      <wsdl:input message="tns:SaveDocumentSoapIn" />
+      <wsdl:output message="tns:SaveDocumentSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ListDeletedDocuments">
+      <wsdl:input message="tns:ListDeletedDocumentsSoapIn" />
+      <wsdl:output message="tns:ListDeletedDocumentsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ListDocumentsForAllProjects">
+      <wsdl:input message="tns:ListDocumentsForAllProjectsSoapIn" />
+      <wsdl:output message="tns:ListDocumentsForAllProjectsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ListDocumentsForAllProjectsAsynchronous">
+      <wsdl:input message="tns:ListDocumentsForAllProjectsAsynchronousSoapIn" />
+      <wsdl:output message="tns:ListDocumentsForAllProjectsAsynchronousSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDocumentDetailsFromProject">
+      <wsdl:input message="tns:GetDocumentDetailsFromProjectSoapIn" />
+      <wsdl:output message="tns:GetDocumentDetailsFromProjectSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDownloadLinkFromProject">
+      <wsdl:input message="tns:GetDownloadLinkFromProjectSoapIn" />
+      <wsdl:output message="tns:GetDownloadLinkFromProjectSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDocumentReviewStatus">
+      <wsdl:input message="tns:GetDocumentReviewStatusSoapIn" />
+      <wsdl:output message="tns:GetDocumentReviewStatusSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="DocumentWebServiceHttpGet">
+    <wsdl:operation name="ListDocument">
+      <wsdl:input message="tns:ListDocumentHttpGetIn" />
+      <wsdl:output message="tns:ListDocumentHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ListDocumentsAll">
+      <wsdl:input message="tns:ListDocumentsAllHttpGetIn" />
+      <wsdl:output message="tns:ListDocumentsAllHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDocumentDetails">
+      <wsdl:input message="tns:GetDocumentDetailsHttpGetIn" />
+      <wsdl:output message="tns:GetDocumentDetailsHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDownloadLink">
+      <wsdl:input message="tns:GetDownloadLinkHttpGetIn" />
+      <wsdl:output message="tns:GetDownloadLinkHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SaveDocument">
+      <wsdl:input message="tns:SaveDocumentHttpGetIn" />
+      <wsdl:output message="tns:SaveDocumentHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ListDeletedDocuments">
+      <wsdl:input message="tns:ListDeletedDocumentsHttpGetIn" />
+      <wsdl:output message="tns:ListDeletedDocumentsHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ListDocumentsForAllProjects">
+      <wsdl:input message="tns:ListDocumentsForAllProjectsHttpGetIn" />
+      <wsdl:output message="tns:ListDocumentsForAllProjectsHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ListDocumentsForAllProjectsAsynchronous">
+      <wsdl:input message="tns:ListDocumentsForAllProjectsAsynchronousHttpGetIn" />
+      <wsdl:output message="tns:ListDocumentsForAllProjectsAsynchronousHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDocumentDetailsFromProject">
+      <wsdl:input message="tns:GetDocumentDetailsFromProjectHttpGetIn" />
+      <wsdl:output message="tns:GetDocumentDetailsFromProjectHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDownloadLinkFromProject">
+      <wsdl:input message="tns:GetDownloadLinkFromProjectHttpGetIn" />
+      <wsdl:output message="tns:GetDownloadLinkFromProjectHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDocumentReviewStatus">
+      <wsdl:input message="tns:GetDocumentReviewStatusHttpGetIn" />
+      <wsdl:output message="tns:GetDocumentReviewStatusHttpGetOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="DocumentWebServiceHttpPost">
+    <wsdl:operation name="ListDocument">
+      <wsdl:input message="tns:ListDocumentHttpPostIn" />
+      <wsdl:output message="tns:ListDocumentHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ListDocumentsAll">
+      <wsdl:input message="tns:ListDocumentsAllHttpPostIn" />
+      <wsdl:output message="tns:ListDocumentsAllHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDocumentDetails">
+      <wsdl:input message="tns:GetDocumentDetailsHttpPostIn" />
+      <wsdl:output message="tns:GetDocumentDetailsHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDownloadLink">
+      <wsdl:input message="tns:GetDownloadLinkHttpPostIn" />
+      <wsdl:output message="tns:GetDownloadLinkHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SaveDocument">
+      <wsdl:input message="tns:SaveDocumentHttpPostIn" />
+      <wsdl:output message="tns:SaveDocumentHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ListDeletedDocuments">
+      <wsdl:input message="tns:ListDeletedDocumentsHttpPostIn" />
+      <wsdl:output message="tns:ListDeletedDocumentsHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ListDocumentsForAllProjects">
+      <wsdl:input message="tns:ListDocumentsForAllProjectsHttpPostIn" />
+      <wsdl:output message="tns:ListDocumentsForAllProjectsHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ListDocumentsForAllProjectsAsynchronous">
+      <wsdl:input message="tns:ListDocumentsForAllProjectsAsynchronousHttpPostIn" />
+      <wsdl:output message="tns:ListDocumentsForAllProjectsAsynchronousHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDocumentDetailsFromProject">
+      <wsdl:input message="tns:GetDocumentDetailsFromProjectHttpPostIn" />
+      <wsdl:output message="tns:GetDocumentDetailsFromProjectHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDownloadLinkFromProject">
+      <wsdl:input message="tns:GetDownloadLinkFromProjectHttpPostIn" />
+      <wsdl:output message="tns:GetDownloadLinkFromProjectHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDocumentReviewStatus">
+      <wsdl:input message="tns:GetDocumentReviewStatusHttpPostIn" />
+      <wsdl:output message="tns:GetDocumentReviewStatusHttpPostOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="DocumentWebServiceSoap" type="tns:DocumentWebServiceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="ListDocument">
+      <soap:operation soapAction="http://www.qa-software.com/ListDocument" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListDocumentsAll">
+      <soap:operation soapAction="http://www.qa-software.com/ListDocumentsAll" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDocumentDetails">
+      <soap:operation soapAction="http://www.qa-software.com/GetDocumentDetails" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDownloadLink">
+      <soap:operation soapAction="http://www.qa-software.com/GetDownloadLink" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SaveDocument">
+      <soap:operation soapAction="http://www.qa-software.com/SaveDocument" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListDeletedDocuments">
+      <soap:operation soapAction="http://www.qa-software.com/ListDeletedDocuments" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListDocumentsForAllProjects">
+      <soap:operation soapAction="http://www.qa-software.com/ListDocumentsForAllProjects" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListDocumentsForAllProjectsAsynchronous">
+      <soap:operation soapAction="http://www.qa-software.com/ListDocumentsForAllProjectsAsynchronous" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDocumentDetailsFromProject">
+      <soap:operation soapAction="http://www.qa-software.com/GetDocumentDetailsFromProject" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDownloadLinkFromProject">
+      <soap:operation soapAction="http://www.qa-software.com/GetDownloadLinkFromProject" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDocumentReviewStatus">
+      <soap:operation soapAction="http://www.qa-software.com/GetDocumentReviewStatus" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="DocumentWebServiceSoap12" type="tns:DocumentWebServiceSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="ListDocument">
+      <soap12:operation soapAction="http://www.qa-software.com/ListDocument" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListDocumentsAll">
+      <soap12:operation soapAction="http://www.qa-software.com/ListDocumentsAll" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDocumentDetails">
+      <soap12:operation soapAction="http://www.qa-software.com/GetDocumentDetails" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDownloadLink">
+      <soap12:operation soapAction="http://www.qa-software.com/GetDownloadLink" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SaveDocument">
+      <soap12:operation soapAction="http://www.qa-software.com/SaveDocument" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListDeletedDocuments">
+      <soap12:operation soapAction="http://www.qa-software.com/ListDeletedDocuments" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListDocumentsForAllProjects">
+      <soap12:operation soapAction="http://www.qa-software.com/ListDocumentsForAllProjects" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListDocumentsForAllProjectsAsynchronous">
+      <soap12:operation soapAction="http://www.qa-software.com/ListDocumentsForAllProjectsAsynchronous" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDocumentDetailsFromProject">
+      <soap12:operation soapAction="http://www.qa-software.com/GetDocumentDetailsFromProject" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDownloadLinkFromProject">
+      <soap12:operation soapAction="http://www.qa-software.com/GetDownloadLinkFromProject" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDocumentReviewStatus">
+      <soap12:operation soapAction="http://www.qa-software.com/GetDocumentReviewStatus" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="DocumentWebServiceHttpGet" type="tns:DocumentWebServiceHttpGet">
+    <http:binding verb="GET" />
+    <wsdl:operation name="ListDocument">
+      <http:operation location="/ListDocument" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListDocumentsAll">
+      <http:operation location="/ListDocumentsAll" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDocumentDetails">
+      <http:operation location="/GetDocumentDetails" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDownloadLink">
+      <http:operation location="/GetDownloadLink" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SaveDocument">
+      <http:operation location="/SaveDocument" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListDeletedDocuments">
+      <http:operation location="/ListDeletedDocuments" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListDocumentsForAllProjects">
+      <http:operation location="/ListDocumentsForAllProjects" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListDocumentsForAllProjectsAsynchronous">
+      <http:operation location="/ListDocumentsForAllProjectsAsynchronous" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDocumentDetailsFromProject">
+      <http:operation location="/GetDocumentDetailsFromProject" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDownloadLinkFromProject">
+      <http:operation location="/GetDownloadLinkFromProject" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDocumentReviewStatus">
+      <http:operation location="/GetDocumentReviewStatus" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="DocumentWebServiceHttpPost" type="tns:DocumentWebServiceHttpPost">
+    <http:binding verb="POST" />
+    <wsdl:operation name="ListDocument">
+      <http:operation location="/ListDocument" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListDocumentsAll">
+      <http:operation location="/ListDocumentsAll" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDocumentDetails">
+      <http:operation location="/GetDocumentDetails" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDownloadLink">
+      <http:operation location="/GetDownloadLink" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SaveDocument">
+      <http:operation location="/SaveDocument" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListDeletedDocuments">
+      <http:operation location="/ListDeletedDocuments" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListDocumentsForAllProjects">
+      <http:operation location="/ListDocumentsForAllProjects" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListDocumentsForAllProjectsAsynchronous">
+      <http:operation location="/ListDocumentsForAllProjectsAsynchronous" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDocumentDetailsFromProject">
+      <http:operation location="/GetDocumentDetailsFromProject" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDownloadLinkFromProject">
+      <http:operation location="/GetDownloadLinkFromProject" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDocumentReviewStatus">
+      <http:operation location="/GetDocumentReviewStatus" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="DocumentWebService">
+    <wsdl:port name="DocumentWebServiceSoap" binding="tns:DocumentWebServiceSoap">
+      <soap:address location="https://kiewittest.teambinder.com/TBWS/Document.asmx" />
+    </wsdl:port>
+    <wsdl:port name="DocumentWebServiceSoap12" binding="tns:DocumentWebServiceSoap12">
+      <soap12:address location="https://kiewittest.teambinder.com/TBWS/Document.asmx" />
+    </wsdl:port>
+    <wsdl:port name="DocumentWebServiceHttpGet" binding="tns:DocumentWebServiceHttpGet">
+      <http:address location="https://kiewittest.teambinder.com/TBWS/Document.asmx" />
+    </wsdl:port>
+    <wsdl:port name="DocumentWebServiceHttpPost" binding="tns:DocumentWebServiceHttpPost">
+      <http:address location="https://kiewittest.teambinder.com/TBWS/Document.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

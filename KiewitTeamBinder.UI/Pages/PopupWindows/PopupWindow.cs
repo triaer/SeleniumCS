@@ -76,7 +76,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
 
         public T ClickSaveButton<T>()
         {
-            ToolBarButton(ToolbarButton.Save.ToDescription()).Click();
+            ClickToolbarButton<T>(ToolbarButton.Save, true);
             WebDriver.SwitchTo().ActiveElement();
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
@@ -85,6 +85,20 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
         {
             OkButtonOnPopUp.Click();
             WebDriver.SwitchTo().DefaultContent();
+            return (T)Activator.CreateInstance(typeof(T), WebDriver);
+        }
+        public AlertDialog ClickValidateDocumentDetails(ToolbarButton buttonName, ref List<KeyValuePair<string, bool>> methodValidation, string processMessage)
+        {
+            var dialog = ClickToolbarButton<AlertDialog>(buttonName, true);
+            methodValidation.Add(ValidateProgressContentMessage(processMessage));
+            return dialog;
+        }
+
+        public T ClickCloseButtonOnPopUp<T>()
+        {
+            ClickToolbarButton<T>(ToolbarButton.Close);
+            WebDriver.SwitchTo().Window(WebDriver.WindowHandles.Last());
+            WaitForLoadingPanel();
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 

@@ -17,10 +17,10 @@ using static KiewitTeamBinder.Common.KiewitTeamBinderENums;
 namespace KiewitTeamBinder.UI.Tests.VendorData
 {
     [TestClass]
-    public class SingleDocUpload : UITestBase
+    public class UploadUnrestrainedDocument : UITestBase
     {
         [TestMethod]
-        public void HoldingArea_UploadSingleDoc_UI()
+        public void HoldingArea_UploadUnrestrainedDocument_UI()
         {
             try
             {
@@ -31,27 +31,27 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 test.Info("Log on TeamBinder via Other User Login: " + teambinderTestAccount.Username);
                 ProjectsList projectsList = new NonSsoSignOn(driver).Logon(teambinderTestAccount) as ProjectsList;
 
-                var uploadSingleDocData = new UploadSingleDocSmoke();
-                test.Info("Navigate to DashBoard Page of Project: " + uploadSingleDocData.ProjectName);
-                ProjectsDashboard projectDashBoard = projectsList.NavigateToProjectDashboardPage(uploadSingleDocData.ProjectName);
+                var uploadUnrestrainedDocData = new UploadUnrestrainedDocSmoke();
+                test.Info("Navigate to DashBoard Page of Project: " + uploadUnrestrainedDocData.ProjectName);
+                ProjectsDashboard projectDashBoard = projectsList.NavigateToProjectDashboardPage(uploadUnrestrainedDocData.ProjectName);
 
-                //when User Story 120221 - 120034 - Upload Single Doc
-                test = LogTest("Upload Single Doc");
+                //when User Story 120278 - 120081 - Upload Unrestrained Document
+                test = LogTest("Upload Unrestrained Document");
                 string username = projectDashBoard.GetUserNameLogon();
                 string currentWindow;
                 projectDashBoard.SelectModuleMenuItem<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription(), waitForLoading: false);
                 HoldingArea holdingArea = projectDashBoard.SelectModuleMenuItem<HoldingArea>(subMenuItem: ModuleSubMenuInLeftNav.HOLDINGAREA.ToDescription());
 
                 DocumentDetail newDocument = holdingArea.ClickNewButton(out currentWindow);
-                newDocument.LogValidation<DocumentDetail>(ref validations, newDocument.ValidateRequiredFieldsWithRedAsterisk(uploadSingleDocData.RequiredFields))
-                    .LogValidation<DocumentDetail>(ref validations, newDocument.ValidateFromUserFieldShowCorrectDataAndFormat(username, uploadSingleDocData.ColorGrey))
-                    .LogValidation<DocumentDetail>(ref validations, newDocument.ValidateDocumentNoIsLimitRetained(uploadSingleDocData.MaxLengthOfDocNo))
-                    .EnterDocumentInformation(uploadSingleDocData.SingleDocInformation, ref methodValidations)
-                    .LogValidation<DocumentDetail>(ref validations, newDocument.ValidateSelectedItemShowInDropdownBoxesCorrect(uploadSingleDocData.SingleDocInformation))
-                    .ClickAttachFilesButton(Utils.GetInputFilesLocalPath(), uploadSingleDocData.FileNames)
+                newDocument.LogValidation<DocumentDetail>(ref validations, newDocument.ValidateRequiredFieldsWithRedAsterisk(uploadUnrestrainedDocData.RequiredFields))
+                    .LogValidation<DocumentDetail>(ref validations, newDocument.ValidateFromUserFieldShowCorrectDataAndFormat(username, uploadUnrestrainedDocData.ColorGrey))
+                    .LogValidation<DocumentDetail>(ref validations, newDocument.ValidateDocumentNoIsLimitRetained(uploadUnrestrainedDocData.MaxLengthOfDocNo))
+                    .EnterDocumentInformation(uploadUnrestrainedDocData.SingleDocInformation, ref methodValidations)
+                    .LogValidation<DocumentDetail>(ref validations, newDocument.ValidateSelectedItemShowInDropdownBoxesCorrect(uploadUnrestrainedDocData.SingleDocInformation))
+                    .ClickAttachFilesButton(Utils.GetInputFilesLocalPath(), uploadUnrestrainedDocData.FileNames)
                     .ClickSaveButton<DocumentDetail>()
                     .LogValidation<DocumentDetail>(ref validations, newDocument.ValidateSaveDialogStatus(close: false))
-                    .LogValidation<DocumentDetail>(ref validations, newDocument.ValidateMessageDisplayCorrect(uploadSingleDocData.SaveMessage))
+                    .LogValidation<DocumentDetail>(ref validations, newDocument.ValidateMessageDisplayCorrect(uploadUnrestrainedDocData.SaveMessage))
                     .ClickOkButtonOnPopUp<DocumentDetail>()
                     .LogValidation<DocumentDetail>(ref validations, newDocument.ValidateSaveDialogStatus(close: true))
                     .ClickToolbarButton<HoldingArea>(ToolbarButton.Close);
