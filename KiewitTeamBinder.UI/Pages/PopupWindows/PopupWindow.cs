@@ -42,6 +42,10 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
         #region Actions
         public PopupWindow(IWebDriver webDriver) : base(webDriver)
         { }
+        public string GetCurrentWindow()
+        {
+            return WebDriver.CurrentWindowHandle;
+        }
 
         public T ClickToolbarButton<T>(ToolbarButton buttonName, bool checkProgressPopup = false, bool isDisappear = false)
         {
@@ -140,18 +144,18 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             }
         }
 
-        public KeyValuePair<string, bool> ValidateSaveDialogStatus(bool close = false)
+        public KeyValuePair<string, bool> ValidateSaveDialogStatus(bool closed = false)
         {
             var node = StepNode();
 
             try
             {
-                if (close == true)
+                if (closed == true)
                 {
-                    if (FindElement(_saveItemPopUp) == null)
-                        return SetPassValidation(node, Validation.Save_PopUp_Closed);
+                    if (StableFindElement(_saveItemPopUp) != null)
+                        return SetFailValidation(node, Validation.Save_PopUp_Closed);
 
-                    return SetFailValidation(node, Validation.Save_PopUp_Closed);
+                    return SetPassValidation(node, Validation.Save_PopUp_Closed);
                 }
 
                 if (StableFindElement(_saveItemPopUp) != null)
@@ -161,8 +165,8 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             }
             catch (Exception e)
             {
-                if (close == true)
-                    return SetFailValidation(node, Validation.Save_PopUp_Closed);
+                if (closed == true)
+                    return SetErrorValidation(node, Validation.Save_PopUp_Closed, e);
 
                 return SetErrorValidation(node, Validation.Save_PopUp_Opened, e);
             }

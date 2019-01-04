@@ -30,14 +30,16 @@ namespace KiewitTeamBinder.Common.TestData
         };
         public string DocumentNo = "AUTO1";
         public string GridViewAddDocName = "GridView_GridData";
+        public string GridViewLinkItemsName = "LinkedDocumentsGrid_GridData";
+        public string SaveMessageOnLinkItem = "Manual Links updated successfully.";
         public DeliverableItemInfo DeliverableItemInfo = new DeliverableItemInfo()
         {
             ContractNumber = "2018-12-005",
             ItemID = "005-02",
-            LineItemNumber = Utils.GetRandomValue("LGVN_LineItemNumber"),
+            LineItemNumber = Utils.GetRandomValue("LineItemNumber"),
             Description = Utils.GetRandomValue("Description"),
             Type = "AR - ARCHITECTURAL (PRE-ENGINEERED METAL BUILDINGS)",
-            Criticality = "High",
+            Criticality = "Normal",
             Status = "COMPLETED - Completed",
         };
     }

@@ -20,7 +20,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
     public class CreateContract : UITestBase
     {
         [TestMethod]
-        public void CreateNewDeliverable()
+        public void VendorDataRegister_CreateNewDeliverable_UI()
         {
             try
             {
@@ -31,41 +31,62 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 test.Info("Log on TeamBinder via Other User Login: " + teambinderTestAccount.Username);
                 ProjectsList projectsList = new NonSsoSignOn(driver).Logon(teambinderTestAccount) as ProjectsList;
 
-                var createNewDeliverable = new CreateNewDeliverableSmoke();
-                test.Info("Navigate to DashBoard Page of Project: " + createNewDeliverable.ProjectName);
-                ProjectsDashboard projectDashBoard = projectsList.NavigateToProjectDashboardPage(createNewDeliverable.ProjectName);
+                var createNewDeliverableData = new CreateNewDeliverableSmoke();
+                test.Info("Navigate to DashBoard Page of Project: " + createNewDeliverableData.ProjectName);
+                ProjectsDashboard projectDashBoard = projectsList.NavigateToProjectDashboardPage(createNewDeliverableData.ProjectName);
 
                 //when
+                string parrentWindow;
+                string currentWindow;
+                VendorDataRegister vendorDataRegister = projectDashBoard.SelectModuleMenuItem<VendorDataRegister>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription(), subMenuItem: ModuleSubMenuInLeftNav.VENDODATAREGISTER.ToDescription());
+                
                 //UserStory 121992 - 120796 - Create New Deliverable
                 test = LogTest("Create New Deliverable");
-                string parrentWindow;
-                VendorDataRegister vendorDataRegister = projectDashBoard.SelectModuleMenuItem<VendorDataRegister>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription(), subMenuItem: ModuleSubMenuInLeftNav.VENDODATAREGISTER.ToDescription());
                 vendorDataRegister.ClickHeaderButton<VendorDataRegister>(MainPaneTableHeaderButton.New)
-                                  .LogValidation<VendorDataRegister>(ref validations, projectDashBoard.ValidateDisplayedSubItemLinks(createNewDeliverable.SubItemMenus));
-
+                                  .LogValidation<VendorDataRegister>(ref validations, projectDashBoard.ValidateDisplayedSubItemLinks(createNewDeliverableData.SubItemMenus));
                 DeliverableItemDetail deliverableItemDetail = vendorDataRegister.OpenDeliverableLineItemTemplate(out parrentWindow);
-                deliverableItemDetail.LogValidation<DeliverableItemDetail>(ref validations, deliverableItemDetail.ValidateWindowIsOpened(createNewDeliverable.DeliverableWindowTitle))
-                                     .LogValidation<DeliverableItemDetail>(ref validations, deliverableItemDetail.ValidateRequiredFieldsWithRedAsterisk(createNewDeliverable.RequiredField))
-                                     .EnterDeliverableItemInfo(createNewDeliverable.DeliverableItemInfo, ref methodValidations)
-                                     .LogValidation<DeliverableItemDetail>(ref validations, deliverableItemDetail.ValidateSelectedItemShowInDropdownBoxesCorrect(createNewDeliverable.DeliverableItemInfo));
+                deliverableItemDetail.LogValidation<DeliverableItemDetail>(ref validations, deliverableItemDetail.ValidateWindowIsOpened(createNewDeliverableData.DeliverableWindowTitle))
+                                     .LogValidation<DeliverableItemDetail>(ref validations, deliverableItemDetail.ValidateRequiredFieldsWithRedAsterisk(createNewDeliverableData.RequiredField))
+                                     .EnterDeliverableItemInfo(createNewDeliverableData.DeliverableItemInfo, ref methodValidations)
+                                     .LogValidation<DeliverableItemDetail>(ref validations, deliverableItemDetail.ValidateSelectedItemShowInDropdownBoxesCorrect(createNewDeliverableData.DeliverableItemInfo));
+                parrentWindow = deliverableItemDetail.GetCurrentWindow();
                 AlertDialog alertDialog = deliverableItemDetail.ClickToolbarButton<AlertDialog>(ToolbarButton.Save);
-                alertDialog.LogValidation<AlertDialog>(ref validations, deliverableItemDetail.ValidateMessageDisplayCorrect(createNewDeliverable.SaveMessage))
+                alertDialog.LogValidation<AlertDialog>(ref validations, deliverableItemDetail.ValidateMessageDisplayCorrect(createNewDeliverableData.SaveMessage))
                            .ClickOKButton<DeliverableItemDetail>();
+                deliverableItemDetail.LogValidation<DeliverableItemDetail>(ref validations, deliverableItemDetail.ValidateSaveDialogStatus(closed: true))
+                                     .ClickToolbarButton<DeliverableItemDetail>(ToolbarButton.More, checkProgressPopup: false, isDisappear: true)
+                                     .LogValidation<DeliverableItemDetail>(ref validations, deliverableItemDetail.ValidateDisplayedSubItemLinks(createNewDeliverableData.SubItemOfMoreFunction));
+                LinkItems linkItem = deliverableItemDetail.ClickHeaderDropdownItem<LinkItems>(MainPaneHeaderDropdownItem.LinkItems, true);
 
-                deliverableItemDetail.ClickToolbarButton<DeliverableItemDetail>(ToolbarButton.More, checkProgressPopup: false, isDisappear: true)
-                                     .LogValidation<DeliverableItemDetail>(ref validations, deliverableItemDetail.ValidateDisplayedSubItemLinks(createNewDeliverable.SubItemOfMoreFunction));
-                                     
-                LinkItem linkItem = deliverableItemDetail.ClickHeaderDropdownItem<LinkItem>(MainPaneHeaderDropdownItem.LinkItems, true);
-                linkItem.LogValidation<LinkItem>(ref validations, linkItem.ValidateWindowIsOpened(createNewDeliverable.LinkItemsWindowTitle))
-                        .ClickToolbarButton<DeliverableItemDetail>(ToolbarButton.Add, checkProgressPopup: false)
-                        .LogValidation<DeliverableItemDetail>(ref validations, linkItem.ValidateDisplayedSubItemLinks(createNewDeliverable.SubItemOfAddFunction));
+                currentWindow = linkItem.GetCurrentWindow();
+                linkItem.LogValidation<LinkItems>(ref validations, linkItem.ValidateWindowIsOpened(createNewDeliverableData.LinkItemsWindowTitle))
+                        .ClickToolbarButton<DeliverableItemDetail>(ToolbarButton.Add)
+                        .LogValidation<DeliverableItemDetail>(ref validations, linkItem.ValidateDisplayedSubItemLinks(createNewDeliverableData.SubItemOfAddFunction));
+                AddDocument addDocument = linkItem.ClickHeaderDropdownItem<AddDocument>(MainPaneHeaderDropdownItem.Documents, false, true);
+                addDocument.LogValidation<AddDocument>(ref validations, addDocument.ValidateDocumentSearchWindowStatus())
+                           .SwitchToFrameOnAddDocument()
+                           .EnterDocumentNo(createNewDeliverableData.DocumentNo)
+                           .ClickToobarBottomButton<AddDocument>(ToolbarButton.Search.ToDescription(), createNewDeliverableData.GridViewAddDocName)
+                           .SelectItemByDocumentNo(createNewDeliverableData.DocumentNo)
+                           .LogValidation<AddDocument>(ref validations, addDocument.ValidateDocumentIsHighlighted(createNewDeliverableData.DocumentNo))
+                           .ClickToobarBottomButton<LinkItems>(ToolbarButton.OK.ToDescription(), createNewDeliverableData.GridViewLinkItemsName, true);
+                linkItem.LogValidation<LinkItems>(ref validations, addDocument.ValidateDocumentSearchWindowStatus(true))
+                        .LogValidation<LinkItems>(ref validations, linkItem.ValidateDocumentIsAttached(createNewDeliverableData.DocumentNo))
+                        .ClickToolbarButton<AlertDialog>(ToolbarButton.Save);
+                alertDialog.LogValidation<AlertDialog>(ref validations, linkItem.ValidateMessageDisplayCorrect(createNewDeliverableData.SaveMessageOnLinkItem))
+                           .ClickOKButton<LinkItems>()
+                           .SwitchToWindow(parrentWindow);
+                deliverableItemDetail.LogValidation<DeliverableItemDetail>(ref validations, deliverableItemDetail.ValidateSaveDialogStatus(true))
+                                     .ClickToolbarButton<AlertDialog>(ToolbarButton.Save, checkProgressPopup: false, isDisappear: true);
+                alertDialog.LogValidation<AlertDialog>(ref validations, deliverableItemDetail.ValidateMessageDisplayCorrect(createNewDeliverableData.SaveMessage))
+                           .ClickOKButton<DeliverableItemDetail>()
+                           .SwitchToWindow(currentWindow);
 
-                AddDocument addDocument = linkItem.ClickHeaderDropdownItem<AddDocument>(MainPaneHeaderDropdownItem.Documents, false);
-                addDocument.EnterAltDocumentNo(createNewDeliverable.DocumentNo)
-                           .ClickToobarBottomButton<AddDocument>(ToolbarButton.Search.ToDescription(), createNewDeliverable.GridViewAddDocName)
-                           //Switch Frame
-                           .SelectItemByDocumentNo<AddDocument>(createNewDeliverable.DocumentNo)
-                           ;
+                int countWindow = linkItem.GetCountWindow();
+                linkItem.LogValidation<LinkItems>(ref validations, deliverableItemDetail.ValidateSaveDialogStatus(true))
+                        .ClickToolbarButton<DeliverableItemDetail>(ToolbarButton.Close)
+                        .SwitchToWindow(parrentWindow);
+                deliverableItemDetail.LogValidation<LinkItems>(ref validations, linkItem.ValidateLinkItemsWindowIsClosed(countWindow));
 
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);

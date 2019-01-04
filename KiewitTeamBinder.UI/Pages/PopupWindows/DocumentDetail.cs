@@ -89,23 +89,33 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             string message = string.Format(Validation.Item_Dropdown_Is_Selected, idDropdownButton.Split('_')[0], value);
             try
             {
-                string id = idDropdownButton.Replace("Input", "ClientState");
-                node.Info("The Dropdown: " + id);
-                string clientStateValue = FindElement(By.Id(id)).GetAttribute("value");
-                string[] attributeValues = clientStateValue.Split(',');
-                foreach (var attributeValue in attributeValues)
+                if (idDropdownButton.Contains("Criticality"))
                 {
-                    if (attributeValue.Contains("text"))
-                    {
-                        selectedText = attributeValue.Split(':')[1];
-                        selectedText = selectedText.Replace("\"", "");
-
-                        if (selectedText.Trim() == value)
-                            return SetPassValidation(node, message);
-                    }
+                    string actual = FindElement(By.Id(idDropdownButton)).GetAttribute("value");
+                    if (actual == value)
+                        return SetPassValidation(node, message);
+                    return SetFailValidation(node, message, value, actual);
                 }
+                else
+                {
+                    string id = idDropdownButton.Replace("Input", "ClientState");
+                    node.Info("The Dropdown: " + id);
+                    string clientStateValue = FindElement(By.Id(id)).GetAttribute("value");
+                    string[] attributeValues = clientStateValue.Split(',');
+                    foreach (var attributeValue in attributeValues)
+                    {
+                        if (attributeValue.Contains("text"))
+                        {
+                            selectedText = attributeValue.Split(':')[1];
+                            selectedText = selectedText.Replace("\"", "");
 
-                return SetFailValidation(node, message, value, selectedText);
+                            if (selectedText.Trim() == value)
+                                return SetPassValidation(node, message);
+                        }
+                    }
+
+                    return SetFailValidation(node, message, value, selectedText);
+                }   
             }
             catch (Exception e)
             {

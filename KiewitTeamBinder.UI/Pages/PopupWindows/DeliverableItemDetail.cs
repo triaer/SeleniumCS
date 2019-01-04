@@ -14,7 +14,9 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
     public class DeliverableItemDetail : PopupWindow
     {
         #region Entities
+        private static By _criticalityTextBox => By.Id("cboCriticality_Input");
 
+        public IWebElement CriticalityTextBox { get { return StableFindElement(_criticalityTextBox); } }
         #endregion
 
         #region Actions
@@ -42,7 +44,8 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             SelectItemInDropdown<DocumentDetail>(DeliverableField.DeliverableType.ToDescription(), deliverableItemInfo.Type, ref methodValidation);
 
             node.Info($"Click {DeliverableField.Criticality.ToDescription()} dropdown, and select: " + deliverableItemInfo.Criticality);
-            SelectItemInDropdown<DocumentDetail>(DeliverableField.Criticality.ToDescription(), deliverableItemInfo.Criticality, ref methodValidation);
+            if (CriticalityTextBox.GetAttribute("value") != "Normal")
+                SelectItemInDropdown<DocumentDetail>(DeliverableField.Criticality.ToDescription(), deliverableItemInfo.Criticality, ref methodValidation);
 
             node.Info($"Click {DeliverableField.Status.ToDescription()} dropdown, and select: " + deliverableItemInfo.Status);
             SelectItemInDropdown<DocumentDetail>(DeliverableField.Status.ToDescription(), deliverableItemInfo.Status, ref methodValidation);
