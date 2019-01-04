@@ -19,7 +19,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
     [TestClass]
     public class CreateContract : UITestBase
     {
-        [TestMethod]
+        [TestMethod] 
         public void VendorDataRegister_CreateNewDeliverable_UI()
         {
             try
