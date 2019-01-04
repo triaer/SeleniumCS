@@ -60,6 +60,7 @@
     <Compile Include="TestData\CreateNewDeliverableSmoke.cs" />
     <Compile Include="TestData\CreateNewPurchaseItemSmoke.cs" />
     <Compile Include="TestData\FilteringSmoke.cs" />
+    <Compile Include="TestData\ProcessDocumentSmoke.cs" />
     <Compile Include="TestData\SimpleLogonSmoke.cs" />
     <Compile Include="TestData\TransmitDocumentSmoke.cs" />
     <Compile Include="TestData\BulkUploadDocumentsSmoke.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="TestData\TransmitSingleDocSmoke.cs" />
     <Compile Include="TestData\TransmittalReceiptSmoke.cs" />
     <Compile Include="TestData\UploadSingleDocSmoke.cs" />
+    <Compile Include="TestData\VerifyDocumentCountSmoke.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">

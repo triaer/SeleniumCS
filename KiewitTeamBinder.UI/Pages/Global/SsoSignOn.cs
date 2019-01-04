@@ -46,6 +46,8 @@ namespace KiewitTeamBinder.UI.Pages.Global
             string signinWindow;
 
             //Click KiewitUserLogin Button and Switch to OtherUserLogin Window
+            if (KiewitUserLoginBtn == null)
+                Browser.MaximizeWindow();
             SwitchToNewPopUpWindow(KiewitUserLoginBtn, out signinWindow, true);
 
             //Fill Kiewit account fields
@@ -63,9 +65,9 @@ namespace KiewitTeamBinder.UI.Pages.Global
             //Fill TeamBinder account fields
             if (FindElement(By.Id("txtUserId"), mediumTimeout) != null)
             {
-                UserIdTextbox.InputText(account.Username);
-                CompanyIdTextbox.InputText(account.Company);
-                PasswordTextbox.InputText(account.Password);
+                UserIdTextbox.InputText(account.Username, true);
+                CompanyIdTextbox.InputText(account.Company, true);
+                PasswordTextbox.InputText(account.Password, true);
                 //Click LogIn button
                 RegisterButton.Click();
             }

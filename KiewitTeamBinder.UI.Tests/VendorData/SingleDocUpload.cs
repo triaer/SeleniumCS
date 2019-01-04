@@ -20,7 +20,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
     public class SingleDocUpload : UITestBase
     {
         [TestMethod]
-        public void UploadSingleDoc()
+        public void HoldingArea_UploadSingleDoc_UI()
         {
             try
             {
@@ -70,7 +70,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
         }
 
         [TestMethod]
-        public void TransmitSingleDocument()
+        public void HoldingArea_TransmitSingleDocument_UI()
         {
             try
             {
