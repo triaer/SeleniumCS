@@ -28,7 +28,7 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
     public class NavigateToModulesFromLeftNav : UITestBase
     {
         [TestMethod]
-        public void NavigateToModulesFromLeftNavSmoke()
+        public void General_NavigateToModulesFromLeftNav_UI()
         {
             try
             {
