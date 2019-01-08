@@ -18,7 +18,7 @@ namespace KiewitTeamBinder.UI.Tests.User
     public class SignOnTests : UITestBase
     {
         [TestMethod]
-        public void NonSSO_ValidUserCanLogonAndLogOff()
+        public void General_NonSSOValidUserSignon_UI()
         {
             try
             {
@@ -52,7 +52,7 @@ namespace KiewitTeamBinder.UI.Tests.User
         }
 
         [TestMethod]
-        public void SSO_ValidUserCanLogonAndLogOff()
+        public void General_SSOValidUserSignon_UI()
         {
             // given
             var teambinderTestAccount = GetTestAccount("VendorAccount1", environment, "KWUser", "SuperUserA");

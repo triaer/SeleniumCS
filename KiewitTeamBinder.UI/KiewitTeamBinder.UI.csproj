@@ -129,6 +129,7 @@
     <Compile Include="Pages\Dialogs\ConfirmDialog.cs" />
     <Compile Include="Pages\Dialogs\AlertDialog.cs" />
     <Compile Include="Pages\Dialogs\ApplyToNRowsDialog.cs" />
+    <Compile Include="Pages\Dialogs\DocumentReceivedDateDialog.cs" />
     <Compile Include="Pages\Dialogs\HelpAboutDialog.cs" />
     <Compile Include="Pages\Dialogs\SelectRecipientsDialog.cs" />
     <Compile Include="Pages\FormModule\Form.cs" />
@@ -146,6 +147,7 @@
     <Compile Include="Pages\MailModule\Mail.cs" />
     <Compile Include="Pages\PopupWindows\PopupWindow.cs" />
     <Compile Include="Pages\PopupWindows\StandardReports.cs" />
+    <Compile Include="Pages\PopupWindows\ProcessDocuments.cs" />
     <Compile Include="Pages\PublishedReportsModule\PublishedReports.cs" />
     <Compile Include="Pages\TasksModule\Task.cs" />
     <Compile Include="Pages\TransmittalsModule\Transmittal.cs" />

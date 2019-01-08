@@ -146,6 +146,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VendorData\CreateContractPurchaseItemDeliverable.cs" />
+    <Compile Include="VendorData\UploadUnrestrainedDocument.cs" />
     <Compile Include="VendorData\SingleDocUpload.cs" />
     <Compile Include="VendorData\BulkUpload.cs" />
   </ItemGroup>
@@ -220,53 +221,56 @@
     <Content Include="ScenariosInputFiles\CreateDataOnRow\File9.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="ScenariosInputFiles\BulkUploadDocuments\File1.txt">
+    <Content Include="ScenariosInputFiles\HoldingArea_BulkUploadDocuments_UI\File1.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="ScenariosInputFiles\BulkUploadDocuments\File10.txt">
+    <Content Include="ScenariosInputFiles\HoldingArea_BulkUploadDocuments_UI\File10.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="ScenariosInputFiles\BulkUploadDocuments\File11.txt">
+    <Content Include="ScenariosInputFiles\HoldingArea_BulkUploadDocuments_UI\File11.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="ScenariosInputFiles\BulkUploadDocuments\File12.txt">
+    <Content Include="ScenariosInputFiles\HoldingArea_BulkUploadDocuments_UI\File12.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="ScenariosInputFiles\BulkUploadDocuments\File13.txt">
+    <Content Include="ScenariosInputFiles\HoldingArea_BulkUploadDocuments_UI\File13.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="ScenariosInputFiles\BulkUploadDocuments\File14.txt">
+    <Content Include="ScenariosInputFiles\HoldingArea_BulkUploadDocuments_UI\File14.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="ScenariosInputFiles\BulkUploadDocuments\File15.txt">
+    <Content Include="ScenariosInputFiles\HoldingArea_BulkUploadDocuments_UI\File15.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="ScenariosInputFiles\BulkUploadDocuments\File2.txt">
+    <Content Include="ScenariosInputFiles\HoldingArea_BulkUploadDocuments_UI\File2.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="ScenariosInputFiles\BulkUploadDocuments\File3.txt">
+    <Content Include="ScenariosInputFiles\HoldingArea_BulkUploadDocuments_UI\File3.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="ScenariosInputFiles\BulkUploadDocuments\File4.txt">
+    <Content Include="ScenariosInputFiles\HoldingArea_BulkUploadDocuments_UI\File4.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="ScenariosInputFiles\BulkUploadDocuments\File5.txt">
+    <Content Include="ScenariosInputFiles\HoldingArea_BulkUploadDocuments_UI\File5.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="ScenariosInputFiles\BulkUploadDocuments\File6.txt">
+    <Content Include="ScenariosInputFiles\HoldingArea_BulkUploadDocuments_UI\File6.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="ScenariosInputFiles\BulkUploadDocuments\File7.txt">
+    <Content Include="ScenariosInputFiles\HoldingArea_BulkUploadDocuments_UI\File7.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="ScenariosInputFiles\BulkUploadDocuments\File8.txt">
+    <Content Include="ScenariosInputFiles\HoldingArea_BulkUploadDocuments_UI\File8.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="ScenariosInputFiles\BulkUploadDocuments\File9.txt">
+    <Content Include="ScenariosInputFiles\HoldingArea_BulkUploadDocuments_UI\File9.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="extent-config.xml" />
-    <Content Include="ScenariosInputFiles\UploadSingleDoc\DocumentAttachFile.txt">
+    <Content Include="ScenariosInputFiles\HoldingArea_UploadSingleDoc_UI\DocumentAttachFile.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ScenariosInputFiles\HoldingArea_UploadUnrestrainedDocument_UI\UnrestrainedDocAttachFile.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

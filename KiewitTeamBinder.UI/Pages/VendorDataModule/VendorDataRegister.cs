@@ -37,6 +37,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
         {
             var PurchaseItemsList = GetAvailablePurchaseItems(columnValuePairList);
             var item = PurchaseItemsList.ElementAt(0).StableFindElement(By.XPath("./td[3]"));
+            ScrollIntoView(item);
             string currentWindow;
             SwitchToNewPopUpWindow(item, out currentWindow, doubleClick: true);
             return new ItemDetail(WebDriver);

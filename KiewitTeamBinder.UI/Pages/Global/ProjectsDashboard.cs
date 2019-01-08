@@ -39,7 +39,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         private static By _paneTable(string gridViewName) => By.XPath($"//table[contains(@id, '{gridViewName}_ctl00_Header')]/thead");
         private static By _visibleRows(string gridViewName) => By.XPath($"//div[contains(@id, '{gridViewName}_GridData')]//tr[@class != 'rgNoRecords' and not(contains(@style, 'hidden'))]");
         private static By _documentsTable(string gridViewName) => By.XPath($"//div[contains(@id, '{gridViewName}_GridData')]");
-        private static By _headerDropdownItem(string itemName) => By.XPath($"//li[a = '{itemName}']");        
+        private static By _headerDropdownItem(string itemName) => By.XPath($"//li[a = '{itemName}']");
         private static By _clearHyperlink => By.Id("lblClear");
         private static By _imageOfFilterOptionByIndex(string selected, string index) => By.XPath($"//img[contains(@id,'Link{selected}{index}')]");
         private static By _imageOfFilterOptionByName(string selected, string name) => By.XPath($"//img[contains(@id,'Link{selected}') and contains(@title, '{name}')]");
@@ -563,6 +563,22 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 return SetErrorValidation(node, Validation.Sub_Page_Is_Displayed, e);
             }
         }
+        public KeyValuePair<string, bool> ValidateItemsAreNotShown(string columnName, string value, string gridViewName)
+        {
+            var node = StepNode();
+            FilterDocumentsByGridFilterRow<ProjectsDashboard>(gridViewName, columnName, value);
+            int itemsNumber = GetTotalRowsVisibleInGrid(gridViewName);
+            try
+            {
+                if (itemsNumber > 0)
+                    return SetFailValidation(node, Validation.Item_Is_Not_Displayed);
+                return SetPassValidation(node, Validation.Item_Is_Not_Displayed);
+            }
+            catch (Exception e)
+            {
+                return SetErrorValidation(node, Validation.Item_Is_Not_Displayed, e);
+            }
+        }
 
         public KeyValuePair<string, bool> ValidateItemsAreShown(List<KeyValuePair<string, string>> columnValuePairList, string gridViewName)
         {
@@ -581,7 +597,8 @@ namespace KiewitTeamBinder.UI.Pages.Global
         
         private static class Validation
         {
-			public static string Project_Is_Opened = "Validate that the project is opened";
+            public static string Item_Is_Not_Displayed = "Validate that item on main pane is not displayed";
+            public static string Project_Is_Opened = "Validate that the project is opened";
             public static string Vendor_Data_Menus_Display = "Validate that the vendor data sub-menus display correct";
             public static string Default_Filter_Display = "Validate that the view filter in upper right corner is defaulted to the {0}";
             public static string Filter_Box_Is_Highlighted = "Validate that the {0} filter box is highlighted";
