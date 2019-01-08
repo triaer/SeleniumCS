@@ -62,7 +62,6 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 dashboard = projectDashBoard.SelectModuleMenuItem<Dashboard>(menuItem: ModuleNameInLeftNav.DASHBOARD.ToDescription());
                 dashboard.LogValidation<Dashboard>(ref validations, dashboard.ValidateCountValueIsCorrect(createContractItemData.WidgetName, createContractItemData.RowName, CountOfContracts + 1));
 
-                
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);
                 Console.WriteLine(string.Join(System.Environment.NewLine, validations.ToArray()));
@@ -203,11 +202,6 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
 
                 //and - User Story 125084 - 120797 Validate Deliverable under Contract/Item
                 test = LogTest("US 125084 - 120797 Validate Deliverable under Contract/Item");
-                //var columnValuePairList1 = new List<KeyValuePair<string, string>> { createNewDeliverableData.ContractNumber };
-                //var columnValuePairList2 = new List<KeyValuePair<string, string>> { createNewDeliverableData.ItemID,
-                //                                                                    createNewDeliverableData.Description,
-                //                                                                    createNewDeliverableData.Status };
-                //var columnValuePairList3 = new List<KeyValuePair<string, string>> { createNewDeliverableData.ItemNumber };
                 vendorDataRegister = projectDashBoard.SelectModuleMenuItem<VendorDataRegister>(subMenuItem: ModuleSubMenuInLeftNav.VENDODATAREGISTER.ToDescription());
                 vendorDataRegister.FilterDocumentsByGridFilterRow<VendorDataRegister>(createNewDeliverableData.GridViewName,
                                                                                       DeliverableField.ContractNumber.ToDescription(),

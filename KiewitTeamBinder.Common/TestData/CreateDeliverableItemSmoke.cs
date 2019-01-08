@@ -65,11 +65,6 @@ namespace KiewitTeamBinder.Common.TestData
                 new KeyValuePair<string, string>("Status", DeliverableInfo.Status)
             };
         }
-        //public KeyValuePair<string, string> ItemID = new KeyValuePair<string, string>("Item ID", "005-01");
-        //public KeyValuePair<string, string> Description = new KeyValuePair<string, string>("Description", DeliverableInfo.Description);
-        //public KeyValuePair<string, string> ContractNumber = new KeyValuePair<string, string>("Contract Number", "2018-12-005");
-        //public KeyValuePair<string, string> Status = new KeyValuePair<string, string>("Status", "OPEN - OPEN");
-        //public KeyValuePair<string, string> ItemNumber = new KeyValuePair<string, string>("Deliverable Line Item Number", DeliverableInfo.LineItemNumber);
         public string GridViewName = "GridViewContractVendor";
         public int ExpanButtonIndex = 1;
         public int ExpanSubButtonIndex = 2;

@@ -38,8 +38,12 @@ namespace KiewitTeamBinder.UI.Pages.DashboardModule
         {
             var moreLessButton = MoreLessButton(widgetName);
             ScrollIntoView(moreLessButton);
-            if ((moreLessButton.Text == "More") == clickMoreButton)                            
+            if ((moreLessButton.Text == "More") == clickMoreButton)
+            {
                 moreLessButton.Click();
+                WaitUntil(driver => MoreLessButton(widgetName).Text == "Less");
+            }
+                
             
             return this;
         }
@@ -80,7 +84,7 @@ namespace KiewitTeamBinder.UI.Pages.DashboardModule
             {
                 int actualCountValue = GetCountValueFromRow(widgetName, rowName);
                 if (actualCountValue == expectedCountValue)
-                    return SetPassValidation(node, Validation.Count_Value_Is_Correct);
+                    return SetPassValidation(node, Validation.Count_Value_Is_Correct + " - " + expectedCountValue);
                 else
                     return SetFailValidation(node, Validation.Count_Value_Is_Correct, expectedCountValue.ToString(), actualCountValue.ToString());  
             }

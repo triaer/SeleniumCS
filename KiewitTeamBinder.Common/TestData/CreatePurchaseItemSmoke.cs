@@ -37,10 +37,6 @@ namespace KiewitTeamBinder.Common.TestData
                 new KeyValuePair<string, string>("Status", PurchaseInfo.Status)
             };
         }
-        //public KeyValuePair<string, string> ItemID = new KeyValuePair<string, string>("Item ID", PurchaseInfo.ItemID);
-        //public KeyValuePair<string, string> Description = new KeyValuePair<string, string>("Description", PurchaseInfo.Description);
-        //public KeyValuePair<string, string> ContractNumber = new KeyValuePair<string, string>("Contract Number", "1234567");
-        //public KeyValuePair<string, string> Status = new KeyValuePair<string, string>("Status", "OPEN - OPEN");
         public string SaveMessage = "Saved Successfully";        
         public int expandButtonIndex = 1;
         
