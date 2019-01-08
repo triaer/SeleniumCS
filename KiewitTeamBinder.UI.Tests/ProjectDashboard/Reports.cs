@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -34,19 +35,33 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                 // and log on via Other User Login Kiewit Account
                 test.Info("Log on TeamBinder via Other User Login: " + teambinderTestAccount.Username);
                 ProjectsList projectsList = new NonSsoSignOn(driver).Logon(teambinderTestAccount) as ProjectsList;
-                var runReportData = new RunReportSmoke();
-                test.Info("Navigate to DashBoard Page of Project: " + runReportData.ProjectName);
-                ProjectsDashboard projectDashBoard = projectsList.NavigateToProjectDashboardPage(runReportData.ProjectName);
+                var reportData = new ReportSmoke();
+                By currentIframe = null;
+                test.Info("Navigate to DashBoard Page of Project: " + reportData.ProjectName);
+                ProjectsDashboard projectDashBoard = projectsList.NavigateToProjectDashboardPage(reportData.ProjectName);
 
                 //when User Story 123743 - 120801 Run Report
                 test = LogTest("Run Report");
-                StandardReports standardReports = projectDashBoard.OpenStandardReportsWindow();
-                standardReports.SelectReportModule(runReportData.ModuleName)
-                    .LogValidation<StandardReports>(ref validations, standardReports.ValidateAvailableReportsDisplay(runReportData.ModuleName, runReportData.AvailableReports))
-                    .SelectReportModuleItem(runReportData.ModuleName, runReportData.ModuleItemName)
-                    .SelectItemInDropdown(runReportData.ContractNumberDropdownList, runReportData.ContractNumberItem, ref methodValidations)
-                    .ClickSearchButton()
-                    .LogValidation<StandardReports>(ref validations, standardReports.ValidateValueInReportDetailDisplaysCorrectly(runReportData.contractNumberKey, runReportData.contractNumberValueArray));
+                StandardReports standardReports = projectDashBoard.OpenStandardReportsWindow(true);
+                standardReports.SelectReportModule(ref currentIframe, reportData.ReportTab, reportData.ModuleName)
+                    .LogValidation<StandardReports>(ref validations, standardReports.ValidateAvailableReportsDisplay(reportData.ReportTab, reportData.ModuleName, reportData.AvailableReports))
+                    .SelectReportModuleItem(ref currentIframe, reportData.ReportTab, reportData.ModuleName, reportData.ModuleItemName)
+                    .SelectItemInDropdown(ref currentIframe, reportData.ContractNumberDropdownList, reportData.ContractNumberItem, ref methodValidations)
+                    .ClickSearchButton(ref currentIframe)
+                    .LogValidation<StandardReports>(ref validations, standardReports.ValidateValueInReportDetailDisplaysCorrectly(reportData.contractNumberKey, reportData.contractNumberValueArray));
+
+                //when User Story 123735 - 120802 Generate/Navigate to Hyperlink
+                test = LogTest("Generate/Navigate to Hyperlink");
+                string reportRanByUser = standardReports.GetReport(ref currentIframe);
+                GenerateHyperlinkDialog generateHyperlinkDialog = standardReports.ClickGenerateHyperlink();
+                string reportUrl = generateHyperlinkDialog.CopyHyperlink();
+                generateHyperlinkDialog.ClickCloseButton(ref currentIframe, ref methodValidations);
+                Browser.Quit();
+
+                currentIframe = null;
+                driver = Browser.Open(reportUrl, browser);
+                StandardReports newStandardReports = new StandardReports(driver).Logon(teambinderTestAccount);
+                newStandardReports.LogValidation<StandardReports>(ref validations, newStandardReports.ValidateReportInHyperlinkIsIdenticalToReportRanByUser(ref currentIframe, reportRanByUser));
 
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);

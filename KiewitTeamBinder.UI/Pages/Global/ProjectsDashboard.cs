@@ -156,10 +156,10 @@ namespace KiewitTeamBinder.UI.Pages.Global
             return helpAboutDialog;
         }
 
-        public StandardReports OpenStandardReportsWindow()
+        public StandardReports OpenStandardReportsWindow(bool closePreviousWindow = false)
         {
             string currentWindow;
-            SwitchToNewPopUpWindow(ReportsButton, out currentWindow);
+            SwitchToNewPopUpWindow(ReportsButton, out currentWindow, closePreviousWindow);
             return new StandardReports(WebDriver);
         }
 

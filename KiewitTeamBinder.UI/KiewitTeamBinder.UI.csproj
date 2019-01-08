@@ -125,6 +125,7 @@
     <Compile Include="ExtentReportsHelper.cs" />
     <Compile Include="IWebElementExtensions.cs" />
     <Compile Include="Pages\DashboardModule\Dashboard.cs" />
+    <Compile Include="Pages\Dialogs\GenerateHyperlinkDialog.cs" />
     <Compile Include="Pages\Dialogs\ConfirmDialog.cs" />
     <Compile Include="Pages\Dialogs\AlertDialog.cs" />
     <Compile Include="Pages\Dialogs\ApplyToNRowsDialog.cs" />

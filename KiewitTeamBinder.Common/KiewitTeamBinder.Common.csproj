@@ -56,7 +56,7 @@
     <Compile Include="Models\VendorData\SingleDocumentInfo.cs" />
     <Compile Include="TestAccountAccess.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestData\RunReportSmoke.cs" />
+    <Compile Include="TestData\ReportSmoke.cs" />
     <Compile Include="TestData\ValidateContractorWidgetCountSmoke.cs" />
     <Compile Include="TestData\ValidatePurchaseItemUnderContractSmoke.cs" />
     <Compile Include="TestData\CreateNewPurchaseItemSmoke.cs" />

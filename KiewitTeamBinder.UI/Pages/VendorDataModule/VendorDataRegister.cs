@@ -50,7 +50,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             ExpandButton.ElementAt(index).Click();
             if (waitForLoading)
             {
-                WaitForLoadingPanel(10);
+                WaitForLoadingPanel(shortTimeout * 2);
             }
             return this;
         }

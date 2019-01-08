@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace KiewitTeamBinder.Common.TestData
 {
-    public class RunReportSmoke
+    public class ReportSmoke
     {
         public string ProjectName = "Automation Project 1";
         public string ModuleName = "Vendor Data";
@@ -16,5 +16,7 @@ namespace KiewitTeamBinder.Common.TestData
         public string ContractNumberItem = "1234567";
         public string contractNumberKey = "Contract Number";
         public string[] contractNumberValueArray = { "1234567" };
+        public string ReportTab = "ReportTypesPanelBar";
+        public string FavReportTab = "FavReportTypePanelBar";
     }
 }
