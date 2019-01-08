@@ -225,5 +225,89 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 throw;
             }
         }
+
+        [TestMethod]
+        public void ValidateDeliverableUnderContractItem()
+        {
+            try
+            {
+                // given
+                var teambinderTestAccount = GetTestAccount("AdminAccount1", environment, "NonSSO");
+                test.Info("Open TeamBinder Web Page: " + teambinderTestAccount.Url);
+                var driver = Browser.Open(teambinderTestAccount.Url, browser);
+                test.Info("Log on TeamBinder via Other User Login: " + teambinderTestAccount.Username);
+                ProjectsList projectsList = new NonSsoSignOn(driver).Logon(teambinderTestAccount) as ProjectsList;
+
+                var validateDeliverableUnderContractItemData = new ValidateDeliverableUnderContractItemSmoke();
+                test.Info("Navigate to DashBoard Page of Project: " + validateDeliverableUnderContractItemData.ProjectName);
+                ProjectsDashboard projectDashBoard = projectsList.NavigateToProjectDashboardPage(validateDeliverableUnderContractItemData.ProjectName);
+                var columnValuePairList1 = new List<KeyValuePair<string, string>> { validateDeliverableUnderContractItemData.ContractNumber };
+                var columnValuePairList2 = new List<KeyValuePair<string, string>> { validateDeliverableUnderContractItemData.ItemID,
+                                                                                    validateDeliverableUnderContractItemData.Description,
+                                                                                    validateDeliverableUnderContractItemData.Status };
+                var columnValuePairList3 = new List<KeyValuePair<string, string>> { validateDeliverableUnderContractItemData.ItemNumber };
+                //when - 120797 Validate Deliverable under Contract/Item
+                //User Story 125084
+                test = LogTest("Create New Purchase Item");
+
+                VendorDataRegister vendorDataRegister = projectDashBoard.SelectModuleMenuItem<VendorDataRegister>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription(), subMenuItem: ModuleSubMenuInLeftNav.VENDODATAREGISTER.ToDescription(), waitForLoading: true);
+                vendorDataRegister.FilterDocumentsByGridFilterRow<VendorDataRegister>(validateDeliverableUnderContractItemData.GridViewName,
+                                                                                      validateDeliverableUnderContractItemData.ContractNumber.Key,
+                                                                                      validateDeliverableUnderContractItemData.ContractNumber.Value)
+                    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateItemsAreShown(columnValuePairList1, validateDeliverableUnderContractItemData.GridViewName))
+                    .ClickExpandButton(validateDeliverableUnderContractItemData.ExpanButtonIndex)
+                    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidatePurchaseItemsAreShown(columnValuePairList2))
+                    .ClickExpandButton(validateDeliverableUnderContractItemData.ExpanSubButtonIndex)
+                    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateDeliverablesAreShown(columnValuePairList3));
+
+                // then
+                Utils.AddCollectionToCollection(validations, methodValidations);
+                Console.WriteLine(string.Join(System.Environment.NewLine, validations.ToArray()));
+                validations.Should().OnlyContain(validations => validations.Value).Equals(bool.TrueString);
+            }
+            catch (Exception e)
+            {
+                lastException = e;
+                validations = Utils.AddCollectionToCollection(validations, methodValidations);
+                throw;
+            }
+        }
+
+        [TestMethod]
+        public void ValidateContractorWidgetCounts()
+        {
+            try
+            {
+                // given
+                var teambinderTestAccount = GetTestAccount("AdminAccount1", environment, "NonSSO");
+                test.Info("Open TeamBinder Web Page: " + teambinderTestAccount.Url);
+                var driver = Browser.Open(teambinderTestAccount.Url, browser);
+                test.Info("Log on TeamBinder via Other User Login: " + teambinderTestAccount.Username);
+                ProjectsList projectsList = new NonSsoSignOn(driver).Logon(teambinderTestAccount) as ProjectsList;
+
+                var validateCountData = new ValidateContractorWidgetCountSmoke();
+                test.Info("Navigate to DashBoard Page of Project: " + validateCountData.ProjectName);
+                ProjectsDashboard projectDashBoard = projectsList.NavigateToProjectDashboardPage(validateCountData.ProjectName);
+
+                //when - 120798 Validate Contractor Widget Counts
+                //User Story 122010
+                test = LogTest("Validate Contractor Widget Counts");
+                int CountOfDeliverables = 28;
+                Dashboard dashboard = projectDashBoard.SelectModuleMenuItem<Dashboard>(menuItem: ModuleNameInLeftNav.DASHBOARD.ToDescription());
+                dashboard.ClickMoreOrLessButton(validateCountData.WidgetName, true)
+                    .LogValidation<Dashboard>(ref validations, dashboard.ValidateCountValueIsCorrect(validateCountData.WidgetName, validateCountData.RowName, CountOfDeliverables + 1));
+
+                // then
+                Utils.AddCollectionToCollection(validations, methodValidations);
+                Console.WriteLine(string.Join(System.Environment.NewLine, validations.ToArray()));
+                validations.Should().OnlyContain(validations => validations.Value).Equals(bool.TrueString);
+            }
+            catch (Exception e)
+            {
+                lastException = e;
+                validations = Utils.AddCollectionToCollection(validations, methodValidations);
+                throw;
+            }
+        }
     }
 }
