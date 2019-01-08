@@ -69,6 +69,7 @@
     <Compile Include="TestData\TeamBinderVersionSmoke.cs" />
     <Compile Include="TestData\TransmitSingleDocSmoke.cs" />
     <Compile Include="TestData\TransmittalReceiptSmoke.cs" />
+    <Compile Include="TestData\UploadUnrestrainedDocSmoke.cs" />
     <Compile Include="TestData\UploadSingleDocSmoke.cs" />
     <Compile Include="TestData\VerifyDocumentCountSmoke.cs" />
   </ItemGroup>

@@ -466,6 +466,8 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
         }
         public ConfirmDialog ClickSaveBulkUploadDocuments(ref List<KeyValuePair<string, bool>> methodValidation)
         {
+            var node = StepNode();
+            node.Info("Click Save in Bottom right corner of Bulk Upload Documents");
             IWebElement SaveButton = StableFindElement(By.XPath(string.Format(_bottomButtonXpath, "Save")));
             SaveButton.ClickOnElement();
             methodValidation.Add(ValidateProgressContentMessage("Saving Documents in progress"));
