@@ -23,7 +23,7 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
     public class Reports : UITestBase
     {
         [TestMethod]
-        public void RunReport()
+        public void General_RunReport_UI()
         {
             try
             {
@@ -40,28 +40,56 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                 test.Info("Navigate to DashBoard Page of Project: " + reportData.ProjectName);
                 ProjectsDashboard projectDashBoard = projectsList.NavigateToProjectDashboardPage(reportData.ProjectName);
 
-                //when User Story 123743 - 120801 Run Report
-                test = LogTest("Run Report");
+                ////when User Story 123743 - 120801 Run Report
+                //test = LogTest("Run Report");
+                //StandardReports standardReports = projectDashBoard.OpenStandardReportsWindow(true);
+                //standardReports.SelectReportModule(ref currentIframe, reportData.ReportTab, reportData.ModuleName)
+                //    .LogValidation<StandardReports>(ref validations, standardReports.ValidateAvailableReportsDisplay(reportData.ReportTab, reportData.ModuleName, reportData.AvailableReports))
+                //    .SelectReportModuleItem(ref currentIframe, reportData.ReportTab, reportData.ModuleName, reportData.ModuleItemName)
+                //    .SelectItemInDropdown(ref currentIframe, reportData.ContractNumberDropdownList, reportData.ContractNumberItem, ref methodValidations)
+                //    .ClickSearchButton(ref currentIframe)
+                //    .LogValidation<StandardReports>(ref validations, standardReports.ValidateValueInReportDetailDisplaysCorrectly(reportData.contractNumberKey, reportData.contractNumberValueArray));
+
+                ////when User Story 123735 - 120802 Generate/Navigate to Hyperlink
+                //test = LogTest("Generate/Navigate to Hyperlink");
+                //string reportRanByUser = standardReports.GetReport(ref currentIframe);
+                //GenerateHyperlinkDialog generateHyperlinkDialog = standardReports.ClickGenerateHyperlink();
+                //string reportUrl = generateHyperlinkDialog.CopyHyperlink();
+
+                //generateHyperlinkDialog.ClickCloseButton(ref currentIframe, ref methodValidations);
+                //Browser.Quit();
+
+                //currentIframe = null;
+                //driver = Browser.Open(reportUrl, browser);
+                //StandardReports newStandardReports = new StandardReports(driver).Logon(teambinderTestAccount);
+                //newStandardReports.LogValidation<StandardReports>(ref validations, newStandardReports.ValidateReportInHyperlinkIsIdenticalToReportRanByUser(ref currentIframe, reportRanByUser));
+
+                //when User Story 123737 - 120803 Schedule a Report
+
+                //driver = Browser.Open(teambinderTestAccount.Url, browser);
+                //projectsList = new NonSsoSignOn(driver).Logon(teambinderTestAccount) as ProjectsList;
+                //currentIframe = null;
+                //projectDashBoard = projectsList.NavigateToProjectDashboardPage(reportData.ProjectName);
                 StandardReports standardReports = projectDashBoard.OpenStandardReportsWindow(true);
+
                 standardReports.SelectReportModule(ref currentIframe, reportData.ReportTab, reportData.ModuleName)
-                    .LogValidation<StandardReports>(ref validations, standardReports.ValidateAvailableReportsDisplay(reportData.ReportTab, reportData.ModuleName, reportData.AvailableReports))
                     .SelectReportModuleItem(ref currentIframe, reportData.ReportTab, reportData.ModuleName, reportData.ModuleItemName)
                     .SelectItemInDropdown(ref currentIframe, reportData.ContractNumberDropdownList, reportData.ContractNumberItem, ref methodValidations)
-                    .ClickSearchButton(ref currentIframe)
-                    .LogValidation<StandardReports>(ref validations, standardReports.ValidateValueInReportDetailDisplaysCorrectly(reportData.contractNumberKey, reportData.contractNumberValueArray));
+                    .ClickSearchButton(ref currentIframe);
 
-                //when User Story 123735 - 120802 Generate/Navigate to Hyperlink
-                test = LogTest("Generate/Navigate to Hyperlink");
-                string reportRanByUser = standardReports.GetReport(ref currentIframe);
-                GenerateHyperlinkDialog generateHyperlinkDialog = standardReports.ClickGenerateHyperlink();
-                string reportUrl = generateHyperlinkDialog.CopyHyperlink();
-                generateHyperlinkDialog.ClickCloseButton(ref currentIframe, ref methodValidations);
-                Browser.Quit();
+                test = LogTest("Schedule a Report");
+                string ContractNumbber = standardReports.GetContractNumber(reportData.contractNumberKey);
 
-                currentIframe = null;
-                driver = Browser.Open(reportUrl, browser);
-                StandardReports newStandardReports = new StandardReports(driver).Logon(teambinderTestAccount);
-                newStandardReports.LogValidation<StandardReports>(ref validations, newStandardReports.ValidateReportInHyperlinkIsIdenticalToReportRanByUser(ref currentIframe, reportRanByUser));
+                standardReports.ClickBackButton(ref currentIframe)
+                    .LogValidation<StandardReports>(ref validations, standardReports.ValidateValuePreviouslyRemainsInReport(ref currentIframe, reportData.ContractNumberDropdownList, "1234567"))
+                    .ClickRadioButton(ref currentIframe, reportData.radioButton)
+                    .LogValidation<StandardReports>(ref validations, standardReports.ValidateRadioButtonIsDepressed(reportData.radioButton))
+                    .EnterToInputReportHeader(reportData.contractUserName)
+                    .LogValidation<StandardReports>(ref validations, standardReports.ValidateContactListAutoPopulated())
+                    .PressEnter()
+                    .ClickSearchButton(ref currentIframe, false)
+                    .LogValidation<StandardReports>(ref validations, standardReports.ValidateValueInMessageReportDisplaysCorrectly(reportData.availableMsg))
+                    .ClickOkButtonOnPopUp<StandardReports>();
 
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);

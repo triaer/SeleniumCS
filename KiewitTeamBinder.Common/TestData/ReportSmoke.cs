@@ -18,5 +18,9 @@ namespace KiewitTeamBinder.Common.TestData
         public string[] contractNumberValueArray = { "1234567" };
         public string ReportTab = "ReportTypesPanelBar";
         public string FavReportTab = "FavReportTypePanelBar";
+        public string radioButton = "Schedule";
+        public string reporterHeader = "Report Title:";
+        public string contractUserName = "Automation";
+        public string availableMsg = "Your report request is being processed and you will be notified via email once the report becomes available.";
     }
 }

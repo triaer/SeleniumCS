@@ -31,7 +31,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
 
         public IWebElement HeaderLabel { get { return StableFindElement(_headerLabel); } }
         public IWebElement DropdownListInput(string fieldLabel, string idType = "") => StableFindElement(_dropdownList(fieldLabel, idType + "_Input"));
-        public IWebElement DropdownListClientState(string fieldLabel, string idType = "") => StableFindElement(_dropdownList(fieldLabel, idType + "_ClientState"));
+        public IWebElement DropdownListClientState(string fieldLabel, string idType = "") => FindElement(_dropdownList(fieldLabel, idType + "_ClientState"));
         public IWebElement TextField(string fieldLabel) => StableFindElement(_textField(fieldLabel));
         public IWebElement ToolBarButton(string buttonName) => StableFindElement(_toolBarButton(buttonName));
         public IWebElement AsteriskLabel(string fieldLabel) => StableFindElement(_asteriskLabel(fieldLabel));
@@ -84,7 +84,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
         public T ClickOkButtonOnPopUp<T>()
         {
             OkButtonOnPopUp.Click();
-            WebDriver.SwitchTo().DefaultContent();
+            WebDriver.SwitchOutOfIFrame();
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
         public AlertDialog ClickValidateDocumentDetails(ToolbarButton buttonName, ref List<KeyValuePair<string, bool>> methodValidation, string processMessage)
