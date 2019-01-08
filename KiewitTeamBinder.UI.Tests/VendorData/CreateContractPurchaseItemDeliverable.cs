@@ -85,7 +85,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
         }
 
         [TestMethod]
-        public void ValidatePurchaseItemUnderContract()
+        public void VendorDataRegister_ValidatePurchaseItemUnderContract_UI()
         {
             try
             {
@@ -134,7 +134,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
         }
 
         //[TestMethod]
-        //public void ValidateContractorWidgetCounts()
+        //public void VendorDataRegister_ValidateContractorWidgetCounts_UI()
         //{
         //    try
         //    {
