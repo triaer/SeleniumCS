@@ -32,36 +32,47 @@ namespace KiewitTeamBinder.Common.TestData
         public string GridViewAddDocName = "GridView_GridData";
         public string GridViewLinkItemsName = "LinkedDocumentsGrid_GridData";
         public string SaveMessageOnLinkItem = "Manual Links updated successfully.";
-        public DeliverableLine DeliverableInfo = new DeliverableLine()
+        public DeliverableLine DeliverableInfo = new DeliverableLine
         {
             ContractNumber = "2018-12-005",
-            ItemID = "005-02",
+            ItemID = "005-01",
             LineItemNumber = Utils.GetRandomValue("LineItemNumber"),
-            Description = Utils.GetRandomValue("Description"),
+            Description = Utils.GetRandomValue("Description Deliverable"),
             DeliverableType = "AR - ARCHITECTURAL (PRE-ENGINEERED METAL BUILDINGS)",
             Criticality = "Normal",
-            Status = "COMPLETED - Completed",
+            Status = "OPEN - OPEN",
         };
-    }
-    public class ValidateContractorWidgetCountSmoke
-    {
-        public string ProjectName = "Automation Project 1";
+
         public string WidgetName = "Contractor View";
         public string RowName = "Deliverables";
 
-    }
-    public class ValidateDeliverableUnderContractItemSmoke
-    {
-        public string ProjectName = "Automation Project 1";
-        public string[] RequiredFields = { "Item ID", "Description", "Status" };
-        public KeyValuePair<string, string> ItemID = new KeyValuePair<string, string>("Item ID", "ITEMID_20181220060207");
-        public KeyValuePair<string, string> Description = new KeyValuePair<string, string>("Description", "Description content");
-        public KeyValuePair<string, string> ContractNumber = new KeyValuePair<string, string>("Contract Number", "1234567");
-        public KeyValuePair<string, string> Status = new KeyValuePair<string, string>("Status", "OPEN - OPEN");
-        public KeyValuePair<string, string> ItemNumber = new KeyValuePair<string, string>("Deliverable Line Item Number", "123456");
-        public string SaveMessage = "Saved Successfully";
+        public List<KeyValuePair<string, string>> ExpectedContractValuesInColumnList(DeliverableLine DeliverableInfo)
+        {
+            return new List<KeyValuePair<string, string>> { new KeyValuePair<string, string>("Contract Number", DeliverableInfo.ContractNumber) };
+        }
+
+        public List<KeyValuePair<string, string>> ExpectedPurchasedValuesInColumnList(DeliverableLine DeliverableInfo)
+        {
+            return new List<KeyValuePair<string, string>> { new KeyValuePair<string, string>("Item ID", DeliverableInfo.ItemID) };
+        }
+
+        public List<KeyValuePair<string, string>> ExpectedDeliverableValuesInColumnList(DeliverableLine DeliverableInfo)
+        {
+            return new List<KeyValuePair<string, string>>
+            {
+                new KeyValuePair<string, string>("Deliverable Line Item Number", DeliverableInfo.LineItemNumber),
+                new KeyValuePair<string, string>("Description", DeliverableInfo.Description),
+                new KeyValuePair<string, string>("Status", DeliverableInfo.Status)
+            };
+        }
+        //public KeyValuePair<string, string> ItemID = new KeyValuePair<string, string>("Item ID", "005-01");
+        //public KeyValuePair<string, string> Description = new KeyValuePair<string, string>("Description", DeliverableInfo.Description);
+        //public KeyValuePair<string, string> ContractNumber = new KeyValuePair<string, string>("Contract Number", "2018-12-005");
+        //public KeyValuePair<string, string> Status = new KeyValuePair<string, string>("Status", "OPEN - OPEN");
+        //public KeyValuePair<string, string> ItemNumber = new KeyValuePair<string, string>("Deliverable Line Item Number", DeliverableInfo.LineItemNumber);
         public string GridViewName = "GridViewContractVendor";
         public int ExpanButtonIndex = 1;
         public int ExpanSubButtonIndex = 2;
     }
+    
 }

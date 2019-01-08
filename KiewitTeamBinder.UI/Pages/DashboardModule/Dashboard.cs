@@ -39,11 +39,12 @@ namespace KiewitTeamBinder.UI.Pages.DashboardModule
             var moreLessButton = MoreLessButton(widgetName);
             ScrollIntoView(moreLessButton);
             if ((moreLessButton.Text == "More") == clickMoreButton)                            
-                moreLessButton.Click();            
+                moreLessButton.Click();
+            
             return this;
         }
 
-        private int GetCountValueFromRow(string widgetName, string rowName)
+        public int GetCountValueFromRow(string widgetName, string rowName)
         {
             return int.Parse(RowInWidget(widgetName, rowName).GetAttribute("count"));
         }

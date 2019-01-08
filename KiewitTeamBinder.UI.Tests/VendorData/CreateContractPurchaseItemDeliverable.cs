@@ -14,6 +14,7 @@ using KiewitTeamBinder.UI;
 using KiewitTeamBinder.UI.Pages.PopupWindows;
 using static KiewitTeamBinder.Common.KiewitTeamBinderENums;
 using KiewitTeamBinder.UI.Pages.DashboardModule;
+using KiewitTeamBinder.Common.Models.VendorData;
 
 namespace KiewitTeamBinder.UI.Tests.VendorData
 {
@@ -35,13 +36,14 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 var createContractItemData = new CreateContractItemSmoke();
                 test.Info("Navigate to DashBoard Page of Project: " + createContractItemData.ProjectName);
                 ProjectsDashboard projectDashBoard = projectsList.NavigateToProjectDashboardPage(createContractItemData.ProjectName);
+                Dashboard dashboard = projectDashBoard.SelectModuleMenuItem<Dashboard>(menuItem: ModuleNameInLeftNav.DASHBOARD.ToDescription());
+                dashboard.ClickMoreOrLessButton(createContractItemData.WidgetName, false);
+                int CountOfContracts = dashboard.GetCountValueFromRow(createContractItemData.WidgetName, createContractItemData.RowName);
 
                 //when User Story 121989 - 120793 Create Contract Items Deliverable
                 test = LogTest("Create Contract Item");
-                Dashboard dashboard = projectDashBoard.SelectModuleMenuItem<Dashboard>(menuItem: ModuleNameInLeftNav.DASHBOARD.ToDescription(), waitForLoading: false);
-                int expectedCountOfContract = dashboard.GetCountValueFromRow(DashboardWidgit.CONTRACTORVIEW.ToDescription(), ModuleSubContractViewWidget.Contracts.ToDescription());
-
-                projectDashBoard = dashboard.SelectModuleMenuItem<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription(), waitForLoading: false);
+                
+                projectDashBoard.SelectModuleMenuItem<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription(), waitForLoading: false);
                 VendorDataRegister vendorDataRegister = projectDashBoard.SelectModuleMenuItem<VendorDataRegister>(subMenuItem: ModuleSubMenuInLeftNav.VENDODATAREGISTER.ToDescription());
                 vendorDataRegister.LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateSubPageIsDislayed(createContractItemData.VendorDataRegisterPaneName))
                     .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateDisplayedViewFilterOption(createContractItemData.DefaultFilter))
@@ -57,18 +59,10 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                     .LogValidation<VendorContractDetail>(ref validations, contractDetail.ValidateSaveDialogStatus(true))
                     .ClickCloseButtonOnPopUp<VendorDataRegister>();
 
-                dashboard = projectDashBoard.SelectModuleMenuItem<Dashboard>(menuItem: ModuleNameInLeftNav.DASHBOARD.ToDescription(), waitForLoading: false);
-                dashboard.ValidateWidgetsOfDashboardDisplayed(createContractItemData.AllWidgitsInDashboardSection);
-                dashboard.ValidateCountValueIsCorrect(DashboardWidgit.CONTRACTORVIEW.ToDescription(), ModuleSubContractViewWidget.Contracts.ToDescription(), expectedCountOfContract);
+                dashboard = projectDashBoard.SelectModuleMenuItem<Dashboard>(menuItem: ModuleNameInLeftNav.DASHBOARD.ToDescription());
+                dashboard.LogValidation<Dashboard>(ref validations, dashboard.ValidateCountValueIsCorrect(createContractItemData.WidgetName, createContractItemData.RowName, CountOfContracts + 1));
 
-                projectDashBoard = dashboard.SelectModuleMenuItem<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription(), waitForLoading: false)
-                    .LogValidation<ProjectsDashboard>(ref validations, projectDashBoard.ValidateDisplayedSubItemLinks(createContractItemData.SubItemMenus));
-
-                vendorDataRegister = projectDashBoard.SelectModuleMenuItem<VendorDataRegister>(subMenuItem: ModuleSubMenuInLeftNav.VENDODATAREGISTER.ToDescription());
-                vendorDataRegister.ClickHeaderButton<VendorDataRegister>(MainPaneTableHeaderButton.Refresh, false)
-                    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateSubPageIsDislayed(createContractItemData.VendorDataRegisterPaneName))
-                    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateDisplayedViewFilterOption(createContractItemData.DefaultFilter));
-
+                
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);
                 Console.WriteLine(string.Join(System.Environment.NewLine, validations.ToArray()));
@@ -115,21 +109,19 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                     .LogValidation<VendorItemDetail>(ref validations, itemDetail.ValidateSaveDialogStatus(true))
                     .ClickCloseButtonOnPopUp<VendorDataRegister>();
 
-                //when - User Story 121991 - 120795 Validate Purchase Item under Contract
+                //and - User Story 121991 - 120795 Validate Purchase Item under Contract
                 test = LogTest("US 121991 - 120795 Validate Purchase Item under Contract");
 
-                var columnValuePairList1 = new List<KeyValuePair<string, string>> { createPurchaseItemData.ContractNumber };
-                var columnValuePairList2 = new List<KeyValuePair<string, string>> { createPurchaseItemData.ItemID,
-                                                                                    createPurchaseItemData.Description,
-                                                                                    createPurchaseItemData.Status };
+                var columnValuePairList1 = createPurchaseItemData.ExpectedContractValuesInColumnList(purchaseInfo);
+                var columnValuePairList2 = createPurchaseItemData.ExpectedPurchasedValuesInColumnList(purchaseInfo);
                                 
                 vendorDataRegister = projectDashBoard.SelectModuleMenuItem<VendorDataRegister>(subMenuItem: ModuleSubMenuInLeftNav.VENDODATAREGISTER.ToDescription());
-                vendorDataRegister.FilterDocumentsByGridFilterRow<VendorDataRegister>(createPurchaseItemData.GridViewName, createPurchaseItemData.ContractNumber.Key, createPurchaseItemData.ContractNumber.Value)
+                vendorDataRegister.FilterDocumentsByGridFilterRow<VendorDataRegister>(createPurchaseItemData.GridViewName, ContractField.ContractNumber.ToDescription(), purchaseInfo.ContractNumber)
                     .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateItemsAreShown(columnValuePairList1, createPurchaseItemData.GridViewName))
                     .ClickExpandButton(createPurchaseItemData.expandButtonIndex)
                     .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidatePurchaseItemsAreShown(columnValuePairList2));
                 itemDetail = vendorDataRegister.OpenItem(columnValuePairList2);
-                itemDetail.LogValidation<VendorItemDetail>(ref validations, itemDetail.ValidateHeaderIsCorrect(createPurchaseItemData.ItemID.Value))
+                itemDetail.LogValidation<VendorItemDetail>(ref validations, itemDetail.ValidateHeaderIsCorrect(purchaseInfo.ItemID))
                     .ClickCloseButtonOnPopUp<VendorDataRegister>();
 
                 // then
@@ -160,14 +152,17 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 var createNewDeliverableData = new CreateDeliverableItemSmoke();
                 test.Info("Navigate to DashBoard Page of Project: " + createNewDeliverableData.ProjectName);
                 ProjectsDashboard projectDashBoard = projectsList.NavigateToProjectDashboardPage(createNewDeliverableData.ProjectName);
+                Dashboard dashboard = projectDashBoard.SelectModuleMenuItem<Dashboard>(menuItem: ModuleNameInLeftNav.DASHBOARD.ToDescription());
+                dashboard.ClickMoreOrLessButton(createNewDeliverableData.WidgetName, true);
+                int CountOfDeliverables = dashboard.GetCountValueFromRow(createNewDeliverableData.WidgetName, createNewDeliverableData.RowName);
 
                 //when UserStory 121992 - 120796 - Create New Deliverable
                 test = LogTest("Create New Deliverable");
                 string parrentWindow;
-                string currentWindow;
+                
                 VendorDataRegister vendorDataRegister = projectDashBoard.SelectModuleMenuItem<VendorDataRegister>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription(), subMenuItem: ModuleSubMenuInLeftNav.VENDODATAREGISTER.ToDescription());
                 vendorDataRegister.ClickHeaderButton<VendorDataRegister>(MainPaneTableHeaderButton.New, false);
-                var deliverableInfo = createNewDeliverableData.DeliverableInfo;
+                DeliverableLine deliverableInfo = createNewDeliverableData.DeliverableInfo;
                 VendorDeliverableDetail deliverableDetail = vendorDataRegister.ClickHeaderDropdownItem<VendorDeliverableDetail>(MainPaneHeaderDropdownItem.DeliverableLineItem, true);
                 deliverableDetail.LogValidation<VendorDeliverableDetail>(ref validations, deliverableDetail.ValidateRequiredFieldsWithRedAsterisk(createNewDeliverableData.RequiredFields))
                     .EnterDeliverableRequiredInfo(deliverableInfo, ref methodValidations)
@@ -178,12 +173,10 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                     .LogValidation<VendorDeliverableDetail>(ref validations, deliverableDetail.ValidateSaveDialogStatus(true));
 
                 parrentWindow = deliverableDetail.GetCurrentWindow();
-
                 deliverableDetail.ClickToolbarButton<VendorDeliverableDetail>(ToolbarButton.More, checkProgressPopup: false, isDisappear: true)
                                      .LogValidation<VendorDeliverableDetail>(ref validations, deliverableDetail.ValidateDisplayedSubItemLinks(createNewDeliverableData.SubItemOfMoreFunction));
                 LinkItems linkItem = deliverableDetail.ClickHeaderDropdownItem<LinkItems>(MainPaneHeaderDropdownItem.LinkItems, true);
 
-                currentWindow = linkItem.GetCurrentWindow();
                 linkItem.LogValidation<LinkItems>(ref validations, linkItem.ValidateWindowIsOpened(createNewDeliverableData.LinkItemsWindowTitle))
                         .ClickToolbarButton<VendorDeliverableDetail>(ToolbarButton.Add)
                         .LogValidation<VendorDeliverableDetail>(ref validations, linkItem.ValidateDisplayedSubItemLinks(createNewDeliverableData.SubItemOfAddFunction));
@@ -197,21 +190,42 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                            .ClickToobarBottomButton<LinkItems>(ToolbarButton.OK.ToDescription(), createNewDeliverableData.GridViewLinkItemsName, true);
                 linkItem.LogValidation<LinkItems>(ref validations, addDocument.ValidateDocumentSearchWindowStatus(true))
                         .LogValidation<LinkItems>(ref validations, linkItem.ValidateDocumentIsAttached(createNewDeliverableData.DocumentNo))
-                        .ClickToolbarButton<AlertDialog>(ToolbarButton.Save);
-                alertDialog.LogValidation<AlertDialog>(ref validations, linkItem.ValidateMessageDisplayCorrect(createNewDeliverableData.SaveMessageOnLinkItem))
-                           .ClickOKButton<LinkItems>()
-                           .SwitchToWindow(parrentWindow);
-                deliverableItemDetail.LogValidation<VendorDeliverableDetail>(ref validations, deliverableItemDetail.ValidateSaveDialogStatus(true))
-                                     .ClickToolbarButton<AlertDialog>(ToolbarButton.Save, checkProgressPopup: false, isDisappear: true);
-                alertDialog.LogValidation<AlertDialog>(ref validations, deliverableItemDetail.ValidateMessageDisplayCorrect(createNewDeliverableData.SaveMessage))
-                           .ClickOKButton<VendorDeliverableDetail>()
-                           .SwitchToWindow(currentWindow);
-
-                int countWindow = linkItem.GetCountWindow();
-                linkItem.LogValidation<LinkItems>(ref validations, deliverableItemDetail.ValidateSaveDialogStatus(true))
+                        .ClickSaveButton<LinkItems>()
+                        .LogValidation<LinkItems>(ref validations, deliverableDetail.ValidateMessageDisplayCorrect(createNewDeliverableData.SaveMessageOnLinkItem))
+                        .ClickOkButtonOnPopUp<LinkItems>()
                         .ClickToolbarButton<VendorDeliverableDetail>(ToolbarButton.Close)
                         .SwitchToWindow(parrentWindow);
-                deliverableItemDetail.LogValidation<LinkItems>(ref validations, linkItem.ValidateLinkItemsWindowIsClosed(countWindow));
+                deliverableDetail.ClickSaveButton<VendorDeliverableDetail>()
+                    .LogValidation<VendorDeliverableDetail>(ref validations, deliverableDetail.ValidateMessageDisplayCorrect(createNewDeliverableData.SaveMessage))
+                    .ClickOkButtonOnPopUp<VendorDeliverableDetail>()
+                    .LogValidation<VendorDeliverableDetail>(ref validations, deliverableDetail.ValidateSaveDialogStatus(true))
+                    .ClickCloseButtonOnPopUp<VendorDataRegister>();
+
+                //and - User Story 125084 - 120797 Validate Deliverable under Contract/Item
+                test = LogTest("US 125084 - 120797 Validate Deliverable under Contract/Item");
+                //var columnValuePairList1 = new List<KeyValuePair<string, string>> { createNewDeliverableData.ContractNumber };
+                //var columnValuePairList2 = new List<KeyValuePair<string, string>> { createNewDeliverableData.ItemID,
+                //                                                                    createNewDeliverableData.Description,
+                //                                                                    createNewDeliverableData.Status };
+                //var columnValuePairList3 = new List<KeyValuePair<string, string>> { createNewDeliverableData.ItemNumber };
+                vendorDataRegister = projectDashBoard.SelectModuleMenuItem<VendorDataRegister>(subMenuItem: ModuleSubMenuInLeftNav.VENDODATAREGISTER.ToDescription());
+                vendorDataRegister.FilterDocumentsByGridFilterRow<VendorDataRegister>(createNewDeliverableData.GridViewName,
+                                                                                      DeliverableField.ContractNumber.ToDescription(),
+                                                                                      deliverableInfo.ContractNumber)
+                    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateItemsAreShown(createNewDeliverableData.ExpectedContractValuesInColumnList(deliverableInfo), 
+                                                                                            createNewDeliverableData.GridViewName))
+                    .ClickExpandButton(createNewDeliverableData.ExpanButtonIndex)
+                    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidatePurchaseItemsAreShown(createNewDeliverableData.ExpectedPurchasedValuesInColumnList(deliverableInfo)))
+                    .ClickExpandButton(createNewDeliverableData.ExpanSubButtonIndex)
+                    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateDeliverablesAreShown(createNewDeliverableData.ExpectedDeliverableValuesInColumnList(deliverableInfo)));
+
+                //and - User Story 122010 - 120798 Validate Contractor Widget Counts
+                test = LogTest("US 122010 - 120798 Validate Contractor Widget Counts");
+                
+                dashboard = projectDashBoard.SelectModuleMenuItem<Dashboard>(menuItem: ModuleNameInLeftNav.DASHBOARD.ToDescription());
+                dashboard.ClickMoreOrLessButton(createNewDeliverableData.WidgetName, true)
+                    .LogValidation<Dashboard>(ref validations, dashboard.ValidateCountValueIsCorrect(createNewDeliverableData.WidgetName, createNewDeliverableData.RowName, CountOfDeliverables + 1));
+
 
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);
@@ -226,88 +240,6 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
             }
         }
 
-        [TestMethod]
-        public void ValidateDeliverableUnderContractItem()
-        {
-            try
-            {
-                // given
-                var teambinderTestAccount = GetTestAccount("AdminAccount1", environment, "NonSSO");
-                test.Info("Open TeamBinder Web Page: " + teambinderTestAccount.Url);
-                var driver = Browser.Open(teambinderTestAccount.Url, browser);
-                test.Info("Log on TeamBinder via Other User Login: " + teambinderTestAccount.Username);
-                ProjectsList projectsList = new NonSsoSignOn(driver).Logon(teambinderTestAccount) as ProjectsList;
-
-                var validateDeliverableUnderContractItemData = new ValidateDeliverableUnderContractItemSmoke();
-                test.Info("Navigate to DashBoard Page of Project: " + validateDeliverableUnderContractItemData.ProjectName);
-                ProjectsDashboard projectDashBoard = projectsList.NavigateToProjectDashboardPage(validateDeliverableUnderContractItemData.ProjectName);
-                var columnValuePairList1 = new List<KeyValuePair<string, string>> { validateDeliverableUnderContractItemData.ContractNumber };
-                var columnValuePairList2 = new List<KeyValuePair<string, string>> { validateDeliverableUnderContractItemData.ItemID,
-                                                                                    validateDeliverableUnderContractItemData.Description,
-                                                                                    validateDeliverableUnderContractItemData.Status };
-                var columnValuePairList3 = new List<KeyValuePair<string, string>> { validateDeliverableUnderContractItemData.ItemNumber };
-                //when - 120797 Validate Deliverable under Contract/Item
-                //User Story 125084
-                test = LogTest("Create New Purchase Item");
-
-                VendorDataRegister vendorDataRegister = projectDashBoard.SelectModuleMenuItem<VendorDataRegister>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription(), subMenuItem: ModuleSubMenuInLeftNav.VENDODATAREGISTER.ToDescription(), waitForLoading: true);
-                vendorDataRegister.FilterDocumentsByGridFilterRow<VendorDataRegister>(validateDeliverableUnderContractItemData.GridViewName,
-                                                                                      validateDeliverableUnderContractItemData.ContractNumber.Key,
-                                                                                      validateDeliverableUnderContractItemData.ContractNumber.Value)
-                    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateItemsAreShown(columnValuePairList1, validateDeliverableUnderContractItemData.GridViewName))
-                    .ClickExpandButton(validateDeliverableUnderContractItemData.ExpanButtonIndex)
-                    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidatePurchaseItemsAreShown(columnValuePairList2))
-                    .ClickExpandButton(validateDeliverableUnderContractItemData.ExpanSubButtonIndex)
-                    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateDeliverablesAreShown(columnValuePairList3));
-
-                // then
-                Utils.AddCollectionToCollection(validations, methodValidations);
-                Console.WriteLine(string.Join(System.Environment.NewLine, validations.ToArray()));
-                validations.Should().OnlyContain(validations => validations.Value).Equals(bool.TrueString);
-            }
-            catch (Exception e)
-            {
-                lastException = e;
-                validations = Utils.AddCollectionToCollection(validations, methodValidations);
-                throw;
-            }
-        }
-
-        [TestMethod]
-        public void ValidateContractorWidgetCounts()
-        {
-            try
-            {
-                // given
-                var teambinderTestAccount = GetTestAccount("AdminAccount1", environment, "NonSSO");
-                test.Info("Open TeamBinder Web Page: " + teambinderTestAccount.Url);
-                var driver = Browser.Open(teambinderTestAccount.Url, browser);
-                test.Info("Log on TeamBinder via Other User Login: " + teambinderTestAccount.Username);
-                ProjectsList projectsList = new NonSsoSignOn(driver).Logon(teambinderTestAccount) as ProjectsList;
-
-                var validateCountData = new ValidateContractorWidgetCountSmoke();
-                test.Info("Navigate to DashBoard Page of Project: " + validateCountData.ProjectName);
-                ProjectsDashboard projectDashBoard = projectsList.NavigateToProjectDashboardPage(validateCountData.ProjectName);
-
-                //when - 120798 Validate Contractor Widget Counts
-                //User Story 122010
-                test = LogTest("Validate Contractor Widget Counts");
-                int CountOfDeliverables = 28;
-                Dashboard dashboard = projectDashBoard.SelectModuleMenuItem<Dashboard>(menuItem: ModuleNameInLeftNav.DASHBOARD.ToDescription());
-                dashboard.ClickMoreOrLessButton(validateCountData.WidgetName, true)
-                    .LogValidation<Dashboard>(ref validations, dashboard.ValidateCountValueIsCorrect(validateCountData.WidgetName, validateCountData.RowName, CountOfDeliverables + 1));
-
-                // then
-                Utils.AddCollectionToCollection(validations, methodValidations);
-                Console.WriteLine(string.Join(System.Environment.NewLine, validations.ToArray()));
-                validations.Should().OnlyContain(validations => validations.Value).Equals(bool.TrueString);
-            }
-            catch (Exception e)
-            {
-                lastException = e;
-                validations = Utils.AddCollectionToCollection(validations, methodValidations);
-                throw;
-            }
-        }
+        
     }
 }
