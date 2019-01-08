@@ -80,7 +80,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
         public HoldingArea ClickCheckboxOfDocumentAtRow(int indexRow)
         {
             IWebElement checkboxAtRow = HoldingAreaGridData.StableFindElement(By.XPath(string.Format(_checkboxInFirstColAtRow, indexRow )));
-            ScrollIntoView(checkboxAtRow);
+            ScrollToElement(checkboxAtRow);
             checkboxAtRow.Check();
             return this;
         }
