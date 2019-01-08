@@ -196,6 +196,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             if (switchPopUp)
                 WebDriver.SwitchTo().ActiveElement();
 
+            WaitForElementDisplay(_walkMe);
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }               
 

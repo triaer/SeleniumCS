@@ -69,6 +69,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
         {
             var node = StepNode();
             node.Info($"Enter {content} in {fieldLabel} Field.");
+            WaitForElementEnable(_textField(fieldLabel));
             TextField(fieldLabel).InputText(content);
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
