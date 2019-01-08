@@ -9,14 +9,14 @@ using static KiewitTeamBinder.Common.KiewitTeamBinderENums;
 
 namespace KiewitTeamBinder.Common.TestData
 {
-    public class CreateNewDeliverableSmoke
+    public class CreateDeliverableItemSmoke
     {
         public string ProjectName = "Automation Project 1";
         public string[] SubItemMenus = { "Contract", "Item Purchased", "Deliverable Line Item" };
         public string[] SubItemOfMoreFunction = { "Link Items" };
         public string DeliverableWindowTitle = "AUTO1 - New Deliverable Item";
         public string LinkItemsWindowTitle = "Link Items";
-        public string[] RequiredField = { "Item ID", "Deliverable Line Item Number", "Description", "Deliverable Type", "Criticality" };
+        public string[] RequiredFields = { "Item ID", "Deliverable Line Item Number", "Description", "Deliverable Type", "Criticality" };
         public string SaveMessage = "Saved Successfully";
         public string[] SubItemOfAddFunction = {
             ModuleSubMenuInAddFunction.Mail.ToDescription(),
@@ -32,13 +32,13 @@ namespace KiewitTeamBinder.Common.TestData
         public string GridViewAddDocName = "GridView_GridData";
         public string GridViewLinkItemsName = "LinkedDocumentsGrid_GridData";
         public string SaveMessageOnLinkItem = "Manual Links updated successfully.";
-        public DeliverableItemInfo DeliverableItemInfo = new DeliverableItemInfo()
+        public DeliverableLine DeliverableInfo = new DeliverableLine()
         {
             ContractNumber = "2018-12-005",
             ItemID = "005-02",
             LineItemNumber = Utils.GetRandomValue("LineItemNumber"),
             Description = Utils.GetRandomValue("Description"),
-            Type = "AR - ARCHITECTURAL (PRE-ENGINEERED METAL BUILDINGS)",
+            DeliverableType = "AR - ARCHITECTURAL (PRE-ENGINEERED METAL BUILDINGS)",
             Criticality = "Normal",
             Status = "COMPLETED - Completed",
         };

@@ -22,5 +22,12 @@ namespace KiewitTeamBinder.Common.TestData
         public KeyValuePair<string, string> Status = new KeyValuePair<string, string>("Status", "OPEN - OPEN");
         public string SaveMessage = "Saved Successfully";        
         public int expandButtonIndex = 1;
+        public ItemPurchased PurchaseInfo = new ItemPurchased()
+        {
+            ContractNumber = Utils.GetRandomValue("CONTRACT"),
+            ItemID = Utils.GetRandomValue("ITEMID"),
+            Description = Utils.GetRandomValue("Description content"),
+            Status = "OPEN - OPEN",
+        };
     }
 }

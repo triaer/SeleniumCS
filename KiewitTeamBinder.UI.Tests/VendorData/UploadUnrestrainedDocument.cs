@@ -50,10 +50,10 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                     .LogValidation<DocumentDetail>(ref validations, newDocument.ValidateSelectedItemShowInDropdownBoxesCorrect(uploadUnrestrainedDocData.SingleDocInformation))
                     .ClickAttachFilesButton(Utils.GetInputFilesLocalPath(), uploadUnrestrainedDocData.FileNames)
                     .ClickSaveButton<DocumentDetail>()
-                    .LogValidation<DocumentDetail>(ref validations, newDocument.ValidateSaveDialogStatus(close: false))
+                    .LogValidation<DocumentDetail>(ref validations, newDocument.ValidateSaveDialogStatus(closed: false))
                     .LogValidation<DocumentDetail>(ref validations, newDocument.ValidateMessageDisplayCorrect(uploadUnrestrainedDocData.SaveMessage))
                     .ClickOkButtonOnPopUp<DocumentDetail>()
-                    .LogValidation<DocumentDetail>(ref validations, newDocument.ValidateSaveDialogStatus(close: true))
+                    .LogValidation<DocumentDetail>(ref validations, newDocument.ValidateSaveDialogStatus(closed: true))
                     .ClickToolbarButton<HoldingArea>(ToolbarButton.Close);
 
                 // then

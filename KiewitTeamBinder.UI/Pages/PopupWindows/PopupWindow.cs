@@ -65,11 +65,11 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 
-        public T EnterTextField<T>(string fieldName, string content)
+        public T EnterTextField<T>(string fieldLabel, string content)
         {
             var node = StepNode();
-            node.Info($"Enter {content} in {fieldName} Field.");
-            TextField(fieldName).InputText(content);
+            node.Info($"Enter {content} in {fieldLabel} Field.");
+            TextField(fieldLabel).InputText(content);
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 
@@ -137,6 +137,46 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             }
         }
 
+        public KeyValuePair<string, bool> ValidateItemDropdownIsSelected(string value, string idDropdownButton)
+        {
+            var node = StepNode();
+            string selectedText = "";
+            string message = string.Format(Validation.Item_Dropdown_Is_Selected, idDropdownButton.Split('_')[0], value);
+            try
+            {
+                if (idDropdownButton.Contains("Criticality"))
+                {
+                    string actual = FindElement(By.Id(idDropdownButton)).GetAttribute("value");
+                    if (actual == value)
+                        return SetPassValidation(node, message);
+                    return SetFailValidation(node, message, value, actual);
+                }
+                else
+                {
+                    string id = idDropdownButton.Replace("Input", "ClientState");
+                    node.Info("The Dropdown: " + id);
+                    string clientStateValue = FindElement(By.Id(id)).GetAttribute("value");
+                    string[] attributeValues = clientStateValue.Split(',');
+                    foreach (var attributeValue in attributeValues)
+                    {
+                        if (attributeValue.Contains("text"))
+                        {
+                            selectedText = attributeValue.Split(':')[1];
+                            selectedText = selectedText.Replace("\"", "");
+
+                            if (selectedText.Trim() == value)
+                                return SetPassValidation(node, message);
+                        }
+                    }
+
+                    return SetFailValidation(node, message, value, selectedText);
+                }
+            }
+            catch (Exception e)
+            {
+                return SetErrorValidation(node, message, e);
+            }
+        }
         public List<KeyValuePair<string, bool>> ValidateRequiredFieldsWithRedAsterisk(string[] requiredFields)
         {
             var node = StepNode();
@@ -230,6 +270,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             public static string Save_PopUp_Opened = "Validate that the save popup is opened";
             public static string Message_Display_Correct = "Validate that the message is displayed correctly";
             public static string Header_Is_Correct = "Validate that the header is correct";
+            public static string Item_Dropdown_Is_Selected = "Validate that the {0} dropdown selected item '{1}' ";
         }
         #endregion
     }

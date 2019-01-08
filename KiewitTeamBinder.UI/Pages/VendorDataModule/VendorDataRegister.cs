@@ -36,14 +36,14 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
         {
         }
 
-        public ItemDetail OpenItem(List<KeyValuePair<string, string>> columnValuePairList)
+        public VendorItemDetail OpenItem(List<KeyValuePair<string, string>> columnValuePairList)
         {
             var PurchaseItemsList = GetAvailablePurchaseItems(columnValuePairList);
             var item = PurchaseItemsList.ElementAt(0).StableFindElement(By.XPath("./td[3]"));
             ScrollIntoView(item);
             string currentWindow;
             SwitchToNewPopUpWindow(item, out currentWindow, doubleClick: true);
-            return new ItemDetail(WebDriver);
+            return new VendorItemDetail(WebDriver);
         }
 
         public VendorDataRegister ClickExpandButton(int index, bool waitForLoading = true)
@@ -106,10 +106,10 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             }
         }
 
-        public DeliverableItemDetail OpenDeliverableLineItemTemplate(out string parrentWindow)
+        public VendorDeliverableDetail OpenDeliverableLineItemTemplate(out string parrentWindow)
         {
             SwitchToNewPopUpWindow(DeliverableLineItem, out parrentWindow, true);
-            return new DeliverableItemDetail(WebDriver);
+            return new VendorDeliverableDetail(WebDriver);
         }
 
         private static class Validation

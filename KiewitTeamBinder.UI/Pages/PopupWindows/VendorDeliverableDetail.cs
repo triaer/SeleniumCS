@@ -11,7 +11,7 @@ using static KiewitTeamBinder.UI.ExtentReportsHelper;
 
 namespace KiewitTeamBinder.UI.Pages.PopupWindows
 {
-    public class DeliverableItemDetail : PopupWindow
+    public class VendorDeliverableDetail : PopupWindow
     {
         #region Entities
         private static By _criticalityTextBox => By.Id("cboCriticality_Input");
@@ -20,11 +20,11 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
         #endregion
 
         #region Actions
-        public DeliverableItemDetail(IWebDriver webDriver) : base(webDriver)
+        public VendorDeliverableDetail(IWebDriver webDriver) : base(webDriver)
         {
         }
 
-        public DeliverableItemDetail EnterDeliverableItemInfo(DeliverableItemInfo deliverableItemInfo, ref List<KeyValuePair<string, bool>> methodValidation)
+        public VendorDeliverableDetail EnterDeliverableRequiredInfo(DeliverableLine deliverableItemInfo, ref List<KeyValuePair<string, bool>> methodValidation)
         {
             var node = StepNode();
 
@@ -35,13 +35,13 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             SelectItemInDropdown<DocumentDetail>(DeliverableField.ItemID.ToDescription(), deliverableItemInfo.ItemID, ref methodValidation);
 
             node.Info($"Enter {deliverableItemInfo.LineItemNumber} in {DeliverableField.LineItemNumber.ToDescription()} Field.");
-            EnterTextField<DeliverableItemDetail>(DeliverableField.LineItemNumber.ToDescription(), deliverableItemInfo.LineItemNumber);
+            EnterTextField<VendorDeliverableDetail>(DeliverableField.LineItemNumber.ToDescription(), deliverableItemInfo.LineItemNumber);
 
             node.Info($"Enter {deliverableItemInfo.Description} in Description Field.");
-            EnterTextField<DeliverableItemDetail>(DeliverableField.Description.ToDescription(), deliverableItemInfo.Description);
+            EnterTextField<VendorDeliverableDetail>(DeliverableField.Description.ToDescription(), deliverableItemInfo.Description);
 
-            node.Info($"Click {DeliverableField.DeliverableType.ToDescription()} dropdown, and select: " + deliverableItemInfo.Type);
-            SelectItemInDropdown<DocumentDetail>(DeliverableField.DeliverableType.ToDescription(), deliverableItemInfo.Type, ref methodValidation);
+            node.Info($"Click {DeliverableField.DeliverableType.ToDescription()} dropdown, and select: " + deliverableItemInfo.DeliverableType);
+            SelectItemInDropdown<DocumentDetail>(DeliverableField.DeliverableType.ToDescription(), deliverableItemInfo.DeliverableType, ref methodValidation);
 
             node.Info($"Click {DeliverableField.Criticality.ToDescription()} dropdown, and select: " + deliverableItemInfo.Criticality);
             if (CriticalityTextBox.GetAttribute("value") != "Normal")
@@ -52,16 +52,15 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
 
             return this;
         }
-        public List<KeyValuePair<string, bool>> ValidateSelectedItemShowInDropdownBoxesCorrect(DeliverableItemInfo deliverableItemInfo)
+        public List<KeyValuePair<string, bool>> ValidateSelectedItemShowInDropdownBoxesCorrect(DeliverableLine deliverableItemInfo)
         {
-            var documentDetail = new DocumentDetail(WebDriver);
             var validation = new List<KeyValuePair<string, bool>>();
 
-            validation.Add(documentDetail.ValidateItemDropdownIsSelected(deliverableItemInfo.ContractNumber, DropdownListInput(DeliverableField.ContractNumber.ToDescription()).GetAttribute("id")));
-            validation.Add(documentDetail.ValidateItemDropdownIsSelected(deliverableItemInfo.ItemID, DropdownListInput(DeliverableField.ItemID.ToDescription()).GetAttribute("id")));
-            validation.Add(documentDetail.ValidateItemDropdownIsSelected(deliverableItemInfo.Type, DropdownListInput(DeliverableField.DeliverableType.ToDescription()).GetAttribute("id")));
-            validation.Add(documentDetail.ValidateItemDropdownIsSelected(deliverableItemInfo.Criticality, DropdownListInput(DeliverableField.Criticality.ToDescription()).GetAttribute("id")));
-            validation.Add(documentDetail.ValidateItemDropdownIsSelected(deliverableItemInfo.Status, DropdownListInput(DeliverableField.Status.ToDescription()).GetAttribute("id")));
+            validation.Add(ValidateItemDropdownIsSelected(deliverableItemInfo.ContractNumber, DropdownListInput(DeliverableField.ContractNumber.ToDescription()).GetAttribute("id")));
+            validation.Add(ValidateItemDropdownIsSelected(deliverableItemInfo.ItemID, DropdownListInput(DeliverableField.ItemID.ToDescription()).GetAttribute("id")));
+            validation.Add(ValidateItemDropdownIsSelected(deliverableItemInfo.DeliverableType, DropdownListInput(DeliverableField.DeliverableType.ToDescription()).GetAttribute("id")));
+            validation.Add(ValidateItemDropdownIsSelected(deliverableItemInfo.Criticality, DropdownListInput(DeliverableField.Criticality.ToDescription()).GetAttribute("id")));
+            validation.Add(ValidateItemDropdownIsSelected(deliverableItemInfo.Status, DropdownListInput(DeliverableField.Status.ToDescription()).GetAttribute("id")));
             return validation;
         }
         #endregion

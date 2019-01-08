@@ -136,7 +136,7 @@
     <Compile Include="Pages\DocumentModule\Document.cs" />
     <Compile Include="Pages\Dialogs\AddDocument.cs" />
     <Compile Include="Pages\PopupWindows\BulkUploadDocuments.cs" />
-    <Compile Include="Pages\PopupWindows\DeliverableItemDetail.cs" />
+    <Compile Include="Pages\PopupWindows\VendorDeliverableDetail.cs" />
     <Compile Include="Pages\PopupWindows\LinkItems.cs" />
     <Compile Include="Pages\PopupWindows\NewTransmittal.cs" />
     <Compile Include="Pages\Global\ProjectsDashboard.cs" />
@@ -149,11 +149,12 @@
     <Compile Include="Pages\MailModule\Mail.cs" />
     <Compile Include="Pages\PopupWindows\PopupWindow.cs" />
     <Compile Include="Pages\PopupWindows\ProcessDocuments.cs" />
+    <Compile Include="Pages\PopupWindows\VendorContractDetail.cs" />
     <Compile Include="Pages\PublishedReportsModule\PublishedReports.cs" />
     <Compile Include="Pages\TasksModule\Task.cs" />
     <Compile Include="Pages\TransmittalsModule\Transmittal.cs" />
     <Compile Include="Pages\PackagesModule\Package.cs" />
-    <Compile Include="Pages\PopupWindows\ItemDetail.cs" />
+    <Compile Include="Pages\PopupWindows\VendorItemDetail.cs" />
     <Compile Include="Pages\PopupWindows\DocumentDetail.cs" />
     <Compile Include="Pages\PopupWindows\TransmittalDetail.cs" />
     <Compile Include="Pages\VendorDataModule\HoldingArea.cs" />

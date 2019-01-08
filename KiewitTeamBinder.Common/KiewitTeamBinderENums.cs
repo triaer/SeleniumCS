@@ -246,8 +246,12 @@ namespace KiewitTeamBinder.Common
         {
             [Description("Create Transmittals")]
             CreateTransmittals,
+            [Description("Contract")]
+            Contract,
             [Description("Item Purchased")]
             ItemPurchased,
+            [Description("Deliverable Line Item")]
+            DeliverableLineItem,
             [Description("Link Items")]
             LinkItems,
             [Description("Documents")]
@@ -318,6 +322,31 @@ namespace KiewitTeamBinder.Common
             RESPONSESOUTSTANDING,
             [Description("Document Bar Chart")]
             DOCMUENTBARCHART
+        }
+
+        public enum ContractField
+        {
+            [Description("Contract Number")]
+            ContractNumber,
+            [Description("Description")]
+            Description,
+            [Description("Vendor Company")]
+            VendorCompany,
+            [Description("Expediting Contract")]
+            ExpeditingContract,
+            [Description("Status")]
+            Status
+        }
+        public enum ItemPurchasedField
+        {
+            [Description("Item ID")]
+            ItemID,
+            [Description("Description")]
+            Description,
+            [Description("Contract Number")]
+            ContractNumber,
+            [Description("Status")]
+            Status
         }
 
         public enum DeliverableField
