@@ -25,7 +25,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
             try
             {
                 // given
-                var teambinderTestAccount = GetTestAccount("VendorAccount1", environment, "NonSSO");
+                var teambinderTestAccount = GetTestAccount("VendorAccount2", environment, "NonSSO");
                 test.Info("Open TeamBinder Web Page: " + teambinderTestAccount.Url);
                 var driver = Browser.Open(teambinderTestAccount.Url, browser);
                 test.Info("Log on TeamBinder via Other User Login: " + teambinderTestAccount.Username);
@@ -35,7 +35,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 test.Info("Navigate to DashBoard Page of Project: " + uploadUnrestrainedDocData.ProjectName);
                 ProjectsDashboard projectDashBoard = projectsList.NavigateToProjectDashboardPage(uploadUnrestrainedDocData.ProjectName);
 
-                //when User Story 120278 - 120081 - Upload Unrestrained Document
+                //when User Story 120278 - 120081 - Upload Unrestrained Document Part 1
                 test = LogTest("Upload Unrestrained Document");
                 string username = projectDashBoard.GetUserNameLogon();
                 string currentWindow;
@@ -55,6 +55,28 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                     .ClickOkButtonOnPopUp<DocumentDetail>()
                     .LogValidation<DocumentDetail>(ref validations, newDocument.ValidateSaveDialogStatus(closed: true))
                     .ClickToolbarButton<HoldingArea>(ToolbarButton.Close);
+
+                //User Story 120278 - 120081 - Upload Unrestrained Document Part 2
+                var columnValuesInConditionList = new List<KeyValuePair<string, string>> { uploadUnrestrainedDocData.ColumnValuesInConditionList.DocumentNo };
+                var columnValuePairList = uploadUnrestrainedDocData.ExpectedDocumentInforInColumnList(uploadUnrestrainedDocData.SingleDocInformation);
+                holdingArea.SwitchToWindow(currentWindow);
+                holdingArea.SelectModuleMenuItem<HoldingArea>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription(), subMenuItem: ModuleSubMenuInLeftNav.HOLDINGAREA.ToDescription())
+                           .EnterDocumentNo(uploadUnrestrainedDocData.SingleDocInformation.DocumentNo)
+                           .PressEnterKey<HoldingArea>()
+                           .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateFilteredRecordsAreCleared(uploadUnrestrainedDocData.GridViewHoldingAreaName, expectedNumberOfClearRecord: 1))
+                           .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateItemsAreShown(columnValuesInConditionList, uploadUnrestrainedDocData.GridViewHoldingAreaName))
+                           .OpenDocumentByDocumentNo<DocumentDetail>(uploadUnrestrainedDocData.SingleDocInformation.DocumentNo, out currentWindow);
+                newDocument.LogValidation<DocumentDetail>(ref validations, newDocument.ValidateWindowIsOpened(uploadUnrestrainedDocData.DocumentDetailWindow(uploadUnrestrainedDocData.SingleDocInformation)))
+                           .LogValidation<DocumentDetail>(ref validations, newDocument.ValidateDocumentDetailsDisplayCorrect(columnValuePairList))
+                           .ClickToolbarButton<HoldingArea>(ToolbarButton.Close)
+                           .SwitchToWindow(currentWindow);
+                holdingArea.ClickCheckboxOfDocumentAtRow(indexRow: 1)
+                           .ClickHeaderButton<HoldingArea>(MainPaneTableHeaderButton.Transmit, false);
+                NewTransmittal newTransmittal = holdingArea.ClickCreateTransmittalsButton();
+                newTransmittal.LogValidation<NewTransmittal>(ref validations, newTransmittal.ValidateWindowIsOpened(uploadUnrestrainedDocData.VendorDocumentSubmissionWindow));
+                SelectRecipientsDialog selectRecipientsDialog = newTransmittal.ClickRecipientsButton(uploadUnrestrainedDocData.ToButton);
+                selectRecipientsDialog.LogValidation<SelectRecipientsDialog>(ref validations, selectRecipientsDialog.ValidateSelectRecipientWindowOpened())
+                                      .SelectCompany(uploadUnrestrainedDocData.KiewitUser.CompanyName);
 
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);

@@ -24,6 +24,7 @@ namespace KiewitTeamBinder.UI.Pages.Dialogs
         private static By _userNameInToTable(string selectedUser) => By.XPath($"//div[@id = 'divToGrid']//tr[td='{selectedUser}']");
         private static By _okButton => By.Id("BtnOk");
         private static By _cancelButton => By.Id("BtnCancel");
+        private static By _selectRecipientsWindow => By.Id("RadWindowWrapper_RadWindowSelection");
 
         public IWebElement DropdownFilterButon { get { return StableFindElement(_dropdownFilterButon); } }
         public IWebElement CompanyItem(string companyName) => StableFindElement(_companyItem(companyName));
@@ -88,12 +89,27 @@ namespace KiewitTeamBinder.UI.Pages.Dialogs
             }
         }
 
+        public KeyValuePair<string, bool> ValidateSelectRecipientWindowOpened()
+        {
+            var node = StepNode();
+            try
+            {
+                if (StableFindElement(_selectRecipientsWindow) != null)
+                    return SetPassValidation(node, Validation.Select_Recipient_Window_Opened);
+                return SetFailValidation(node, Validation.Select_Recipient_Window_Opened);
+            }
+            catch (Exception e)
+            {
+                return SetErrorValidation(node, Validation.Select_Recipient_Window_Opened, e);
+            }
+        }
+
         private static class Validation
         {
             public static string User_Is_Added_To_The_To_Table = "Validate that user is added to the To table";
+            public static string Select_Recipient_Window_Opened = "Validate that select recipient window is opened";
         }
         #endregion
     }
 }
 
-        

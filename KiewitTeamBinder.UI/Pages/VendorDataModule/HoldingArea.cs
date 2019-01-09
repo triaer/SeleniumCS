@@ -10,6 +10,7 @@ using static KiewitTeamBinder.UI.ExtentReportsHelper;
 using static KiewitTeamBinder.Common.KiewitTeamBinderENums;
 using KiewitTeamBinder.Common.TestData;
 using KiewitTeamBinder.Common.Helper;
+using System.Windows.Forms;
 
 namespace KiewitTeamBinder.UI.Pages.VendorDataModule
 {
@@ -115,6 +116,26 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             }
             
             return this;
+        }
+
+        public T PressEnterKey<T>()
+        {
+            SendKeys.SendWait(@"{Enter}");
+            return (T)Activator.CreateInstance(typeof(T), WebDriver);
+        }
+
+        public IWebElement FindDocumentByDocumentNo(string documentNo)
+        {
+            int rowIndex, colIndex;
+            GetTableCellValueIndex(HoldingAreaRadGrid, documentNo, out rowIndex, out colIndex);
+            return TableCell(HoldingAreaRadGrid, rowIndex, colIndex);
+        }
+
+        public T OpenDocumentByDocumentNo<T>(string documentNo, out string currentWindow)
+        {
+            currentWindow = WebDriver.CurrentWindowHandle;
+            FindDocumentByDocumentNo(documentNo).DoubleClick();
+            return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
         
         public List<KeyValuePair<string, bool>> ValidateHoldingAreaGridShownDataCorrect(string filterColumn, string filterValue)

@@ -188,6 +188,39 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
                 return SetErrorValidation(node, Validation.Document_No_Limit_Retained, e);
             }
         }
+
+        public List<KeyValuePair<string, bool>> ValidateDocumentDetailsDisplayCorrect(List<KeyValuePair<string, string>> columnValuePairList)
+        {
+            var node = StepNode();
+            var validation = new List<KeyValuePair<string, bool>>();
+            try
+            {
+                foreach (var columnValuePair in columnValuePairList)
+                {
+                    if (columnValuePair.Key == "Document No." || columnValuePair.Key == "Title")
+                    {
+                        node.Info("Document Field: " + columnValuePair.Key);
+                        if (TextField(columnValuePair.Key).Text == columnValuePair.Value)
+                            validation.Add(SetPassValidation(node, Validation.Document_Detail_Is_Displayed_Correct));
+                        validation.Add(SetFailValidation(node, Validation.Document_Detail_Is_Displayed_Correct, columnValuePair.Value, TextField(columnValuePair.Key).Text));
+                    }
+                    else
+                    {
+                        node.Info("Document Field: " + columnValuePair.Key);
+                        if (DropdownListInput(columnValuePair.Key).GetValue() == columnValuePair.Value)
+                            validation.Add(SetPassValidation(node, Validation.Document_Detail_Is_Displayed_Correct));
+                        validation.Add(SetFailValidation(node, Validation.Document_Detail_Is_Displayed_Correct, columnValuePair.Value, TextField(columnValuePair.Key).GetValue()));
+                    }
+                }
+
+                return validation;
+            }
+            catch (Exception e)
+            {
+                validation.Add(SetErrorValidation(node, Validation.Document_Detail_Is_Displayed_Correct, e));
+                return validation;
+            }
+        }
         
         private static class Validation
         {
@@ -196,6 +229,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             public static string User_Fields_Cannot_Update = "Validate that the User Field is cannot updated";
             public static string Document_No_Limit_Retained = "Validate that the Document No is retained limited";
             public static string Item_Dropdown_Is_Highlighted = "Validate that the item is highlighted when hovered or scrolled over in the dropdown: ";
+            public static string Document_Detail_Is_Displayed_Correct = "Validate that the document detail is displayed correctly";
         }
         #endregion
     }
