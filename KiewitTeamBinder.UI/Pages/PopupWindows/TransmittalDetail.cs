@@ -67,7 +67,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
         }
         public T ClickCloseButton<T> (ref List<KeyValuePair<string, bool>> methodValidations)
         {
-            ClickToolbarButton<T>(KiewitTeamBinderENums.ToolbarButton.Close);
+            ClickToolbarButtonOnWinPopup<T>(KiewitTeamBinderENums.ToolbarButton.Close);
             methodValidations.Add(ValidateTransmittalDetailWindowIsClosed());
             WebDriver.SwitchTo().Window(WebDriver.WindowHandles.Last());
             return (T)Activator.CreateInstance(typeof(T), WebDriver);

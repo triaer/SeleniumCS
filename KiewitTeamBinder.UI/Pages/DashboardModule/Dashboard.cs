@@ -50,6 +50,7 @@ namespace KiewitTeamBinder.UI.Pages.DashboardModule
 
         public int GetCountValueFromRow(string widgetName, string rowName)
         {
+            WaitUntil(driver => RowInWidget(widgetName, rowName) != null);
             return int.Parse(RowInWidget(widgetName, rowName).GetAttribute("count"));
         }
 

@@ -30,7 +30,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
 
         public DocumentReceivedDateDialog ClickProcessDocumentDetails(ToolbarButton buttonName)
         {
-            var dialog = ClickToolbarButton<DocumentReceivedDateDialog>(buttonName, true);
+            var dialog = ClickToolbarButtonOnWinPopup<DocumentReceivedDateDialog>(buttonName, true);
             WebDriver.SwitchTo().Frame(dialog.Iframe);
             return dialog;
         }
