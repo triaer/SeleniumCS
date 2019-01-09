@@ -22,7 +22,7 @@ namespace KiewitTeamBinder.UI.Pages.Dialogs
         public static By _messageDialog => By.XPath("//div[@class='rwDialogPopup radalert']//div[@class='rwDialogText']");
         public IWebElement OKButton { get { return StableFindElement(_oKButton); } }
         public IWebElement MessageDialog { get { return StableFindElement(_messageDialog); } }
-        
+
         #endregion
 
         #region Actions

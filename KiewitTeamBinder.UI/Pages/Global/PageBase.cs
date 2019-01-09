@@ -434,6 +434,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         {
             try
             {
+                string k = By.XPath(".//tr[" + rowIndex + "]/" + colType + "[" + colIndex + "]").ToString();
                 return TableElement.StableFindElement(By.XPath(".//tr[" + rowIndex + "]/" + colType + "[" + colIndex + "]"), timeout);
             }
             catch (Exception)
