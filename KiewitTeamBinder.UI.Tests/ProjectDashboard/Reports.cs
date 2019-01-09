@@ -70,6 +70,7 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                 //projectsList = new NonSsoSignOn(driver).Logon(teambinderTestAccount) as ProjectsList;
                 //currentIframe = null;
                 //projectDashBoard = projectsList.NavigateToProjectDashboardPage(reportData.ProjectName);
+
                 StandardReports standardReports = projectDashBoard.OpenStandardReportsWindow(true);
 
                 standardReports.SelectReportModule(ref currentIframe, reportData.ReportTab, reportData.ModuleName)
@@ -81,7 +82,7 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                 string ContractNumbber = standardReports.GetContractNumber(reportData.contractNumberKey);
 
                 standardReports.ClickBackButton(ref currentIframe)
-                    .LogValidation<StandardReports>(ref validations, standardReports.ValidateValuePreviouslyRemainsInReport(ref currentIframe, reportData.ContractNumberDropdownList, "1234567"))
+                    .LogValidation<StandardReports>(ref validations, standardReports.ValidateValuePreviouslyRemainsInReport(ref currentIframe, reportData.ContractNumberDropdownList, ContractNumbber))
                     .ClickRadioButton(ref currentIframe, reportData.radioButton)
                     .LogValidation<StandardReports>(ref validations, standardReports.ValidateRadioButtonIsDepressed(reportData.radioButton))
                     .EnterToInputReportHeader(reportData.contractUserName)
@@ -89,6 +90,24 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                     .PressEnter()
                     .ClickSearchButton(ref currentIframe, false)
                     .LogValidation<StandardReports>(ref validations, standardReports.ValidateValueInMessageReportDisplaysCorrectly(reportData.availableMsg))
+                    .ClickOkButtonOnPopUp<StandardReports>()
+                    .LogValidation<StandardReports>(ref validations, standardReports.ValidateCloseDialog(close: true));
+
+                currentIframe = null;
+
+                //when User Story 123738 - 120804 Favorite a Report
+                standardReports.ClickButtonReportHeader(ref currentIframe, reportData.idButtonAddToFavouriteReportHeader)
+                    .LogValidation<StandardReports>(ref validations, standardReports.ValidateOpenDialog(close: false))
+                    //.LogValidation<StandardReports>(ref validations, standardReports.ValidateUserIsAbleToFavoriteReport(reportData.favoriteItem));
+                    .SelectFavoriteReport(ref currentIframe, reportData.myselfFavReport)
+                    .LogValidation<StandardReports>(ref validations, standardReports.ValidateUserIsAbleToFavoriteReport(reportData.favoriteItem))
+                    .LogValidation<StandardReports>(ref validations, standardReports.ValidateFavoritedForUserOnly(reportData.favoriteItem))
+                    .clickOkFavoritePopup(ref currentIframe)
+                    .LogValidation<StandardReports>(ref validations, standardReports.ValidateOpenDialogWithMessageCorrectly(reportData.favSuccessfullyMsg, close: false))
+                    .ClickOkButtonOnPopUp<StandardReports>()
+                    .LogValidation<StandardReports>(ref validations, standardReports.ValidateCloseDialog(close: true))
+                    .ClickButtonReportHeader(ref currentIframe, reportData.idButtonAddToFavouriteReportHeader)
+                    .ClickYesFavoritePopup(ref currentIframe)
                     .ClickOkButtonOnPopUp<StandardReports>();
 
                 // then

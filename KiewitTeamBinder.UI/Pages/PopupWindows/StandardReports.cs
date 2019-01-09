@@ -15,6 +15,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
         #region Entities        
         protected static By filterIframe => By.XPath("//iframe[@id='ifrmFilter']");
         protected static By reportViewIframe => By.XPath("//iframe[@id='ifrmReportView']");
+        protected static By favoriteReportIframe => By.XPath("//iframe[@name='RadWindowFavReportAccess']");
 
         private static By _reportModuleButton(string tab, string moduleName) => By.XPath($"//div[@id= '{tab}']//span[contains(text(), '{moduleName}')]/ancestor::a[contains(@class, 'RootLink')]");
         private static By _reportSubMenuItemLink(string subMenuItem) => By.XPath($"./following-sibling::div//a[span = '{subMenuItem}']");
@@ -27,10 +28,19 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
         private static By _loginBtn => By.XPath("//a[@id='lnkLogon']/span[.='Login']");
         private static By _backButton => By.XPath("//a[contains(@id, 'back')]");
         private static By _contractNumber(string columnName) => By.XPath($"//div[text() = '{columnName}']/ancestor::table[1]//tr[3]/td[2]/div");
-        private static By _radioButton(string radioButtonName) => By.XPath($"//input[@id='rdoRunReport_{radioButtonName}']");
+        private static By _radioButtonReportHeader(string radioButtonName) => By.XPath($"//input[@id='rdoRunReport_{radioButtonName}']");
+        //private static By _radioButtonFavoriteReport => By.XPath("//td[@class='Checkbox']/label");
+        private static By _favReport(string nameFav) => By.XPath($"//td[@class='Checkbox']//label[text()='{nameFav}']");
+        private static By _radioButtonFavReport(string nameFav) => By.XPath($"//td[@class='Checkbox']//label[text()='{nameFav}']/ancestor::td[@class='Checkbox']//input[contains(@id,'chk')]");
+        private static By _okButtonInFavReport => By.XPath("//input[@id='ButtonOk']");
+        private static By _yesButtonInFavReport => By.XPath("//span[text()='Yes']");
+
         private static By _toInput => By.XPath("//input[@id='anonymous_element_2']");
         private static By _listContact => By.XPath("//li[contains(@id,'anonymous_element') and @class='auto-focus']");
         private static By _reportMsg => By.XPath("//div[contains(@id, 'message')]");
+        private static By _saveItemPopUp => By.XPath("//div[contains(@id,'RadWindowWrapper_alert')]");
+        private static By _favoriteReportPopUp => By.XPath("//div[contains(@id,'RadWindowWrapper_RadWindowFavReportAccess')]");
+        private static By _reportHeaderButton(string idButtonReportHeader) => By.XPath($"//input[@id='{idButtonReportHeader}']");
 
         public IWebElement ReportModuleButton(string tab, string moduleName) => StableFindElement(_reportModuleButton(tab, moduleName));
         public IWebElement ReportSubMenuItemLink(string tab, string moduleName, string subMenuItem) => ReportModuleButton(tab, moduleName).StableFindElement(_reportSubMenuItemLink(subMenuItem));
@@ -43,10 +53,18 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
         public IWebElement LoginBtn { get { return StableFindElement(_loginBtn); } }
         public IWebElement BackButton { get { return StableFindElement(_backButton); } }
         public IWebElement ContractNumber(string columnName) => StableFindElement(_contractNumber(columnName));
-        public IWebElement RadioButton(string radioButtonName) => StableFindElement(_radioButton(radioButtonName));
+        public IWebElement RadioButtonReportHeader(string radioButtonName) => StableFindElement(_radioButtonReportHeader(radioButtonName));
+        public IWebElement FavReport(string nameFav) => StableFindElement(_favReport(nameFav));
+        public IWebElement RadioButtonFavReport(string nameFav) => StableFindElement(_radioButtonFavReport(nameFav));
+        public IWebElement OkButtonInFavReport { get { return StableFindElement(_okButtonInFavReport); } }
+        public IWebElement YesButtonInFavReport { get { return StableFindElement(_yesButtonInFavReport); } }
+
+
         public IWebElement ToInput { get { return StableFindElement(_toInput); } }
         public IReadOnlyCollection<IWebElement> VisibleContactList => StableFindElements(_listContact);
+        //public IReadOnlyCollection<IWebElement> VisibleRadioButtonFavoriteReport => StableFindElements(_radioButtonFavoriteReport);
         public IWebElement ReportMsg { get { return StableFindElement(_reportMsg); } }
+        public IWebElement ReportHeaderButton(string tabName) => StableFindElement(_reportHeaderButton(tabName));
         #endregion
 
         #region Actions
@@ -66,6 +84,8 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             }
             currentIFrame = switchIFrame;
         }
+
+        
 
         public string GetContractNumber(string columnName, bool waitForLoading = true)
         {
@@ -87,14 +107,29 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             return valueArray;
         }
 
+
+        public StandardReports ClickButtonReportHeader(ref By currentIFrame, string idButton, bool waitForLoading = true)
+        {
+            var node = StepNode();
+            node.Info($"Click {idButton} Tab");
+            if (waitForLoading)
+                WaitForLoading(_reportHeaderButton(idButton));
+            ReportHeaderButton(idButton).Click();
+            return this;
+        }
+
         public StandardReports ClickBackButton(ref By currentIframe, bool waitLoadingPanel = true)
         {
+            var node = StepNode();
+            node.Info($"Click Back Button");
+
             BackButton.Click();
             if (waitLoadingPanel)
                 WaitForLoading(_loadingPanel);
             SwitchToFrame(ref currentIframe, null);
             return this;
         }
+   
 
         public GenerateHyperlinkDialog ClickGenerateHyperlink()
         {
@@ -119,8 +154,8 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             node.Info($"Click {fieldLabel} Radio button under Run Report in Report Header");
             SwitchToFrame(ref currentIframe, null);
             if (waitLoadingPanel)
-                WaitForLoading(_radioButton(fieldLabel));
-            RadioButton(fieldLabel).Click();
+                WaitForLoading(_radioButtonReportHeader(fieldLabel));
+            RadioButtonReportHeader(fieldLabel).Click();
             return this;
         }
 
@@ -147,6 +182,25 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             return this;
         }
 
+        public StandardReports ClickYesFavoritePopup(ref By currentIframe, bool waitForLoading = true) {
+            var node = StepNode();
+            node.Info("Click Yes in Favorite Report Popup ");
+            if (waitForLoading)
+                WaitForLoading(_yesButtonInFavReport);
+            YesButtonInFavReport.Click();
+            return this;
+        }
+
+        public StandardReports clickOkFavoritePopup( ref By currentIframe) {
+            var node = StepNode();
+            node.Info("Click OK in Favorite Report Access Popup");
+            OkButtonInFavReport.Click();
+            SwitchToFrame(ref currentIframe, null);
+            return this;
+
+        }
+
+
         public StandardReports ClickSearchButton(ref By currentIframe, bool reportNow = true, bool waitLoadingPanel = true)
         {
             if (reportNow)
@@ -164,6 +218,16 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
                 SearchButton.Click();
                 SwitchToFrame(ref currentIframe, null);
             }
+            return this;
+        }
+
+        public StandardReports SelectFavoriteReport(ref By currentIframe, string nameFav, bool waitForLoading = true) {
+            var node = StepNode();
+            node.Info($"Select {nameFav} radio button");
+            SwitchToFrame(ref currentIframe, favoriteReportIframe);
+            if (waitForLoading)
+                WaitForLoading(_favReport(nameFav));
+            FavReport(nameFav).Click();
             return this;
         }
 
@@ -271,7 +335,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             node.Info(Validation.Radio_Button_Is_Depressed);
             try
             {
-                if (RadioButton(radioButtonName).Selected)
+                if (RadioButtonReportHeader(radioButtonName).Selected)
                     return SetPassValidation(node, Validation.Radio_Button_Is_Depressed);
                 return SetFailValidation(node, Validation.Radio_Button_Is_Depressed);
             }
@@ -377,6 +441,124 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             }
         }
 
+        public KeyValuePair<string, bool> ValidateCloseDialog(bool close = false)
+        {
+            var node = StepNode();
+            node.Info(Validation.Dialog_Box_Is_Closed);
+            try
+            {
+                if (close == true)
+                {
+                    if (FindElement(_saveItemPopUp) == null)
+                        return SetPassValidation(node, Validation.Dialog_Box_Is_Closed);
+
+                    return SetFailValidation(node, Validation.Dialog_Box_Is_Closed);
+                }
+
+                if (StableFindElement(_saveItemPopUp) != null)
+                    return SetPassValidation(node, Validation.Dialog_Box_Is_Closed);
+
+                return SetFailValidation(node, Validation.Dialog_Box_Is_Closed);
+            }
+            catch (Exception e)
+            {
+                if (close == true)
+                    return SetFailValidation(node, Validation.Dialog_Box_Is_Closed);
+
+                return SetErrorValidation(node, Validation.Dialog_Box_Is_Closed, e);
+            }
+        }
+
+        public KeyValuePair<string, bool> ValidateOpenDialog(bool close = false) {
+            var node = StepNode();
+            node.Info(Validation.Dialog_Box_Is_Opend);
+
+            try
+            {
+                if (close == true)
+                {
+                    if (FindElement(_favoriteReportPopUp) == null)
+                        return SetPassValidation(node, Validation.Dialog_Box_Is_Closed);
+
+                    return SetFailValidation(node, Validation.Dialog_Box_Is_Closed);
+                }
+
+                if (StableFindElement(_favoriteReportPopUp) != null)
+                    return SetPassValidation(node, Validation.Dialog_Box_Is_Closed);
+
+                return SetFailValidation(node, Validation.Dialog_Box_Is_Closed);
+            }
+            catch (Exception e)
+            {
+                if (close == true)
+                    return SetFailValidation(node, Validation.Dialog_Box_Is_Closed);
+
+                return SetErrorValidation(node, Validation.Dialog_Box_Is_Closed, e);
+            }
+        }
+
+        public KeyValuePair<string, bool> ValidateUserIsAbleToFavoriteReport(string[] favoriteName)
+        {
+            var node = StepNode();
+            node.Info(Validation.User_Is_Able_To_Favorite_Report);
+            try
+            {
+                if(FavReport(favoriteName[0]).Text != null && FavReport(favoriteName[1]).Text != null && FavReport(favoriteName[2]).Text != null)
+                    return SetPassValidation(node, Validation.User_Is_Able_To_Favorite_Report);
+                return SetFailValidation(node, Validation.User_Is_Able_To_Favorite_Report);
+            }
+            catch (Exception e)
+            {
+                return SetErrorValidation(node, Validation.User_Is_Able_To_Favorite_Report, e);
+            }
+        }
+
+
+        public KeyValuePair<string, bool> ValidateOpenDialogWithMessageCorrectly(string expectedValue, bool close = false) {
+            var node = StepNode();
+            node.Info(Validation.Dialog_Box_Is_Opened_With_Message_Display_Correctly);
+            try
+            {
+                var actualValue = ReportMsg.Text;
+                if (close == true)
+                {
+                    if (FindElement(_saveItemPopUp) == null)
+                        return SetPassValidation(node, Validation.Dialog_Box_Is_Closed);
+
+                    return SetFailValidation(node, Validation.Dialog_Box_Is_Closed);
+                }
+
+                if (StableFindElement(_saveItemPopUp) != null) {
+                    if (actualValue.Contains(expectedValue))
+                        return SetPassValidation(node, Validation.Dialog_Box_Is_Opened_With_Message_Display_Correctly);
+                    return SetPassValidation(node, Validation.Dialog_Box_Is_Closed);
+                }
+                return SetFailValidation(node, Validation.Dialog_Box_Is_Closed);
+            }
+            catch (Exception e)
+            {
+                return SetErrorValidation(node, Validation.Dialog_Box_Is_Opened_With_Message_Display_Correctly, e);
+            }
+        }
+
+        public KeyValuePair<string, bool> ValidateFavoritedForUserOnly(string[] favoriteName){
+            var node = StepNode();
+            node.Info(Validation.Dialog_Box_Is_Opened_With_Message_Display_Correctly);
+
+            try
+            {
+                if (RadioButtonFavReport(favoriteName[0]).Selected && !RadioButtonFavReport(favoriteName[1]).Selected && !RadioButtonFavReport(favoriteName[2]).Selected) {
+                    return SetPassValidation(node, Validation.Report_Is_Favorited_For_User_Only);
+                }
+                return SetFailValidation(node, Validation.Report_Is_Favorited_For_User_Only);
+                
+            }
+            catch (Exception e)
+            {
+                return SetErrorValidation(node, Validation.Report_Is_Favorited_For_User_Only, e);
+            }
+        }
+
         private static class Validation
         {
             public static string Available_Reports_Display = "Validate that all available reports display";
@@ -386,6 +568,11 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             public static string Message_Reports_Display_Correctly = "Validate that message displays correctly";
             public static string Radio_Button_Is_Depressed = "Validate that radio button is depressed";
             public static string Contact_List_Is_Auto_Populated = "Vatlidate that contact list auto populated";
+            public static string Dialog_Box_Is_Closed = "Validate that dialog Box is closed";
+            public static string Dialog_Box_Is_Opend = "Validate that dialog box is opend";
+            public static string User_Is_Able_To_Favorite_Report = "Validate that User is able to favorite report ";
+            public static string Dialog_Box_Is_Opened_With_Message_Display_Correctly = "Validate that dialog dialog box is opend with displays message correctly";
+            public static string Report_Is_Favorited_For_User_Only = "Validate that Report is favorited for user only";
         }
         #endregion
     }
