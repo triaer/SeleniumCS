@@ -13,13 +13,14 @@ namespace KiewitTeamBinder.UI.Pages.DashboardModule
     {
         #region Entities
         private static string _widgetLabelXpath = "//span[@class='Title' and text()='{0}']";
-        private static string _widgetBlockXpath = _widgetLabelXpath + "/ancestor::div[contains(@class, 'RadDock_Classic')]";
 
-        private static By _moreLessButton(string widgetName) => By.XPath(string.Format(_widgetBlockXpath + "//a[contains(@id,'More')]", widgetName));
-        private static By _rowInWidget(string widgetName, string rowName) => By.XPath(string.Format(_widgetBlockXpath + "//td[contains(@id,'tdCaption')][span = '{1}']", widgetName, rowName));
+        private static By _moreLessButton(string widgetName) => By.XPath($"//div[@widgetuniquename = '{widgetName}']//a[contains(@id,'More')]");
+        private static By _rowInWidget(string widgetName, string rowName) => By.XPath($"//div[@widgetuniquename = '{widgetName}']//td[contains(@id,'tdCaption')][span = '{rowName}']");
+        private static By _numberOnRowInWidget(string widgetName, string rowName) => By.XPath($"//div[@widgetuniquename = '{widgetName}']//td[contains(@id,'tdCaption')][span = '{rowName}']/preceding-sibling::td[contains(@id,'tdCount')]");
 
         public IWebElement MoreLessButton(string widgetName) => StableFindElement(_moreLessButton(widgetName));
         public IWebElement RowInWidget(string widgetName, string rowName) => StableFindElement(_rowInWidget(widgetName, rowName));
+        public IWebElement NumberOnRowInWidget(string widgetName, string rowName) => StableFindElement(_numberOnRowInWidget(widgetName, rowName));
         #endregion
 
         #region Actions
@@ -38,14 +39,22 @@ namespace KiewitTeamBinder.UI.Pages.DashboardModule
         {
             var moreLessButton = MoreLessButton(widgetName);
             ScrollIntoView(moreLessButton);
-            if ((moreLessButton.Text == "More") == clickMoreButton)                            
-                moreLessButton.Click();            
+            if ((moreLessButton.Text == "More") == clickMoreButton)
+                moreLessButton.Click();
             return this;
         }
 
         private int GetCountValueFromRow(string widgetName, string rowName)
         {
             return int.Parse(RowInWidget(widgetName, rowName).GetAttribute("count"));
+        }
+
+        public T ClickNumberOnRow<T>(string widgetName, string rowName)
+        {
+            var NumberOnRow = NumberOnRowInWidget(widgetName, rowName);
+            ScrollIntoView(NumberOnRow);
+            NumberOnRow.Click();
+            return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 
         public KeyValuePair<string, bool> ValidateWidgetsOfDashboardDisplayed(string[] widgets)

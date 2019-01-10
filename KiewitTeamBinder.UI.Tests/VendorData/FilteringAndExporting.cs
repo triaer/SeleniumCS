@@ -52,6 +52,11 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateExcelItemsCount(filteringAndExportingData.GridViewName,
                                                                                                                   filteringAndExportingData.DownloadFilePath));
 
+                //when - User Story 123548 - 120790 Filtering & Exporting Vendor Data Register Validation - Part 2
+                test = LogTest("US 123548 - 120790 Filtering & Exporting Vendor Data Register Validation - Part 2");
+                Dashboard dashboard = vendorDataRegister.SelectModuleMenuItem<Dashboard>(ModuleNameInLeftNav.DASHBOARD.ToDescription());
+                dashboard.ClickNumberOnRow<VendorDataRegister>("", "");
+
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);
                 Console.WriteLine(string.Join(System.Environment.NewLine, validations.ToArray()));
