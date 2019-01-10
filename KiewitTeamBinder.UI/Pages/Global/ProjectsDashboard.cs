@@ -33,7 +33,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         private static By _subMenuItemLink(string value) => By.XPath($"//span[(text()='{value}')]");
         private static By _moduleButton(string value) => By.XPath($"//div[@id = 'div{value}']");
         private static By _subPageTable(string value) => By.XPath($"//table[@id='ctl00_cntPhMain_{value}_ctl00']");
-        private static By _itemsNumberLabel(string value) => By.XPath($"//span[contains(@id, '{value}_ctl00DSC')]");
+        private static By _itemsNumberLabel(string gridViewName) => By.XPath($"//span[contains(@id, '{gridViewName}_ctl00DSC')]");
         private static By _divSubMenu => By.XPath("//div[@id='divSubMenu']");        
         private static By _subPageHeader => By.Id("lblRegisterCaption");              
         private static By _paneTable(string gridViewName) => By.XPath($"//table[contains(@id, '{gridViewName}_ctl00_Header')]/thead");
@@ -68,7 +68,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         public IWebElement DivSubMenu { get { return StableFindElement(_divSubMenu); } }
         public IWebElement ModuleButton(string value) => StableFindElement(_moduleButton(value));
         public IWebElement SubMenuItemLink(string value) => StableFindElement(_subMenuItemLink(value));
-        public IWebElement ItemsNumberLabel(string value) => StableFindElement(_itemsNumberLabel(value));
+        public IWebElement ItemsNumberLabel(string gridViewName) => StableFindElement(_itemsNumberLabel(gridViewName));
         public IWebElement SubPageTable(string value) => StableFindElement(_subPageTable(value));
         public IWebElement PaneTable(string gridViewName) => StableFindElement(_paneTable(gridViewName));
         public IReadOnlyCollection<IWebElement> VisibleRows(string gridViewName) => StableFindElements(_visibleRows(gridViewName));
@@ -353,13 +353,38 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 return SetFailValidation(node, Validation.Progress_Message_Is_Displayed, message, actual);
         }
 
+        public KeyValuePair<string, bool> ValidateExcelItemsCount(string gridViewName, string excelFilePath, string sheetName = "")
+        {
+            var node = StepNode();
+            try
+            {
+                int actual = int.Parse(ItemsNumberLabel(gridViewName).Text);
+                int expected = ExcelUtils.GetNumberOfRows(excelFilePath, sheetName);
+                if (actual == expected)
+                    return SetPassValidation(node, Validation.Excel_Items_Count);
+                else
+                    return SetFailValidation(node, Validation.Excel_Items_Count, expected.ToString(), actual.ToString());
+            }
+            catch (Exception e)
+            {
+                return SetErrorValidation(node, Validation.Excel_Items_Count, e);
+            }
+        }
+
         public KeyValuePair<string, bool> ValidateRegisterViewIsCorrect(string expectedView)
         {
             var node = StepNode();
-            if (RegisterViewCheckbox(expectedView).Displayed)
-                return SetPassValidation(node, Validation.Register_View_Is_Correct);
-            else
-                return SetFailValidation(node, Validation.Register_View_Is_Correct);
+            try
+            {
+                if (RegisterViewCheckbox(expectedView).Displayed)
+                    return SetPassValidation(node, Validation.Register_View_Is_Correct);
+                else
+                    return SetFailValidation(node, Validation.Register_View_Is_Correct);
+            }
+            catch (Exception e)
+            {
+                return SetErrorValidation(node, Validation.Register_View_Is_Correct, e);
+            }
         }
 
         public KeyValuePair<string, bool> ValidateRecordsMatchingFilterAreReturned(string gridViewName, List<KeyValuePair<string, string>> ValueInColumn, int expectedNumberOfRecord)
@@ -632,7 +657,8 @@ namespace KiewitTeamBinder.UI.Pages.Global
             public static string Records_Matching_Filter_Are_Returned = "Validate that the records matching filter are returned: ";
             public static string Value_In_Column_Is_Correct = "Validate that the value in column is correct: ";
             public static string Filtered_Records_Are_Cleared = "Validate that the filtered records are cleared, and return the total records before filtering: ";
-            public static string Register_View_Is_Correct = "Validate that the register view is correct";
+            public static string Register_View_Is_Correct = "Validate that the register view is correct"; 
+            public static string Excel_Items_Count = "Validate that the excel items count matches the items count on the Web";
         }
         #endregion
     }

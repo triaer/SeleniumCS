@@ -41,16 +41,16 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
 
                 projectDashBoard.SelectModuleMenuItem<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription(), waitForLoading: false);
                 VendorDataRegister vendorDataRegister = projectDashBoard.SelectModuleMenuItem<VendorDataRegister>(subMenuItem: ModuleSubMenuInLeftNav.VENDODATAREGISTER.ToDescription());
-                vendorDataRegister.LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateDisplayedViewFilterOption(filteringAndExportingData.DefaultFilterAtVendorDataRegisterPane))
-                    //.ClickHeaderButton<VendorDataRegister>(MainPaneTableHeaderButton.More, false)
-                    //.HoverHeaderDropdownItem<VendorDataRegister>(MainPaneHeaderDropdownItem.RegisterView)
-                    //.LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateRegisterViewIsCorrect(filteringAndExportingData.RegisterView))
-                    //.LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateRecordItemsCount(filteringAndExportingData.GridViewVendorDataRegisterName))
-                    //.ClickHeaderButton<VendorDataRegister>(MainPaneTableHeaderButton.Export, false)
-                    //.ClickHeaderDropdownItem<VendorDataRegister>(MainPaneHeaderDropdownItem.Contracts, false)
-                    //.DownloadFile<VendorDataRegister>(filteringAndExportingData.DownloadFilePath)
-                    //.OpenExcelFile(filteringAndExportingData.DownloadFilePath);
-                    .OpenExcelFile("Contracts_20190109055702.xlsx");
+                vendorDataRegister.LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateDisplayedViewFilterOption(filteringAndExportingData.DefaultFilter))
+                   .ClickHeaderButton<VendorDataRegister>(MainPaneTableHeaderButton.More, false)
+                   .HoverHeaderDropdownItem<VendorDataRegister>(MainPaneHeaderDropdownItem.RegisterView)
+                   .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateRegisterViewIsCorrect(filteringAndExportingData.RegisterView))
+                   .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateRecordItemsCount(filteringAndExportingData.GridViewName))
+                   .ClickHeaderButton<VendorDataRegister>(MainPaneTableHeaderButton.Export, false)
+                   .ClickHeaderDropdownItem<VendorDataRegister>(MainPaneHeaderDropdownItem.Contracts, false)
+                   .DownloadFile<VendorDataRegister>(filteringAndExportingData.DownloadFilePath)
+                   .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateExcelItemsCount(filteringAndExportingData.GridViewName,
+                                                                                                                  filteringAndExportingData.DownloadFilePath));
 
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);

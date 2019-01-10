@@ -9,7 +9,7 @@ namespace KiewitTeamBinder.Common.Helper
 {
     public static class ExcelUtils
     {
-        public static void CopyDataFromExcelFileToExcelFile(string excelFileContainPath, string excelFileToBeCopiedPath, string excelFileContainSheetName, string excelFileToBeCopiedSheetName, int rowToBeCopied, int rowContain)
+        public static void CopyDataFromFileToFile(string excelFileContainPath, string excelFileToBeCopiedPath, string excelFileContainSheetName, string excelFileToBeCopiedSheetName, int rowToBeCopied, int rowContain)
         {
             var excelDriver1 = ExcelInterop.ExcelDriver.getExcelHelper(excelFileToBeCopiedPath);
             excelDriver1.Open(excelFileToBeCopiedPath, excelFileToBeCopiedSheetName);
@@ -25,7 +25,7 @@ namespace KiewitTeamBinder.Common.Helper
             excelDriver2.Close();
         }
 
-        public static void EditCellValueInExcelFile(string filePath, string sheetName, string cellValueBeforeEdit, string cellValueAfterEdit)
+        public static void EditCellValueInFile(string filePath, string sheetName, string cellValueBeforeEdit, string cellValueAfterEdit)
         {
             var excelDriver = ExcelInterop.ExcelDriver.getExcelHelper(filePath);
             excelDriver.Open(filePath, sheetName);
@@ -34,30 +34,20 @@ namespace KiewitTeamBinder.Common.Helper
             excelDriver.Close();
         }
 
-        public static void OpenExcelFiletoView(string filePath, string sheetName, int timeout)
+        public static void OpenFiletoView(string filePath, string sheetName, int timeout)
         {
             var excelDriver = ExcelInterop.ExcelDriver.getExcelHelper(filePath);
             excelDriver.OpenExcelfileToView(filePath, sheetName, timeout);
             excelDriver.Close();
-        }
-
-        public static void OpenExcelFile(string filePath, string sheetName)
-        {
-            var excelDriver = ExcelInterop.ExcelDriver.getExcelHelper(filePath);
-            excelDriver.Open(filePath, sheetName);
-        }
-
-        public static void CloseExcelFile(string filePath)
-        {
-            var excelDriver = ExcelInterop.ExcelDriver.getExcelHelper(filePath);
-            excelDriver.Close();
-        }
+        }               
 
         public static int GetNumberOfRows(string filePath, string sheetName)
         {
             var excelDriver = ExcelInterop.ExcelDriver.getExcelHelper(filePath);
             excelDriver.Open(filePath, sheetName);
-            return excelDriver.GetExcelTotalRows();
+            int numberOfRows = excelDriver.GetExcelTotalRows();
+            excelDriver.Close();
+            return numberOfRows;
         }
     }
 }
