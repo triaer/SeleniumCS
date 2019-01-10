@@ -18,7 +18,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
     {
         #region Entities
         private string _functionButton = "//li[@class='rtbItem rtbBtn'][a='{0}']";
-        private string _filterTextBoxXpath = "//tr[@class='rgFilterRow']/td[count(//tr/th[.='{0}']/preceding-sibling::th)+1]";
+        //private string _filterTextBoxXpath = "//tr[@class='rgFilterRow']/td[count(//tr/th[.='{0}']/preceding-sibling::th)+1]";
         private string _checkboxInFirstColAtRow = ".//tbody/tr[{0}]/td[1]/input";
         private static By _holdingAreaLabel => By.Id("lblRegisterCaption");
         private static By _documentNoTextBox => By.XPath("//input[contains(@id,'FilterTextBox_GridColDocumentNo')]");
@@ -26,12 +26,17 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
         private static By _holdingAreaGridData => By.XPath("//div[contains(@id,'_GridViewHoldingArea_GridData')]");
         private static By _infoPagerInHoldingAreaGrid => By.XPath("//table[contains(@id,'GridViewHoldingArea')]//div[contains(@class,'rgInfoPart')]//span[contains(@id,'DSC')]");
         private static By _documentRowsVisiableOnGrid => By.XPath(".//tbody/tr[not(@class='rgNoRecords')][contains(@style,'visible')]");
+        private static By _gridViewData(string gridViewName) => By.XPath($"//div[contains(@id, '{gridViewName}')]/table");
+        private static By _holdingAreaGridView => By.XPath("//table[@id = 'ctl00_cntPhMain_GridViewHoldingArea_ctl00']/tbody");
+        private static By _rowItem(int index) => By.XPath($"//table[@id = 'ctl00_cntPhMain_GridViewHoldingArea_ctl00']/tbody/tr[{index}]");
 
         public IWebElement HoldingAreaLabel { get { return StableFindElement(_holdingAreaLabel); } }
         public IWebElement DocumentNoTextBox { get { return StableFindElement(_documentNoTextBox); } }
         public IWebElement HoldingAreaRadGrid { get { return StableFindElement(_holdingAreaRadGrid); } }
         public IWebElement HoldingAreaGridData { get { return StableFindElement(_holdingAreaGridData); } }
         public IWebElement InfoPagerInHoldingAreaGrid { get { return StableFindElement(_infoPagerInHoldingAreaGrid); } }
+        public IWebElement HoldingAreaGridView { get { return StableFindElement(_holdingAreaGridView); } }
+        public IWebElement RowItem(int index)  { return StableFindElement(_rowItem(index)); } 
         #endregion
 
         #region Actions
@@ -118,23 +123,17 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             return this;
         }
 
-        public T PressEnterKey<T>()
+        public T PressEnterKey<T>(string gridViewName)
         {
             SendKeys.SendWait(@"{Enter}");
+            WaitForElement(_gridViewData(gridViewName));
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 
-        public IWebElement FindDocumentByDocumentNo(string documentNo)
+        public T OpenDocumentByIndex<T>(int index, out string currentWindow)
         {
-            int rowIndex, colIndex;
-            GetTableCellValueIndex(HoldingAreaRadGrid, documentNo, out rowIndex, out colIndex);
-            return TableCell(HoldingAreaRadGrid, rowIndex, colIndex);
-        }
-
-        public T OpenDocumentByDocumentNo<T>(string documentNo, out string currentWindow)
-        {
-            currentWindow = WebDriver.CurrentWindowHandle;
-            FindDocumentByDocumentNo(documentNo).DoubleClick();
+            var node = StepNode();
+            SwitchToNewPopUpWindow(RowItem(index), out currentWindow, false, true);
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
         
@@ -217,7 +216,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
                 return SetErrorValidation(node, Validation.Document_Row_Is_Highlighted, e);
             }
         }
-        
+
         private static class Validation
         {
             public static string Holding_Area_Page_Displays = "Validate that the Vendor Data Module Holding Area page displays";

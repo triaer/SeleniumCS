@@ -59,13 +59,14 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 //User Story 120278 - 120081 - Upload Unrestrained Document Part 2
                 var columnValuesInConditionList = new List<KeyValuePair<string, string>> { uploadUnrestrainedDocData.ColumnValuesInConditionList.DocumentNo };
                 var columnValuePairList = uploadUnrestrainedDocData.ExpectedDocumentInforInColumnList(uploadUnrestrainedDocData.SingleDocInformation);
+                string[] selectedDocuments = new string[uploadUnrestrainedDocData.NumberOfSelectedDocumentRow];
                 holdingArea.SwitchToWindow(currentWindow);
                 holdingArea.SelectModuleMenuItem<HoldingArea>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription(), subMenuItem: ModuleSubMenuInLeftNav.HOLDINGAREA.ToDescription())
                            .EnterDocumentNo(uploadUnrestrainedDocData.SingleDocInformation.DocumentNo)
-                           .PressEnterKey<HoldingArea>()
-                           .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateFilteredRecordsAreCleared(uploadUnrestrainedDocData.GridViewHoldingAreaName, expectedNumberOfClearRecord: 1))
+                           .PressEnterKey<HoldingArea>(uploadUnrestrainedDocData.GridViewHoldingAreaData)
+                           .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateRecordsMatchingFilterAreReturned(uploadUnrestrainedDocData.GridViewHoldingAreaName, columnValuesInConditionList, 1))
                            .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateItemsAreShown(columnValuesInConditionList, uploadUnrestrainedDocData.GridViewHoldingAreaName))
-                           .OpenDocumentByDocumentNo<DocumentDetail>(uploadUnrestrainedDocData.SingleDocInformation.DocumentNo, out currentWindow);
+                           .OpenDocumentByIndex<DocumentDetail>(1, out currentWindow);
                 newDocument.LogValidation<DocumentDetail>(ref validations, newDocument.ValidateWindowIsOpened(uploadUnrestrainedDocData.DocumentDetailWindow(uploadUnrestrainedDocData.SingleDocInformation)))
                            .LogValidation<DocumentDetail>(ref validations, newDocument.ValidateDocumentDetailsDisplayCorrect(columnValuePairList))
                            .ClickToolbarButton<HoldingArea>(ToolbarButton.Close)
@@ -75,8 +76,22 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 NewTransmittal newTransmittal = holdingArea.ClickCreateTransmittalsButton();
                 newTransmittal.LogValidation<NewTransmittal>(ref validations, newTransmittal.ValidateWindowIsOpened(uploadUnrestrainedDocData.VendorDocumentSubmissionWindow));
                 SelectRecipientsDialog selectRecipientsDialog = newTransmittal.ClickRecipientsButton(uploadUnrestrainedDocData.ToButton);
-                selectRecipientsDialog.LogValidation<SelectRecipientsDialog>(ref validations, selectRecipientsDialog.ValidateSelectRecipientWindowOpened())
-                                      .SelectCompany(uploadUnrestrainedDocData.KiewitUser.CompanyName);
+                selectRecipientsDialog.LogValidation<SelectRecipientsDialog>(ref validations, selectRecipientsDialog.ValidateSelectRecipientWindowStatus())
+                                      .SelectCompany(uploadUnrestrainedDocData.CompanyName)
+                                      .LogValidation<SelectRecipientsDialog>(ref validations, selectRecipientsDialog.ValidateListItemUserInLeftGrid(uploadUnrestrainedDocData.ListUser))
+                                      .AddUserToTheTable(uploadUnrestrainedDocData.toTableTo, uploadUnrestrainedDocData.ListUserTo)
+                                      .LogValidation<SelectRecipientsDialog>(ref validations, selectRecipientsDialog.ValidateUserIsAddedToTheTable(uploadUnrestrainedDocData.toTableTo, uploadUnrestrainedDocData.CompanyName,uploadUnrestrainedDocData.ListUserTo))
+                                      .LogValidation<SelectRecipientsDialog>(ref validations, selectRecipientsDialog.ValidateUserIsHighlightedInTheTable(uploadUnrestrainedDocData.toTableTo, uploadUnrestrainedDocData.CompanyName, uploadUnrestrainedDocData.ListUserTo))
+                                      .LogValidation<SelectRecipientsDialog>(ref validations, selectRecipientsDialog.ValidateUserIsRetainedCheckMarkInTheTable(uploadUnrestrainedDocData.toTableTo, uploadUnrestrainedDocData.CompanyName, uploadUnrestrainedDocData.ListUserTo))
+                                      .AddUserToTheTable(uploadUnrestrainedDocData.toTableCc, uploadUnrestrainedDocData.ListUserCc)
+                                      .LogValidation<SelectRecipientsDialog>(ref validations, selectRecipientsDialog.ValidateUserIsAddedToTheTable(uploadUnrestrainedDocData.toTableCc, uploadUnrestrainedDocData.CompanyName, uploadUnrestrainedDocData.ListUserCc))
+                                      .ClickOkButton<NewTransmittal>();
+                newTransmittal.LogValidation<NewTransmittal>(ref validations, selectRecipientsDialog.ValidateSelectRecipientWindowStatus(closed: true))
+                              .LogValidation<NewTransmittal>(ref validations, newTransmittal.ValidateSelectedUsersPopulateInTheToField(uploadUnrestrainedDocData.ListUserTo.ToArray()))
+                              .EnterSubject(uploadUnrestrainedDocData.Subject)
+                              .EnterMessage(uploadUnrestrainedDocData.Message);
+                TransmittalDetail transmittalDetail = newTransmittal.ClickSendButton(ref methodValidations);
+                transmittalDetail.LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateAttachedDocumentsAreDisplayed(selectedDocuments));
 
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);

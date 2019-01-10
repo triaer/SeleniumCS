@@ -32,26 +32,29 @@ namespace KiewitTeamBinder.Common.TestData
         };
         //User Story 120278 - 120081 - Upload Unrestrained Document Part 2
         public string GridViewHoldingAreaName = "GridViewHoldingArea";
-        public int NumberOfSelectedDocumentRow = 1;
+        public string GridViewHoldingAreaData = "_GridViewHoldingArea_GridData";
+        public int NumberOfSelectedDocumentRow = 1;    
         public string DocumentDetailWindow(SingleDocumentInfo SingleDocInformation)
         {
-            return "AUTO1 - " + SingleDocInformation.DocumentNo + " - "
-                                    + SingleDocInformation.RevStatus.Split('-')[0].Trim() + " - "
-                                    + SingleDocInformation.Status.Split('-')[0].Trim();
+            return "AUTO1 - " + SingleDocInformation.DocumentNo.ToUpper() + " - "
+                                    + SingleDocInformation.RevStatus.Split('-')[0].Trim().ToUpper() + " - "
+                                    + SingleDocInformation.Status.Split('-')[0].Trim().ToUpper();
         }
-        
         public string VendorDocumentSubmissionWindow = "AUTO1 - " + "New Vendor Document Submission";
         public string ToButton = "toBtn";
-        public User KiewitUser = new User()
-        {
-            UserName = "Automation Admin1",
-            CompanyName = "Kiewit",
-            Description = "Automation Admin1 (Kiewit)"
-        };
+        public string toTableTo = "To";
+        public string toTableCc = "Cc";
+        public string CompanyName = "Kiewit";
+        public List<string> ListUser = new List<string>() { "Automation Admin1", "Automation Admin2" };
+        public List<string> ListUserTo = new List<string>() { "Automation Admin1" };
+        public List<string> ListUserCc = new List<string>() { "Automation User1" };
+        public string Subject = "Test - Upload Unrestrained Document";
+        public string Message = "This is a test - Upload Unrestrained Document";
         public ColumnValuesInCondition ColumnValuesInConditionList = new ColumnValuesInCondition();
+
         public class ColumnValuesInCondition
         {
-            public KeyValuePair<string, string> DocumentNo = new KeyValuePair<string, string>(MainPaneTableHeaderLabel.DocumentNo.ToDescription(), new SingleDocumentInfo().DocumentNo);
+            public KeyValuePair<string, string> DocumentNo = new KeyValuePair<string, string>(DocumentDetailHeader.DocumentNo.ToDescription(), new SingleDocumentInfo().DocumentNo);
         }
         public List<KeyValuePair<string, string>> ExpectedDocumentInforInColumnList(SingleDocumentInfo SingleDocInformation)
         {

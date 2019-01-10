@@ -151,9 +151,10 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             }
         }
 
-        public KeyValuePair<string, bool> ValidateSelectedUsersPopulateInTheToField(string[] selectedUsers)
+        public List<KeyValuePair<string, bool>> ValidateSelectedUsersPopulateInTheToField(string[] selectedUsers)
         {
             var node = StepNode();
+            var validation = new List<KeyValuePair<string, bool>>();
             try
             {
                 bool flag;
@@ -165,16 +166,17 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
                         if (selectedUsers[i] == selectedUser.Text)
                             flag = true;
                     }
-                    if (flag == false)                    
-                        return SetFailValidation(node, Validation.Selected_Users_Populate_In_The_To_Field);
+                    if (flag == false)
+                        validation.Add(SetFailValidation(node, Validation.Selected_Users_Populate_In_The_To_Field));
                     
                 }
-                return SetPassValidation(node, Validation.Selected_Users_Populate_In_The_To_Field);
-
+                validation.Add(SetPassValidation(node, Validation.Selected_Users_Populate_In_The_To_Field));
+                return validation;
             }
             catch (Exception e)
             {
-                return SetErrorValidation(node, Validation.Selected_Users_Populate_In_The_To_Field, e);
+                validation.Add(SetErrorValidation(node, Validation.Selected_Users_Populate_In_The_To_Field, e));
+                return validation;
             }
         }
 

@@ -525,7 +525,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 if (WebDriver.Title == windowName)
                     return SetPassValidation(node, string.Format(Validation.Window_Is_Opened, windowName));
                 else
-                    return SetFailValidation(node, string.Format(Validation.Window_Is_Opened, windowName));
+                    return SetFailValidation(node, string.Format(Validation.Window_Is_Opened, windowName, WebDriver.Title));
             }
             catch (Exception e)
             {
