@@ -13,19 +13,30 @@ namespace KiewitTeamBinder.UI.Pages.DashboardModule
     {
         #region Entities
         private static string _widgetLabelXpath = "//span[@class='Title' and text()='{0}']";
-        private static string _widgetBlockXpath = _widgetLabelXpath + "/ancestor::div[contains(@class, 'RadDock_Classic')]";
 
-        private static By _moreLessButton(string widgetName) => By.XPath(string.Format(_widgetBlockXpath + "//a[contains(@id,'More')]", widgetName));
-        private static By _rowInWidget(string widgetName, string rowName) => By.XPath(string.Format(_widgetBlockXpath + "//td[contains(@id,'tdCaption')][span = '{1}']", widgetName, rowName));
+        private static By _moreLessButton(string widgetUniqueName) => By.XPath($"//div[@widgetuniquename = '{widgetUniqueName}']//a[contains(@id,'More')]");
+        private static By _rowInWidget(string widgetUniqueName, string rowName) => By.XPath($"//div[@widgetuniquename = '{widgetUniqueName}']//td[contains(@id,'tdCaption')][span = '{rowName}']");
+        private static By _numberOnRowInWidget(string widgetUniqueName, string rowName) => By.XPath($"//div[@widgetuniquename = '{widgetUniqueName}']//td[contains(@id,'tdCaption')][span = '{rowName}']/preceding-sibling::td[contains(@id,'tdCount')]");
+        private static By _tableStateInWidget(string widgetUniqueName) => By.XPath($"//div[@widgetuniquename = '{widgetUniqueName}']//table[contains(@id,'tblStat')]");
 
         public IWebElement MoreLessButton(string widgetName) => StableFindElement(_moreLessButton(widgetName));
         public IWebElement RowInWidget(string widgetName, string rowName) => StableFindElement(_rowInWidget(widgetName, rowName));
+        public IWebElement NumberOnRowInWidget(string widgetName, string rowName) => StableFindElement(_numberOnRowInWidget(widgetName, rowName));
+        public IWebElement TableStateInWidget(string widgetName) => StableFindElement(_tableStateInWidget(widgetName));
         #endregion
 
         #region Actions
         public Dashboard(IWebDriver webDriver) : base(webDriver)
         {
 
+        }
+
+        public T ClickNumberOnRow<T>(string widgetName, string rowName)
+        {
+            var NumberOnRow = NumberOnRowInWidget(widgetName, rowName);
+            ScrollIntoView(NumberOnRow);
+            NumberOnRow.Click();
+            return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 
         /// <summary>
@@ -37,14 +48,14 @@ namespace KiewitTeamBinder.UI.Pages.DashboardModule
         public Dashboard ClickMoreOrLessButton(string widgetName, bool clickMoreButton)
         {
             var moreLessButton = MoreLessButton(widgetName);
-            ScrollIntoView(moreLessButton);
+            ScrollIntoView(TableStateInWidget(widgetName));
             if ((moreLessButton.Text == "More") == clickMoreButton)
             {
+                var currentRows = TableStateInWidget(widgetName).StableFindElements(By.TagName("tr")).Count;
                 moreLessButton.Click();
                 WaitUntil(driver => MoreLessButton(widgetName).Text == "Less");
+                WaitUntil(driver => TableStateInWidget(widgetName).StableFindElements(By.TagName("tr")).Count > currentRows);
             }
-                
-            
             return this;
         }
 

@@ -60,7 +60,8 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             node.Info("Click New button in Holding Area Header");
             IWebElement FunctionButton = StableFindElement(By.XPath(string.Format(_functionButton, "New")));
             SwitchToNewPopUpWindow(FunctionButton, out currentWindow, false);
-            WaitForElementDisplay(By.Id("walkme-player"));
+            WaitForJQueryLoad();
+            WaitForElementDisplay(_walkMe);
             return new DocumentDetail(WebDriver);
         }
         public ProcessDocuments ClickProcessDocumentButton(string nameButton, out string currentWindow)

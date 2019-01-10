@@ -11,7 +11,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
 {
     public class ProcessDocumentSmoke
     {
-        public string ProjectName = "Automation Project 1";
+        public string ProjectName = "Automation Project 2";
         public string DefaultFilterAtHoldingAreaPane = "New Documents";
         public string GridViewHoldingAreaName = "GridViewHoldingArea"; 
         public string GridViewDocumentName = "GridViewDocReg";

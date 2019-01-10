@@ -102,12 +102,12 @@ namespace KiewitTeamBinder.UI.Tests.Transmittals
                 newDocument.EnterDocumentInformation(processDocumentData.SingleDocInformation, ref methodValidations)
                            .ClickSaveInToolbarHeader()
                            .ClickOKOnMessageDialog<DocumentDetail>()
-                           .ClickToolbarButtonOnWinPopup<HoldingArea>(ToolbarButton.Close)
-                           .SwitchToWindow(currentWindow);
+                           .ClickCloseButtonOnPopUp<HoldingArea>();
 
                 //User Story 120013 - Process Document
+                test = LogTest("Process Document");
                 var columnValuesInConditionList = new List<KeyValuePair<string, string>> { processDocumentData.ColumnValuesInConditionList.DocumentNo };
-
+                projectDashBoard.SelectModuleMenuItemOnLeftNav<HoldingArea>(subMenuItem: ModuleSubMenuInLeftNav.HOLDINGAREA.ToDescription());
                 holdingArea.LogValidation<HoldingArea>(ref validations, holdingArea.ValidateDisplayedViewFilterOption(processDocumentData.DefaultFilterAtHoldingAreaPane))
                            .FilterDocumentsByGridFilterRow < HoldingArea >(processDocumentData.GridViewHoldingAreaName, MainPaneTableHeaderLabel.DocumentNo.ToDescription(), processDocumentData.SingleDocInformation.DocumentNo)
                            .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateRecordItemsCount(processDocumentData.GridViewHoldingAreaName))

@@ -16,23 +16,23 @@ namespace KiewitTeamBinder.Common.TestData
         {
             public string[] AllWidgitsInDashboardSection =
                 {
-                    DashboardWidgit.MAIL.ToDescription(),
-                    DashboardWidgit.DOCUMENTS.ToDescription(),
-                    DashboardWidgit.UNREGISTEREDMAIL.ToDescription(),
-                    DashboardWidgit.WORKFLOW.ToDescription(),
-                    DashboardWidgit.PACKAGES.ToDescription(),
-                    DashboardWidgit.TRANSMITTALS.ToDescription(),
-                    DashboardWidgit.TASKS.ToDescription(),
-                    DashboardWidgit.MYSTATISTICS.ToDescription(),
-                    DashboardWidgit.CONTRACTORVIEW.ToDescription(),
-                    DashboardWidgit.FORMS.ToDescription(),
-                    DashboardWidgit.GALLERY.ToDescription(),
-                    DashboardWidgit.SUBMISSIONVIEW.ToDescription(),
-                    DashboardWidgit.PROJECTANNOUNCEMENTS.ToDescription(),
-                    DashboardWidgit.PROJECTDESCRIPTION.ToDescription(),
-                    DashboardWidgit.USEFULCONTACTS.ToDescription(),
-                    DashboardWidgit.RESPONSESOUTSTANDING.ToDescription(),
-                    DashboardWidgit.DOCMUENTBARCHART.ToDescription()
+                    DashboardWidgetLabel.MAIL.ToDescription(),
+                    DashboardWidgetLabel.DOCUMENTS.ToDescription(),
+                    DashboardWidgetLabel.UNREGISTEREDMAIL.ToDescription(),
+                    DashboardWidgetLabel.WORKFLOW.ToDescription(),
+                    DashboardWidgetLabel.PACKAGES.ToDescription(),
+                    DashboardWidgetLabel.TRANSMITTALS.ToDescription(),
+                    DashboardWidgetLabel.TASKS.ToDescription(),
+                    DashboardWidgetLabel.MYSTATISTICS.ToDescription(),
+                    DashboardWidgetLabel.CONTRACTORVIEW.ToDescription(),
+                    DashboardWidgetLabel.FORMS.ToDescription(),
+                    DashboardWidgetLabel.GALLERY.ToDescription(),
+                    DashboardWidgetLabel.SUBMISSIONVIEW.ToDescription(),
+                    DashboardWidgetLabel.PROJECTANNOUNCEMENTS.ToDescription(),
+                    DashboardWidgetLabel.PROJECTDESCRIPTION.ToDescription(),
+                    DashboardWidgetLabel.USEFULCONTACTS.ToDescription(),
+                    DashboardWidgetLabel.RESPONSESOUTSTANDING.ToDescription(),
+                    DashboardWidgetLabel.DOCMUENTBARCHART.ToDescription()
                 };
         }
 

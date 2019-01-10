@@ -98,6 +98,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
         {
             ClickToolbarButtonOnWinPopup<T>(ToolbarButton.Close);
             WebDriver.SwitchTo().Window(WebDriver.WindowHandles.Last());
+            WaitForJQueryLoad();
             WaitForLoadingPanel();
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
@@ -110,6 +111,11 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
                 node.Info("The Dropdown: " + idDropdown);
                 string actual;
                 int i = 0;
+                if (idDropdown.Contains("Contract Number"))
+                {
+                    ScrollIntoView(ItemDropdown(value));
+                    WaitForElementDisplay(_itemDropdown(value));
+                }
                 do
                 {
                     ScrollToElement(ItemDropdown(value));

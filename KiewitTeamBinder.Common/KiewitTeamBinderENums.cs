@@ -255,7 +255,11 @@ namespace KiewitTeamBinder.Common
             [Description("Link Items")]
             LinkItems,
             [Description("Documents")]
-            Documents
+            Documents,
+            [Description("Register View")]
+            RegisterView,
+            [Description("Contracts")]
+            Contracts
         }
 
         public enum DialogPopupButton
@@ -286,7 +290,7 @@ namespace KiewitTeamBinder.Common
             HOLDINGAREA
         }
 
-        public enum DashboardWidgit
+        public enum DashboardWidgetLabel
         {
             [Description("Mail")]
             MAIL,
@@ -384,6 +388,44 @@ namespace KiewitTeamBinder.Common
             Deliverables,
             [Description("Holding Area")]
             HoldingArea
+        }
+
+        public enum WidgetUniqueName
+        {
+            [Description("Mail")]
+            MAIL,
+            [Description("Documents")]
+            DOCUMENTS,
+            [Description("UnregisteredMail")]
+            UNREGISTEREDMAIL,
+            [Description("Workflow")]
+            WORKFLOW,
+            [Description("Packages")]
+            PACKAGES,
+            [Description("Transmittal")]
+            TRANSMITTALS,
+            [Description("Task")]
+            TASKS,
+            [Description("MyStatistic")]
+            MYSTATISTICS,
+            [Description("ContractorView")]
+            CONTRACTORVIEW,
+            [Description("Forms")]
+            FORMS,
+            [Description("Gallery")]
+            GALLERY,
+            [Description("SubmissionView")]
+            SUBMISSIONVIEW,
+            [Description("ProjectAnnouncements")]
+            PROJECTANNOUNCEMENTS,
+            [Description("ProjectDescription")]
+            PROJECTDESCRIPTION,
+            [Description("UsefulContact")]
+            USEFULCONTACTS,
+            [Description("Chart")]
+            RESPONSESOUTSTANDING,
+            [Description("DocumentChart")]
+            DOCMUENTBARCHART
         }
 
         public enum DocumentDetailHeader

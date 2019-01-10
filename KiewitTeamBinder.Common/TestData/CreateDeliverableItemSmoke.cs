@@ -32,18 +32,39 @@ namespace KiewitTeamBinder.Common.TestData
         public string GridViewAddDocName = "GridView_GridData";
         public string GridViewLinkItemsName = "LinkedDocumentsGrid_GridData";
         public string SaveMessageOnLinkItem = "Manual Links updated successfully.";
-        public DeliverableLine DeliverableInfo = new DeliverableLine
+        public Contract ContractInfo = new Contract()
         {
-            ContractNumber = "2018-12-005",
-            ItemID = "005-01",
-            LineItemNumber = Utils.GetRandomValue("LineItemNumber"),
-            Description = Utils.GetRandomValue("Description Deliverable"),
-            DeliverableType = "AR - ARCHITECTURAL (PRE-ENGINEERED METAL BUILDINGS)",
-            Criticality = "Normal",
-            Status = "OPEN - OPEN",
+            ContractNumber = Utils.GetRandomValue("CONTRACT"),
+            Description = Utils.GetRandomValue("Description Contract"),
+            VendorCompany = "Kiewit",
+            ExpeditingContract = "No",
+            Status = "STARTED - STARTED"
         };
+        public ItemPurchased PurchaseInfo(Contract ContractInfo)
+        {
+            return new ItemPurchased()
+            {
+                ContractNumber = ContractInfo.ContractNumber,
+                ItemID = Utils.GetRandomValue("ITEMID"),
+                Description = Utils.GetRandomValue("Description item content"),
+                Status = "OPEN - OPEN",
+            };
+        }
+        public DeliverableLine DeliverableInfo(ItemPurchased PurchaseInfo)
+        {
+            return new DeliverableLine()
+            {
+                ContractNumber = PurchaseInfo.ContractNumber,
+                ItemID = PurchaseInfo.ItemID,
+                LineItemNumber = Utils.GetRandomValue("LineItemNumber"),
+                Description = Utils.GetRandomValue("Description Deliverable"),
+                DeliverableType = "AR - ARCHITECTURAL (PRE-ENGINEERED METAL BUILDINGS)",
+                Criticality = "Normal",
+                Status = "OPEN - OPEN",
+            };
+        }
 
-        public string WidgetName = "Contractor View";
+        public string WidgetUniqueName = KiewitTeamBinderENums.WidgetUniqueName.CONTRACTORVIEW.ToDescription();
         public string RowName = "Deliverables";
 
         public List<KeyValuePair<string, string>> ExpectedContractValuesInColumnList(DeliverableLine DeliverableInfo)

@@ -10,6 +10,7 @@ using KiewitTeamBinder.UI.Pages.Dialogs;
 using KiewitTeamBinder.Common;
 using KiewitTeamBinder.Common.Helper;
 using static KiewitTeamBinder.Common.KiewitTeamBinderENums;
+using System.Diagnostics;
 
 namespace KiewitTeamBinder.UI.Pages.Global
 {
@@ -93,10 +94,27 @@ namespace KiewitTeamBinder.UI.Pages.Global
             return this;
         }       
         
-        public void WaitForLoadingPanel(int timeout = shortTimeout)
+        public void WaitForLoadingPanel(int timeout = sapLongTimeout)
         {
-            WaitForLoading(_loadingPanel, timeout);
-            WaitForElementEnable(By.XPath("//div[contains(@id,'_GridData')]"));
+            var node = StepNode(); 
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            do
+            {
+                try
+                {
+                    WaitForLoading(_loadingPanel);
+                    WaitForElementDisplay(_walkMe, mediumTimeout);
+                    if (WaitForElementInvisible(_loadingPanel))
+                        break;
+                }
+                catch (Exception)
+                {   }
+            } while (stopwatch.Elapsed.TotalSeconds <= sapLongTimeout);
+            if (stopwatch.Elapsed.TotalSeconds >= sapLongTimeout)
+                node.Warning("The icon loading process is not completed in timeout: " + timeout);
+
+            stopwatch.Stop();
         }
             
         private void ClickMenuItem(string menuItem)
@@ -104,7 +122,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
             var node = StepNode();
             node.Info($"Click on the root node: {menuItem}");
             ModuleButton(menuItem).Click();
-            WaitForElement(_divSubMenu);
         }
 
         private void ClickSubMenuItem(string subMenuItem)
@@ -112,7 +129,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
             var node = StepNode();
             node.Info($"Click on the sub node: {subMenuItem}");
             SubMenuItemLink(subMenuItem).Click();
-            WaitForElement(_subPageHeader);
         }
 
         public T SelectFilterOption<T>(string nameOrIndex, bool byName = true, bool waitForLoading = true)
@@ -138,6 +154,10 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
             if (waitForLoading)
                 WaitForLoadingPanel();
+
+            if (menuItem !=  ModuleNameInLeftNav.DASHBOARD.ToDescription())
+                WaitForElement(_subPageHeader);
+
             return (T)Activator.CreateInstance(typeof(T), WebDriver);            
         }
 
@@ -186,6 +206,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             SwitchToNewPopUpWindow(HeaderDropdownItem(item.ToDescription()), out currentWindow, false);
             try
             {
+                WaitForJQueryLoad();
                 WaitForElementDisplay(_walkMe);
             }
             catch { }

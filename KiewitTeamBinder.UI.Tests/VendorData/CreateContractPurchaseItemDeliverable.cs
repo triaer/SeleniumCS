@@ -37,8 +37,8 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 test.Info("Navigate to DashBoard Page of Project: " + createContractItemData.ProjectName);
                 ProjectsDashboard projectDashBoard = projectsList.NavigateToProjectDashboardPage(createContractItemData.ProjectName);
                 Dashboard dashboard = projectDashBoard.SelectModuleMenuItemOnLeftNav<Dashboard>(menuItem: ModuleNameInLeftNav.DASHBOARD.ToDescription());
-                dashboard.ClickMoreOrLessButton(createContractItemData.WidgetName, false);
-                int CountOfContracts = dashboard.GetCountValueFromRow(createContractItemData.WidgetName, createContractItemData.RowName);
+                dashboard.ClickMoreOrLessButton(createContractItemData.WidgetUniqueName, false);
+                int CountOfContracts = dashboard.GetCountValueFromRow(createContractItemData.WidgetUniqueName, createContractItemData.RowName);
 
                 //when User Story 121989 - 120793 Create Contract Items Deliverable
                 test = LogTest("Create Contract Item");
@@ -60,7 +60,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                     .ClickCloseButtonOnPopUp<VendorDataRegister>();
 
                 dashboard = projectDashBoard.SelectModuleMenuItemOnLeftNav<Dashboard>(menuItem: ModuleNameInLeftNav.DASHBOARD.ToDescription());
-                dashboard.LogValidation<Dashboard>(ref validations, dashboard.ValidateCountValueIsCorrect(createContractItemData.WidgetName, createContractItemData.RowName, CountOfContracts + 1));
+                dashboard.LogValidation<Dashboard>(ref validations, dashboard.ValidateCountValueIsCorrect(createContractItemData.WidgetUniqueName, createContractItemData.RowName, CountOfContracts + 1));
 
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);
@@ -91,13 +91,22 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 test.Info("Navigate to DashBoard Page of Project: " + createPurchaseItemData.ProjectName);
                 ProjectsDashboard projectDashBoard = projectsList.NavigateToProjectDashboardPage(createPurchaseItemData.ProjectName);
 
-                //when - User Story 121990 - 120794 Create New Purchase Item
-                test = LogTest("US 121990 - 120794 Create New Purchase Item");
-
+                //Pre-Condition Create new contract
+                test = LogTest("Pre-Condition: Create new contract");
                 projectDashBoard.SelectModuleMenuItemOnLeftNav<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription(), waitForLoading: false);
                 VendorDataRegister vendorDataRegister = projectDashBoard.SelectModuleMenuItemOnLeftNav<VendorDataRegister>(subMenuItem: ModuleSubMenuInLeftNav.VENDODATAREGISTER.ToDescription());
                 vendorDataRegister.ClickHeaderButton<VendorDataRegister>(MainPaneTableHeaderButton.New, false);
-                var purchaseInfo = createPurchaseItemData.PurchaseInfo;
+                var contractInfo = createPurchaseItemData.ContractInfo;
+                VendorContractDetail contractDetail = vendorDataRegister.SelectDropdownItemWithSwitchWindow<VendorContractDetail>(MainPaneHeaderDropdownItem.Contract);
+                contractDetail.EnterContractRequiredInfo(contractInfo, ref methodValidations)
+                              .ClickSaveInToolbarHeader()
+                              .ClickOKOnMessageDialog<VendorContractDetail>()
+                              .ClickCloseButtonOnPopUp<VendorDataRegister>();
+
+                //when - User Story 121990 - 120794 Create New Purchase Item
+                test = LogTest("US 121990 - 120794 Create New Purchase Item");
+                vendorDataRegister.ClickHeaderButton<VendorDataRegister>(MainPaneTableHeaderButton.New, false);
+                var purchaseInfo = createPurchaseItemData.PurchaseInfo(contractInfo);
                 VendorItemDetail itemDetail = vendorDataRegister.SelectDropdownItemWithSwitchWindow<VendorItemDetail>(MainPaneHeaderDropdownItem.ItemPurchased);
                 itemDetail.LogValidation<VendorItemDetail>(ref validations, itemDetail.ValidateRequiredFieldsWithRedAsterisk(createPurchaseItemData.RequiredFields))
                     .EnterItemPurchasedRequiredInfo(purchaseInfo, ref methodValidations)
@@ -110,7 +119,6 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
 
                 //and - User Story 121991 - 120795 Validate Purchase Item under Contract
                 test = LogTest("US 121991 - 120795 Validate Purchase Item under Contract");
-
                 var columnValuePairList1 = createPurchaseItemData.ExpectedContractValuesInColumnList(purchaseInfo);
                 var columnValuePairList2 = createPurchaseItemData.ExpectedPurchasedValuesInColumnList(purchaseInfo);
                                 
@@ -152,16 +160,35 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 test.Info("Navigate to DashBoard Page of Project: " + createNewDeliverableData.ProjectName);
                 ProjectsDashboard projectDashBoard = projectsList.NavigateToProjectDashboardPage(createNewDeliverableData.ProjectName);
                 Dashboard dashboard = projectDashBoard.SelectModuleMenuItemOnLeftNav<Dashboard>(menuItem: ModuleNameInLeftNav.DASHBOARD.ToDescription());
-                dashboard.ClickMoreOrLessButton(createNewDeliverableData.WidgetName, true);
-                int CountOfDeliverables = dashboard.GetCountValueFromRow(createNewDeliverableData.WidgetName, createNewDeliverableData.RowName);
+                dashboard.ClickMoreOrLessButton(createNewDeliverableData.WidgetUniqueName, true);
+                int CountOfDeliverables = dashboard.GetCountValueFromRow(createNewDeliverableData.WidgetUniqueName, createNewDeliverableData.RowName);
+
+                //Pre-Condition Create new contract
+                test = LogTest("Pre-Condition: Create new contract and purchase item");
+                projectDashBoard.SelectModuleMenuItemOnLeftNav<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription(), waitForLoading: false);
+                VendorDataRegister vendorDataRegister = projectDashBoard.SelectModuleMenuItemOnLeftNav<VendorDataRegister>(subMenuItem: ModuleSubMenuInLeftNav.VENDODATAREGISTER.ToDescription());
+                vendorDataRegister.ClickHeaderButton<VendorDataRegister>(MainPaneTableHeaderButton.New, false);
+                var contractInfo = createNewDeliverableData.ContractInfo;
+                VendorContractDetail contractDetail = vendorDataRegister.SelectDropdownItemWithSwitchWindow<VendorContractDetail>(MainPaneHeaderDropdownItem.Contract);
+                contractDetail.EnterContractRequiredInfo(contractInfo, ref methodValidations)
+                              .ClickSaveInToolbarHeader()
+                              .ClickOKOnMessageDialog<VendorContractDetail>()
+                              .ClickCloseButtonOnPopUp<VendorDataRegister>();
+
+                vendorDataRegister.ClickHeaderButton<VendorDataRegister>(MainPaneTableHeaderButton.New, false);
+                var purchaseInfo = createNewDeliverableData.PurchaseInfo(contractInfo);
+                VendorItemDetail itemDetail = vendorDataRegister.SelectDropdownItemWithSwitchWindow<VendorItemDetail>(MainPaneHeaderDropdownItem.ItemPurchased);
+                itemDetail.EnterItemPurchasedRequiredInfo(purchaseInfo, ref methodValidations)
+                          .ClickSaveInToolbarHeader()
+                          .ClickOKOnMessageDialog<VendorItemDetail>()
+                          .ClickCloseButtonOnPopUp<VendorDataRegister>();
 
                 //when UserStory 121992 - 120796 - Create New Deliverable
                 test = LogTest("Create New Deliverable");
                 string parrentWindow;
                 
-                VendorDataRegister vendorDataRegister = projectDashBoard.SelectModuleMenuItemOnLeftNav<VendorDataRegister>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription(), subMenuItem: ModuleSubMenuInLeftNav.VENDODATAREGISTER.ToDescription());
                 vendorDataRegister.ClickHeaderButton<VendorDataRegister>(MainPaneTableHeaderButton.New, false);
-                DeliverableLine deliverableInfo = createNewDeliverableData.DeliverableInfo;
+                DeliverableLine deliverableInfo = createNewDeliverableData.DeliverableInfo(purchaseInfo);
                 VendorDeliverableDetail deliverableDetail = vendorDataRegister.SelectDropdownItemWithSwitchWindow<VendorDeliverableDetail>(MainPaneHeaderDropdownItem.DeliverableLineItem);
                 deliverableDetail.LogValidation<VendorDeliverableDetail>(ref validations, deliverableDetail.ValidateRequiredFieldsWithRedAsterisk(createNewDeliverableData.RequiredFields))
                     .EnterDeliverableRequiredInfo(deliverableInfo, ref methodValidations)
@@ -217,8 +244,8 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 test = LogTest("US 122010 - 120798 Validate Contractor Widget Counts");
                 
                 dashboard = projectDashBoard.SelectModuleMenuItemOnLeftNav<Dashboard>(menuItem: ModuleNameInLeftNav.DASHBOARD.ToDescription());
-                dashboard.ClickMoreOrLessButton(createNewDeliverableData.WidgetName, true)
-                    .LogValidation<Dashboard>(ref validations, dashboard.ValidateCountValueIsCorrect(createNewDeliverableData.WidgetName, createNewDeliverableData.RowName, CountOfDeliverables + 1));
+                dashboard.ClickMoreOrLessButton(createNewDeliverableData.WidgetUniqueName, true)
+                    .LogValidation<Dashboard>(ref validations, dashboard.ValidateCountValueIsCorrect(createNewDeliverableData.WidgetUniqueName, createNewDeliverableData.RowName, CountOfDeliverables + 1));
 
 
                 // then
