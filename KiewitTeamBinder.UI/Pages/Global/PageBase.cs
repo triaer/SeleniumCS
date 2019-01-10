@@ -358,7 +358,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         internal static void ScrollIntoView(IWebElement Element)
         {
             IJavaScriptExecutor jse = (IJavaScriptExecutor)WebDriver;
-            jse.ExecuteScript("arguments[0].scrollIntoView();", Element);
+            jse.ExecuteScript("arguments[0].scrollIntoView(true);", Element);
         }
 
         internal static bool RetryingFindClick(IWebElement webElement)

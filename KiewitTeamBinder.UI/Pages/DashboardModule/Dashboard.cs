@@ -52,7 +52,7 @@ namespace KiewitTeamBinder.UI.Pages.DashboardModule
             if ((moreLessButton.Text == "More") == clickMoreButton)
             {
                 var currentRows = TableStateInWidget(widgetName).StableFindElements(By.TagName("tr")).Count;
-                moreLessButton.Click();
+                moreLessButton.WaitAndClick();
                 WaitUntil(driver => MoreLessButton(widgetName).Text == "Less");
                 WaitUntil(driver => TableStateInWidget(widgetName).StableFindElements(By.TagName("tr")).Count > currentRows);
             }

@@ -113,6 +113,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
                 int i = 0;
                 if (idDropdown.Contains("Contract Number"))
                 {
+                    WaitForJQueryLoad();
                     ScrollIntoView(ItemDropdown(value));
                     WaitForElementDisplay(_itemDropdown(value));
                 }
