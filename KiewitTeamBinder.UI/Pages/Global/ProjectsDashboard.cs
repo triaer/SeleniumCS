@@ -50,10 +50,11 @@ namespace KiewitTeamBinder.UI.Pages.Global
         private static By _arrowFirstPageInGridPager(string gridViewName) => By.XPath($"//table[contains(@id,'{gridViewName}')]//img[@title='First Page']");
         private static By _arrowLastPageInGridPager(string gridViewName) => By.XPath($"//table[contains(@id,'{gridViewName}')]//img[@title='Last Page']");
         private static By _reportsButton => By.Id("btnReports");
+        private static By _registerViewCheckbox(string view) => By.XPath($"//a[span = '{view}']/img");
 
         private static string _filterItemsXpath = "//tr[@valign='top' and not(contains(@style, 'hidden'))]";        
         private static string _headerButtonXpath = "//a[span='{0}']";
-        private static string _filterTextBoxXpath = "//table[contains(@id,'{0}')]//tr[@class='rgFilterRow']/td[{1}]";//count(//tr/th[.='{0}']/preceding-sibling::th)+1]";
+        private static string _filterTextBoxXpath = "//table[contains(@id,'{0}')]//tr[@class='rgFilterRow']/td[{1}]";
 
         public IWebElement FormTitle { get { return StableFindElement(_formTitle); } }        
         public IWebElement ViewFilter { get { return StableFindElement(_viewFilter); } }
@@ -84,6 +85,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         public IWebElement ArrowFirstPageInGridPager(string gridViewName) => StableFindElement(_arrowFirstPageInGridPager(gridViewName));
         public IWebElement ArrowLastPageInGridPager(string gridViewName) => StableFindElement(_arrowLastPageInGridPager(gridViewName));
         public IWebElement ReportsButton { get { return StableFindElement(_reportsButton); } }
+        public IWebElement RegisterViewCheckbox(string gridViewName) => StableFindElement(_registerViewCheckbox(gridViewName));
         #endregion
 
         #region Actions
@@ -96,7 +98,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             WaitForElementAttribute(ProjectListSumary, "display", "block");
             return this;
         }
-           
+        
         private void ClickMenuItem(string menuItem)
         {
             var node = StepNode();
@@ -192,11 +194,19 @@ namespace KiewitTeamBinder.UI.Pages.Global
             {
                 string currentWindow;
                 SwitchToNewPopUpWindow(HeaderDropdownItem(item.ToDescription()), out currentWindow, false);
-            }                
+            }
             else
                 HeaderDropdownItem(item.ToDescription()).Click();
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
-        }               
+        }
+
+        public T HoverHeaderDropdownItem<T>(MainPaneHeaderDropdownItem item)
+        {
+            var node = StepNode();
+            node.Info("Hover the item: " + item.ToDescription());
+            HeaderDropdownItem(item.ToDescription()).HoverElement();
+            return (T)Activator.CreateInstance(typeof(T), WebDriver);
+        }
 
         public string GetUserNameLogon()
         {
@@ -341,6 +351,15 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 return SetPassValidation(node, Validation.Progress_Message_Is_Displayed + message);
             else
                 return SetFailValidation(node, Validation.Progress_Message_Is_Displayed, message, actual);
+        }
+
+        public KeyValuePair<string, bool> ValidateRegisterViewIsCorrect(string expectedView)
+        {
+            var node = StepNode();
+            if (RegisterViewCheckbox(expectedView).Displayed)
+                return SetPassValidation(node, Validation.Register_View_Is_Correct);
+            else
+                return SetFailValidation(node, Validation.Register_View_Is_Correct);
         }
 
         public KeyValuePair<string, bool> ValidateRecordsMatchingFilterAreReturned(string gridViewName, List<KeyValuePair<string, string>> ValueInColumn, int expectedNumberOfRecord)
@@ -563,6 +582,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 return SetErrorValidation(node, Validation.Sub_Page_Is_Displayed, e);
             }
         }
+
         public KeyValuePair<string, bool> ValidateItemsAreNotShown(string columnName, string value, string gridViewName)
         {
             var node = StepNode();
@@ -612,6 +632,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             public static string Records_Matching_Filter_Are_Returned = "Validate that the records matching filter are returned: ";
             public static string Value_In_Column_Is_Correct = "Validate that the value in column is correct: ";
             public static string Filtered_Records_Are_Cleared = "Validate that the filtered records are cleared, and return the total records before filtering: ";
+            public static string Register_View_Is_Correct = "Validate that the register view is correct";
         }
         #endregion
     }

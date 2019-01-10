@@ -118,10 +118,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Browser.cs" />
-    <Compile Include="ExcelInterop\ExcelDriver.cs" />
-    <Compile Include="ExcelInterop\ExcelHelper.cs" />
-    <Compile Include="ExcelInterop\New_ExcelHelper.cs" />
-    <Compile Include="ExcelInterop\Old_ExcelHelper.cs" />
     <Compile Include="ExtentReportsHelper.cs" />
     <Compile Include="IWebElementExtensions.cs" />
     <Compile Include="Pages\DashboardModule\Dashboard.cs" />

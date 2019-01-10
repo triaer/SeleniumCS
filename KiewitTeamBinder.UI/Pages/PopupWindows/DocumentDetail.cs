@@ -125,10 +125,10 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
                 {
                     ScrollIntoView(ItemDropdown(value));
                     WaitForElementDisplay(_itemDropdown(value));
-                    ScrollToElement(ItemDropdown(value));
+                    ItemDropdown(value).HoverElement();
                 }
 
-                ScrollToElement(ItemDropdown(value));
+                ItemDropdown(value).HoverElement();
                 actual = ItemDropdown(value).GetAttribute("class");
                 if (actual.Contains("Hovered"))
                     return SetPassValidation(node, Validation.Item_Dropdown_Is_Highlighted + idDropdown);

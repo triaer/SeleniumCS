@@ -9,7 +9,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 
-namespace KiewitTeamBinder.UI.ExcelInterop
+namespace KiewitTeamBinder.Common.ExcelInterop
 {
     class New_ExcelHelper : ExcelHelper
     {
@@ -26,12 +26,14 @@ namespace KiewitTeamBinder.UI.ExcelInterop
         {
             try
             {
+
                 ExcelPackage package = new ExcelPackage(new FileInfo(filePath));
 
                 if (sheetName.Trim() == "")
                     workSheet = package.Workbook.Worksheets[1];
                 else
                     workSheet = package.Workbook.Worksheets[sheetName];
+                
             }
             catch (Exception)
             {

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KiewitTeamBinder.UI.ExcelInterop
+namespace KiewitTeamBinder.Common.ExcelInterop
 {
     public static class ExcelDriver
     {

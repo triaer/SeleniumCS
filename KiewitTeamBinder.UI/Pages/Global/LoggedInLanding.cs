@@ -48,7 +48,20 @@ namespace KiewitTeamBinder.UI.Pages.Global
             LogoutYesButton.Click();
             return new NonSsoSignOn(WebDriver);
         }
-                
+
+        public LoggedInLanding OpenExcelFile(string filePath)
+        {
+            //ExcelUtils.OpenExcelFile(filePath, "Contracts");
+            int a = ExcelUtils.GetNumberOfRows(filePath, "Contracts");
+            return this;
+        }
+
+        public T DownloadFile<T>(string fileName)
+        {
+            DownloadFileByIE(fileName);
+            return (T)Activator.CreateInstance(typeof(T), WebDriver);
+        }
+
         public T ReloadPage<T>()
         {
             Reload();

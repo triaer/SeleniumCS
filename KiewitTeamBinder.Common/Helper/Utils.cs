@@ -202,5 +202,11 @@ namespace KiewitTeamBinder.Common.Helper
             var path = GetProjectPath(true) + string.Format(@"ScenariosInputFiles\{0}", memberName);
             return path;
         }
+
+        public static string GetDownloadFilesLocalPath()
+        {
+            var path = GetProjectPath(false) + "DownloadFiles";
+            return path;
+        }
     }
 }

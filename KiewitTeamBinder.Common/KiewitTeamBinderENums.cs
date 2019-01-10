@@ -239,7 +239,11 @@ namespace KiewitTeamBinder.Common
             [Description("Create Transmittals")]
             CreateTransmittals,
             [Description("Item Purchased")]
-            ItemPurchased
+            ItemPurchased,
+            [Description("Register View")]
+            RegisterView,
+            [Description("Contracts")]
+            Contracts
         }
 
         public enum DialogPopupButton

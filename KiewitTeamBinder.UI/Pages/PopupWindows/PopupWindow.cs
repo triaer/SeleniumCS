@@ -112,7 +112,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
                 int i = 0;
                 do
                 {
-                    ScrollToElement(ItemDropdown(value));
+                    ItemDropdown(value).HoverElement();
                     actual = ItemDropdown(value).GetAttribute("class");
                     i++;
                 }
