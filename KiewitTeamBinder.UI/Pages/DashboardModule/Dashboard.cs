@@ -14,9 +14,9 @@ namespace KiewitTeamBinder.UI.Pages.DashboardModule
         #region Entities
         private static string _widgetLabelXpath = "//span[@class='Title' and text()='{0}']";
 
-        private static By _moreLessButton(string widgetName) => By.XPath($"//div[@widgetuniquename = '{widgetName}']//a[contains(@id,'More')]");
-        private static By _rowInWidget(string widgetName, string rowName) => By.XPath($"//div[@widgetuniquename = '{widgetName}']//td[contains(@id,'tdCaption')][span = '{rowName}']");
-        private static By _numberOnRowInWidget(string widgetName, string rowName) => By.XPath($"//div[@widgetuniquename = '{widgetName}']//td[contains(@id,'tdCaption')][span = '{rowName}']/preceding-sibling::td[contains(@id,'tdCount')]");
+        private static By _moreLessButton(string widgetUniqueName) => By.XPath($"//div[@widgetuniquename = '{widgetUniqueName}']//a[contains(@id,'More')]");
+        private static By _rowInWidget(string widgetUniqueName, string rowName) => By.XPath($"//div[@widgetuniquename = '{widgetUniqueName}']//td[contains(@id,'tdCaption')][span = '{rowName}']");
+        private static By _numberOnRowInWidget(string widgetUniqueName, string rowName) => By.XPath($"//div[@widgetuniquename = '{widgetUniqueName}']//td[contains(@id,'tdCaption')][span = '{rowName}']/preceding-sibling::td[contains(@id,'tdCount')]");
 
         public IWebElement MoreLessButton(string widgetName) => StableFindElement(_moreLessButton(widgetName));
         public IWebElement RowInWidget(string widgetName, string rowName) => StableFindElement(_rowInWidget(widgetName, rowName));
@@ -27,6 +27,14 @@ namespace KiewitTeamBinder.UI.Pages.DashboardModule
         public Dashboard(IWebDriver webDriver) : base(webDriver)
         {
 
+        }
+
+        public T ClickNumberOnRow<T>(string widgetName, string rowName)
+        {
+            var NumberOnRow = NumberOnRowInWidget(widgetName, rowName);
+            ScrollIntoView(NumberOnRow);
+            NumberOnRow.Click();
+            return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 
         /// <summary>
@@ -40,21 +48,18 @@ namespace KiewitTeamBinder.UI.Pages.DashboardModule
             var moreLessButton = MoreLessButton(widgetName);
             ScrollIntoView(moreLessButton);
             if ((moreLessButton.Text == "More") == clickMoreButton)
+            {
                 moreLessButton.Click();
+                WaitUntil(driver => MoreLessButton(widgetName).Text == "Less");
+            }
+                
+            
             return this;
         }
 
-        private int GetCountValueFromRow(string widgetName, string rowName)
+        public int GetCountValueFromRow(string widgetName, string rowName)
         {
             return int.Parse(RowInWidget(widgetName, rowName).GetAttribute("count"));
-        }
-
-        public T ClickNumberOnRow<T>(string widgetName, string rowName)
-        {
-            var NumberOnRow = NumberOnRowInWidget(widgetName, rowName);
-            ScrollIntoView(NumberOnRow);
-            NumberOnRow.Click();
-            return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 
         public KeyValuePair<string, bool> ValidateWidgetsOfDashboardDisplayed(string[] widgets)
@@ -88,7 +93,7 @@ namespace KiewitTeamBinder.UI.Pages.DashboardModule
             {
                 int actualCountValue = GetCountValueFromRow(widgetName, rowName);
                 if (actualCountValue == expectedCountValue)
-                    return SetPassValidation(node, Validation.Count_Value_Is_Correct);
+                    return SetPassValidation(node, Validation.Count_Value_Is_Correct + " - " + expectedCountValue);
                 else
                     return SetFailValidation(node, Validation.Count_Value_Is_Correct, expectedCountValue.ToString(), actualCountValue.ToString());  
             }

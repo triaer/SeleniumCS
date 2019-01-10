@@ -19,7 +19,7 @@ namespace KiewitTeamBinder.Common.TestData
         public string SaveMessage = "Document details saved successfully.";
         public SingleDocumentInfo SingleDocInformation = new SingleDocumentInfo()
         {
-            DocumentNo = Utils.GetRandomValue("Unrestrained DocumentNo"),
+            DocumentNo = Utils.GetRandomValue("Unrestrained_DocumentNo"),
             RevStatus = "F - Rev F",
             Status = "IFR - Issued for Review",
             Title = Utils.GetRandomValue("Unrestrained DocumentTitle"),

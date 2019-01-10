@@ -103,7 +103,15 @@ namespace KiewitTeamBinder.Common
 			[Description("Process")]
             Process,
             [Description("Save")]
-            Save
+            Save,
+            [Description("More")]
+            More,
+            [Description("Add")]
+            Add,
+            [Description("Search")]
+            Search,
+            [Description("OK")]
+            OK
         }
 
         public enum DocBulkUploadInputText
@@ -238,8 +246,16 @@ namespace KiewitTeamBinder.Common
         {
             [Description("Create Transmittals")]
             CreateTransmittals,
+            [Description("Contract")]
+            Contract,
             [Description("Item Purchased")]
             ItemPurchased,
+            [Description("Deliverable Line Item")]
+            DeliverableLineItem,
+            [Description("Link Items")]
+            LinkItems,
+            [Description("Documents")]
+            Documents,
             [Description("Register View")]
             RegisterView,
             [Description("Contracts")]
@@ -310,6 +326,68 @@ namespace KiewitTeamBinder.Common
             RESPONSESOUTSTANDING,
             [Description("Document Bar Chart")]
             DOCMUENTBARCHART
+        }
+
+        public enum ContractField
+        {
+            [Description("Contract Number")]
+            ContractNumber,
+            [Description("Description")]
+            Description,
+            [Description("Vendor Company")]
+            VendorCompany,
+            [Description("Expediting Contract")]
+            ExpeditingContract,
+            [Description("Status")]
+            Status
+        }
+        public enum ItemPurchasedField
+        {
+            [Description("Item ID")]
+            ItemID,
+            [Description("Description")]
+            Description,
+            [Description("Contract Number")]
+            ContractNumber,
+            [Description("Status")]
+            Status
+        }
+
+        public enum DeliverableField
+        {
+            [Description("Contract Number")]
+            ContractNumber,
+            [Description("Item ID")]
+            ItemID,
+            [Description("Deliverable Type")]
+            DeliverableType,
+            [Description("Criticality")]
+            Criticality,
+            [Description("Status")]
+            Status,
+            [Description("Deliverable Line Item Number")]
+            LineItemNumber,
+            [Description("Description")]
+            Description
+        }
+        public enum ModuleSubMenuInAddFunction
+        {
+            [Description("Mail")]
+            Mail,
+            [Description("Documents")]
+            Documents,
+            [Description("Transmittals")]
+            Transmittals,
+            [Description("Packages")]
+            Packages,
+            [Description("Forms")]
+            Forms,
+            [Description("Gallery")]
+            Gallery,
+            [Description("Deliverables")]
+            Deliverables,
+            [Description("Holding Area")]
+            HoldingArea
         }
 
         public enum WidgetUniqueName

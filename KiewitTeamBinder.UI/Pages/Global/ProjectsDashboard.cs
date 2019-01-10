@@ -186,10 +186,11 @@ namespace KiewitTeamBinder.UI.Pages.Global
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
                 
-        public T ClickHeaderDropdownItem<T>(MainPaneHeaderDropdownItem item, bool switchWindow)
+        public T ClickHeaderDropdownItem<T>(MainPaneHeaderDropdownItem item, bool switchWindow, bool switchPopUp = false)
         {
             var node = StepNode();
             node.Info("Click the item: " + item.ToDescription());
+            
             if (switchWindow)
             {
                 string currentWindow;
@@ -197,6 +198,11 @@ namespace KiewitTeamBinder.UI.Pages.Global
             }
             else
                 HeaderDropdownItem(item.ToDescription()).Click();
+
+            if (switchPopUp)
+                WebDriver.SwitchTo().ActiveElement();
+
+            WaitForElementDisplay(_walkMe);
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 
