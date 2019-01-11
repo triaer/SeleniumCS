@@ -67,6 +67,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             node.Info($"Enter {content} in {fieldLabel} Field.");
             WaitForElementEnable(_textField(fieldLabel));
             TextField(fieldLabel).InputText(content);
+            WaitForJQueryLoad();
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 
@@ -74,6 +75,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
         {
             IWebElement DropdownList = DropdownListInput(fieldLabel);
             DropdownList.Click();
+            WaitForJQueryLoad();
             methodValidation.Add(ValidateItemDropdownIsHighlighted(selectedValue, fieldLabel));
             ItemDropdown(selectedValue).Click();
             DropdownList.SendKeys(OpenQA.Selenium.Keys.Tab);
@@ -113,7 +115,6 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
                 int i = 0;
                 if (idDropdown.Contains("Contract Number"))
                 {
-                    WaitForJQueryLoad();
                     ScrollIntoView(ItemDropdown(value));
                     WaitForElementDisplay(_itemDropdown(value));
                 }
