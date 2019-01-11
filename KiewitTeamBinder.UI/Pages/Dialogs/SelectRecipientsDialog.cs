@@ -124,15 +124,15 @@ namespace KiewitTeamBinder.UI.Pages.Dialogs
                 foreach (var item in selectedUsers)
                 {
                     if (UserNameInTable(toTable, item, companyName) != null)
-                        validation.Add(SetPassValidation(node, Validation.User_Is_Added_To_The_Table + toTable));
+                        validation.Add(SetPassValidation(node, string.Format(Validation.User_Is_Added_To_The_Table, item, toTable)));
                     else
-                        validation.Add(SetFailValidation(node, Validation.User_Is_Added_To_The_Table + toTable));
+                        validation.Add(SetFailValidation(node, string.Format(Validation.User_Is_Added_To_The_Table, item, toTable)));
                 }
                 return validation;
             }
             catch (Exception e)
             {
-                validation.Add(SetErrorValidation(node, Validation.User_Is_Added_To_The_Table + toTable, e));
+                validation.Add(SetErrorValidation(node, string.Format(Validation.User_Is_Added_To_The_Table, toTable), e));
                 return validation;
             }
         }
@@ -146,9 +146,9 @@ namespace KiewitTeamBinder.UI.Pages.Dialogs
                 {
                     ScrollToElement(UserNameInTable(toTable, item, nameCompny));
                     if (UserNameInTable(toTable, item, nameCompny).GetAttribute("class").Contains("HoveredRow"))
-                        validation.Add(SetPassValidation(node, Validation.User_Is_Highlighted_In_The_Table));
+                        validation.Add(SetPassValidation(node, string.Format(Validation.User_Is_Highlighted_In_The_Table, item)));
                     else
-                        validation.Add(SetFailValidation(node, Validation.User_Is_Highlighted_In_The_Table, "HoveredRow", UserNameInTable(toTable, item, nameCompny).GetAttribute("class")));
+                        validation.Add(SetFailValidation(node, string.Format(Validation.User_Is_Highlighted_In_The_Table, item), "HoveredRow", UserNameInTable(toTable, item, nameCompny).GetAttribute("class")));
                 }
                 return validation;
             }
@@ -170,15 +170,15 @@ namespace KiewitTeamBinder.UI.Pages.Dialogs
                     string _userRowXpath = _userNameInTable(toTable, item, nameCompny).ToString().Replace("By.XPath:", "").Trim();
                     string _checkMarkXpath = _userRowXpath.Insert(_userRowXpath.Length, "//input[@type='image']");
                     if (StableFindElement(By.XPath(_checkMarkXpath)).GetAttribute("src").Contains("tbDelete.gif"))
-                        validation.Add(SetPassValidation(node, Validation.User_Is_Highlighted_In_The_Table));
+                        validation.Add(SetPassValidation(node, string.Format(Validation.User_Is_Retained_Check_Mark_In_The_Table, item)));
                     else
-                        validation.Add(SetFailValidation(node, Validation.User_Is_Highlighted_In_The_Table));
+                        validation.Add(SetFailValidation(node, string.Format(Validation.User_Is_Retained_Check_Mark_In_The_Table, item)));
                 }
                 return validation;
             }
             catch (Exception e)
             {
-                validation.Add(SetErrorValidation(node, Validation.User_Is_Highlighted_In_The_Table, e));
+                validation.Add(SetErrorValidation(node, Validation.User_Is_Retained_Check_Mark_In_The_Table, e));
                 return validation;
             }
         }
@@ -238,8 +238,9 @@ namespace KiewitTeamBinder.UI.Pages.Dialogs
             public static string Select_Recipient_Window_Opened = "Validate that select recipient window is opened";
             public static string Select_Recipient_Window_Closed = "Validate that select recipient window is closed";
             public static string Item_User_In_Left_GridView = "Validate that item user is displayed in left gridview.";
-            public static string User_Is_Added_To_The_Table = "Validate that user is added to the table: ";
-            public static string User_Is_Highlighted_In_The_Table = "Validate that user is highlighted in the table after added.";
+            public static string User_Is_Added_To_The_Table = "Validate that user: {0} is added to the {1} table.";
+            public static string User_Is_Highlighted_In_The_Table = "Validate that user: {0} is highlighted in the table after added.";
+            public static string User_Is_Retained_Check_Mark_In_The_Table = "Validate that user: {0} is retained check mark in the table after added.";
         }
         #endregion
     }

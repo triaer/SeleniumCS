@@ -37,24 +37,35 @@ namespace KiewitTeamBinder.UI.Pages.Global
             string logonWindow;
 
             //Click OtherUserLogin Button and Switch to OtherUserLogin Window
-            if (OtherUserLoginBtn == null)
-                Browser.MinimizeWindow();
-            Browser.MaximizeWindow();
-            SwitchToNewPopUpWindow(OtherUserLoginBtn, out logonWindow, true);
-            WaitForElementDisplay(By.Id("walkme-player"));
+            //if (OtherUserLoginBtn == null)
+            //    Browser.MinimizeWindow();
+            //Browser.MaximizeWindow();
+            //SwitchToNewPopUpWindow(OtherUserLoginBtn, out logonWindow, true);
+            //WaitForElementDisplay(By.Id("walkme-player"));
 
             //Fill account fields
-            UserIdTextbox.InputText(account.Username,true);
+            UserIdTextbox.InputText(account.Username, true);
             WaitForElementEnable(_companyIdTextbox);
             CompanyIdTextbox.InputText(account.Company, true);
             WaitForElementEnable(_passwordTextbox);
             PasswordTextbox.InputText(account.Password, true);
 
+            SwitchToNewPopUpWindow(LoginBtn, out logonWindow, true);
+            //WaitForElementDisplay(By.Id("walkme-player"));
+
+            if (WebDriver.WindowHandles.Count > 1)
+            {
+                string reportWindow = WebDriver.WindowHandles.Last();
+                Browser.Close();
+                WebDriver.SwitchTo().Window(reportWindow);
+                WebDriver.Manage().Window.Maximize();
+            }
+
             //Click LogIn button
-            LoginBtn.Click();
+            //LoginBtn.Click();
             var projectsListPage = new ProjectsList(WebDriver);
             WaitUntil(driver => projectsListPage.ProjListTitle != null);
-            
+
             return projectsListPage;
         }
 

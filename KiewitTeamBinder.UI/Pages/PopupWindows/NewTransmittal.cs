@@ -166,13 +166,16 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
                     for (int i = 0; i < selectedUsers.Length; i++)
                     {
                         if (selectedUsers[i] == selectedUser.Text)
+                        {
                             flag = true;
+                            break;
+                        }                           
                     }
                     if (flag == false)
                         validation.Add(SetFailValidation(node, Validation.Selected_Users_Populate_In_The_To_Field));
-                    
-                }
-                validation.Add(SetPassValidation(node, Validation.Selected_Users_Populate_In_The_To_Field));
+                    else
+                        validation.Add(SetPassValidation(node, Validation.Selected_Users_Populate_In_The_To_Field));
+                }                
                 return validation;
             }
             catch (Exception e)

@@ -13,6 +13,7 @@ using System.Threading;
 using KiewitTeamBinder.UI;
 using KiewitTeamBinder.UI.Pages.Dialogs;
 using static KiewitTeamBinder.Common.KiewitTeamBinderENums;
+using KiewitTeamBinder.UI.Pages.TransmittalsModule;
 
 namespace KiewitTeamBinder.UI.Tests.VendorData
 {
@@ -35,7 +36,8 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 test.Info("Navigate to DashBoard Page of Project: " + uploadUnrestrainedDocData.ProjectName);
                 ProjectsDashboard projectDashBoard = projectsList.NavigateToProjectDashboardPage(uploadUnrestrainedDocData.ProjectName);
 
-                //when User Story 120278 - 120081 - Upload Unrestrained Document Part 1
+                // when 
+                // User Story 120278 - 120081 - Upload Unrestrained Document Part 1
                 test = LogTest("Upload Unrestrained Document");
                 string username = projectDashBoard.GetUserNameLogon();
                 string currentWindow;
@@ -56,9 +58,10 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                     .LogValidation<DocumentDetail>(ref validations, newDocument.ValidateSaveDialogStatus(closed: true))
                     .ClickToolbarButton<HoldingArea>(ToolbarButton.Close);
 
-                //User Story 120278 - 120081 - Upload Unrestrained Document Part 2
+                // User Story 120278 - 120081 - Upload Unrestrained Document Part 2
                 var columnValuesInConditionList = new List<KeyValuePair<string, string>> { uploadUnrestrainedDocData.ColumnValuesInConditionList.DocumentNo };
                 var columnValuePairList = uploadUnrestrainedDocData.ExpectedDocumentInforInColumnList(uploadUnrestrainedDocData.SingleDocInformation);
+                string[] selectedUsersWithCompanyName = new string[] { uploadUnrestrainedDocData.DescriptionUserVendor2 };
                 string[] selectedDocuments = new string[uploadUnrestrainedDocData.NumberOfSelectedDocumentRow];
                 holdingArea.SwitchToWindow(currentWindow);
                 holdingArea.SelectModuleMenuItem<HoldingArea>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription(), subMenuItem: ModuleSubMenuInLeftNav.HOLDINGAREA.ToDescription())
@@ -78,6 +81,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 SelectRecipientsDialog selectRecipientsDialog = newTransmittal.ClickRecipientsButton(uploadUnrestrainedDocData.ToButton, false);
                 selectRecipientsDialog.LogValidation<SelectRecipientsDialog>(ref validations, selectRecipientsDialog.ValidateSelectRecipientWindowStatus())
                                       .SwitchToFrame()
+                                      //.LogValidation<SelectRecipientsDialog>(ref validations, newTransmittal.ValidateAllSelectedDocumentsAreListed(ref selectedDocuments))
                                       .SelectCompany(uploadUnrestrainedDocData.CompanyName)
                                       .LogValidation<SelectRecipientsDialog>(ref validations, selectRecipientsDialog.ValidateListItemUserInLeftGrid(uploadUnrestrainedDocData.ListUser))
                                       .AddUserToTheTable(uploadUnrestrainedDocData.toTableTo, uploadUnrestrainedDocData.ListUserTo)
@@ -87,13 +91,40 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                                       .AddUserToTheTable(uploadUnrestrainedDocData.toTableCc, uploadUnrestrainedDocData.ListUserCc)
                                       .LogValidation<SelectRecipientsDialog>(ref validations, selectRecipientsDialog.ValidateUserIsAddedToTheTable(uploadUnrestrainedDocData.toTableCc, uploadUnrestrainedDocData.CompanyName, uploadUnrestrainedDocData.ListUserCc))
                                       .ClickOkButton<NewTransmittal>();
-                //newTransmittal.LogValidation<NewTransmittal>(ref validations, selectRecipientsDialog.ValidateSelectRecipientWindowStatus(closed: true))
-                //              .LogValidation<NewTransmittal>(ref validations, newTransmittal.ValidateSelectedUsersPopulateInTheToField(uploadUnrestrainedDocData.ListUserTo.ToArray()))
-                //              .EnterSubject(uploadUnrestrainedDocData.Subject)
-                //              .EnterMessage(uploadUnrestrainedDocData.Message);
-                //TransmittalDetail transmittalDetail = newTransmittal.ClickSendButton(ref methodValidations);
-                //transmittalDetail.LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateAttachedDocumentsAreDisplayed(selectedDocuments));
+                newTransmittal.LogValidation<NewTransmittal>(ref validations, selectRecipientsDialog.ValidateSelectRecipientWindowStatus(closed: true))
+                              .LogValidation<NewTransmittal>(ref validations, newTransmittal.ValidateSelectedUsersPopulateInTheToField(uploadUnrestrainedDocData.ListUserTo.ToArray()))
+                              .EnterSubject(uploadUnrestrainedDocData.Subject)
+                              .EnterMessage(uploadUnrestrainedDocData.Message);
+                TransmittalDetail transmittalDetail = newTransmittal.ClickSendButton(ref methodValidations);
 
+                string transmittalDetailWindow = string.Format(uploadUnrestrainedDocData.TransmittalDetailWindow, transmittalDetail.GetTransmittalNo(), uploadUnrestrainedDocData.Subject);
+                transmittalDetail.LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateWindowIsOpened(transmittalDetailWindow))
+                                 .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateProjectNumberIsCorrect(uploadUnrestrainedDocData.ProjectNumber))
+                                 .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateProjectNameIsCorrect(uploadUnrestrainedDocData.ProjectName))
+                                 .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateTransmittalNoIsCorrectWithTheHeader())
+                                 .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateFromUserInfoIsCorrect(uploadUnrestrainedDocData.DescriptionUserVendor2))
+                                 //.LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateAttachedDocumentsAreDisplayed(selectedDocuments))
+                                 .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateRecipentsAreDisplayed(selectedUsersWithCompanyName))
+                                 .ClickToolbarButton<HoldingArea>(ToolbarButton.Close)
+                                 .SwitchToWindow(currentWindow);
+                holdingArea.LogValidation<HoldingArea>(ref validations, transmittalDetail.ValidateTransmittalDetailWindowIsClosed())
+                           .Logout();
+
+                // User Story 120278 - 120081 - Upload Unrestrained Document Part 3
+                // Pre - Condition
+                teambinderTestAccount = GetTestAccount("StandardAccount1", environment, "NonSSO");
+                test.Info("Open TeamBinder Web Page: " + teambinderTestAccount.Url);
+                driver = Browser.Open(teambinderTestAccount.Url, browser);
+                test.Info("Log on TeamBinder via Other User Login: " + teambinderTestAccount.Username);
+                projectsList = new NonSsoSignOn(driver).Logon(teambinderTestAccount) as ProjectsList;
+                test.Info("Navigate to DashBoard Page of Project: " + uploadUnrestrainedDocData.ProjectName);
+                projectsList.NavigateToProjectDashboardPage(uploadUnrestrainedDocData.ProjectName);
+
+                // when
+                columnValuesInConditionList = new List<KeyValuePair<string, string>> { new KeyValuePair<string, string>(MainPaneTableHeaderLabel.TransmittalNo.ToDescription(), transmittalDetail.GetTransmittalNo()) };
+                Transmittal transmittalsModule = projectDashBoard.SelectModuleMenuItem<Transmittal>(menuItem: ModuleNameInLeftNav.TRANSMITTALS.ToDescription(),subMenuItem: ModuleSubMenuInLeftNav.INBOX.ToDescription());
+                transmittalsModule.LogValidation<Transmittal>(ref validations, transmittalsModule.ValidateItemsAreShown(columnValuesInConditionList, uploadUnrestrainedDocData.TransmittalGridViewName));
+                
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);
                 Console.WriteLine(string.Join(System.Environment.NewLine, validations.ToArray()));

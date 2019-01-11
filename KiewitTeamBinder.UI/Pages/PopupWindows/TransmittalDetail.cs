@@ -99,6 +99,11 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             return recipientList;
         }
 
+        public string GetTransmittalNo()
+        {
+            return HeaderTransmittalNoInfo.Text;
+        }
+
         /// <summary>
         /// Refactor Selected users with company name to standard form: "UserName (CompanyName)"
         /// </summary>

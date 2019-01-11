@@ -30,7 +30,10 @@ namespace KiewitTeamBinder.Common.TestData
             Discipline = "87 - Misc Specialty Work",
             Type = "SUB - Submittal",
         };
+
         //User Story 120278 - 120081 - Upload Unrestrained Document Part 2
+        public string ProjectNumber = "AUTO1";
+        public string DescriptionUserVendor2 = "Automation Vendor1, AUTOVENDOR";
         public string GridViewHoldingAreaName = "GridViewHoldingArea";
         public string GridViewHoldingAreaData = "_GridViewHoldingArea_GridData";
         public int NumberOfSelectedDocumentRow = 1;    
@@ -46,10 +49,11 @@ namespace KiewitTeamBinder.Common.TestData
         public string toTableCc = "Cc";
         public string CompanyName = "Kiewit";
         public List<string> ListUser = new List<string>() { "Automation Admin1", "Automation Admin2" };
-        public List<string> ListUserTo = new List<string>() { "Automation Admin1" };
-        public List<string> ListUserCc = new List<string>() { "Automation User1" };
+        public List<string> ListUserTo = new List<string>() { "Automation User1", "Automation Admin1" };
+        public List<string> ListUserCc = new List<string>() { "Automation User2" };
         public string Subject = "Test - Upload Unrestrained Document";
         public string Message = "This is a test - Upload Unrestrained Document";
+        public string TransmittalDetailWindow = "AUTO1 - Transmittal: {0} - {1}";
         public ColumnValuesInCondition ColumnValuesInConditionList = new ColumnValuesInCondition();
 
         public class ColumnValuesInCondition
@@ -69,5 +73,8 @@ namespace KiewitTeamBinder.Common.TestData
                 new KeyValuePair<string, string>("Type", SingleDocInformation.Type)
             };
         }
+
+        //User Story 120278 - 120081 - Upload Unrestrained Document Part 3
+        public string TransmittalGridViewName = "TransmittalRegisterGrid";
     }
 }

@@ -122,8 +122,8 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 test = LogTest("Pre-condition: Upload two documents");
                 projectDashBoard.SelectModuleMenuItem<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription());
                 HoldingArea holdingArea = projectDashBoard.SelectModuleMenuItem<HoldingArea>(subMenuItem: ModuleSubMenuInLeftNav.HOLDINGAREA.ToDescription());
-                BulkUploadDocuments bulkUploadDocuments = holdingArea.ClickBulkUploadButton(out currentWindow);
-                bulkUploadDocuments.CreateDataOnRow<HoldingArea>(2);
+                //BulkUploadDocuments bulkUploadDocuments = holdingArea.ClickBulkUploadButton(out currentWindow);
+                //bulkUploadDocuments.CreateDataOnRow<HoldingArea>(2);
 
                 //when User Story 120157 - 119696 Transmit Documents
                 test = LogTest("Transmit Documents");
