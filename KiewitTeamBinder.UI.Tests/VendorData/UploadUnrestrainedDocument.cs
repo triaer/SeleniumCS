@@ -75,23 +75,24 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                            .ClickHeaderButton<HoldingArea>(MainPaneTableHeaderButton.Transmit, false);
                 NewTransmittal newTransmittal = holdingArea.ClickCreateTransmittalsButton();
                 newTransmittal.LogValidation<NewTransmittal>(ref validations, newTransmittal.ValidateWindowIsOpened(uploadUnrestrainedDocData.VendorDocumentSubmissionWindow));
-                SelectRecipientsDialog selectRecipientsDialog = newTransmittal.ClickRecipientsButton(uploadUnrestrainedDocData.ToButton);
+                SelectRecipientsDialog selectRecipientsDialog = newTransmittal.ClickRecipientsButton(uploadUnrestrainedDocData.ToButton, false);
                 selectRecipientsDialog.LogValidation<SelectRecipientsDialog>(ref validations, selectRecipientsDialog.ValidateSelectRecipientWindowStatus())
+                                      .SwitchToFrame()
                                       .SelectCompany(uploadUnrestrainedDocData.CompanyName)
                                       .LogValidation<SelectRecipientsDialog>(ref validations, selectRecipientsDialog.ValidateListItemUserInLeftGrid(uploadUnrestrainedDocData.ListUser))
                                       .AddUserToTheTable(uploadUnrestrainedDocData.toTableTo, uploadUnrestrainedDocData.ListUserTo)
-                                      .LogValidation<SelectRecipientsDialog>(ref validations, selectRecipientsDialog.ValidateUserIsAddedToTheTable(uploadUnrestrainedDocData.toTableTo, uploadUnrestrainedDocData.CompanyName,uploadUnrestrainedDocData.ListUserTo))
+                                      .LogValidation<SelectRecipientsDialog>(ref validations, selectRecipientsDialog.ValidateUserIsAddedToTheTable(uploadUnrestrainedDocData.toTableTo, uploadUnrestrainedDocData.CompanyName, uploadUnrestrainedDocData.ListUserTo))
                                       .LogValidation<SelectRecipientsDialog>(ref validations, selectRecipientsDialog.ValidateUserIsHighlightedInTheTable(uploadUnrestrainedDocData.toTableTo, uploadUnrestrainedDocData.CompanyName, uploadUnrestrainedDocData.ListUserTo))
                                       .LogValidation<SelectRecipientsDialog>(ref validations, selectRecipientsDialog.ValidateUserIsRetainedCheckMarkInTheTable(uploadUnrestrainedDocData.toTableTo, uploadUnrestrainedDocData.CompanyName, uploadUnrestrainedDocData.ListUserTo))
                                       .AddUserToTheTable(uploadUnrestrainedDocData.toTableCc, uploadUnrestrainedDocData.ListUserCc)
                                       .LogValidation<SelectRecipientsDialog>(ref validations, selectRecipientsDialog.ValidateUserIsAddedToTheTable(uploadUnrestrainedDocData.toTableCc, uploadUnrestrainedDocData.CompanyName, uploadUnrestrainedDocData.ListUserCc))
                                       .ClickOkButton<NewTransmittal>();
-                newTransmittal.LogValidation<NewTransmittal>(ref validations, selectRecipientsDialog.ValidateSelectRecipientWindowStatus(closed: true))
-                              .LogValidation<NewTransmittal>(ref validations, newTransmittal.ValidateSelectedUsersPopulateInTheToField(uploadUnrestrainedDocData.ListUserTo.ToArray()))
-                              .EnterSubject(uploadUnrestrainedDocData.Subject)
-                              .EnterMessage(uploadUnrestrainedDocData.Message);
-                TransmittalDetail transmittalDetail = newTransmittal.ClickSendButton(ref methodValidations);
-                transmittalDetail.LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateAttachedDocumentsAreDisplayed(selectedDocuments));
+                //newTransmittal.LogValidation<NewTransmittal>(ref validations, selectRecipientsDialog.ValidateSelectRecipientWindowStatus(closed: true))
+                //              .LogValidation<NewTransmittal>(ref validations, newTransmittal.ValidateSelectedUsersPopulateInTheToField(uploadUnrestrainedDocData.ListUserTo.ToArray()))
+                //              .EnterSubject(uploadUnrestrainedDocData.Subject)
+                //              .EnterMessage(uploadUnrestrainedDocData.Message);
+                //TransmittalDetail transmittalDetail = newTransmittal.ClickSendButton(ref methodValidations);
+                //transmittalDetail.LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateAttachedDocumentsAreDisplayed(selectedDocuments));
 
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);

@@ -27,7 +27,7 @@ namespace KiewitTeamBinder.UI.Pages.Dialogs
         private static By _cancelButton => By.Id("BtnCancel");
         private static By _addUserToButton => By.Id("AddToBtn");
         private static By _addUserCCButton => By.Id("AddCcBtn");
-        private static By _selectRecipientsWindow => By.Id("RadWindowWrapper_RadWindowSelection");
+        private static By _selectRecipientsWindow => By.XPath("//div[contains(@id,'_RadWindowSelection')]");
         private static By _userNameCheckBoxInLeftTable(string userName) => By.XPath($"//tr[contains(@id,'RecipientSelect_RadGridViewContacts')][td='{userName}']/td/input[contains(@id, 'CheckBox')]");
 
         public IWebElement DropdownFilterButon { get { return StableFindElement(_dropdownFilterButon); } }
@@ -47,6 +47,14 @@ namespace KiewitTeamBinder.UI.Pages.Dialogs
         {
             webDriver.SwitchTo().ActiveElement();
         }
+
+        public SelectRecipientsDialog SwitchToFrame()
+        {
+            WebDriver.SwitchTo().Frame(IFrameName);
+            WaitUntil(driver => DropdownFilterButon != null);
+            return this;
+        }
+
 
         public SelectRecipientsDialog SelectCompany(string companyName)
         {
@@ -136,6 +144,7 @@ namespace KiewitTeamBinder.UI.Pages.Dialogs
             {
                 foreach (var item in selectedUsers)
                 {
+                    ScrollToElement(UserNameInTable(toTable, item, nameCompny));
                     if (UserNameInTable(toTable, item, nameCompny).GetAttribute("class").Contains("HoveredRow"))
                         validation.Add(SetPassValidation(node, Validation.User_Is_Highlighted_In_The_Table));
                     else
@@ -158,7 +167,7 @@ namespace KiewitTeamBinder.UI.Pages.Dialogs
             {
                 foreach (var item in selectedUsers)
                 {
-                    string _userRowXpath = _userNameInTable(toTable, item, nameCompny).ToString();
+                    string _userRowXpath = _userNameInTable(toTable, item, nameCompny).ToString().Replace("By.XPath:", "").Trim();
                     string _checkMarkXpath = _userRowXpath.Insert(_userRowXpath.Length, "//input[@type='image']");
                     if (StableFindElement(By.XPath(_checkMarkXpath)).GetAttribute("src").Contains("tbDelete.gif"))
                         validation.Add(SetPassValidation(node, Validation.User_Is_Highlighted_In_The_Table));

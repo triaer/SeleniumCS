@@ -52,14 +52,16 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
         #region Actions
         public NewTransmittal(IWebDriver webDriver) : base(webDriver) { }
 
-        public SelectRecipientsDialog ClickRecipientsButton(string buttonName)
+        public SelectRecipientsDialog ClickRecipientsButton(string buttonName, bool switchToFrame = true)
         {
             RecipientsButton(buttonName).Click();
 
             var selectRecipientsDialog = new SelectRecipientsDialog(WebDriver);
-            WebDriver.SwitchTo().Frame(selectRecipientsDialog.IFrameName);
-            WaitUntil(driver => selectRecipientsDialog.DropdownFilterButon != null);
-
+            if (switchToFrame)
+            {
+                WebDriver.SwitchTo().Frame(selectRecipientsDialog.IFrameName);
+                WaitUntil(driver => selectRecipientsDialog.DropdownFilterButon != null);
+            }
             return selectRecipientsDialog;
         }
 
