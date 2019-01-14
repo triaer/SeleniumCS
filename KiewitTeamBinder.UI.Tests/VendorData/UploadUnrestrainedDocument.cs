@@ -63,7 +63,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 var columnValuePairList = uploadUnrestrainedDocData.ExpectedDocumentInforInColumnList(uploadUnrestrainedDocData.SingleDocInformation);
                 string[] selectedUsersWithCompanyName = uploadUnrestrainedDocData.ListUserTo.ToArray();
                 holdingArea.SwitchToWindow(currentWindow);
-                holdingArea.SelectModuleMenuItem<HoldingArea>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription(), subMenuItem: ModuleSubMenuInLeftNav.HOLDINGAREA.ToDescription())
+                holdingArea.SelectModuleMenuItemOnLeftNav<HoldingArea>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription(), subMenuItem: ModuleSubMenuInLeftNav.HOLDINGAREA.ToDescription())
                            .EnterDocumentNo(uploadUnrestrainedDocData.SingleDocInformation.DocumentNo)
                            .PressEnterKey<HoldingArea>(uploadUnrestrainedDocData.GridViewHoldingAreaData)
                            .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateRecordsMatchingFilterAreReturned(uploadUnrestrainedDocData.GridViewHoldingAreaName, columnValuesInConditionList, 1))
@@ -71,7 +71,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                            .OpenDocumentByIndex<DocumentDetail>(1, out currentWindow);
                 newDocument.LogValidation<DocumentDetail>(ref validations, newDocument.ValidateWindowIsOpened(uploadUnrestrainedDocData.DocumentDetailWindow(uploadUnrestrainedDocData.SingleDocInformation)))
                            .LogValidation<DocumentDetail>(ref validations, newDocument.ValidateDocumentDetailsDisplayCorrect(columnValuePairList))
-                           .ClickToolbarButton<HoldingArea>(ToolbarButton.Close)
+                           .ClickToolbarButtonOnWinPopup<HoldingArea>(ToolbarButton.Close)
                            .SwitchToWindow(currentWindow);
                 holdingArea.ClickCheckboxOfDocumentAtRow(indexRow: 1)
                            .ClickHeaderButton<HoldingArea>(MainPaneTableHeaderButton.Transmit, false);
@@ -103,7 +103,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                                  .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateTransmittalNoIsCorrectWithTheHeader())
                                  .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateFromUserInfoIsCorrect(uploadUnrestrainedDocData.DescriptionUserVendor2))
                                  .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateRecipentsAreDisplayed(selectedUsersWithCompanyName, false, uploadUnrestrainedDocData.CompanyName))
-                                 .ClickToolbarButton<HoldingArea>(ToolbarButton.Close)
+                                 .ClickToolbarButtonOnWinPopup<HoldingArea>(ToolbarButton.Close)
                                  .SwitchToWindow(currentWindow);
                 holdingArea.LogValidation<HoldingArea>(ref validations, transmittalDetail.ValidateTransmittalDetailWindowIsClosed())
                            .Logout();
@@ -120,7 +120,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
 
                 // when
                 columnValuesInConditionList = new List<KeyValuePair<string, string>> { new KeyValuePair<string, string>(MainPaneTableHeaderLabel.TransmittalNo.ToDescription(), tranmisttalNo) };
-                Transmittal transmittalsModule = projectDashBoard.SelectModuleMenuItem<Transmittal>(menuItem: ModuleNameInLeftNav.TRANSMITTALS.ToDescription(),subMenuItem: ModuleSubMenuInLeftNav.INBOX.ToDescription());
+                Transmittal transmittalsModule = projectDashBoard.SelectModuleMenuItemOnLeftNav<Transmittal>(menuItem: ModuleNameInLeftNav.TRANSMITTALS.ToDescription(),subMenuItem: ModuleSubMenuInLeftNav.INBOX.ToDescription());
                 transmittalsModule.LogValidation<Transmittal>(ref validations, transmittalsModule.ValidateItemsAreShown(columnValuesInConditionList, uploadUnrestrainedDocData.TransmittalGridViewName));
                 
                 // then
