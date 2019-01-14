@@ -31,6 +31,33 @@ namespace KiewitTeamBinder.Api.Service
             return dataSetResponse;
         }
 
+        public DataSet GetMailDetails(string sessionKey, string mailBox, int mailIntKey)
+        {
+            DataSet dataSetResponse = _request.GetMailDetails(sessionKey, mailBox, mailIntKey);
+            return dataSetResponse;
+        }
+
+        public KeyValuePair<string, bool> ValidateEmailsInMailBox(DataSet dataSetResponse, bool isExisted)
+        {
+            try
+            {
+                int expectedNumberOfTable;
+                if (isExisted)
+                    expectedNumberOfTable = 4;
+                else
+                    expectedNumberOfTable = 1;
+
+                int numberOfTable = dataSetResponse.Tables.Count;
+                if (numberOfTable == expectedNumberOfTable)
+                    return new KeyValuePair<string, bool>(Validation.Emails_In_Mail_Box, true);
+                return new KeyValuePair<string, bool>(Validation.Emails_In_Mail_Box, false);
+            }
+            catch (Exception e)
+            {
+                return new KeyValuePair<string, bool>(Validation.Emails_In_Mail_Box + ", Error: " + e, false);
+            }
+        }
+
         public DataTable ListMail(string sessionKey, string mailBox, string[] fieldNamesWithValues = null, string[] dateTimeFieldNamesWithValues = null, int mailAccessLevel = 1)
         {
             string orderBy = "Subject";
@@ -134,13 +161,13 @@ namespace KiewitTeamBinder.Api.Service
             return intKeyofSentMail;
         }
 
-        public KeyValuePair<string, bool> ValidateIntKeySavedMail (string intKey, int intKeySavedMail)
+        public KeyValuePair<string, bool> ValidateIntKeySavedMail (string intKeySavedMail)
         {
             try
             {
-                if (int.Parse(intKey) == intKeySavedMail)
-                    return new KeyValuePair<string, bool>(Validation.IntKey_Saved_Mail, true);
-                return new KeyValuePair<string, bool>(Validation.IntKey_Saved_Mail, false);
+                int temp = int.Parse(intKeySavedMail);
+                return new KeyValuePair<string, bool>(Validation.IntKey_Saved_Mail, true);
+           
             }
             catch (Exception e)
             {
@@ -165,6 +192,7 @@ namespace KiewitTeamBinder.Api.Service
         {
             public static string IntKey_Saved_Mail = "Validate intkey of Saved Mail is correct ";
             public static string IntKey_Sent_Mail = "Validate intkey of Sent Mail is correct ";
+            public static string Emails_In_Mail_Box = "Validate Email is in MailBox ";
         }
 
         #endregion

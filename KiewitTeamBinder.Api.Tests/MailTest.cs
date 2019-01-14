@@ -22,23 +22,30 @@ namespace KiewitTeamBinder.Api.Tests
             try
             {
                 //given
-                var sendMaildata = new SendMailSmoke();
-                var teambinderTestAccount = GetTestAccount("AdminAccount1", environment, "NonSSO");
-                sessionRequest = new SessionApi(GetServiceUrl(teambinderTestAccount.Url));
+                var sendMailData = new SendMailSmoke();
+                var teambinderTestAccount1 = GetTestAccount("AdminAccount1", environment, "NonSSO");
+                var teambinderTestAccount2 = GetTestAccount("AdminAccount2", environment, "NonSSO");
+                sessionRequest = new SessionApi(GetServiceUrl(teambinderTestAccount1.Url));
 
                 //when
-                sessionKey = sessionRequest.LogonWithApplication(teambinderTestAccount.Username, teambinderTestAccount.Company, teambinderTestAccount.Password, sendMaildata.ProjectNumber, sendMaildata.ConnectingProduct);
+                sessionKey = sessionRequest.LogonWithApplication(teambinderTestAccount1.Username, teambinderTestAccount1.Company, teambinderTestAccount1.Password, sendMailData.ProjectNumber, sendMailData.ConnectingProduct);
                 validations.Add(sessionRequest.ValidateLogonWithApplicationSuccessfully(sessionKey));
 
-                MailApi mailRequest = new MailApi(GetServiceUrl(teambinderTestAccount.Url));
-                DataTable response = mailRequest.ListMail(sessionKey, sendMaildata.MailBox, sendMaildata.FilterOptions, null);
+                MailApi mailRequest = new MailApi(GetServiceUrl(teambinderTestAccount1.Url));
+                int savedMailIntKey = int.Parse(mailRequest.SaveMail(sessionKey, sendMailData.MailType, sendMailData.MailDetailXml(sendMailData.IntKeyForNewMail, sendMailData.RecipientIntKey), sendMailData.ComposeMailAcction, sendMailData.MailBox));
 
-                string intKey = mailRequest.getIntKey(response);
-                int intKeySavedMail = int.Parse(mailRequest.SaveMail(sessionKey, sendMaildata.MailType, sendMaildata.MailDetailXml("0"), sendMaildata.ComposeMailAcction, sendMaildata.MailBox));
-                validations.Add(mailRequest.ValidateIntKeySavedMail(intKey, intKeySavedMail));
+                DataSet mailDetail = mailRequest.GetMailDetails(sessionKey, sendMailData.MailBox, savedMailIntKey);
+                validations.Add(mailRequest.ValidateEmailsInMailBox(mailDetail, true));
 
-                string intKeySentMail = mailRequest.SendMail(sessionKey, intKeySavedMail, sendMaildata.MailType, sendMaildata.MailDetailXml(intKey), sendMaildata.ComposeMailAcction, sendMaildata.MailBox);
+                string intKeySentMail = mailRequest.SendMail(sessionKey, savedMailIntKey, sendMailData.MailType, sendMailData.MailDetailXml(savedMailIntKey, sendMailData.RecipientIntKey), sendMailData.ComposeMailAcction, sendMailData.MailBox);
                 validations.Add(mailRequest.ValidateIntKeySentMail(intKeySentMail));
+
+                string respone = sessionRequest.LogoffStatus(sessionKey);
+                validations.Add(sessionRequest.ValidateLogoffStatusSuccessfully(respone));
+
+                sessionKey = sessionRequest.LogonWithApplication(teambinderTestAccount2.Username, teambinderTestAccount2.Company, teambinderTestAccount2.Password, sendMailData.ProjectNumber, sendMailData.ConnectingProduct);
+                mailDetail = mailRequest.GetMailDetails(sessionKey, sendMailData.MailBox, savedMailIntKey);
+                validations.Add(mailRequest.ValidateEmailsInMailBox(mailDetail, false));
 
                 validations.Add(new KeyValuePair<string, bool>("Release " + sessionKey, sessionRequest.ValidateLogoffStatusSuccessfully(sessionRequest.LogoffStatus(sessionKey)).Value));
 
