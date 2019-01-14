@@ -40,18 +40,21 @@ namespace KiewitTeamBinder.UI.Pages.Global
             if (OtherUserLoginBtn == null)
                 Browser.MinimizeWindow();
             Browser.MaximizeWindow();
-            SwitchToNewPopUpWindow(OtherUserLoginBtn, out logonWindow, true);
+            //SwitchToNewPopUpWindow(OtherUserLoginBtn, out logonWindow, true);
+            OtherUserLoginBtn.Click();
             WaitForElementDisplay(By.Id("walkme-player"));
 
             //Fill account fields
-            UserIdTextbox.InputText(account.Username,true);
+            UserIdTextbox.InputText(account.Username, true);
             WaitForElementEnable(_companyIdTextbox);
             CompanyIdTextbox.InputText(account.Company, true);
             WaitForElementEnable(_passwordTextbox);
             PasswordTextbox.InputText(account.Password, true);
 
             //Click LogIn button
-            LoginBtn.Click();
+            //LoginBtn.Click();
+            SwitchToNewPopUpWindow(LoginBtn, out logonWindow, true);
+
             var projectsListPage = new ProjectsList(WebDriver);
             WaitUntil(driver => projectsListPage.ProjListTitle != null);
             
