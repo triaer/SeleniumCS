@@ -153,13 +153,17 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             }
         }
 
-        public List<KeyValuePair<string, bool>> ValidateSelectedUsersPopulateInTheToField(string[] selectedUsers)
+        public List<KeyValuePair<string, bool>> ValidateSelectedUsersPopulateInTheToField(string[] selectedUsers, string companyName = "")
         {
             var node = StepNode();
             var validation = new List<KeyValuePair<string, bool>>();
             try
             {
                 bool flag;
+                if (companyName != "")
+                    for (int itemUser = 0; itemUser < selectedUsers.Length; itemUser++)
+                        selectedUsers[itemUser] = selectedUsers[itemUser] + " (" + companyName + ")";
+                 
                 foreach (var selectedUser in SelectedUsersInToField)
                 {
                     flag = false;

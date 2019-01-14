@@ -61,8 +61,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 // User Story 120278 - 120081 - Upload Unrestrained Document Part 2
                 var columnValuesInConditionList = new List<KeyValuePair<string, string>> { uploadUnrestrainedDocData.ColumnValuesInConditionList.DocumentNo };
                 var columnValuePairList = uploadUnrestrainedDocData.ExpectedDocumentInforInColumnList(uploadUnrestrainedDocData.SingleDocInformation);
-                string[] selectedUsersWithCompanyName = new string[] { uploadUnrestrainedDocData.DescriptionUserVendor2 };
-                string[] selectedDocuments = new string[uploadUnrestrainedDocData.NumberOfSelectedDocumentRow];
+                string[] selectedUsersWithCompanyName = uploadUnrestrainedDocData.ListUserTo.ToArray();
                 holdingArea.SwitchToWindow(currentWindow);
                 holdingArea.SelectModuleMenuItem<HoldingArea>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription(), subMenuItem: ModuleSubMenuInLeftNav.HOLDINGAREA.ToDescription())
                            .EnterDocumentNo(uploadUnrestrainedDocData.SingleDocInformation.DocumentNo)
@@ -81,7 +80,6 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 SelectRecipientsDialog selectRecipientsDialog = newTransmittal.ClickRecipientsButton(uploadUnrestrainedDocData.ToButton, false);
                 selectRecipientsDialog.LogValidation<SelectRecipientsDialog>(ref validations, selectRecipientsDialog.ValidateSelectRecipientWindowStatus())
                                       .SwitchToFrame()
-                                      //.LogValidation<SelectRecipientsDialog>(ref validations, newTransmittal.ValidateAllSelectedDocumentsAreListed(ref selectedDocuments))
                                       .SelectCompany(uploadUnrestrainedDocData.CompanyName)
                                       .LogValidation<SelectRecipientsDialog>(ref validations, selectRecipientsDialog.ValidateListItemUserInLeftGrid(uploadUnrestrainedDocData.ListUser))
                                       .AddUserToTheTable(uploadUnrestrainedDocData.toTableTo, uploadUnrestrainedDocData.ListUserTo)
@@ -92,19 +90,19 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                                       .LogValidation<SelectRecipientsDialog>(ref validations, selectRecipientsDialog.ValidateUserIsAddedToTheTable(uploadUnrestrainedDocData.toTableCc, uploadUnrestrainedDocData.CompanyName, uploadUnrestrainedDocData.ListUserCc))
                                       .ClickOkButton<NewTransmittal>();
                 newTransmittal.LogValidation<NewTransmittal>(ref validations, selectRecipientsDialog.ValidateSelectRecipientWindowStatus(closed: true))
-                              .LogValidation<NewTransmittal>(ref validations, newTransmittal.ValidateSelectedUsersPopulateInTheToField(uploadUnrestrainedDocData.ListUserTo.ToArray()))
+                              .LogValidation<NewTransmittal>(ref validations, newTransmittal.ValidateSelectedUsersPopulateInTheToField(uploadUnrestrainedDocData.ListUserTo.ToArray(), uploadUnrestrainedDocData.CompanyName))
                               .EnterSubject(uploadUnrestrainedDocData.Subject)
                               .EnterMessage(uploadUnrestrainedDocData.Message);
                 TransmittalDetail transmittalDetail = newTransmittal.ClickSendButton(ref methodValidations);
 
-                string transmittalDetailWindow = string.Format(uploadUnrestrainedDocData.TransmittalDetailWindow, transmittalDetail.GetTransmittalNo(), uploadUnrestrainedDocData.Subject);
+                string tranmisttalNo = transmittalDetail.GetTransmittalNo();
+                string transmittalDetailWindow = string.Format(uploadUnrestrainedDocData.TransmittalDetailWindow, tranmisttalNo, uploadUnrestrainedDocData.Subject);
                 transmittalDetail.LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateWindowIsOpened(transmittalDetailWindow))
                                  .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateProjectNumberIsCorrect(uploadUnrestrainedDocData.ProjectNumber))
                                  .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateProjectNameIsCorrect(uploadUnrestrainedDocData.ProjectName))
                                  .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateTransmittalNoIsCorrectWithTheHeader())
                                  .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateFromUserInfoIsCorrect(uploadUnrestrainedDocData.DescriptionUserVendor2))
-                                 //.LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateAttachedDocumentsAreDisplayed(selectedDocuments))
-                                 .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateRecipentsAreDisplayed(selectedUsersWithCompanyName))
+                                 .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateRecipentsAreDisplayed(selectedUsersWithCompanyName, false, uploadUnrestrainedDocData.CompanyName))
                                  .ClickToolbarButton<HoldingArea>(ToolbarButton.Close)
                                  .SwitchToWindow(currentWindow);
                 holdingArea.LogValidation<HoldingArea>(ref validations, transmittalDetail.ValidateTransmittalDetailWindowIsClosed())
@@ -121,7 +119,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 projectsList.NavigateToProjectDashboardPage(uploadUnrestrainedDocData.ProjectName);
 
                 // when
-                columnValuesInConditionList = new List<KeyValuePair<string, string>> { new KeyValuePair<string, string>(MainPaneTableHeaderLabel.TransmittalNo.ToDescription(), transmittalDetail.GetTransmittalNo()) };
+                columnValuesInConditionList = new List<KeyValuePair<string, string>> { new KeyValuePair<string, string>(MainPaneTableHeaderLabel.TransmittalNo.ToDescription(), tranmisttalNo) };
                 Transmittal transmittalsModule = projectDashBoard.SelectModuleMenuItem<Transmittal>(menuItem: ModuleNameInLeftNav.TRANSMITTALS.ToDescription(),subMenuItem: ModuleSubMenuInLeftNav.INBOX.ToDescription());
                 transmittalsModule.LogValidation<Transmittal>(ref validations, transmittalsModule.ValidateItemsAreShown(columnValuesInConditionList, uploadUnrestrainedDocData.TransmittalGridViewName));
                 

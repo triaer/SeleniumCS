@@ -33,7 +33,7 @@ namespace KiewitTeamBinder.Common.TestData
 
         //User Story 120278 - 120081 - Upload Unrestrained Document Part 2
         public string ProjectNumber = "AUTO1";
-        public string DescriptionUserVendor2 = "Automation Vendor1, AUTOVENDOR";
+        public string DescriptionUserVendor2 = "Automation Vendor2 (AUTOVENDOR)";
         public string GridViewHoldingAreaName = "GridViewHoldingArea";
         public string GridViewHoldingAreaData = "_GridViewHoldingArea_GridData";
         public int NumberOfSelectedDocumentRow = 1;    

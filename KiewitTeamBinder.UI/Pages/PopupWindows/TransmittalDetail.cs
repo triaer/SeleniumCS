@@ -335,28 +335,40 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             }
         }
 
-        public KeyValuePair<string, bool> ValidateRecipentsAreDisplayed(string[] selectedUsersWithCompanyName, bool ccList = false)
+        public List<KeyValuePair<string, bool>> ValidateRecipentsAreDisplayed(string[] selectedUsersWithCompanyName, bool ccList = false, string companyName = "")
         {
             var node = StepNode();
-            node.Info("");
+            var validation = new List<KeyValuePair<string, bool>>();
+            node.Info("Validate recipents are displayed");
             try
             {
+                if (companyName != "")
+                    for (int i = 0; i < selectedUsersWithCompanyName.Length; i++)
+                        selectedUsersWithCompanyName[i] = selectedUsersWithCompanyName[i] + " (" + companyName + ")";
+
                 foreach (var recipient in GetRecipientList(ccList))
                 {
                     bool flag = false;
                     for (int i = 0; i < selectedUsersWithCompanyName.Length && flag == false; i++)
+                    {
+                        string b = selectedUsersWithCompanyName[i];
                         if (recipient == selectedUsersWithCompanyName[i])
+                        {
                             flag = true;
-
+                            break;
+                        }
+                    }
                     if (flag == false)
-                        return SetFailValidation(node, Validation.Recipents_Are_Displayed);
-                     
+                        validation.Add(SetFailValidation(node, Validation.Recipents_Are_Displayed));
+                    else
+                        validation.Add(SetPassValidation(node, Validation.Recipents_Are_Displayed));
                 }
-                return SetPassValidation(node, Validation.Recipents_Are_Displayed);
+                return validation;
             }
             catch (Exception e)
             {
-                return SetErrorValidation(node, Validation.Recipents_Are_Displayed, e);
+                validation.Add(SetErrorValidation(node, Validation.Recipents_Are_Displayed, e));
+                return validation;
             }
         }
 
