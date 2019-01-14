@@ -42,15 +42,23 @@ namespace KiewitTeamBinder.Api.Service
             try
             {
                 int expectedNumberOfTable;
+                string message;
                 if (isExisted)
+                {
                     expectedNumberOfTable = 4;
+                    message = Validation.Emails_In_Mail_Box;
+                }
                 else
+                {
                     expectedNumberOfTable = 1;
+                    message = Validation.Emails_Not_In_Mail_Box;
+                }
+                    
 
                 int numberOfTable = dataSetResponse.Tables.Count;
                 if (numberOfTable == expectedNumberOfTable)
-                    return new KeyValuePair<string, bool>(Validation.Emails_In_Mail_Box, true);
-                return new KeyValuePair<string, bool>(Validation.Emails_In_Mail_Box, false);
+                    return new KeyValuePair<string, bool>(message, true);
+                return new KeyValuePair<string, bool>(message, false);
             }
             catch (Exception e)
             {
@@ -192,7 +200,8 @@ namespace KiewitTeamBinder.Api.Service
         {
             public static string IntKey_Saved_Mail = "Validate intkey of Saved Mail is correct ";
             public static string IntKey_Sent_Mail = "Validate intkey of Sent Mail is correct ";
-            public static string Emails_In_Mail_Box = "Validate Email is in MailBox ";
+            public static string Emails_In_Mail_Box = "Validate Email exists in MailBox ";
+            public static string Emails_Not_In_Mail_Box = "Validate Email not exists in MailBox ";
         }
 
         #endregion
