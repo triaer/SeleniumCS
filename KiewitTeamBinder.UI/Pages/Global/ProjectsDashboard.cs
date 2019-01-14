@@ -11,7 +11,7 @@ using KiewitTeamBinder.Common;
 using KiewitTeamBinder.Common.Helper;
 using static KiewitTeamBinder.Common.KiewitTeamBinderENums;
 using KiewitTeamBinder.UI.Pages.PopupWindows;
-
+using KiewitTeamBinder.UI.Pages.VendorDataModule;
 
 namespace KiewitTeamBinder.UI.Pages.Global
 {
@@ -49,6 +49,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         private static By _pageCountInNumPartOfGridPager(string gridViewName) => By.XPath($"//table[contains(@id,'{gridViewName}')]//div[contains(@class,'rgNumPart')]//a");
         private static By _arrowFirstPageInGridPager(string gridViewName) => By.XPath($"//table[contains(@id,'{gridViewName}')]//img[@title='First Page']");
         private static By _arrowLastPageInGridPager(string gridViewName) => By.XPath($"//table[contains(@id,'{gridViewName}')]//img[@title='Last Page']");
+        private static By _itemWidget(string widgetName, string itemName) => By.XPath($"//div[@id='{widgetName}']//span[contains(text(),'{itemName}')]");
         private static By _reportsButton => By.Id("btnReports");
 
         private static string _filterItemsXpath = "//tr[@valign='top' and not(contains(@style, 'hidden'))]";        
@@ -84,6 +85,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         public IWebElement ArrowFirstPageInGridPager(string gridViewName) => StableFindElement(_arrowFirstPageInGridPager(gridViewName));
         public IWebElement ArrowLastPageInGridPager(string gridViewName) => StableFindElement(_arrowLastPageInGridPager(gridViewName));
         public IWebElement ReportsButton { get { return StableFindElement(_reportsButton); } }
+        public IWebElement ItemWidget(string widgetName, string itemName) => StableFindElement(_itemWidget(widgetName, itemName));
         #endregion
 
         #region Actions
@@ -111,6 +113,14 @@ namespace KiewitTeamBinder.UI.Pages.Global
             node.Info($"Click on the sub node: {subMenuItem}");
             SubMenuItemLink(subMenuItem).Click();
             WaitForElement(_subPageHeader);
+        }
+
+        public T ClickItemInWidget<T>(string widgetName, string itemName, bool waitForLoading = true)
+        {
+            if (waitForLoading)
+                WaitForLoading(_itemWidget(widgetName, itemName));
+            ItemWidget(widgetName, itemName).Click();
+            return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 
         public T SelectFilterOption<T>(string nameOrIndex, bool byName = true, bool waitForLoading = true)

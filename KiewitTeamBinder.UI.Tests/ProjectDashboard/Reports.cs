@@ -40,37 +40,8 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                 test.Info("Navigate to DashBoard Page of Project: " + reportData.ProjectName);
                 ProjectsDashboard projectDashBoard = projectsList.NavigateToProjectDashboardPage(reportData.ProjectName);
 
-                ////when User Story 123743 - 120801 Run Report
-                //test = LogTest("Run Report");
-                //StandardReports standardReports = projectDashBoard.OpenStandardReportsWindow(true);
-                //standardReports.SelectReportModule(ref currentIframe, reportData.ReportTab, reportData.ModuleName)
-                //    .LogValidation<StandardReports>(ref validations, standardReports.ValidateAvailableReportsDisplay(reportData.ReportTab, reportData.ModuleName, reportData.AvailableReports))
-                //    .SelectReportModuleItem(ref currentIframe, reportData.ReportTab, reportData.ModuleName, reportData.ModuleItemName)
-                //    .SelectItemInDropdown(ref currentIframe, reportData.ContractNumberDropdownList, reportData.ContractNumberItem, ref methodValidations)
-                //    .ClickSearchButton(ref currentIframe)
-                //    .LogValidation<StandardReports>(ref validations, standardReports.ValidateValueInReportDetailDisplaysCorrectly(reportData.contractNumberKey, reportData.contractNumberValueArray));
-
-                ////when User Story 123735 - 120802 Generate/Navigate to Hyperlink
-                //test = LogTest("Generate/Navigate to Hyperlink");
-                //string reportRanByUser = standardReports.GetReport(ref currentIframe);
-                //GenerateHyperlinkDialog generateHyperlinkDialog = standardReports.ClickGenerateHyperlink();
-                //string reportUrl = generateHyperlinkDialog.CopyHyperlink();
-
-                //generateHyperlinkDialog.ClickCloseButton(ref currentIframe, ref methodValidations);
-                //Browser.Quit();
-
-                //currentIframe = null;
-                //driver = Browser.Open(reportUrl, browser);
-                //StandardReports newStandardReports = new StandardReports(driver).Logon(teambinderTestAccount);
-                //newStandardReports.LogValidation<StandardReports>(ref validations, newStandardReports.ValidateReportInHyperlinkIsIdenticalToReportRanByUser(ref currentIframe, reportRanByUser));
-
-                //when User Story 123737 - 120803 Schedule a Report
-
-                //driver = Browser.Open(teambinderTestAccount.Url, browser);
-                //projectsList = new NonSsoSignOn(driver).Logon(teambinderTestAccount) as ProjectsList;
-                //currentIframe = null;
-                //projectDashBoard = projectsList.NavigateToProjectDashboardPage(reportData.ProjectName);
-
+                //when User Story 123743 - 120801 Run Report
+                test = LogTest("Run Report");
                 StandardReports standardReports = projectDashBoard.OpenStandardReportsWindow(true);
 
                 standardReports.SelectReportModule(ref currentIframe, reportData.ReportTab, reportData.ModuleName)
@@ -78,6 +49,7 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                     .SelectItemInDropdown(ref currentIframe, reportData.ContractNumberDropdownList, reportData.ContractNumberItem, ref methodValidations)
                     .ClickSearchButton(ref currentIframe);
 
+                //when User Story 123737 - 120803 Schedule a Report
                 test = LogTest("Schedule a Report");
                 string ContractNumbber = standardReports.GetContractNumber(reportData.contractNumberKey);
 

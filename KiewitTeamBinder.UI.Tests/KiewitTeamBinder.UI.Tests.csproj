@@ -145,6 +145,7 @@
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VendorData\FilteringExportingVendorDataRegisterValidation.cs" />
     <Compile Include="VendorData\CreateContractPurchaseItemDeliverable.cs" />
     <Compile Include="VendorData\UploadUnrestrainedDocument.cs" />
     <Compile Include="VendorData\SingleDocUpload.cs" />

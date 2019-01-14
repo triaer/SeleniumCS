@@ -23,14 +23,42 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
         private static By _purchaseTable => By.XPath("//table[contains(@id,'GridViewItemsVendor')]/thead");
 
         private static string _filterItemsXpath = "//table[contains(@id,'GridViewItemsVendor')]//tr[@valign='top']";
+       
+        private static By _contractNumber(string contractNumber,string gridView, string contractDescription) => By.XPath($"//span[contains(text(),'{contractNumber}')]/ancestor::tr[contains(@id,'{gridView}_ctl00')]//nobr[contains(text(),'{contractDescription}')]");
+        private static By _checkBoxItemContract(string gridView, string contractDescription) => By.XPath($"//*[contains(text(),'{contractDescription}')]/ancestor::tr[contains(@id,'{gridView}_ctl00')]//input[contains(@id,'{gridView}_ctl00')]");
+        private static By _selectedRecordCount => By.XPath("//span[@id='lblRegisterSelectedRecordCount']");
+        private static By _blueHeader(string blueHeader) => By.XPath($"//div[@id='lblRegisterCaption']/span[text()='{blueHeader}']");
+        private static By _itemsList(string gridView) => By.XPath($"//tr[contains(@id,'ctl00_cntPhMain_{gridView}_ctl00')]");
+        private static By _totalItem(string gridView) => By.XPath($"//span[contains(@id,'ctl00_cntPhMain_{gridView}_ctl00DSC')]");
 
         public IReadOnlyCollection<IWebElement> ExpandButton { get { return StableFindElements(_expandButton); } }
         public IWebElement PurchaseTable { get { return StableFindElement(_purchaseTable); } }
+        public IWebElement ContractNumber(string contractNumber, string gridView, string description) => StableFindElement(_contractNumber(contractNumber, gridView, description));
+        public IWebElement CheckBoxItemContract(string gridView, string contractDescription) => StableFindElement(_checkBoxItemContract(gridView, contractDescription));
+        public IWebElement SelectedRecordCount { get { return StableFindElement(_selectedRecordCount); } }
+        public IWebElement BlueHeader(string blueHeader) => StableFindElement(_blueHeader(blueHeader));
+        public IWebElement TotalItem(string gridView) => StableFindElement(_totalItem(gridView));
+        public IReadOnlyCollection<IWebElement> ItemsList(string gridView) => StableFindElements(_itemsList(gridView));
         #endregion
 
         #region Actions
         public VendorDataRegister(IWebDriver webDriver) : base(webDriver)
         {
+        }
+
+        public int GetTotalItems(string gridView, bool waitForLoading = true) {
+            if (waitForLoading)
+                WaitForLoading(_totalItem(gridView));
+            return int.Parse(TotalItem(gridView).Text);
+        }
+
+        public int GetSelectedRecordCount(bool waitForLoading = true) {
+            string selectedText = "";
+            string selectedCount = SelectedRecordCount.Text;
+
+            selectedText = selectedCount.Split(':')[1];
+            selectedText = selectedText.Replace(" ", "");
+            return int.Parse(selectedText);
         }
 
         public ItemDetail OpenItem(List<KeyValuePair<string, string>> columnValuePairList)
@@ -43,6 +71,33 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             return new ItemDetail(WebDriver);
         }
 
+        public VendorDataRegister ClickOnBlueHeader(string blueHeader) {
+            var node = StepNode();
+            node.Info($"Click on the {blueHeader} BlueHeader");
+            BlueHeader(blueHeader).Click();
+            return this;
+        }
+
+        public VendorDataRegister ClickOnCheckBox(string gridView, string contractDescription, bool uncheck = false, bool waitForLoading = true) {
+            if (uncheck)
+            {
+                var node = StepNode();
+                node.Info("Check box a line item");
+                if (waitForLoading)
+                    WaitForLoadingPanel();
+                CheckBoxItemContract(gridView, contractDescription).Click();
+                return this;
+            }
+            else {
+                var node = StepNode();
+                node.Info("Uncheck box a line item");
+                if (waitForLoading)
+                    WaitForLoadingPanel();
+                CheckBoxItemContract(gridView, contractDescription).Click();
+                return this;
+            }
+        }
+
         public VendorDataRegister ClickExpandButton(int index, bool waitForLoading = true)
         {
             var node = StepNode();
@@ -53,6 +108,16 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             {
                 WaitForLoadingPanel(shortTimeout * 2);
             }
+            return this;
+        }
+
+        public VendorDataRegister DoubleClickItemContract(string contractNumber, string gridView, string description, bool waitForLoading = true) {
+            var node = StepNode();
+            node.Info("Double click on a item");
+            if (waitForLoading)
+                WaitForLoadingPanel();
+            ScrollIntoView(ContractNumber(contractNumber, gridView, description));
+            ContractNumber(contractNumber, gridView, description).DoubleClick();
             return this;
         }
 
@@ -103,9 +168,33 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             }
         }
 
+        public KeyValuePair<string, bool> ValidateItemsCountedAreMatches(string gridView, int expectedValue=0)
+        {
+            var node = StepNode();
+            try
+            {
+                expectedValue = GetTotalItems(gridView);
+                int itemListSize = 0;
+                //int itemListSize = ItemsList(gridView).Count;
+                foreach (IWebElement item in ItemsList(gridView)) {
+                    if (item.IsDisplayed()) {
+                        itemListSize += 1;
+                    }
+                }
+                if (itemListSize == expectedValue)
+                    return SetPassValidation(node, Validation.Purchase_Items_Are_Shown);
+                return SetFailValidation(node, Validation.Purchase_Items_Are_Shown);
+            }
+            catch (Exception e)
+            {
+                return SetErrorValidation(node, Validation.Purchase_Items_Are_Shown, e);
+            }
+        }
+
         private static class Validation
         {
             public static string Purchase_Items_Are_Shown = "Validate that purchase items are shown";
+            public static string Items_Counted_Are_Matches = "Validate that number of line items matches the count";
         }
         #endregion
     }
