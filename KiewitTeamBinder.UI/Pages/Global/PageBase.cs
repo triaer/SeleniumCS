@@ -250,6 +250,19 @@ namespace KiewitTeamBinder.UI.Pages.Global
             var wait = Browser.Wait(seconds);
             return wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.InvisibilityOfElementLocated(elementDescription));
         }
+        internal static bool IsElementPresent(By elementDescription)
+        {
+            try
+            {
+                WebDriver.FindElement(elementDescription);
+                return true;
+            }
+            catch (NoSuchElementException e)
+            {
+                return false;
+            }
+        }
+
         /// <summary>
         /// Wait for progress appear and disappear
         /// </summary>

@@ -26,13 +26,17 @@ namespace KiewitTeamBinder.UI.Pages.Global
         private static By _saveChangeYesButton => By.Id("Yes");
         private static By _saveChangeNoButton => By.Id("No");
         private static By _saveItemPopUp => By.XPath("//div[contains(@id,'RadWindowWrapper_alert')]");
+        private static By _iframeAutoRecovery => By.XPath("//iframe[@name='RadWindowAutoRecovery']");
+        private static By _recoveryCancelButton => By.Id("divCancel");
 
 
         public IWebElement LogoutLink { get { return StableFindElement(_logoutLink); } }
         public IWebElement LogoutYesButton { get { return StableFindElement(_logoutYesButton); } }
         public IWebElement SaveChangeYesButton { get { return StableFindElement(_saveChangeYesButton); } }
         public IWebElement SaveChangeNoButton { get { return StableFindElement(_saveChangeNoButton); } }
-        public IWebElement WalkMe { get { return StableFindElement(_walkMe); } }        
+        public IWebElement WalkMe { get { return StableFindElement(_walkMe); } }
+        public IWebElement IframeAutoRecovery { get { return StableFindElement(_iframeAutoRecovery); } }
+        public IWebElement RecoveryCancelButton { get { return StableFindElement(_recoveryCancelButton); } }
         #endregion
 
 
@@ -64,6 +68,17 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 Browser.Close();
             }
             WebDriver.SwitchTo().Window(window);
+            return this;
+        }
+        public LoggedInLanding HandleAutoRecoveryPopup()
+        {
+            if (IsElementPresent(_iframeAutoRecovery))
+            {
+                WebDriver.SwitchTo().Frame("RadWindowAutoRecovery");
+                //RecoveryCancelButton.Click();
+                Console.WriteLine(RecoveryCancelButton.GetAttribute("id"));
+                WebDriver.SwitchTo().DefaultContent();
+            }
             return this;
         }
 
