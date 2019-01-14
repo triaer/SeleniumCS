@@ -55,17 +55,29 @@ namespace KiewitTeamBinder.UI.Pages.Dialogs
             return MessageDialog.Text;
         }
 
+        public KeyValuePair<string, bool> ValidateConfirmMessageDisplayCorrect(string expectedMessage)
+        {
+            var node = StepNode();
+            try
+            {
+                string actualMessage = GetDialogMessage().Replace(System.Environment.NewLine, string.Empty).Trim();
+                if (actualMessage == expectedMessage)
+                    return SetPassValidation(node, Validation.Message_On_Dialog + expectedMessage);
+                else
+                    return SetFailValidation(node, Validation.Message_On_Dialog, expectedMessage, actualMessage);
+            }
+            catch (Exception e)
+            {
+                return SetErrorValidation(node, Validation.Message_On_Dialog, e);
+            }
+        }
         public List<KeyValuePair<string, bool>> ValidateMessageDialogAsExpected(string expectedMessage)
         {
             var node = StepNode();
             var validation = new List<KeyValuePair<string, bool>>();
             try
             {
-                string actualContent = GetDialogMessage().Replace(System.Environment.NewLine, string.Empty);
-                if (expectedMessage == actualContent)
-                    validation.Add(SetPassValidation(node, Validation.Message_On_Dialog + actualContent));
-                else
-                    validation.Add(SetFailValidation(node, Validation.Message_On_Dialog, expectedMessage, actualContent));
+                validation.Add(ValidateConfirmMessageDisplayCorrect(expectedMessage));
 
                 if (StableFindElement(By.XPath(string.Format(_button, DialogPopupButton.Yes.ToDescription()))) != null)
                     validation.Add(SetPassValidation(node, Validation.Yes_Button_Displays));
@@ -81,7 +93,7 @@ namespace KiewitTeamBinder.UI.Pages.Dialogs
             }
             catch (Exception e)
             {
-                validation.Add(SetErrorValidation(node, Validation.Message_On_Dialog, e));
+                validation.Add(SetErrorValidation(node, Validation.Yes_Button_Displays, e));
                 return validation;
             }
         }

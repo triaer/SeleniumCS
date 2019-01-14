@@ -179,6 +179,21 @@ namespace KiewitTeamBinder.UI
             driver.SwitchTo().DefaultContent();
         }
 
+        public static void WaitAndClick(this IWebElement Element)
+        {
+            try
+            {
+                WebDriverWait wait = Browser.Wait(mediumTimeout);
+                //wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.InvisibilityOfElementLocated(By.className("loader")));
+                wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(Element)).Click();
+            }
+            catch (WebDriverException)
+            {
+                ScrollIntoView(Element);
+                Element.Click();
+            }
+        }
+
         public static void ActionsClick(this IWebElement Element)
         {
             Actions actions = new Actions(WebDriver);

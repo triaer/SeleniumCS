@@ -18,20 +18,25 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
         #region Entities
 
-        public static By _walkMe => By.Id("walkme-player");
+        public static By _walkMe => By.XPath("//div[@id='walkme-player']//div[contains(@class,'walkme-in')]");
         private static By _userNameLable => By.XPath("//div[@id='divUserName']/span");
         private static By _logoutLink => By.Id("LogoutLabel");
         private static By _logoutYesButton => By.XPath("//div[@class='rwDialogPopup radconfirm']//a[.//span[text()='Yes']]");
         private static By _alertPopup => By.Id("kendoAlertWindow");
         private static By _saveChangeYesButton => By.Id("Yes");
         private static By _saveChangeNoButton => By.Id("No");
-        
-        
+        private static By _saveItemPopUp => By.XPath("//div[contains(@id,'RadWindowWrapper_alert')]");
+        private static By _iframeAutoRecovery => By.XPath("//iframe[@name='RadWindowAutoRecovery']");
+        private static By _recoveryCancelButton => By.Id("divCancel");
+
+
         public IWebElement LogoutLink { get { return StableFindElement(_logoutLink); } }
         public IWebElement LogoutYesButton { get { return StableFindElement(_logoutYesButton); } }
         public IWebElement SaveChangeYesButton { get { return StableFindElement(_saveChangeYesButton); } }
         public IWebElement SaveChangeNoButton { get { return StableFindElement(_saveChangeNoButton); } }
-        public IWebElement WalkMe { get { return StableFindElement(_walkMe); } }        
+        public IWebElement WalkMe { get { return StableFindElement(_walkMe); } }
+        public IWebElement IframeAutoRecovery { get { return StableFindElement(_iframeAutoRecovery); } }
+        public IWebElement RecoveryCancelButton { get { return StableFindElement(_recoveryCancelButton); } }
         #endregion
 
 
@@ -65,6 +70,45 @@ namespace KiewitTeamBinder.UI.Pages.Global
             WebDriver.SwitchTo().Window(window);
             return this;
         }
+        public LoggedInLanding HandleAutoRecoveryPopup()
+        {
+            if (IsElementPresent(_iframeAutoRecovery))
+            {
+                WebDriver.SwitchTo().Frame("RadWindowAutoRecovery");
+                //RecoveryCancelButton.Click();
+                Console.WriteLine(RecoveryCancelButton.GetAttribute("id"));
+                WebDriver.SwitchTo().DefaultContent();
+            }
+            return this;
+        }
+
+        public KeyValuePair<string, bool> ValidateSaveDialogStatus(bool closed = false)
+        {
+            var node = StepNode();
+
+            try
+            {
+                if (closed == true)
+                {
+                    if (FindElement(_saveItemPopUp) != null)
+                        return SetFailValidation(node, Validation.Save_PopUp_Closed);
+
+                    return SetPassValidation(node, Validation.Save_PopUp_Closed);
+                }
+
+                if (StableFindElement(_saveItemPopUp) != null)
+                    return SetPassValidation(node, Validation.Save_PopUp_Opened);
+
+                return SetFailValidation(node, Validation.Save_PopUp_Opened);
+            }
+            catch (Exception e)
+            {
+                if (closed == true)
+                    return SetErrorValidation(node, Validation.Save_PopUp_Closed, e);
+
+                return SetErrorValidation(node, Validation.Save_PopUp_Opened, e);
+            }
+        }
 
         public string GetUrl()
         {
@@ -96,5 +140,11 @@ namespace KiewitTeamBinder.UI.Pages.Global
         }
 
         #endregion
+        private static class Validation
+        {
+            public static string Save_PopUp_Closed = "Validate that the save popup is closed";
+            public static string Save_PopUp_Opened = "Validate that the save popup is opened";
+            
+        }
     }
 }

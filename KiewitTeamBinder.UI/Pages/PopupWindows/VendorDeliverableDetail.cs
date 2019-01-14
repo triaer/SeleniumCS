@@ -29,10 +29,10 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             var node = StepNode();
 
             node.Info($"Click {DeliverableField.ContractNumber.ToDescription()} dropdown, and select: " + deliverableItemInfo.ContractNumber);
-            SelectItemInDropdown<DocumentDetail>(DeliverableField.ContractNumber.ToDescription(), deliverableItemInfo.ContractNumber, ref methodValidation);
+            SelectItemInDropdown<VendorDeliverableDetail>(DeliverableField.ContractNumber.ToDescription(), deliverableItemInfo.ContractNumber, ref methodValidation);
 
             node.Info($"Click {DeliverableField.ItemID.ToDescription()} dropdown, and select: " + deliverableItemInfo.ItemID);
-            SelectItemInDropdown<DocumentDetail>(DeliverableField.ItemID.ToDescription(), deliverableItemInfo.ItemID, ref methodValidation);
+            SelectItemInDropdown<VendorDeliverableDetail>(DeliverableField.ItemID.ToDescription(), deliverableItemInfo.ItemID, ref methodValidation);
 
             node.Info($"Enter {deliverableItemInfo.LineItemNumber} in {DeliverableField.LineItemNumber.ToDescription()} Field.");
             EnterTextField<VendorDeliverableDetail>(DeliverableField.LineItemNumber.ToDescription(), deliverableItemInfo.LineItemNumber);
@@ -41,14 +41,14 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             EnterTextField<VendorDeliverableDetail>(DeliverableField.Description.ToDescription(), deliverableItemInfo.Description);
 
             node.Info($"Click {DeliverableField.DeliverableType.ToDescription()} dropdown, and select: " + deliverableItemInfo.DeliverableType);
-            SelectItemInDropdown<DocumentDetail>(DeliverableField.DeliverableType.ToDescription(), deliverableItemInfo.DeliverableType, ref methodValidation);
+            SelectItemInDropdown<VendorDeliverableDetail>(DeliverableField.DeliverableType.ToDescription(), deliverableItemInfo.DeliverableType, ref methodValidation);
 
             node.Info($"Click {DeliverableField.Criticality.ToDescription()} dropdown, and select: " + deliverableItemInfo.Criticality);
             if (CriticalityTextBox.GetAttribute("value") != "Normal")
-                SelectItemInDropdown<DocumentDetail>(DeliverableField.Criticality.ToDescription(), deliverableItemInfo.Criticality, ref methodValidation);
+                SelectItemInDropdown<VendorDeliverableDetail>(DeliverableField.Criticality.ToDescription(), deliverableItemInfo.Criticality, ref methodValidation);
 
             node.Info($"Click {DeliverableField.Status.ToDescription()} dropdown, and select: " + deliverableItemInfo.Status);
-            SelectItemInDropdown<DocumentDetail>(DeliverableField.Status.ToDescription(), deliverableItemInfo.Status, ref methodValidation);
+            SelectItemInDropdown<VendorDeliverableDetail>(DeliverableField.Status.ToDescription(), deliverableItemInfo.Status, ref methodValidation);
 
             return this;
         }

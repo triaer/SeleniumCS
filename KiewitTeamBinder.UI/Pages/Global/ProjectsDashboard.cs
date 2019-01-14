@@ -10,6 +10,7 @@ using KiewitTeamBinder.UI.Pages.Dialogs;
 using KiewitTeamBinder.Common;
 using KiewitTeamBinder.Common.Helper;
 using static KiewitTeamBinder.Common.KiewitTeamBinderENums;
+using System.Diagnostics;
 
 namespace KiewitTeamBinder.UI.Pages.Global
 {
@@ -93,10 +94,27 @@ namespace KiewitTeamBinder.UI.Pages.Global
             return this;
         }       
         
-        public void WaitForLoadingPanel(int timeout = shortTimeout)
+        public void WaitForLoadingPanel(int timeout = sapLongTimeout)
         {
-            WaitForLoading(_loadingPanel, timeout);
-            WaitForElementEnable(By.XPath("//div[contains(@id,'_GridData')]"));
+            var node = StepNode(); 
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            do
+            {
+                try
+                {
+                    WaitForLoading(_loadingPanel);
+                    WaitForElementDisplay(_walkMe, mediumTimeout);
+                    if (WaitForElementInvisible(_loadingPanel))
+                        break;
+                }
+                catch (Exception)
+                {   }
+            } while (stopwatch.Elapsed.TotalSeconds <= sapLongTimeout);
+            if (stopwatch.Elapsed.TotalSeconds >= sapLongTimeout)
+                node.Warning("The icon loading process is not completed in timeout: " + timeout);
+
+            stopwatch.Stop();
         }
             
         private void ClickMenuItem(string menuItem)
@@ -104,7 +122,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
             var node = StepNode();
             node.Info($"Click on the root node: {menuItem}");
             ModuleButton(menuItem).Click();
-            WaitForElement(_divSubMenu);
         }
 
         private void ClickSubMenuItem(string subMenuItem)
@@ -112,7 +129,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
             var node = StepNode();
             node.Info($"Click on the sub node: {subMenuItem}");
             SubMenuItemLink(subMenuItem).Click();
-            WaitForElement(_subPageHeader);
         }
 
         public T SelectFilterOption<T>(string nameOrIndex, bool byName = true, bool waitForLoading = true)
@@ -128,22 +144,20 @@ namespace KiewitTeamBinder.UI.Pages.Global
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 
-        private ProjectsDashboard SelectModuleMenuItem(string menuItem, string subMenuItem)
+        public T SelectModuleMenuItemOnLeftNav<T>(string menuItem = "", string subMenuItem = "", bool waitForLoading = true)
         {
             if (menuItem != "")
                 ClickMenuItem(menuItem);
-            
+
             if (subMenuItem != "")
                 ClickSubMenuItem(subMenuItem);
 
-                return this;
-        }
-
-        public T SelectModuleMenuItem<T>(string menuItem = "", string subMenuItem = "", bool waitForLoading = true)
-        {
-            SelectModuleMenuItem(menuItem, subMenuItem);
             if (waitForLoading)
                 WaitForLoadingPanel();
+
+            if (menuItem !=  ModuleNameInLeftNav.DASHBOARD.ToDescription())
+                WaitForElement(_subPageHeader);
+
             return (T)Activator.CreateInstance(typeof(T), WebDriver);            
         }
 
@@ -178,27 +192,38 @@ namespace KiewitTeamBinder.UI.Pages.Global
             
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
-                
-        public T ClickHeaderDropdownItem<T>(MainPaneHeaderDropdownItem item, bool switchWindow, bool switchPopUp = false)
+
+        public void SelectItemOnHeaderDropdown(MainPaneHeaderDropdownItem item)
+        {
+            HeaderDropdownItem(item.ToDescription()).Click();
+        }
+        public T SelectDropdownItemWithSwitchWindow<T>(MainPaneHeaderDropdownItem item)
         {
             var node = StepNode();
-            node.Info("Click the item: " + item.ToDescription());
-            
-            if (switchWindow)
+            node.Info($"Click the item: {item.ToDescription()}, and switch to new window popup");
+           
+            string currentWindow;
+            SwitchToNewPopUpWindow(HeaderDropdownItem(item.ToDescription()), out currentWindow, false);
+            try
             {
-                string currentWindow;
-                SwitchToNewPopUpWindow(HeaderDropdownItem(item.ToDescription()), out currentWindow, false);
+                WaitForJQueryLoad();
+                WaitForElementDisplay(_walkMe);
             }
+            catch { }
             
-            else
-                HeaderDropdownItem(item.ToDescription()).Click();
-
-            if (switchPopUp)
-                WebDriver.SwitchTo().ActiveElement();
-
-            WaitForElementDisplay(_walkMe);
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
-        }               
+        }
+
+        public T SelectDropdownItemWithSwitchDialog<T>(MainPaneHeaderDropdownItem item)
+        {
+            var node = StepNode();
+            node.Info($"Click the item: {item.ToDescription()}, and switch to dialog popup");
+
+            SelectItemOnHeaderDropdown(item);
+            WebDriver.SwitchTo().ActiveElement();
+            
+            return (T)Activator.CreateInstance(typeof(T), WebDriver);
+        }
 
         public string GetUserNameLogon()
         {

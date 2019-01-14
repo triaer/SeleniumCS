@@ -111,7 +111,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
 
         public TransmittalDetail ClickSendButton(ref List<KeyValuePair<string, bool>> methodValidation)
         {            
-            ClickToolbarButton<TransmittalDetail>(KiewitTeamBinderENums.ToolbarButton.Send);
+            ClickToolbarButtonOnWinPopup<TransmittalDetail>(KiewitTeamBinderENums.ToolbarButton.Send);
             methodValidation.Add(ValidateProgressContentMessage("Please wait while transmittal is being sent"));
             return new TransmittalDetail(WebDriver);
         }
