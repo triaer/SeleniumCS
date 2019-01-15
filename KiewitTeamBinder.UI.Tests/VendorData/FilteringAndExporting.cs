@@ -70,8 +70,11 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 //when - User Story 123549 - 120790 Filtering & Exporting Vendor Data Register Validation Part 3
                 test = LogTest("US 123549 - 120790 Filtering & Exporting Vendor Data Register Validation - Part 3");
 
+                string linnkingTrail = "";
+
                 //projectDashBoard.SelectModuleMenuItem<ProjectsList>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription(), waitForLoading: false);               
-                vendorDataRegister.DoubleClickItem(filteringAndExportingData.ContractNumber, filteringAndExportingData.GridViewContract, filteringAndExportingData.ContractNumberDescription)
+                vendorDataRegister.DoubleClickItem( filteringAndExportingData.ContractNumber, filteringAndExportingData.GridViewContract, filteringAndExportingData.ContractNumberDescription)
+                    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateLinkingPageAreShown(filteringAndExportingData.ContractNumber))
                     .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateItemsCountedAreMatches(filteringAndExportingData.GridViewItem))
                     .ClickOnCheckBox(filteringAndExportingData.GridViewItem, filteringAndExportingData.ItemDescription, uncheck: false)
                     .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateLineItemsIsHighlighted(filteringAndExportingData.GridViewItem, filteringAndExportingData.ItemDescription))
@@ -81,7 +84,8 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
 
                 vendorDataRegister.ClickOnCheckBox(filteringAndExportingData.GridViewItem, filteringAndExportingData.ItemDescription, uncheck: true)
                     .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateSelectedCountDeCreased(filteringAndExportingData.GridViewItem, filteringAndExportingData.ItemDescription, selectedRow))
-                    .DoubleClickItem(filteringAndExportingData.ItemID, filteringAndExportingData.GridViewItem, filteringAndExportingData.ItemDescription)
+                    .DoubleClickItem(filteringAndExportingData.ItemIDNumber, filteringAndExportingData.GridViewItem, filteringAndExportingData.ItemDescription)
+                    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateLinkingPageAreShown(filteringAndExportingData.ContractNumber, filteringAndExportingData.ItemIDNumber))
                     .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateItemsCountedAreMatches(filteringAndExportingData.GridViewDeliverable))
                     .ClickOnCheckBox(filteringAndExportingData.GridViewDeliverable, filteringAndExportingData.DeliverableDescription, uncheck: false)
                     .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateLineItemsIsHighlighted(filteringAndExportingData.GridViewDeliverable, filteringAndExportingData.DeliverableDescription))
@@ -92,6 +96,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 vendorDataRegister.ClickOnCheckBox(filteringAndExportingData.GridViewDeliverable, filteringAndExportingData.DeliverableDescription, uncheck: true)
                     .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateSelectedCountDeCreased(filteringAndExportingData.GridViewDeliverable, filteringAndExportingData.DeliverableDescription, selectedRow))
                     .DoubleClickItem(filteringAndExportingData.DeliverableNumber, filteringAndExportingData.GridViewDeliverable, filteringAndExportingData.DeliverableDescription)
+                    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateLinkingPageAreShown(filteringAndExportingData.ContractNumber, filteringAndExportingData.ItemIDNumber, filteringAndExportingData.DeliverableNumber))
                     .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateItemsCountedAreMatches(filteringAndExportingData.GridViewDocument))
                     .ClickOnBlueHeader(filteringAndExportingData.ContractNumber);
 

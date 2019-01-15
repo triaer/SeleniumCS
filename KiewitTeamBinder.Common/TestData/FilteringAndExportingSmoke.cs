@@ -11,6 +11,9 @@ namespace KiewitTeamBinder.Common.TestData
     public class FilteringAndExportingSmoke
     {
         public string ProjectName = "Automation Project 1";
+        public string ItemPurchasedHeader = "Item Purchased";
+        public string DeliverablesHeader = "Deliverables";
+        public string DocumentsHeader = "Documents";
         public string HierarchicalGridViewName = "GridViewContractVendor";
         public string GridGridViewName = "GridViewContractsGrid";
         public string DefaultFilter = "Hierarchical View";
@@ -27,14 +30,12 @@ namespace KiewitTeamBinder.Common.TestData
         public string GridViewDocument = "GridViewDocumentsGrid";
 
         public string ContractNumber = "1234567";
-        public string ItemID = "123";
+        public string ItemIDNumber = "123";
         public string DeliverableNumber = "123456";
-
         public string ContractNumberDescription = "testing 120793";
         public string ItemDescription = "abc";
         public string DeliverableDescription = "123456";
 
-        public string ContractViewWidget = "divWidgetContractorView";
-        public string ContractsInContractView = "Contracts";
+
     }
 }
