@@ -45,7 +45,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             WaitForElementDisplay(By.Id("walkme-player"));
 
             //Fill account fields
-            UserIdTextbox.InputText(account.Username,true);
+            UserIdTextbox.InputText(account.Username, true);
             WaitForElementEnable(_companyIdTextbox);
             CompanyIdTextbox.InputText(account.Company, true);
             WaitForElementEnable(_passwordTextbox);
@@ -54,6 +54,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             //Click LogIn button
             //LoginBtn.Click();
             SwitchToNewPopUpWindow(LoginBtn, out logonWindow, true);
+
             var projectsListPage = new ProjectsList(WebDriver);
             WaitUntil(driver => projectsListPage.ProjListTitle != null);
             

@@ -28,13 +28,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
         }
 
-        //public NonSsoSignOn ClickOtherUserLoginBtn(out string logonLink)
-        //{
-        //    OtherUserLoginBtn.Click();
-        //    logonLink = WebDriver.WindowHandles.Last();
-
-        //    return new NonSsoSignOn(WebDriver); ;
-        //}
+        
         #endregion
     }
 }
