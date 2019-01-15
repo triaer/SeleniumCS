@@ -19,11 +19,10 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
     public class VendorDataRegister : ProjectsDashboard
     {
         #region Entities
-        private static By _expandButton => By.XPath("//td[@class = 'rgExpandCol']/input");
+        private static By _deliverableLineItem => By.XPath("//span[(text()='Deliverable Line Item')]");        
         private static By _purchaseTable => By.XPath("//table[contains(@id,'GridViewItemsVendor')]/thead");
-
-        private static string _filterItemsXpath = "//table[contains(@id,'GridViewItemsVendor')]//tr[@valign='top']";
-       
+        private static By _deliverableTable => By.XPath("//table[contains(@id,'GridViewItemsVendor') and contains(@id, 'ViewDeliverableVendor')]/thead");        
+        private static By _expandButton => By.XPath("//td[@class = 'rgExpandCol']/input");           
         private static By _contractNumber(string contractNumber,string gridView, string contractDescription) => By.XPath($"//span[contains(text(),'{contractNumber}')]/ancestor::tr[contains(@id,'{gridView}_ctl00')]//nobr[contains(text(),'{contractDescription}')]");
         private static By _checkBoxItemContract(string gridView, string description) => By.XPath($"//*[contains(text(),'{description}')]/ancestor::tr[contains(@id,'{gridView}_ctl00')]//input[contains(@id,'{gridView}_ctl00')]");
         private static By _selectedRecordCount => By.XPath("//span[@id='lblRegisterSelectedRecordCount']");
@@ -32,6 +31,11 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
         private static By _totalItem(string gridView) => By.XPath($"//span[contains(@id,'ctl00_cntPhMain_{gridView}_ctl00DSC')]");
         private static By _selectedRow(string gridView, string Description) => By.XPath($"//*[contains(text(),'{Description}')]/ancestor::tr[contains(@id,'{gridView}_ctl00')]");
         //*[contains(text(),'123456')]/ancestor::tr[contains(@id,'GridViewDeliverablesGrid_ctl00')]//input[contains(@id,'GridViewDeliverablesGrid_ctl00')]
+
+        private static string _filterItemsXpath = "//table[contains(@id,'GridViewItemsVendor')]//tr[@valign='top']";
+
+        public IWebElement DeliverableTable { get { return StableFindElement(_deliverableTable); } }
+        public IWebElement DeliverableLineItem => StableFindElement(_deliverableLineItem);
         public IReadOnlyCollection<IWebElement> ExpandButton { get { return StableFindElements(_expandButton); } }
         public IWebElement PurchaseTable { get { return StableFindElement(_purchaseTable); } }
         public IWebElement ContractNumber(string contractNumber, string gridView, string description) => StableFindElement(_contractNumber(contractNumber, gridView, description));
@@ -48,6 +52,57 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
         {
         }
 
+        public VendorItemDetail OpenItem(List<KeyValuePair<string, string>> columnValuePairList)
+        {
+            var PurchaseItemsList = GetAvailablePurchaseItems(columnValuePairList);
+            var item = PurchaseItemsList.ElementAt(0).StableFindElement(By.XPath("./td[3]"));
+            ScrollIntoView(item);
+            string currentWindow;
+            SwitchToNewPopUpWindow(item, out currentWindow, doubleClick: true);
+            return new VendorItemDetail(WebDriver);
+        }
+
+        public VendorDataRegister ClickExpandButton(int index, bool waitForLoading = true)
+        {
+            var node = StepNode();
+            node.Info("Click the expand button");
+            index = Utils.RefactorIndex(index);
+            ExpandButton.ElementAt(index).Click();
+            if (waitForLoading)
+            {
+                WaitForLoadingPanel(shortTimeout * 2);
+            }
+            return this;
+        }       
+
+        private IReadOnlyCollection<IWebElement> GetAvalibleDeliverable(List<KeyValuePair<string, string>> columnValuePairList)
+        {
+            int rowIndex, colIndex = 1;
+            string itemsXpath = _filterItemsXpath;
+            GetTableCellValueIndex(DeliverableTable, columnValuePairList.ElementAt(0).Key, out rowIndex, out colIndex, "th");
+            if (colIndex < 2)
+                return null;
+            itemsXpath += $"[td[{colIndex}][contains(., '{columnValuePairList.ElementAt(0).Value}')]";
+
+            for (int i = 1; i < columnValuePairList.Count; i++)
+            {
+                GetTableCellValueIndex(DeliverableTable, columnValuePairList.ElementAt(i).Key, out rowIndex, out colIndex, "th");
+                if (colIndex < 2)
+                    return null;
+                itemsXpath += $" and td[{colIndex}][contains(., '{columnValuePairList.ElementAt(i).Value}')]";
+            }
+            itemsXpath += "]";
+
+            return StableFindElements(By.XPath(itemsXpath));
+
+        }
+               
+        public VendorDeliverableDetail OpenDeliverableLineItemTemplate(out string parrentWindow)
+        {
+            SwitchToNewPopUpWindow(DeliverableLineItem, out parrentWindow, true);
+            return new VendorDeliverableDetail(WebDriver);
+        }
+                
         public int GetTotalItems(string gridView, bool waitForLoading = true) {
             if (waitForLoading)
                 WaitForLoading(_totalItem(gridView));
@@ -61,17 +116,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             selectedText = selectedCount.Split(':')[1];
             selectedText = selectedText.Replace(" ", "");
             return int.Parse(selectedText);
-        }
-
-        public ItemDetail OpenItem(List<KeyValuePair<string, string>> columnValuePairList)
-        {
-            var PurchaseItemsList = GetAvailablePurchaseItems(columnValuePairList);
-            var item = PurchaseItemsList.ElementAt(0).StableFindElement(By.XPath("./td[3]"));
-            ScrollIntoView(item);
-            string currentWindow;
-            SwitchToNewPopUpWindow(item, out currentWindow, doubleClick: true);
-            return new ItemDetail(WebDriver);
-        }
+        }               
 
         public VendorDataRegister ClickOnBlueHeader(string blueHeader) {
             var node = StepNode();
@@ -98,19 +143,6 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
                 CheckBoxItemContract(gridView, contractDescription).Click();
                 return this;
             }
-        }
-
-        public VendorDataRegister ClickExpandButton(int index, bool waitForLoading = true)
-        {
-            var node = StepNode();
-            node.Info("Click the expand button");
-            index = Utils.RefactorIndex(index);
-            ExpandButton.ElementAt(index).Click();
-            if (waitForLoading)
-            {
-                WaitForLoadingPanel(shortTimeout * 2);
-            }
-            return this;
         }
 
         public VendorDataRegister DoubleClickItem(string contractNumber, string gridView, string description, bool waitForLoading = true) {
@@ -167,6 +199,25 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             catch (Exception e)
             {
                 return SetErrorValidation(node, Validation.Purchase_Items_Are_Shown, e);
+            }
+        }
+
+        public KeyValuePair<string, bool> ValidateDeliverablesAreShown(List<KeyValuePair<string, string>> columnValuePairList)
+        {
+            var node = StepNode();
+            try
+            {
+                var DeliverableList = GetAvalibleDeliverable(columnValuePairList);
+                if (DeliverableList.Count > 0)
+                {
+                    return SetPassValidation(node, Validation.Deliverables_Are_Shown);
+                }
+                return SetFailValidation(node, Validation.Deliverables_Are_Shown);
+            }
+            catch (Exception e)
+            {
+
+                return SetErrorValidation(node, Validation.Deliverables_Are_Shown, e);
             }
         }
 
@@ -277,9 +328,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
                 return SetErrorValidation(node, Validation.Selected_Count_Is_Increased, e);
             }
         }
-
-
-
+        
         private static class Validation
         {
             public static string Purchase_Items_Are_Shown = "Validate that purchase items are shown";
@@ -287,6 +336,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             public static string Line_Items_Is_Highlighted = "Validate that the line item is highlighted when cliked checkbox";
             public static string Selected_Count_Is_Increased = "Validate that selected count increased on bottom right corner";
             public static string Selected_Count_Is_Decreased = "Validate that selected count decreased on bottom right corner";
+            public static string Deliverables_Are_Shown = "Validate that deliverables are shown";
         }
         #endregion
     }

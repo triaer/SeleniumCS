@@ -86,7 +86,7 @@
     <Compile Include="TestData\CreatePurchaseItemSmoke.cs" />
     <Compile Include="TestData\FilteringAndExportingSmoke.cs" />
     <Compile Include="TestData\ReportSmoke.cs" />
-	<Compile Include="TestData\FilteringExportingVendorDataRegisterValidationSmoke.cs" />
+    <Compile Include="TestData\FilteringExportingVendorDataRegisterValidationSmoke.cs" />
     <Compile Include="TestData\ValidateContractorWidgetCountSmoke.cs" />
     <Compile Include="TestData\ValidatePurchaseItemUnderContractSmoke.cs" />
     <Compile Include="TestData\FilteringSmoke.cs" />

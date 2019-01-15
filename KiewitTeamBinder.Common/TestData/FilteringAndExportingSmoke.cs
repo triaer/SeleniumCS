@@ -19,5 +19,22 @@ namespace KiewitTeamBinder.Common.TestData
         public string RowName = "Contracts";
         public string DownloadFilePath = Utils.GetDownloadFilesLocalPath() + "\\" + Utils.GetRandomValue("Contracts") + ".xlsx";
         public string FilterValue = "CLOSED-OUT - Closed Out";
+
+        public string GridView = "Grid View";
+        public string GridViewContract = "GridViewContractsGrid";
+        public string GridViewDeliverable = "GridViewDeliverablesGrid";
+        public string GridViewItem = "GridViewItemsGrid";
+        public string GridViewDocument = "GridViewDocumentsGrid";
+
+        public string ContractNumber = "1234567";
+        public string ItemID = "123";
+        public string DeliverableNumber = "123456";
+
+        public string ContractNumberDescription = "testing 120793";
+        public string ItemDescription = "abc";
+        public string DeliverableDescription = "123456";
+
+        public string ContractViewWidget = "divWidgetContractorView";
+        public string ContractsInContractView = "Contracts";
     }
 }
