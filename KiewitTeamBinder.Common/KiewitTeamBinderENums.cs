@@ -239,7 +239,9 @@ namespace KiewitTeamBinder.Common
             [Description("Document No.")]
             DocumentNo,
             [Description("Hold Process Status")]
-            HoldProcessStatus
+            HoldProcessStatus,
+            [Description("Status")]
+            Status
         }
 
         public enum MainPaneHeaderDropdownItem

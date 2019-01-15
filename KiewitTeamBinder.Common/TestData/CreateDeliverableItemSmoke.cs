@@ -42,8 +42,7 @@ namespace KiewitTeamBinder.Common.TestData
             Criticality = "Normal",
             Status = "OPEN - OPEN",
         };
-
-        public string WidgetName = "Contractor View";
+        
         public string RowName = "Deliverables";
 
         public List<KeyValuePair<string, string>> ExpectedContractValuesInColumnList(DeliverableLine DeliverableInfo)

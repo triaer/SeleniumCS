@@ -38,8 +38,8 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 test.Info("Navigate to DashBoard Page of Project: " + createContractItemData.ProjectName);
                 ProjectsDashboard projectDashBoard = projectsList.NavigateToProjectDashboardPage(createContractItemData.ProjectName);
                 Dashboard dashboard = projectDashBoard.SelectModuleMenuItem<Dashboard>(menuItem: ModuleNameInLeftNav.DASHBOARD.ToDescription());
-                dashboard.ClickMoreOrLessButton(createContractItemData.WidgetName, false);
-                int CountOfContracts = dashboard.GetCountValueFromRow(createContractItemData.WidgetName, createContractItemData.RowName);
+                dashboard.ClickMoreOrLessButton(WidgetUniqueName.CONTRACTORVIEW.ToDescription(), false);
+                int CountOfContracts = dashboard.GetCountValueFromRow(WidgetUniqueName.CONTRACTORVIEW.ToDescription(), createContractItemData.RowName);
 
                 //when User Story 121989 - 120793 Create Contract Items Deliverable
                 test = LogTest("Create Contract Item");
@@ -61,7 +61,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                     .ClickCloseButtonOnPopUp<VendorDataRegister>();
 
                 dashboard = projectDashBoard.SelectModuleMenuItem<Dashboard>(menuItem: ModuleNameInLeftNav.DASHBOARD.ToDescription());
-                dashboard.LogValidation<Dashboard>(ref validations, dashboard.ValidateCountValueIsCorrect(createContractItemData.WidgetName, createContractItemData.RowName, CountOfContracts + 1));
+                dashboard.LogValidation<Dashboard>(ref validations, dashboard.ValidateCountValueIsCorrect(WidgetUniqueName.CONTRACTORVIEW.ToDescription(), createContractItemData.RowName, CountOfContracts + 1));
 
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);
@@ -153,8 +153,8 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 test.Info("Navigate to DashBoard Page of Project: " + createNewDeliverableData.ProjectName);
                 ProjectsDashboard projectDashBoard = projectsList.NavigateToProjectDashboardPage(createNewDeliverableData.ProjectName);
                 Dashboard dashboard = projectDashBoard.SelectModuleMenuItem<Dashboard>(menuItem: ModuleNameInLeftNav.DASHBOARD.ToDescription());
-                dashboard.ClickMoreOrLessButton(createNewDeliverableData.WidgetName, true);
-                int CountOfDeliverables = dashboard.GetCountValueFromRow(createNewDeliverableData.WidgetName, createNewDeliverableData.RowName);
+                dashboard.ClickMoreOrLessButton(WidgetUniqueName.CONTRACTORVIEW.ToDescription(), true);
+                int CountOfDeliverables = dashboard.GetCountValueFromRow(WidgetUniqueName.CONTRACTORVIEW.ToDescription(), createNewDeliverableData.RowName);
 
                 //when UserStory 121992 - 120796 - Create New Deliverable
                 test = LogTest("Create New Deliverable");
@@ -218,8 +218,8 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 test = LogTest("US 122010 - 120798 Validate Contractor Widget Counts");
                 
                 dashboard = projectDashBoard.SelectModuleMenuItem<Dashboard>(menuItem: ModuleNameInLeftNav.DASHBOARD.ToDescription());
-                dashboard.ClickMoreOrLessButton(createNewDeliverableData.WidgetName, true)
-                    .LogValidation<Dashboard>(ref validations, dashboard.ValidateCountValueIsCorrect(createNewDeliverableData.WidgetName, createNewDeliverableData.RowName, CountOfDeliverables + 1));
+                dashboard.ClickMoreOrLessButton(WidgetUniqueName.CONTRACTORVIEW.ToDescription(), true)
+                    .LogValidation<Dashboard>(ref validations, dashboard.ValidateCountValueIsCorrect(WidgetUniqueName.CONTRACTORVIEW.ToDescription(), createNewDeliverableData.RowName, CountOfDeliverables + 1));
 
 
                 // then

@@ -45,17 +45,26 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                    .ClickHeaderButton<VendorDataRegister>(MainPaneTableHeaderButton.More, false)
                    .HoverHeaderDropdownItem<VendorDataRegister>(MainPaneHeaderDropdownItem.RegisterView)
                    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateRegisterViewIsCorrect(filteringAndExportingData.RegisterView))
-                   .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateRecordItemsCount(filteringAndExportingData.GridViewName))
+                   .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateRecordItemsCount(filteringAndExportingData.HierarchicalGridViewName))
                    .ClickHeaderButton<VendorDataRegister>(MainPaneTableHeaderButton.Export, false)
                    .ClickHeaderDropdownItem<VendorDataRegister>(MainPaneHeaderDropdownItem.Contracts, false)
                    .DownloadFile<VendorDataRegister>(filteringAndExportingData.DownloadFilePath)
-                   .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateExcelItemsCount(filteringAndExportingData.GridViewName,
+                   .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateExcelItemsCount(filteringAndExportingData.HierarchicalGridViewName,
                                                                                                                   filteringAndExportingData.DownloadFilePath));
 
                 //when - User Story 123548 - 120790 Filtering & Exporting Vendor Data Register Validation - Part 2
                 test = LogTest("US 123548 - 120790 Filtering & Exporting Vendor Data Register Validation - Part 2");
                 Dashboard dashboard = vendorDataRegister.SelectModuleMenuItem<Dashboard>(ModuleNameInLeftNav.DASHBOARD.ToDescription());
-                dashboard.ClickNumberOnRow<VendorDataRegister>("", "");
+                vendorDataRegister = dashboard.ClickNumberOnRow<VendorDataRegister>(WidgetUniqueName.CONTRACTORVIEW.ToDescription(), filteringAndExportingData.RowName);
+                vendorDataRegister.LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateDisplayedViewFilterOption(filteringAndExportingData.GridViewFilter))
+                    .ClickHeaderButton<VendorDataRegister>(MainPaneTableHeaderButton.More, false)
+                    .HoverHeaderDropdownItem<VendorDataRegister>(MainPaneHeaderDropdownItem.RegisterView)
+                    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateRegisterViewIsCorrect(filteringAndExportingData.RegisterView))
+                    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateRecordItemsCount(filteringAndExportingData.GridGridViewName))
+                    .ClickHeaderLabelToSort<VendorDataRegister>(MainPaneTableHeaderLabel.ContractNumber)
+                    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateColumnIsSorted(MainPaneTableHeaderLabel.ContractNumber.ToDescription()))
+                    .FilterDocumentsByGridFilterRow<VendorDataRegister>(filteringAndExportingData.GridGridViewName, MainPaneTableHeaderLabel.Status.ToDescription(), filteringAndExportingData.FilterValue)
+                    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateValueInColumnIsCorrect(filteringAndExportingData.GridGridViewName, MainPaneTableHeaderLabel.Status.ToDescription(), filteringAndExportingData.FilterValue));
 
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);

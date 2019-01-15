@@ -18,7 +18,6 @@ namespace KiewitTeamBinder.Common.TestData
         public string VendorDataRegisterPaneName = "Vendor Data";
         public string TableVendorDataRegister = "GridViewContractVendor";
         public string SaveMessage = "Saved Successfully";
-        public string WidgetName = WidgetUniqueName.CONTRACTORVIEW.ToDescription();
         public string RowName = "Contracts";
 
         public Contract ContractInfo = new Contract()
