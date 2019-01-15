@@ -79,7 +79,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
         public HoldingArea ClickCheckboxOfDocumentAtRow(int indexRow)
         {
             IWebElement checkboxAtRow = HoldingAreaGridData.StableFindElement(By.XPath(string.Format(_checkboxInFirstColAtRow, indexRow )));
-            ScrollToElement(checkboxAtRow);
+            checkboxAtRow.HoverElement();
             checkboxAtRow.Check();
             return this;
         }
@@ -89,8 +89,8 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             var node = StepNode();
             node.Info("Select checkbox of document rows without the transmittal no. value in Holding Area grid");
             int rowIndex, colIndex = 1;
-            WaitForElementClickable(_sortButton(MainPaneTableHeaderLabel.TransmittalNo.ToDescription()));
-            SortButton(MainPaneTableHeaderLabel.TransmittalNo.ToDescription()).Click();
+            WaitForElementClickable(_columnLabel(MainPaneTableHeaderLabel.TransmittalNo.ToDescription()));
+            ColumnLabel(MainPaneTableHeaderLabel.TransmittalNo.ToDescription()).Click();
             WaitForJQueryLoad();
             GetTableCellValueIndex(PaneTable(gridViewName), "Document No.", out rowIndex, out colIndex, "th");
             var conditions = new List<KeyValuePair<string, string>>

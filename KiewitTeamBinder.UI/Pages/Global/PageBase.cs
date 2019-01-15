@@ -17,6 +17,7 @@ using System.Windows.Forms;
 using KiewitTeamBinder.Common.Helper;
 using AventStack.ExtentReports;
 
+
 namespace KiewitTeamBinder.UI.Pages.Global
 {
     public abstract class PageBase
@@ -157,12 +158,14 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 return null;
             }
         }
+
         internal static void Wait(int seconds = longTimeout)
         {
             System.Threading.Thread.Sleep(seconds * 1000);
             //WebDriverWait wait = new WebDriverWait(WebDriver, TimeSpan.FromSeconds(seconds));
             //wait.
         }
+
         internal static T WaitUntil<T>(Func<IWebDriver, T> condition, int seconds = longTimeout)
         {
             var wait = Browser.Wait(seconds);
@@ -197,6 +200,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
             stopwatch.Stop();
         }
+
         internal static void WaitFor(By elementDescription)
 
         {
@@ -204,7 +208,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
             wait.Until(driver => driver.FindElement(elementDescription));
         }
-        
+
         internal static void WaitForElementClickable(By elementDescription, int seconds = mediumTimeout)
         {
             IWebElement myDynamicElement = (new WebDriverWait(WebDriver, TimeSpan.FromSeconds(seconds))).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(elementDescription));
@@ -309,6 +313,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 }
             }
         }
+
         internal static void WaitForAngularJSLoad(int timeout = mediumTimeout)
         {
             IJavaScriptExecutor js = (IJavaScriptExecutor)WebDriver;
@@ -323,14 +328,8 @@ namespace KiewitTeamBinder.UI.Pages.Global
                     break;
             }
         }
-
-        internal static void ScrollToElement(IWebElement Element)
-        {
-            Actions action = new Actions(WebDriver);
-            action.MoveToElement(Element);
-            action.Perform();
-        }
-        internal static void ScrollToElement(By by, int timeout = longTimeout)
+        
+        internal static void HoverElement(By by, int timeout = longTimeout)
         {
             var element = StableFindElement(by, timeout);
 
@@ -440,6 +439,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         {
             try
             {
+                string k = By.XPath(".//tr[" + rowIndex + "]/" + colType + "[" + colIndex + "]").ToString();
                 return TableElement.StableFindElement(By.XPath(".//tr[" + rowIndex + "]/" + colType + "[" + colIndex + "]"), timeout);
             }
             catch (Exception)
@@ -506,6 +506,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
                     }
                 }
         }
+
         internal static void SelectFilterByText(IWebElement Combobox, By data, string value, int timeout = mediumTimeout, bool isEqual = true)
         {
 
@@ -555,8 +556,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
             return selectedItem;
         }
-
-
+        
         /// <summary>
         /// Get elements by locator whenever elements' size equals or larger than the input size
         /// </summary>
@@ -597,39 +597,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 return false;
             }
         }
-
-        internal static void CopyDataFromExcelFileToExcelFile(string excelFileContainPath, string excelFileToBeCopiedPath, string excelFileContainSheetName, string excelFileToBeCopiedSheetName, int rowToBeCopied, int rowContain)
-        {
-            var excelDriver1 = ExcelInterop.ExcelDriver.getExcelHelper(excelFileToBeCopiedPath);
-            excelDriver1.Open(excelFileToBeCopiedPath, excelFileToBeCopiedSheetName);
-            excelDriver1.GetAllExcelRowsValue(rowToBeCopied);
-            string[] cellValue = excelDriver1.GetAllExcelRowsValue(rowToBeCopied).Split(',');
-            var excelDriver2 = ExcelInterop.ExcelDriver.getExcelHelper(excelFileContainPath);
-
-            for (int colIndex = 1; colIndex <= cellValue.Length; colIndex++)
-            {
-                excelDriver2.WriteDataToExcelFile(excelFileContainPath, excelFileContainSheetName, rowContain, colIndex, cellValue[colIndex - 1]);
-            }
-            //excelDriver2.OpenExcelfileToView(excelFileContainPath, excelFileContainSheetName, 5);
-            excelDriver2.Close();
-        }
-
-        internal static void EditCellValueInExcelFile(string filePath, string sheetName, string cellValueBeforeEdit, string cellValueAfterEdit)
-        {
-            var excelDriver = ExcelInterop.ExcelDriver.getExcelHelper(filePath);
-            excelDriver.Open(filePath, sheetName);
-            excelDriver.Search(cellValueBeforeEdit);
-            excelDriver.WriteDataToExcelFile(filePath, sheetName, excelDriver.Search(cellValueBeforeEdit)[0], excelDriver.Search(cellValueBeforeEdit)[1], cellValueAfterEdit);
-            excelDriver.Close();
-        }
-
-        internal static void OpenExcelFiletoView(string filePath, string sheetName, int timeout)
-        {
-            var excelDriver = ExcelInterop.ExcelDriver.getExcelHelper(filePath);
-            excelDriver.OpenExcelfileToView(filePath, sheetName, timeout);
-            excelDriver.Close();
-        }
-
+                
         internal static void SwitchToNewPopUpWindow(IWebElement ElementToBeClicked, out string parentWindow, bool closePreviousWindow = false, bool doubleClick = false, int timeout = 30)
         {
             parentWindow = WebDriver.CurrentWindowHandle;
@@ -717,6 +685,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             WaitForElement(selector);
             return parent.StableFindElement(selector).GetAttribute("id");
         }
+
         internal static IWebElement GetDivCellByRowAndColumnIDNumber(IWebElement elementParent, string rowIndx, string colIndx)
         {
             string partID = rowIndx + ":" + colIndx;
@@ -818,12 +787,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
         }
 
-        internal static void ClickElement(By by)
-        {
-            WaitForElementClickable(by);
-            StableFindElement(by).Click();
-        }
-               
         internal static KeyValuePair<string, bool> SetPassValidation(ExtentTest test, string testInfo)
         {
             test.Pass(testInfo);
@@ -869,6 +832,23 @@ namespace KiewitTeamBinder.UI.Pages.Global
             SendKeys.SendWait(@"{Enter}");
             Wait(shortTimeout / 2);
             SendKeys.SendWait(@fileNames);
+            Wait(shortTimeout / 3);
+            SendKeys.SendWait(@"{Enter}");
+            Wait(shortTimeout / 3);
+        }
+
+        internal static void DownloadFileByIE(string fileName)
+        {
+            Wait(shortTimeout / 2);
+            SendKeys.SendWait("%N");
+            Wait(shortTimeout / 3);
+            SendKeys.SendWait("{TAB}");
+            Wait(shortTimeout / 3);
+            SendKeys.SendWait("{Down 2}");
+            Wait(shortTimeout / 3);
+            SendKeys.SendWait("{Enter}");
+            Wait(shortTimeout / 3);
+            SendKeys.SendWait(@fileName);
             Wait(shortTimeout / 3);
             SendKeys.SendWait(@"{Enter}");
             Wait(shortTimeout / 3);

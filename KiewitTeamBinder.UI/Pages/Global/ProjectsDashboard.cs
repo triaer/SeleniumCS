@@ -11,7 +11,7 @@ using KiewitTeamBinder.Common;
 using KiewitTeamBinder.Common.Helper;
 using static KiewitTeamBinder.Common.KiewitTeamBinderENums;
 using KiewitTeamBinder.UI.Pages.PopupWindows;
-using KiewitTeamBinder.UI.Pages.VendorDataModule;
+
 
 namespace KiewitTeamBinder.UI.Pages.Global
 {
@@ -20,7 +20,8 @@ namespace KiewitTeamBinder.UI.Pages.Global
         #region Entities              
         public By _dashBoardLabel => By.XPath("//span[.='Dashboard']");
         public By _gridViewFilterListData => By.XPath("//div[substring(@id, string-length(@id) - string-length('_rfltMenu_detached') +1) = '_rfltMenu_detached'][contains(@style,'block')]/ul/li");
-        public By _sortButton(string titleColumn) => By.XPath($"//a[text() ='{titleColumn}']");
+        public By _columnLabel(string titleColumn) => By.XPath(_panelXpath + $"//a[text() ='{titleColumn}']");
+        private static By _sortButton(string titleColumn) => By.XPath(_panelXpath + $"//a[text() ='{titleColumn}']/following::input[1]");
         private static By _nameProjectLabel => By.Id("projectInput");
         private static By _projectListDropdown => By.Id("btnShowProjectList");
         private static By _projectListSumary => By.Id("divProjectSummary");
@@ -33,7 +34,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         private static By _subMenuItemLink(string value) => By.XPath($"//span[(text()='{value}')]");
         private static By _moduleButton(string value) => By.XPath($"//div[@id = 'div{value}']");
         private static By _subPageTable(string value) => By.XPath($"//table[@id='ctl00_cntPhMain_{value}_ctl00']");
-        private static By _itemsNumberLabel(string value) => By.XPath($"//span[contains(@id, '{value}_ctl00DSC')]");
+        private static By _itemsNumberLabel(string gridViewName) => By.XPath($"//span[contains(@id, '{gridViewName}_ctl00DSC')]");
         private static By _divSubMenu => By.XPath("//div[@id='divSubMenu']");        
         private static By _subPageHeader => By.Id("lblRegisterCaption");              
         private static By _paneTable(string gridViewName) => By.XPath($"//table[contains(@id, '{gridViewName}_ctl00_Header')]/thead");
@@ -49,12 +50,14 @@ namespace KiewitTeamBinder.UI.Pages.Global
         private static By _pageCountInNumPartOfGridPager(string gridViewName) => By.XPath($"//table[contains(@id,'{gridViewName}')]//div[contains(@class,'rgNumPart')]//a");
         private static By _arrowFirstPageInGridPager(string gridViewName) => By.XPath($"//table[contains(@id,'{gridViewName}')]//img[@title='First Page']");
         private static By _arrowLastPageInGridPager(string gridViewName) => By.XPath($"//table[contains(@id,'{gridViewName}')]//img[@title='Last Page']");
-        private static By _itemWidget(string widgetName, string itemName) => By.XPath($"//div[@id='{widgetName}']//span[contains(text(),'{itemName}')]");
         private static By _reportsButton => By.Id("btnReports");
+        private static By _registerViewCheckbox(string view) => By.XPath($"//a[span = '{view}']/img");
+        private static By _currentPageSize(string gridViewName) => By.XPath($"//input[contains(@id, '{gridViewName}') and contains(@id,'PageSizeComboBox_Input')]");
 
         private static string _filterItemsXpath = "//tr[@valign='top' and not(contains(@style, 'hidden'))]";        
         private static string _headerButtonXpath = "//a[span='{0}']";
-        private static string _filterTextBoxXpath = "//table[contains(@id,'{0}')]//tr[@class='rgFilterRow']/td[{1}]";//count(//tr/th[.='{0}']/preceding-sibling::th)+1]";
+        private static string _filterTextBoxXpath = "//table[contains(@id,'{0}')]//tr[@class='rgFilterRow']/td[{1}]";
+        private static string _panelXpath = "//div[@id='ctl00_cntPhMain_GridUpdatePanel']/div[@class='GridViewPlaceHolder' and not(contains(@style,'display: none;'))]";
 
         public IWebElement FormTitle { get { return StableFindElement(_formTitle); } }        
         public IWebElement ViewFilter { get { return StableFindElement(_viewFilter); } }
@@ -68,13 +71,14 @@ namespace KiewitTeamBinder.UI.Pages.Global
         public IWebElement DivSubMenu { get { return StableFindElement(_divSubMenu); } }
         public IWebElement ModuleButton(string value) => StableFindElement(_moduleButton(value));
         public IWebElement SubMenuItemLink(string value) => StableFindElement(_subMenuItemLink(value));
-        public IWebElement ItemsNumberLabel(string value) => StableFindElement(_itemsNumberLabel(value));
+        public IWebElement ItemsNumberLabel(string gridViewName) => StableFindElement(_itemsNumberLabel(gridViewName));
         public IWebElement SubPageTable(string value) => StableFindElement(_subPageTable(value));
         public IWebElement PaneTable(string gridViewName) => StableFindElement(_paneTable(gridViewName));
         public IReadOnlyCollection<IWebElement> VisibleRows(string gridViewName) => StableFindElements(_visibleRows(gridViewName));
         public IWebElement HeaderDropdownItem(string itemName) => StableFindElement(_headerDropdownItem(itemName));
         public IWebElement DocumentsTable(string gridViewName) => StableFindElement(_documentsTable(gridViewName));
-        public IWebElement SortButton(string titleColumn) => StableFindElement(_sortButton(titleColumn));
+        public IWebElement ColumnLabel(string titleColumn) => StableFindElement(_columnLabel(titleColumn));
+        public IWebElement SortButton(string titleColumn) => FindElement(_sortButton(titleColumn));
         public IWebElement ClearHyperlink { get { return StableFindElement(_clearHyperlink); } }
         public IWebElement ImageOfFilterOptionByIndex(string selected, string index) => StableFindElement(_imageOfFilterOptionByIndex(selected, index));
         public IWebElement ImageOfFilterOptionByName(string selected, string name) => StableFindElement(_imageOfFilterOptionByName(selected, name));
@@ -85,7 +89,8 @@ namespace KiewitTeamBinder.UI.Pages.Global
         public IWebElement ArrowFirstPageInGridPager(string gridViewName) => StableFindElement(_arrowFirstPageInGridPager(gridViewName));
         public IWebElement ArrowLastPageInGridPager(string gridViewName) => StableFindElement(_arrowLastPageInGridPager(gridViewName));
         public IWebElement ReportsButton { get { return StableFindElement(_reportsButton); } }
-        public IWebElement ItemWidget(string widgetName, string itemName) => StableFindElement(_itemWidget(widgetName, itemName));
+        public IWebElement RegisterViewCheckbox(string gridViewName) => StableFindElement(_registerViewCheckbox(gridViewName));
+        public IWebElement CurrentPageSize(string gridViewName) => StableFindElement(_currentPageSize(gridViewName));
         #endregion
 
         #region Actions
@@ -98,7 +103,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             WaitForElementAttribute(ProjectListSumary, "display", "block");
             return this;
         }
-           
+        
         private void ClickMenuItem(string menuItem)
         {
             var node = StepNode();
@@ -113,14 +118,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
             node.Info($"Click on the sub node: {subMenuItem}");
             SubMenuItemLink(subMenuItem).Click();
             WaitForElement(_subPageHeader);
-        }
-
-        public T ClickItemInWidget<T>(string widgetName, string itemName, bool waitForLoading = true)
-        {
-            if (waitForLoading)
-                WaitForLoading(_itemWidget(widgetName, itemName));
-            ItemWidget(widgetName, itemName).Click();
-            return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 
         public T SelectFilterOption<T>(string nameOrIndex, bool byName = true, bool waitForLoading = true)
@@ -194,19 +191,41 @@ namespace KiewitTeamBinder.UI.Pages.Global
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
                 
-        public T ClickHeaderDropdownItem<T>(MainPaneHeaderDropdownItem item, bool switchWindow)
+        public T ClickHeaderDropdownItem<T>(MainPaneHeaderDropdownItem item, bool switchWindow, bool switchPopUp = false)
         {
             var node = StepNode();
             node.Info("Click the item: " + item.ToDescription());
+            
             if (switchWindow)
             {
                 string currentWindow;
                 SwitchToNewPopUpWindow(HeaderDropdownItem(item.ToDescription()), out currentWindow, false);
-            }                
+            }
             else
                 HeaderDropdownItem(item.ToDescription()).Click();
+
+            if (switchPopUp)
+                WebDriver.SwitchTo().ActiveElement();
+
+            WaitForElementDisplay(_walkMe);
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
-        }               
+        }
+
+        public T HoverHeaderDropdownItem<T>(MainPaneHeaderDropdownItem item)
+        {
+            var node = StepNode();
+            node.Info("Hover the item: " + item.ToDescription());
+            HeaderDropdownItem(item.ToDescription()).HoverElement();
+            return (T)Activator.CreateInstance(typeof(T), WebDriver);
+        }
+
+        public T ClickHeaderLabelToSort<T>(MainPaneTableHeaderLabel label)
+        {
+            var node = StepNode();
+            node.Info("Click the label of column: " + label.ToDescription());
+            ColumnLabel(label.ToDescription()).Click();
+            return (T)Activator.CreateInstance(typeof(T), WebDriver);
+        }
 
         public string GetUserNameLogon()
         {
@@ -224,7 +243,11 @@ namespace KiewitTeamBinder.UI.Pages.Global
             IWebElement FilterTextBox = FilterCell.StableFindElement(By.TagName("input"));
             FilterTextBox.InputText(value);
             if (!useFilterMenu)
+            {
                 FilterTextBox.SendKeys(Keys.Enter);
+                Wait(shortTimeout / 5);
+                FilterTextBox.SendKeys(Keys.Enter);
+            }
             else
             {
                 IWebElement FilterMenu = FilterCell.StableFindElement(By.TagName("img"));
@@ -313,10 +336,10 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 {
                     ArrowLastPageInGridPager(gridViewName).Click();
                     WaitForLoadingPanel();
-                    rowsCount = (pagesCount - 1) * 100 + VisibleRows(gridViewName).Count;
+                    rowsCount = (pagesCount - 1) * int.Parse(CurrentPageSize(gridViewName).GetAttribute("value")) + VisibleRows(gridViewName).Count;
                     //return back 1st page
                     ArrowFirstPageInGridPager(gridViewName).Click();
-                    WaitForLoadingPanel();
+                    WaitForLoadingPanel(longTimeout);
                 }
                 else
                     rowsCount =  VisibleRows(gridViewName).Count;
@@ -342,6 +365,25 @@ namespace KiewitTeamBinder.UI.Pages.Global
             }
         }
 
+        public KeyValuePair<string, bool> ValidateColumnIsSorted(string columnName)
+        {
+            var node = StepNode();
+            try
+            {
+                //int rowIndex, colIndex = -1;
+                //GetTableCellValueIndex(PaneTable(gridViewName), columnName, out rowIndex, out colIndex, "th");
+                
+                if (SortButton(columnName).IsDisplayed())
+                    return SetPassValidation(node, Validation.Column_Is_Sorted);
+                else
+                    return SetFailValidation(node, Validation.Column_Is_Sorted);
+            }
+            catch (Exception e)
+            {
+                return SetErrorValidation(node, Validation.Column_Is_Sorted, e);
+            }
+        }
+
         protected KeyValuePair<string, bool> ValidateProgressContentMessage(string message)
         {
             var node = StepNode();
@@ -351,6 +393,40 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 return SetPassValidation(node, Validation.Progress_Message_Is_Displayed + message);
             else
                 return SetFailValidation(node, Validation.Progress_Message_Is_Displayed, message, actual);
+        }
+
+        public KeyValuePair<string, bool> ValidateExcelItemsCount(string gridViewName, string excelFilePath, string sheetName = "")
+        {
+            var node = StepNode();
+            try
+            {
+                int expected = int.Parse(ItemsNumberLabel(gridViewName).Text);
+                int actual = ExcelUtils.GetNumberOfRows(excelFilePath, sheetName) - 1;
+                if (actual == expected)
+                    return SetPassValidation(node, Validation.Excel_Items_Count);
+                else
+                    return SetFailValidation(node, Validation.Excel_Items_Count, expected.ToString(), actual.ToString());
+            }
+            catch (Exception e)
+            {
+                return SetErrorValidation(node, Validation.Excel_Items_Count, e);
+            }
+        }
+
+        public KeyValuePair<string, bool> ValidateRegisterViewIsCorrect(string expectedView)
+        {
+            var node = StepNode();
+            try
+            {
+                if (RegisterViewCheckbox(expectedView).Displayed)
+                    return SetPassValidation(node, Validation.Register_View_Is_Correct);
+                else
+                    return SetFailValidation(node, Validation.Register_View_Is_Correct);
+            }
+            catch (Exception e)
+            {
+                return SetErrorValidation(node, Validation.Register_View_Is_Correct, e);
+            }
         }
 
         public KeyValuePair<string, bool> ValidateRecordsMatchingFilterAreReturned(string gridViewName, List<KeyValuePair<string, string>> ValueInColumn, int expectedNumberOfRecord)
@@ -377,8 +453,18 @@ namespace KiewitTeamBinder.UI.Pages.Global
             try
             {
                 int totalRecords = GetTotalRowsVisibleInGrid(gridViewName);
-                var valueInColumn = new List<KeyValuePair<string, string>> { new KeyValuePair<string, string>(columnName, value) };
-                int numberOfCorrectRow = GetTableItemNumberWithConditions(gridViewName, valueInColumn);
+                var columnValuePairList = new List<KeyValuePair<string, string>> { new KeyValuePair<string, string>(columnName, value) };
+                foreach (var columnValuePair in columnValuePairList)
+                {
+                    if (columnValuePair.Key == "Status")
+                    {
+                        string status = columnValuePair.Value.Split('-')[0].Trim();
+                        columnValuePairList.Remove(columnValuePair);
+                        columnValuePairList.Add(new KeyValuePair<string, string>("Status", status));
+                        break;
+                    }
+                }
+                int numberOfCorrectRow = GetTableItemNumberWithConditions(gridViewName, columnValuePairList);
 
                 if (totalRecords == numberOfCorrectRow)
                     return SetPassValidation(node, Validation.Value_In_Column_Is_Correct + numberOfCorrectRow);
@@ -573,6 +659,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 return SetErrorValidation(node, Validation.Sub_Page_Is_Displayed, e);
             }
         }
+
         public KeyValuePair<string, bool> ValidateItemsAreNotShown(string columnName, string value, string gridViewName)
         {
             var node = StepNode();
@@ -622,6 +709,9 @@ namespace KiewitTeamBinder.UI.Pages.Global
             public static string Records_Matching_Filter_Are_Returned = "Validate that the records matching filter are returned: ";
             public static string Value_In_Column_Is_Correct = "Validate that the value in column is correct: ";
             public static string Filtered_Records_Are_Cleared = "Validate that the filtered records are cleared, and return the total records before filtering: ";
+            public static string Register_View_Is_Correct = "Validate that the register view is correct"; 
+            public static string Excel_Items_Count = "Validate that the excel items count matches the items count on the Web";
+            public static string Column_Is_Sorted = "Validate that the column is sorted";
         }
         #endregion
     }

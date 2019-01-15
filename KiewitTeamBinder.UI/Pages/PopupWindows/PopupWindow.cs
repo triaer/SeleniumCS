@@ -44,23 +44,33 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
         #region Actions
         public PopupWindow(IWebDriver webDriver) : base(webDriver)
         { }
+        public string GetCurrentWindow()
+        {
+            return WebDriver.CurrentWindowHandle;
+        }
 
-        public T ClickToolbarButton<T>(ToolbarButton buttonName, bool checkProgressPopup = false)
+        public T ClickToolbarButton<T>(ToolbarButton buttonName, bool checkProgressPopup = false, bool isDisappear = false)
         {
             var node = StepNode();
             node.Info("Click the button: " + buttonName.ToDescription());
-            ToolBarButton(buttonName.ToDescription()).Click();
+
+            if (isDisappear == true)
+                IWebElementExtensions.HoverAndClickWithJS(ToolBarButton(buttonName.ToDescription()));   
+            else 
+                ToolBarButton(buttonName.ToDescription()).Click();
+
             if (checkProgressPopup)
                 WaitForLoading(_progressPopUp);
 
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 
-        public T EnterTextField<T>(string fieldName, string content)
+        public T EnterTextField<T>(string fieldLabel, string content)
         {
             var node = StepNode();
-            node.Info($"Enter {content} in {fieldName} Field.");
-            TextField(fieldName).InputText(content);
+            node.Info($"Enter {content} in {fieldLabel} Field.");
+            WaitForElementEnable(_textField(fieldLabel));
+            TextField(fieldLabel).InputText(content);
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 
@@ -112,7 +122,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
                 int i = 0;
                 do
                 {
-                    ScrollToElement(ItemDropdown(value));
+                    ItemDropdown(value).HoverElement();
                     actual = ItemDropdown(value).GetAttribute("class");
                     i++;
                 }
@@ -128,6 +138,46 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             }
         }
 
+        public KeyValuePair<string, bool> ValidateItemDropdownIsSelected(string value, string idDropdownButton)
+        {
+            var node = StepNode();
+            string selectedText = "";
+            string message = string.Format(Validation.Item_Dropdown_Is_Selected, idDropdownButton.Split('_')[0], value);
+            try
+            {
+                if (idDropdownButton.Contains("Criticality"))
+                {
+                    string actual = FindElement(By.Id(idDropdownButton)).GetAttribute("value");
+                    if (actual == value)
+                        return SetPassValidation(node, message);
+                    return SetFailValidation(node, message, value, actual);
+                }
+                else
+                {
+                    string id = idDropdownButton.Replace("Input", "ClientState");
+                    node.Info("The Dropdown: " + id);
+                    string clientStateValue = FindElement(By.Id(id)).GetAttribute("value");
+                    string[] attributeValues = clientStateValue.Split(',');
+                    foreach (var attributeValue in attributeValues)
+                    {
+                        if (attributeValue.Contains("text"))
+                        {
+                            selectedText = attributeValue.Split(':')[1];
+                            selectedText = selectedText.Replace("\"", "");
+
+                            if (selectedText.Trim() == value)
+                                return SetPassValidation(node, message);
+                        }
+                    }
+
+                    return SetFailValidation(node, message, value, selectedText);
+                }
+            }
+            catch (Exception e)
+            {
+                return SetErrorValidation(node, message, e);
+            }
+        }
         public List<KeyValuePair<string, bool>> ValidateRequiredFieldsWithRedAsterisk(string[] requiredFields)
         {
             var node = StepNode();
@@ -151,18 +201,18 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             }
         }
 
-        public KeyValuePair<string, bool> ValidateSaveDialogStatus(bool close = false)
+        public KeyValuePair<string, bool> ValidateSaveDialogStatus(bool closed = false)
         {
             var node = StepNode();
 
             try
             {
-                if (close == true)
+                if (closed == true)
                 {
-                    if (FindElement(_saveItemPopUp) == null)
-                        return SetPassValidation(node, Validation.Save_PopUp_Closed);
+                    if (StableFindElement(_saveItemPopUp) != null)
+                        return SetFailValidation(node, Validation.Save_PopUp_Closed);
 
-                    return SetFailValidation(node, Validation.Save_PopUp_Closed);
+                    return SetPassValidation(node, Validation.Save_PopUp_Closed);
                 }
 
                 if (StableFindElement(_saveItemPopUp) != null)
@@ -172,8 +222,8 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             }
             catch (Exception e)
             {
-                if (close == true)
-                    return SetFailValidation(node, Validation.Save_PopUp_Closed);
+                if (closed == true)
+                    return SetErrorValidation(node, Validation.Save_PopUp_Closed, e);
 
                 return SetErrorValidation(node, Validation.Save_PopUp_Opened, e);
             }
@@ -221,6 +271,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             public static string Save_PopUp_Opened = "Validate that the save popup is opened";
             public static string Message_Display_Correct = "Validate that the message is displayed correctly";
             public static string Header_Is_Correct = "Validate that the header is correct";
+            public static string Item_Dropdown_Is_Selected = "Validate that the {0} dropdown selected item '{1}' ";
         }
         #endregion
     }

@@ -47,8 +47,14 @@ namespace KiewitTeamBinder.UI.Pages.Global
             WebDriver.SwitchTo().ActiveElement();
             LogoutYesButton.Click();
             return new NonSsoSignOn(WebDriver);
+        }               
+
+        public T DownloadFile<T>(string fileName)
+        {
+            DownloadFileByIE(fileName);
+            return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
-                
+
         public T ReloadPage<T>()
         {
             Reload();

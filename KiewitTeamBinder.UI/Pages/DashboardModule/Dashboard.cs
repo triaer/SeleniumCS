@@ -13,13 +13,14 @@ namespace KiewitTeamBinder.UI.Pages.DashboardModule
     {
         #region Entities
         private static string _widgetLabelXpath = "//span[@class='Title' and text()='{0}']";
-        private static string _widgetBlockXpath = _widgetLabelXpath + "/ancestor::div[contains(@class, 'RadDock_Classic')]";
 
-        private static By _moreLessButton(string widgetName) => By.XPath(string.Format(_widgetBlockXpath + "//a[contains(@id,'More')]", widgetName));
-        private static By _rowInWidget(string widgetName, string rowName) => By.XPath(string.Format(_widgetBlockXpath + "//td[contains(@id,'tdCaption')][span = '{1}']", widgetName, rowName));
+        private static By _moreLessButton(string widgetUniqueName) => By.XPath($"//div[@widgetuniquename = '{widgetUniqueName}']//a[contains(@id,'More')]");
+        private static By _rowInWidget(string widgetUniqueName, string rowName) => By.XPath($"//div[@widgetuniquename = '{widgetUniqueName}']//td[contains(@id,'tdCaption')][span = '{rowName}']");
+        private static By _numberOnRowInWidget(string widgetUniqueName, string rowName) => By.XPath($"//div[@widgetuniquename = '{widgetUniqueName}']//td[contains(@id,'tdCaption')][span = '{rowName}']/preceding-sibling::td[contains(@id,'tdCount')]");
 
-        public IWebElement MoreLessButton(string widgetName) => StableFindElement(_moreLessButton(widgetName));
-        public IWebElement RowInWidget(string widgetName, string rowName) => StableFindElement(_rowInWidget(widgetName, rowName));
+        public IWebElement MoreLessButton(string widgetUniqueName) => StableFindElement(_moreLessButton(widgetUniqueName));
+        public IWebElement RowInWidget(string widgetUniqueName, string rowName) => StableFindElement(_rowInWidget(widgetUniqueName, rowName));
+        public IWebElement NumberOnRowInWidget(string widgetUniqueName, string rowName) => StableFindElement(_numberOnRowInWidget(widgetUniqueName, rowName));
         #endregion
 
         #region Actions
@@ -28,41 +29,53 @@ namespace KiewitTeamBinder.UI.Pages.DashboardModule
 
         }
 
+        public T ClickNumberOnRow<T>(string widgetUniqueName, string rowName)
+        {
+            var NumberOnRow = NumberOnRowInWidget(widgetUniqueName, rowName);
+            ScrollIntoView(NumberOnRow);
+            NumberOnRow.Click();
+            return (T)Activator.CreateInstance(typeof(T), WebDriver);
+        }
+
         /// <summary>
         /// Click More button or Less button at the bottom left of the widget
         /// </summary>
-        /// <param name="widgetName">Widget name</param>
+        /// <param name="widgetUniqueName">Widget name</param>
         /// <param name="clickMoreButton">Set true if want to click More button, fasle if want to click Less button</param>
         /// <returns>Dashboard object</returns>
-        public Dashboard ClickMoreOrLessButton(string widgetName, bool clickMoreButton)
+        public Dashboard ClickMoreOrLessButton(string widgetUniqueName, bool clickMoreButton)
         {
-            var moreLessButton = MoreLessButton(widgetName);
+            var moreLessButton = MoreLessButton(widgetUniqueName);
             ScrollIntoView(moreLessButton);
-            if ((moreLessButton.Text == "More") == clickMoreButton)                            
-                moreLessButton.Click();            
+            if ((moreLessButton.Text == "More") == clickMoreButton)
+            {
+                moreLessButton.Click();
+                WaitUntil(driver => MoreLessButton(widgetUniqueName).Text == "Less");
+            }
+                
+            
             return this;
         }
 
-        private int GetCountValueFromRow(string widgetName, string rowName)
+        public int GetCountValueFromRow(string widgetUniqueName, string rowName)
         {
-            return int.Parse(RowInWidget(widgetName, rowName).GetAttribute("count"));
+            return int.Parse(RowInWidget(widgetUniqueName, rowName).GetAttribute("count"));
         }
 
-        public KeyValuePair<string, bool> ValidateWidgetsOfDashboardDisplayed(string[] widgets)
+        public KeyValuePair<string, bool> ValidateWidgetsOfDashboardDisplayed(string[] widgetLabels)
         {
             var node = StepNode();
 
             try
             {
-                if (widgets.Length >= 0)
+                if (widgetLabels.Length >= 0)
                 {
-                    for (int i = 0; i < widgets.Length; i++)
+                    for (int i = 0; i < widgetLabels.Length; i++)
                     {
-                        if (StableFindElement(By.XPath(string.Format(_widgetLabelXpath, widgets[i]))) != null)
-                            return SetPassValidation(node, Validation.Widget_Dashboard_Dispalyed + widgets[i]);
-                        else
-                            return SetFailValidation(node, Validation.Widget_Dashboard_Dispalyed + widgets[i]);
+                        if (StableFindElement(By.XPath(string.Format(_widgetLabelXpath, widgetLabels[i]))) == null)
+                            return SetFailValidation(node, Validation.Widget_Dashboard_Dispalyed + widgetLabels[i]);
                     }
+                    return SetPassValidation(node, Validation.Widget_Dashboard_Dispalyed);
                 }
                 return SetFailValidation(node, Validation.Widget_Dashboard_Dispalyed);
             }
@@ -72,14 +85,14 @@ namespace KiewitTeamBinder.UI.Pages.DashboardModule
             }
         }
 
-        public KeyValuePair<string, bool> ValidateCountValueIsCorrect(string widgetName, string rowName, int expectedCountValue)
+        public KeyValuePair<string, bool> ValidateCountValueIsCorrect(string widgetUniqueName, string rowName, int expectedCountValue)
         {
             var node = StepNode();            
             try
             {
-                int actualCountValue = GetCountValueFromRow(widgetName, rowName);
+                int actualCountValue = GetCountValueFromRow(widgetUniqueName, rowName);
                 if (actualCountValue == expectedCountValue)
-                    return SetPassValidation(node, Validation.Count_Value_Is_Correct);
+                    return SetPassValidation(node, Validation.Count_Value_Is_Correct + " - " + expectedCountValue);
                 else
                     return SetFailValidation(node, Validation.Count_Value_Is_Correct, expectedCountValue.ToString(), actualCountValue.ToString());  
             }
