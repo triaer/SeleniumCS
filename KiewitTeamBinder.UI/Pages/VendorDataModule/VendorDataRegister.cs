@@ -25,20 +25,22 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
         private static string _filterItemsXpath = "//table[contains(@id,'GridViewItemsVendor')]//tr[@valign='top']";
        
         private static By _contractNumber(string contractNumber,string gridView, string contractDescription) => By.XPath($"//span[contains(text(),'{contractNumber}')]/ancestor::tr[contains(@id,'{gridView}_ctl00')]//nobr[contains(text(),'{contractDescription}')]");
-        private static By _checkBoxItemContract(string gridView, string contractDescription) => By.XPath($"//*[contains(text(),'{contractDescription}')]/ancestor::tr[contains(@id,'{gridView}_ctl00')]//input[contains(@id,'{gridView}_ctl00')]");
+        private static By _checkBoxItemContract(string gridView, string description) => By.XPath($"//*[contains(text(),'{description}')]/ancestor::tr[contains(@id,'{gridView}_ctl00')]//input[contains(@id,'{gridView}_ctl00')]");
         private static By _selectedRecordCount => By.XPath("//span[@id='lblRegisterSelectedRecordCount']");
         private static By _blueHeader(string blueHeader) => By.XPath($"//div[@id='lblRegisterCaption']/span[text()='{blueHeader}']");
         private static By _itemsList(string gridView) => By.XPath($"//tr[contains(@id,'ctl00_cntPhMain_{gridView}_ctl00')]");
         private static By _totalItem(string gridView) => By.XPath($"//span[contains(@id,'ctl00_cntPhMain_{gridView}_ctl00DSC')]");
-
+        private static By _selectedRow(string gridView, string Description) => By.XPath($"//*[contains(text(),'{Description}')]/ancestor::tr[contains(@id,'{gridView}_ctl00')]");
+        //*[contains(text(),'123456')]/ancestor::tr[contains(@id,'GridViewDeliverablesGrid_ctl00')]//input[contains(@id,'GridViewDeliverablesGrid_ctl00')]
         public IReadOnlyCollection<IWebElement> ExpandButton { get { return StableFindElements(_expandButton); } }
         public IWebElement PurchaseTable { get { return StableFindElement(_purchaseTable); } }
         public IWebElement ContractNumber(string contractNumber, string gridView, string description) => StableFindElement(_contractNumber(contractNumber, gridView, description));
-        public IWebElement CheckBoxItemContract(string gridView, string contractDescription) => StableFindElement(_checkBoxItemContract(gridView, contractDescription));
+        public IWebElement CheckBoxItemContract(string gridView, string description) => StableFindElement(_checkBoxItemContract(gridView, description));
         public IWebElement SelectedRecordCount { get { return StableFindElement(_selectedRecordCount); } }
         public IWebElement BlueHeader(string blueHeader) => StableFindElement(_blueHeader(blueHeader));
         public IWebElement TotalItem(string gridView) => StableFindElement(_totalItem(gridView));
         public IReadOnlyCollection<IWebElement> ItemsList(string gridView) => StableFindElements(_itemsList(gridView));
+        public IReadOnlyCollection<IWebElement> SelectedRow(string gridView, string description) => StableFindElements(_selectedRow(gridView, description));
         #endregion
 
         #region Actions
@@ -111,7 +113,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             return this;
         }
 
-        public VendorDataRegister DoubleClickItemContract(string contractNumber, string gridView, string description, bool waitForLoading = true) {
+        public VendorDataRegister DoubleClickItem(string contractNumber, string gridView, string description, bool waitForLoading = true) {
             var node = StepNode();
             node.Info("Double click on a item");
             if (waitForLoading)
@@ -182,19 +184,109 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
                     }
                 }
                 if (itemListSize == expectedValue)
-                    return SetPassValidation(node, Validation.Purchase_Items_Are_Shown);
-                return SetFailValidation(node, Validation.Purchase_Items_Are_Shown);
+                    return SetPassValidation(node, Validation.Items_Counted_Are_Matches);
+                return SetFailValidation(node, Validation.Items_Counted_Are_Matches);
             }
             catch (Exception e)
             {
-                return SetErrorValidation(node, Validation.Purchase_Items_Are_Shown, e);
+                return SetErrorValidation(node, Validation.Items_Counted_Are_Matches, e);
             }
         }
+
+        public KeyValuePair<string, bool> ValidateLineItemsIsHighlighted(string gridView, string description, int expectedValue = 0) {
+            var node = StepNode();
+            try
+            {
+                expectedValue = GetSelectedRecordCount();
+                string actual;
+                int count = 0;
+
+                foreach (IWebElement item in SelectedRow(gridView, description)) {
+                    actual = item.GetAttribute("class");
+                    if ((actual.Contains("Selected"))) {
+                        count += 1;
+                    }
+                }
+                if (count == expectedValue)
+                    return SetPassValidation(node, Validation.Line_Items_Is_Highlighted);
+                return SetFailValidation(node, Validation.Line_Items_Is_Highlighted);
+            }
+            catch (Exception e)
+            {
+                return SetErrorValidation(node, Validation.Line_Items_Is_Highlighted, e);
+            }
+        }
+
+        public KeyValuePair<string, bool> ValidateSelectedCountInCreased(string gridView, string description, int expectedValue = 0) {
+            var node = StepNode();
+            try
+            {
+                int count = 0;
+                int selectedRow = GetSelectedRecordCount();
+                string actual;
+
+                foreach (IWebElement item in SelectedRow(gridView, description))
+                {
+                    actual = item.GetAttribute("class");
+                    if ((actual.Contains("Selected")))
+                    {
+                       count += 1;
+                    }
+                }
+
+                if ((expectedValue + count) == selectedRow)
+                {
+                    return SetPassValidation(node, Validation.Selected_Count_Is_Increased);
+                }
+                return SetFailValidation(node, Validation.Selected_Count_Is_Increased);
+
+            }
+            catch (Exception e)
+            {
+                return SetErrorValidation(node, Validation.Selected_Count_Is_Increased, e);
+            }
+        }
+
+        public KeyValuePair<string, bool> ValidateSelectedCountDeCreased(string gridView, string description, int expectedValue)
+        {
+            var node = StepNode();
+            try
+            {
+                int count = 0;
+                int selectedRow = GetSelectedRecordCount();
+                string actual;
+
+                foreach (IWebElement item in SelectedRow(gridView, description))
+                {
+                    actual = item.GetAttribute("class");
+                    if ((actual.Contains("Selected")))
+                    {
+                        count += 1;
+                    }
+                }
+
+                if ((expectedValue + count) > selectedRow)
+                {
+                    return SetPassValidation(node, Validation.Selected_Count_Is_Increased);
+                }
+                return SetFailValidation(node, Validation.Selected_Count_Is_Increased);
+
+            }
+            catch (Exception e)
+            {
+                return SetErrorValidation(node, Validation.Selected_Count_Is_Increased, e);
+            }
+        }
+
+
 
         private static class Validation
         {
             public static string Purchase_Items_Are_Shown = "Validate that purchase items are shown";
             public static string Items_Counted_Are_Matches = "Validate that number of line items matches the count";
+            public static string Line_Items_Is_Highlighted = "Validate that the line item is highlighted when cliked checkbox";
+            public static string Selected_Count_Is_Increased = "Validate that selected count increased on bottom right corner";
+            public static string Selected_Count_Is_Decreased = "Validate that selected count decreased on bottom right corner";
         }
         #endregion
     }

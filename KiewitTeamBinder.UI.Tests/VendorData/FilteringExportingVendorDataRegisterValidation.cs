@@ -41,19 +41,27 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
 
                 //projectDashBoard.SelectModuleMenuItem<ProjectsList>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription(), waitForLoading: false);
                 VendorDataRegister vendorDataRegister = projectDashBoard.ClickItemInWidget<VendorDataRegister>(filteringExportingItemData.ContractViewWidget, filteringExportingItemData.ContractsInContractView);
-                vendorDataRegister.DoubleClickItemContract(filteringExportingItemData.ContractNumber, filteringExportingItemData.GridViewContract, filteringExportingItemData.ContractNumberDescription)
+                vendorDataRegister.DoubleClickItem(filteringExportingItemData.ContractNumber, filteringExportingItemData.GridViewContract, filteringExportingItemData.ContractNumberDescription)
                     .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateItemsCountedAreMatches(filteringExportingItemData.GridViewItem))
-                    .ClickOnCheckBox(filteringExportingItemData.GridViewItem, filteringExportingItemData.ItemDescription, uncheck: false);
+                    .ClickOnCheckBox(filteringExportingItemData.GridViewItem, filteringExportingItemData.ItemDescription, uncheck: false)
+                    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateLineItemsIsHighlighted(filteringExportingItemData.GridViewItem, filteringExportingItemData.ItemDescription))
+                    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateSelectedCountInCreased(filteringExportingItemData.GridViewItem, filteringExportingItemData.ItemDescription));
 
-                int selectedRecordNumber = vendorDataRegister.GetSelectedRecordCount();
+                int selectedRow = vendorDataRegister.GetSelectedRecordCount();
 
                 vendorDataRegister.ClickOnCheckBox(filteringExportingItemData.GridViewItem, filteringExportingItemData.ItemDescription, uncheck: true)
-                    .DoubleClickItemContract(filteringExportingItemData.ItemID, filteringExportingItemData.GridViewItem, filteringExportingItemData.ItemDescription)
+                    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateSelectedCountDeCreased(filteringExportingItemData.GridViewItem, filteringExportingItemData.ItemDescription, selectedRow))
+                    .DoubleClickItem(filteringExportingItemData.ItemID, filteringExportingItemData.GridViewItem, filteringExportingItemData.ItemDescription)
                     .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateItemsCountedAreMatches(filteringExportingItemData.GridViewDeliverable))
-                    .ClickOnCheckBox(filteringExportingItemData.GridViewDeliverable, filteringExportingItemData.DeliverableDescription, uncheck: false);
+                    .ClickOnCheckBox(filteringExportingItemData.GridViewDeliverable, filteringExportingItemData.DeliverableDescription, uncheck: false)
+                    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateLineItemsIsHighlighted(filteringExportingItemData.GridViewDeliverable, filteringExportingItemData.DeliverableDescription))
+                    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateSelectedCountInCreased(filteringExportingItemData.GridViewDeliverable, filteringExportingItemData.DeliverableDescription));
+
+                selectedRow = vendorDataRegister.GetSelectedRecordCount();
 
                 vendorDataRegister.ClickOnCheckBox(filteringExportingItemData.GridViewDeliverable, filteringExportingItemData.DeliverableDescription, uncheck: true)
-                    .DoubleClickItemContract(filteringExportingItemData.DeliverableNumber, filteringExportingItemData.GridViewDeliverable, filteringExportingItemData.DeliverableDescription)
+                    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateSelectedCountDeCreased(filteringExportingItemData.GridViewDeliverable, filteringExportingItemData.DeliverableDescription, selectedRow))
+                    .DoubleClickItem(filteringExportingItemData.DeliverableNumber, filteringExportingItemData.GridViewDeliverable, filteringExportingItemData.DeliverableDescription)
                     .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateItemsCountedAreMatches(filteringExportingItemData.GridViewDocument))
                     .ClickOnBlueHeader(filteringExportingItemData.ContractNumber);
 
