@@ -25,7 +25,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
         public NotLoggedInLanding(IWebDriver webDriver) : base(webDriver)
         {
-
         }        
         #endregion
     }
