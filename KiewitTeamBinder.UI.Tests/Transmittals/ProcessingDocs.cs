@@ -43,7 +43,7 @@ namespace KiewitTeamBinder.UI.Tests.Transmittals
                 string[] selectedUsersWithCompanyName = new string[] { transmittalReceiptData.SelectedUserWithCompany.Description };
                 var columnValuesInConditionList = new List<KeyValuePair<string, string>> { transmittalReceiptData.ColumnValuesInConditionList.Subject };
 
-                projectDashBoard.SelectModuleMenuItemOnLeftNav<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.TRANSMITTALS.ToDescription())
+                projectDashBoard.SelectModuleMenuItemOnLeftNav<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.TRANSMITTALS.ToDescription(), waitForLoading: false)
                     .LogValidation<ProjectsDashboard>(ref validations, projectDashBoard.ValidateDisplayedSubItemLinks(transmittalReceiptData.SubItemMenus));
 
                 Transmittal transmittal = projectDashBoard.SelectModuleMenuItemOnLeftNav<Transmittal>(subMenuItem: ModuleSubMenuInLeftNav.INBOX.ToDescription());

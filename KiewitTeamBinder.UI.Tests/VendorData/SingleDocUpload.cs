@@ -91,7 +91,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 test = LogTest("Transmit Single Document");
                 string[] selectedDocuments = new string[transmitSingleDocData.NumberOfSelectedDocumentRow];
                 string[] selectedUsersWithCompanyName = new string[] { transmitSingleDocData.KiewitUser.Description };
-                projectDashBoard.SelectModuleMenuItemOnLeftNav<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription());
+                projectDashBoard.SelectModuleMenuItemOnLeftNav<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription(), waitForLoading: false);
                 HoldingArea holdingArea = projectDashBoard.SelectModuleMenuItemOnLeftNav<HoldingArea>(subMenuItem: ModuleSubMenuInLeftNav.HOLDINGAREA.ToDescription());
 
                 holdingArea.SelectRowsWithoutTransmittalNo(transmitSingleDocData.GridViewHoldingAreaName, transmitSingleDocData.NumberOfSelectedDocumentRow, true, ref selectedDocuments)

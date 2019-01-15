@@ -94,7 +94,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             return this;
         }       
         
-        public void WaitForLoadingPanel(int timeout = sapLongTimeout)
+        public void WaitForLoadingPanel(int timeout = sapShortTimeout)
         {
             var node = StepNode(); 
             Stopwatch stopwatch = new Stopwatch();
@@ -110,8 +110,8 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 }
                 catch (Exception)
                 {   }
-            } while (stopwatch.Elapsed.TotalSeconds <= sapLongTimeout);
-            if (stopwatch.Elapsed.TotalSeconds >= sapLongTimeout)
+            } while (stopwatch.Elapsed.TotalSeconds <= timeout);
+            if (stopwatch.Elapsed.TotalSeconds >= timeout)
                 node.Warning("The icon loading process is not completed in timeout: " + timeout);
 
             stopwatch.Stop();

@@ -11,7 +11,7 @@ namespace KiewitTeamBinder.Common.TestData
 {
     public class UploadSingleDocSmoke
     {
-        public string ProjectName = "Automation Project 1";
+        public string ProjectName = "Automation Project 2";
         public string FileNames = "\"DocumentAttachFile.txt\" ";
         public string[] RequiredFields = { "Document No.", "Rev", "Status", "Title", "Category", "Discipline" };
         public Color ColorGrey = Color.FromArgb(207,207,207);

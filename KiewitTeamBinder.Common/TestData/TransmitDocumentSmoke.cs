@@ -10,7 +10,7 @@ namespace KiewitTeamBinder.Common.TestData
 {
     public class TransmitDocumentSmoke
     {
-        public string ProjectName = "Automation Project 1";
+        public string ProjectName = "Automation Project 4";
         public string ProjectNumber = "AUTO1";
         public string GridViewHoldingAreaName = "GridViewHoldingArea";
         public string GridViewTransmitDocName = "GridViewDocuments";
