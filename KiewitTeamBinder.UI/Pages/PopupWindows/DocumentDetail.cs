@@ -82,36 +82,6 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             return validation;
         }
 
-        public KeyValuePair<string, bool> ValidateItemDropdownIsSelected(string value, string idDropdownButton)
-        {
-            var node = StepNode();
-            string selectedText = "";
-            string message = string.Format(Validation.Item_Dropdown_Is_Selected, idDropdownButton.Split('_')[0], value);
-            try
-            {
-                string id = idDropdownButton.Replace("Input", "ClientState");
-                node.Info("The Dropdown: " + id);
-                string clientStateValue = FindElement(By.Id(id)).GetAttribute("value");
-                string[] attributeValues = clientStateValue.Split(',');
-                foreach (var attributeValue in attributeValues)
-                {
-                    if (attributeValue.Contains("text"))
-                    {
-                        selectedText = attributeValue.Split(':')[1];
-                        selectedText = selectedText.Replace("\"", "");
-
-                        if (selectedText.Trim() == value)
-                            return SetPassValidation(node, message);
-                    }
-                }
-
-                return SetFailValidation(node, message, value, selectedText);
-            }
-            catch (Exception e)
-            {
-                return SetErrorValidation(node, message, e);
-            }
-        }
 
         public override KeyValuePair<string, bool> ValidateItemDropdownIsHighlighted(string value, string idDropdown)
         {
@@ -226,7 +196,6 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             public static string User_Fields_Cannot_Update = "Validate that the User Field is cannot updated";
             public static string Document_No_Limit_Retained = "Validate that the Document No is retained limited";
             public static string Item_Dropdown_Is_Highlighted = "Validate that the item is highlighted when hovered or scrolled over in the dropdown: ";
-            public static string Item_Dropdown_Is_Selected = "Validate that the {0} dropdown selected item '{1}' ";
         }
         #endregion
     }

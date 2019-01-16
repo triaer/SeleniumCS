@@ -18,5 +18,15 @@ namespace KiewitTeamBinder.Common.TestData
         public string[] contractNumberValueArray = { "1234567" };
         public string ReportTab = "ReportTypesPanelBar";
         public string FavReportTab = "FavReportTypePanelBar";
+        public string[] favoriteItem = { "Myself", "My company", "My project" };
+        public string idButtonAddToFavouriteReportHeader = "btnAddRemoveFavouriteReport";
+        public string radioButton = "Schedule";
+        public string myselfFavReport = "Myself";
+        public string mycompanyFavReport = "My company";
+        public string myprojectFavReport = "My project";
+        public string reporterHeader = "Report Title:";
+        public string contractUserName = "Automation";
+        public string availableMessage = "Your report request is being processed and you will be notified via email once the report becomes available.";
+        public string favSuccessfullyMsg = "Selected report successfully added to Favorites.";
     }
 }

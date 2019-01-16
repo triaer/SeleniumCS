@@ -62,6 +62,50 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                 driver = Browser.Open(reportUrl, browser);
                 StandardReports newStandardReports = new StandardReports(driver).Logon(teambinderTestAccount);
                 newStandardReports.LogValidation<StandardReports>(ref validations, newStandardReports.ValidateReportInHyperlinkIsIdenticalToReportRanByUser(ref currentIframe, reportRanByUser));
+                Browser.Quit();
+
+                //when User Story 123737 - 120803 Schedule a Report
+                driver = Browser.Open(teambinderTestAccount.Url, browser);
+                projectsList = new NonSsoSignOn(driver).Logon(teambinderTestAccount) as ProjectsList;
+                projectDashBoard = projectsList.NavigateToProjectDashboardPage(reportData.ProjectName);
+                standardReports = projectDashBoard.OpenStandardReportsWindow(true);
+                currentIframe = null;
+                standardReports.SelectReportModule(ref currentIframe, reportData.ReportTab, reportData.ModuleName)
+                    .SelectReportModuleItem(ref currentIframe, reportData.ReportTab, reportData.ModuleName, reportData.ModuleItemName)
+                    .SelectItemInDropdown(ref currentIframe, reportData.ContractNumberDropdownList, reportData.ContractNumberItem, ref methodValidations)
+                    .ClickSearchButton(ref currentIframe);
+
+                test = LogTest("Schedule a Report");
+                string contractNumbber = standardReports.GetValueFromVendorDataDetailsTable(reportData.contractNumberKey)[0];
+
+                standardReports.ClickBackButton(ref currentIframe)
+                    .LogValidation<StandardReports>(ref validations, standardReports.ValidateValuePreviouslyRemainsInReport(ref currentIframe, reportData.ContractNumberDropdownList, contractNumbber))
+                    .ClickRadioButton(ref currentIframe, reportData.radioButton)
+                    .LogValidation<StandardReports>(ref validations, standardReports.ValidateRadioButtonIsDepressed(reportData.radioButton))
+                    .EnterToTextField(reportData.contractUserName)
+                    .LogValidation<StandardReports>(ref validations, standardReports.ValidateContactListAutoPopulated())
+                    .PressEnter()
+                    .ClickSearchButton(ref currentIframe, false)
+                    .LogValidation<StandardReports>(ref validations, standardReports.ValidateValueInMessageReportDisplaysCorrectly(reportData.availableMessage))
+                    .ClickOkButtonOnPopUp<StandardReports>()
+                    .LogValidation<StandardReports>(ref validations, standardReports.ValidateCloseDialog(close: true));
+
+                currentIframe = null;
+
+                //when User Story 123738 - 120804 Favorite a Report
+                standardReports.ClickButtonReportHeader(ref currentIframe, reportData.idButtonAddToFavouriteReportHeader)
+                    .LogValidation<StandardReports>(ref validations, standardReports.ValidateOpenDialog(close: false))
+                    //.LogValidation<StandardReports>(ref validations, standardReports.ValidateUserIsAbleToFavoriteReport(reportData.favoriteItem));
+                    .SelectFavoriteReport(ref currentIframe, reportData.myselfFavReport)
+                    .LogValidation<StandardReports>(ref validations, standardReports.ValidateUserIsAbleToFavoriteReport(reportData.favoriteItem))
+                    .LogValidation<StandardReports>(ref validations, standardReports.ValidateFavoritedForUserOnly(reportData.favoriteItem))
+                    .clickOkFavoritePopup(ref currentIframe)
+                    .LogValidation<StandardReports>(ref validations, standardReports.ValidateOpenDialogWithMessageCorrectly(reportData.favSuccessfullyMsg, close: false))
+                    .ClickOkButtonOnPopUp<StandardReports>()
+                    .LogValidation<StandardReports>(ref validations, standardReports.ValidateCloseDialog(close: true))
+                    .ClickButtonReportHeader(ref currentIframe, reportData.idButtonAddToFavouriteReportHeader)
+                    .ClickYesFavoritePopup(ref currentIframe)
+                    .ClickOkButtonOnPopUp<StandardReports>();
 
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);

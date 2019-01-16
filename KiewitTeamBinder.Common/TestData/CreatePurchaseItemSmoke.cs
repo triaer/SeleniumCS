@@ -16,11 +16,29 @@ namespace KiewitTeamBinder.Common.TestData
         public string GridViewName = "GridViewContractVendor";
         public string GridViewItemsName = "GridViewItemsVendor";
         public string[] RequiredFields = {"Item ID", "Description", "Status"};
-        public KeyValuePair<string, string> ItemID = new KeyValuePair<string, string>("Item ID", Utils.GetRandomValue("ITEMID"));
-        public KeyValuePair<string, string> Description = new KeyValuePair<string, string>("Description", "Description content");
-        public KeyValuePair<string, string> ContractNumber = new KeyValuePair<string, string>("Contract Number", "1234567");
-        public KeyValuePair<string, string> Status = new KeyValuePair<string, string>("Status", "OPEN - OPEN");
+        public ItemPurchased PurchaseInfo = new ItemPurchased()
+        {
+            ContractNumber = "1234567",
+            ItemID = Utils.GetRandomValue("ITEMID"),
+            Description = Utils.GetRandomValue("Description content"),
+            Status = "OPEN - OPEN",
+        };
+
+        public List<KeyValuePair<string, string>> ExpectedContractValuesInColumnList(ItemPurchased PurchaseInfo)
+        {
+            return new List<KeyValuePair<string, string>> { new KeyValuePair<string, string>("Contract Number", PurchaseInfo.ContractNumber) };
+        }
+        public List<KeyValuePair<string, string>> ExpectedPurchasedValuesInColumnList(ItemPurchased PurchaseInfo)
+        {
+            return new List<KeyValuePair<string, string>>
+            {
+                new KeyValuePair<string, string>("Item ID", PurchaseInfo.ItemID),
+                new KeyValuePair<string, string>("Description", PurchaseInfo.Description),
+                new KeyValuePair<string, string>("Status", PurchaseInfo.Status)
+            };
+        }
         public string SaveMessage = "Saved Successfully";        
         public int expandButtonIndex = 1;
+        
     }
 }
