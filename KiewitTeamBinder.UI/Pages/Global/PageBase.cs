@@ -353,13 +353,9 @@ namespace KiewitTeamBinder.UI.Pages.Global
             }
         }
 
-        internal static void ScrollToElement(IWebElement Element)
-        {
-            Actions action = new Actions(WebDriver);
-            action.MoveToElement(Element);
-            action.Perform();
-        }
-        internal static void ScrollToElement(By by, int timeout = longTimeout)
+        
+        
+        internal static void HoverElement(By by, int timeout = longTimeout)
         {
             var element = StableFindElement(by, timeout);
 
@@ -367,7 +363,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
             action.MoveToElement(element);
             action.Perform();
         }
-
         internal static void ScrollIntoView(IWebElement Element)
         {
             IJavaScriptExecutor jse = (IJavaScriptExecutor)WebDriver;

@@ -121,7 +121,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
                 }
                 do
                 {
-                    ScrollToElement(ItemDropdown(value));
+                    ItemDropdown(value).HoverElement();
                     actual = ItemDropdown(value).GetAttribute("class");
                     i++;
                 }
@@ -146,7 +146,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
                 if (idDropdownButton.Contains("Criticality"))
                 {
                     string actual = FindElement(By.Id(idDropdownButton)).GetAttribute("value");
-                    if (actual == value)
+                    if (actual.Split('-')[0].Trim() == value)
                         return SetPassValidation(node, message);
                     return SetFailValidation(node, message, value, actual);
                 }
@@ -163,7 +163,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
                             selectedText = attributeValue.Split(':')[1];
                             selectedText = selectedText.Replace("\"", "");
 
-                            if (selectedText.Trim() == value)
+                            if (selectedText.Split('-')[0].Trim() == value)
                                 return SetPassValidation(node, message);
                         }
                     }

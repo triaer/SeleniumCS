@@ -11,7 +11,7 @@ namespace KiewitTeamBinder.Common.TestData
 {
     public class CreateContractItemSmoke
     {
-        public string ProjectName = "Automation Project 1";
+        public string ProjectName = "Automation Project 2";
         public string[] RequiredFields = { "Contract Number", "Description", "Vendor Company", "Expediting Contract", "Status" };
         public string[] SubItemMenus = { "Vendor Data Register", "Holding Area" };
         public string DefaultFilter = "Hierarchical View";
@@ -27,7 +27,7 @@ namespace KiewitTeamBinder.Common.TestData
             Description = Utils.GetRandomValue("Description Contract"),
             VendorCompany = "Kiewit",
             ExpeditingContract = "No",
-            Status = "STARTED - STARTED"
+            Status = "STARTED"
         };
 
     }

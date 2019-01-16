@@ -37,8 +37,8 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 test.Info("Navigate to DashBoard Page of Project: " + createContractItemData.ProjectName);
                 ProjectsDashboard projectDashBoard = projectsList.NavigateToProjectDashboardPage(createContractItemData.ProjectName);
                 Dashboard dashboard = projectDashBoard.SelectModuleMenuItemOnLeftNav<Dashboard>(menuItem: ModuleNameInLeftNav.DASHBOARD.ToDescription());
-                dashboard.ClickMoreOrLessButton(createContractItemData.WidgetUniqueName, false);
-                int CountOfContracts = dashboard.GetCountValueFromRow(createContractItemData.WidgetUniqueName, createContractItemData.RowName);
+                dashboard.ClickMoreOrLessButton(WidgetUniqueName.CONTRACTORVIEW.ToDescription(), false);
+                int CountOfContracts = dashboard.GetCountValueFromRow(WidgetUniqueName.CONTRACTORVIEW.ToDescription(), createContractItemData.RowName);
 
                 //when User Story 121989 - 120793 Create Contract Items Deliverable
                 test = LogTest("Create Contract Item");
@@ -60,7 +60,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                     .ClickCloseButtonOnPopUp<VendorDataRegister>();
 
                 dashboard = projectDashBoard.SelectModuleMenuItemOnLeftNav<Dashboard>(menuItem: ModuleNameInLeftNav.DASHBOARD.ToDescription());
-                dashboard.LogValidation<Dashboard>(ref validations, dashboard.ValidateCountValueIsCorrect(createContractItemData.WidgetUniqueName, createContractItemData.RowName, CountOfContracts + 1));
+                dashboard.LogValidation<Dashboard>(ref validations, dashboard.ValidateCountValueIsCorrect(WidgetUniqueName.CONTRACTORVIEW.ToDescription(), createContractItemData.RowName, CountOfContracts + 1));
 
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);
@@ -160,8 +160,8 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 test.Info("Navigate to DashBoard Page of Project: " + createNewDeliverableData.ProjectName);
                 ProjectsDashboard projectDashBoard = projectsList.NavigateToProjectDashboardPage(createNewDeliverableData.ProjectName);
                 Dashboard dashboard = projectDashBoard.SelectModuleMenuItemOnLeftNav<Dashboard>(menuItem: ModuleNameInLeftNav.DASHBOARD.ToDescription());
-                dashboard.ClickMoreOrLessButton(createNewDeliverableData.WidgetUniqueName, true);
-                int CountOfDeliverables = dashboard.GetCountValueFromRow(createNewDeliverableData.WidgetUniqueName, createNewDeliverableData.RowName);
+                dashboard.ClickMoreOrLessButton(WidgetUniqueName.CONTRACTORVIEW.ToDescription(), true);
+                int CountOfDeliverables = dashboard.GetCountValueFromRow(WidgetUniqueName.CONTRACTORVIEW.ToDescription(), createNewDeliverableData.RowName);
 
                 //Pre-Condition Create new contract
                 test = LogTest("Pre-Condition: Create new contract and purchase item");
@@ -244,8 +244,8 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 test = LogTest("US 122010 - 120798 Validate Contractor Widget Counts");
                 
                 dashboard = projectDashBoard.SelectModuleMenuItemOnLeftNav<Dashboard>(menuItem: ModuleNameInLeftNav.DASHBOARD.ToDescription());
-                dashboard.ClickMoreOrLessButton(createNewDeliverableData.WidgetUniqueName, true)
-                    .LogValidation<Dashboard>(ref validations, dashboard.ValidateCountValueIsCorrect(createNewDeliverableData.WidgetUniqueName, createNewDeliverableData.RowName, CountOfDeliverables + 1));
+                dashboard.ClickMoreOrLessButton(WidgetUniqueName.CONTRACTORVIEW.ToDescription(), true)
+                    .LogValidation<Dashboard>(ref validations, dashboard.ValidateCountValueIsCorrect(WidgetUniqueName.CONTRACTORVIEW.ToDescription(), createNewDeliverableData.RowName, CountOfDeliverables + 1));
 
 
                 // then

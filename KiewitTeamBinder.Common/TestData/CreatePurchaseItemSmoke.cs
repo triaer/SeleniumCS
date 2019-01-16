@@ -22,7 +22,7 @@ namespace KiewitTeamBinder.Common.TestData
             Description = Utils.GetRandomValue("Description Contract"),
             VendorCompany = "Kiewit",
             ExpeditingContract = "No",
-            Status = "STARTED - STARTED"
+            Status = "STARTED"
         };
         public ItemPurchased PurchaseInfo(Contract ContractInfo)
         {
@@ -31,7 +31,7 @@ namespace KiewitTeamBinder.Common.TestData
                 ContractNumber = ContractInfo.ContractNumber,
                 ItemID = Utils.GetRandomValue("ITEMID"),
                 Description = Utils.GetRandomValue("Description item content"),
-                Status = "OPEN - OPEN",
+                Status = "OPEN",
             };
         }
 

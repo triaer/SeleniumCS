@@ -79,7 +79,7 @@ namespace KiewitTeamBinder.UI
                     var wait = Browser.Wait(shortTimeout);
                     wait.Until(d => Element.FindElement(by).Displayed);
                     Ele = Element.FindElement(by);
-                    ScrollToElement(Ele);
+                    HoverElement(Ele);
                     break;
                 }
 
@@ -90,7 +90,7 @@ namespace KiewitTeamBinder.UI
                             try
                             {
                                 if (!Element.FindElement(by).IsDisplayed())
-                                    ScrollToElement(Element.FindElement(by));
+                                    HoverElement(Element.FindElement(by));
                             }
                             catch
                             {
@@ -104,7 +104,7 @@ namespace KiewitTeamBinder.UI
                         try
                         {
                             if (!Element.FindElement(by).IsDisplayed())
-                                ScrollToElement(Element.FindElement(by));
+                                HoverElement(Element.FindElement(by));
                         }
                         catch
                         {
@@ -272,6 +272,13 @@ namespace KiewitTeamBinder.UI
             {
                 WebDriver.Manage().Timeouts().PageLoad = normalPageLoadTime; 
             }
+        }
+
+        public static void HoverElement(this IWebElement Element)
+        {
+            Actions action = new Actions(WebDriver);
+            action.MoveToElement(Element);
+            action.Perform();
         }
         public static void HoverAndClickWithJS(this IWebElement Element)
         {
