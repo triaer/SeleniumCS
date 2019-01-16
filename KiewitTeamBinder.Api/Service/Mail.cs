@@ -4,6 +4,9 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
+using System.IO;
+using System.Xml;
 
 namespace KiewitTeamBinder.Api.Service
 {
@@ -22,11 +25,9 @@ namespace KiewitTeamBinder.Api.Service
         {
             _request = new MailServiceReference.MailWebServiceSoapClient(EndpointName, url + ServiceName);
         }
-
  
         public DataSet GetStructureForComposeMail(string sessionKey, int parentMailIntKey, string parentMailBox, string mailType, string composeMailAction)
         {
-
             DataSet dataSetResponse = _request.GetStructureForComposeMail(sessionKey, parentMailIntKey, parentMailBox, mailType, composeMailAction);
             return dataSetResponse;
         }
@@ -111,8 +112,7 @@ namespace KiewitTeamBinder.Api.Service
             return dataTableResponse;
 
         }
-
-
+        
         public string getValueOfResponseData(DataTable dataTableResponse, int i)
         {
             string value = "";
@@ -128,29 +128,46 @@ namespace KiewitTeamBinder.Api.Service
             string IntKey = getValueOfResponseData(dataTableResponse, 6);
             return IntKey;
         }
-
-        public string ConvertDataTableToString(DataTable dataTable)
-        {
-
-            StringBuilder stringBuilder = new StringBuilder();
-            dataTable.Rows.Cast<DataRow>().ToList().ForEach(dataRow =>
-            {
-                dataTable.Columns.Cast<DataColumn>().ToList().ForEach(column =>
-                {
-                    stringBuilder.AppendFormat("{0}:{1} ", column.ColumnName, dataRow[column]);
-                });
-                stringBuilder.Append(Environment.NewLine);
-            });
-            return stringBuilder.ToString();
+                        
+        private string ConvertDataSetToXML(DataSet dataSet)
+        {            
+            XmlSerializer ser = new XmlSerializer(typeof(DataSet));
+            var memoryStream = new MemoryStream();
+            TextWriter writer = new StreamWriter(memoryStream);
+            ser.Serialize(writer, dataSet);
+            return Encoding.UTF8.GetString(memoryStream.ToArray());
         }
-
-
 
         public DataSet GetStructureForComposeMail(string sessionKey, string parentMailBox, string mailType, string composeMailAction)
         {
             int parentMailIntKey = 0;
             DataSet dataSetRespone = _request.GetStructureForComposeMail(sessionKey, parentMailIntKey, parentMailBox, mailType, composeMailAction);
             return dataSetRespone;
+        }
+        
+        public string GetMailDetailsXml(DataSet structureForComposeMail, string subject, string mailType, int intKey, int recipientIntKey)
+        {
+            string xmlResponse = ConvertDataSetToXML(structureForComposeMail);
+            xmlResponse = xmlResponse.Remove(0, 40);
+            xmlResponse = xmlResponse.Replace("<DataSet>", "<DataSet xmlns=\"http://www.qa-software.com/\">");
+            xmlResponse = xmlResponse.Replace("<NewDataSet>", "<NewDataSet xmlns=\"\">");
+            xmlResponse = xmlResponse.Replace("<Int_key>0</Int_key>\r\n        <Type />", $"<Int_key>{intKey}</Int_key><Type />");
+            xmlResponse = xmlResponse.Replace("<Type />", $"<Type>{mailType}</Type>");
+            xmlResponse = xmlResponse.Replace("<Subject />", $"<Subject>{subject}</Subject>");
+            string fMailRecipients = "<fMailRecipients diffgr:id='fMailRecipients1' msdata:rowOrder='0'>" +
+                                       "<Int_Key>0</Int_Key>" +
+                                       "<ToId>ADMIN2</ToId>" +
+                                       "<CompanyId>Kiewit</CompanyId>" +
+                                       "<Int_Cc>0</Int_Cc>" +
+                                       $"<Int_Adr>{recipientIntKey}</Int_Adr>" +
+                                       "</fMailRecipients>";
+            xmlResponse = xmlResponse.Replace("</fMailCustomData>", "</fMailCustomData>" + fMailRecipients);
+            xmlResponse = xmlResponse.Replace("  ", "");
+            xmlResponse = xmlResponse.Replace("\t", "");
+            xmlResponse = xmlResponse.Replace("\n", "");
+            xmlResponse = xmlResponse.Replace("\r", "");
+
+            return xmlResponse;
         }
 
         public string SaveMail(string sessionKey, string mailType, string mailDetailsXml, string composeMailAction, string parentMailBox)
@@ -183,11 +200,11 @@ namespace KiewitTeamBinder.Api.Service
             }
         }
 
-        public KeyValuePair<string, bool> ValidateIntKeySentMail(string intKeySentMail)
+        public KeyValuePair<string, bool> ValidateIntKeySentMail(int intKeySentMail)
         {
             try
             {
-                int temp = int.Parse(intKeySentMail);
+                int temp = intKeySentMail;
                 return new KeyValuePair<string, bool>(Validation.IntKey_Sent_Mail, true);               
             }
             catch (Exception e)
@@ -203,7 +220,6 @@ namespace KiewitTeamBinder.Api.Service
             public static string Emails_In_Mail_Box = "Validate Email exists in MailBox ";
             public static string Emails_Not_In_Mail_Box = "Validate Email not exists in MailBox ";
         }
-
         #endregion
     }
 }

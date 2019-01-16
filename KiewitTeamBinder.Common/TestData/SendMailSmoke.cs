@@ -12,8 +12,9 @@ namespace KiewitTeamBinder.Common.TestData
     {
         public string ProjectNumber = "AUTO2";
         public string ConnectingProduct = "KiewitApiTest";
-        public string MailBox = "Drafts";
-        public string Subject = "SAVE";
+        public string DraftBox = "Drafts";
+        public string Inbox = "Inbox";
+        public string Subject = "Automation send mail API427";
         public string MailType = "PCO";
         public string ComposeMailAcction = "New";
         public int IntKeyForNewMail = 0;
