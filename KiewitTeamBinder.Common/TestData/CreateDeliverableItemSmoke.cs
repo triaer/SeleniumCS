@@ -56,7 +56,7 @@ namespace KiewitTeamBinder.Common.TestData
             {
                 ContractNumber = PurchaseInfo.ContractNumber,
                 ItemID = PurchaseInfo.ItemID,
-                LineItemNumber = Utils.GetRandomValue("LineItemNumber"),
+                LineItemNumber = Utils.GetRandomValue("LINEITEM"),
                 Description = Utils.GetRandomValue("Description Deliverable"),
                 DeliverableType = "AR",
                 Criticality = "Normal",
@@ -69,19 +69,19 @@ namespace KiewitTeamBinder.Common.TestData
 
         public List<KeyValuePair<string, string>> ExpectedContractValuesInColumnList(DeliverableLine DeliverableInfo)
         {
-            return new List<KeyValuePair<string, string>> { new KeyValuePair<string, string>("Contract Number", DeliverableInfo.ContractNumber) };
+            return new List<KeyValuePair<string, string>> { new KeyValuePair<string, string>("Contract Number", DeliverableInfo.ContractNumber.ToUpper()) };
         }
 
         public List<KeyValuePair<string, string>> ExpectedPurchasedValuesInColumnList(DeliverableLine DeliverableInfo)
         {
-            return new List<KeyValuePair<string, string>> { new KeyValuePair<string, string>("Item ID", DeliverableInfo.ItemID) };
+            return new List<KeyValuePair<string, string>> { new KeyValuePair<string, string>("Item ID", DeliverableInfo.ItemID.ToUpper()) };
         }
 
         public List<KeyValuePair<string, string>> ExpectedDeliverableValuesInColumnList(DeliverableLine DeliverableInfo)
         {
             return new List<KeyValuePair<string, string>>
             {
-                new KeyValuePair<string, string>("Deliverable Line Item Number", DeliverableInfo.LineItemNumber),
+                new KeyValuePair<string, string>("Deliverable Line Item Number", DeliverableInfo.LineItemNumber.ToUpper()),
                 new KeyValuePair<string, string>("Description", DeliverableInfo.Description),
                 new KeyValuePair<string, string>("Status", DeliverableInfo.Status)
             };

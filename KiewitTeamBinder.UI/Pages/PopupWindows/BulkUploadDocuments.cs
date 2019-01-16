@@ -234,7 +234,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             AddFilesInBulk(Utils.GetInputFilesLocalPath(), fileNames)
                 .ClickACheckboxInDocumentRow(documentRow: 1)
                 .SelectDataOfDocumentPropertyDropdown("00 - Rev 00", DocBulkUploadDropdownType.Rev, documentRow: 1)
-                .SelectDataOfDocumentPropertyDropdown("VSUB - Vendor Submission", DocBulkUploadDropdownType.Sts, documentRow: 1)
+                .SelectDataOfDocumentPropertyDropdown("VSUB - Vendor Submitted", DocBulkUploadDropdownType.Sts, documentRow: 1)
                 .EnterDataOfDocumentPropertyTextbox("Vendor Submitted Document", DocBulkUploadInputText.Title.ToDescription(), documentRow: 1)
                 .SelectDataOfDocumentPropertyDropdown("CON - Contruction", DocBulkUploadDropdownType.Disc, documentRow: 1)
                 .SelectDataOfDocumentPropertyDropdown("CA - CALCULATION", DocBulkUploadDropdownType.Cat, documentRow: 1)

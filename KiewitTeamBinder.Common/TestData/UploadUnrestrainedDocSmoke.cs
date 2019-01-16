@@ -19,13 +19,13 @@ namespace KiewitTeamBinder.Common.TestData
         public string SaveMessage = "Document details saved successfully.";
         public SingleDocumentInfo SingleDocInformation = new SingleDocumentInfo()
         {
-            DocumentNo = Utils.GetRandomValue("Unrestrained_DocNo"),
-            RevStatus = "F - Rev F",
-            Status = "IFR - Issued for Review",
+            DocumentNo = Utils.GetRandomValue("Unrestrained_DocNo").ToUpper(),
+            RevStatus = "F",
+            Status = "IFR",
             Title = Utils.GetRandomValue("Unrestrained DocTitle"),
-            Category = "RE - REFERENCE",
-            Discipline = "87 - Misc Specialty Work",
-            Type = "SUB - Submittal",
+            Category = "RE",
+            Discipline = "87",
+            Type = "SUB",
         };
     }
 }
