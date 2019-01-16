@@ -153,10 +153,11 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 ClickSubMenuItem(subMenuItem);
 
             if (waitForLoading)
+            {
                 WaitForLoadingPanel();
-
-            if (menuItem !=  ModuleNameInLeftNav.DASHBOARD.ToDescription())
-                WaitForElement(_subPageHeader);
+                if (menuItem != ModuleNameInLeftNav.DASHBOARD.ToDescription())
+                    WaitForElement(_subPageHeader);
+            }
 
             return (T)Activator.CreateInstance(typeof(T), WebDriver);            
         }

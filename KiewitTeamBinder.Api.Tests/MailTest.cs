@@ -33,16 +33,16 @@ namespace KiewitTeamBinder.Api.Tests
 
                 MailApi mailRequest = new MailApi(GetServiceUrl(teambinderTestAccount1.Url));
                 //Save email
-                int savedMailIntKey = int.Parse(mailRequest.SaveMail(sessionKey, sendMailData.MailType, sendMailData.MailDetailXml(sendMailData.IntKeyForNewMail, sendMailData.RecipientIntKey), sendMailData.ComposeMailAcction, sendMailData.MailBox));
+                int savedMailIntKey = int.Parse(mailRequest.SaveMail(sessionKey, sendMailData.MailType, sendMailData.MailDetailXml(sendMailData.IntKeyForNewMail, sendMailData.RecipientIntKey, sendMailData.EmailSubject), sendMailData.ComposeMailAcction, sendMailData.DraftBox));
                 //Verify email exists in draft view
-                DataSet mailDetail = mailRequest.GetMailDetails(sessionKey, sendMailData.MailBox, savedMailIntKey);
+                DataSet mailDetail = mailRequest.GetMailDetails(sessionKey, sendMailData.DraftBox, savedMailIntKey);
                 validations.Add(mailRequest.ValidateEmailsInMailBox(mailDetail, true));
                 //Send Email
-                string intKeySentMail = mailRequest.SendMail(sessionKey, savedMailIntKey, sendMailData.MailType, sendMailData.MailDetailXml(savedMailIntKey, sendMailData.RecipientIntKey), sendMailData.ComposeMailAcction, sendMailData.MailBox);
+                string intKeySentMail = mailRequest.SendMail(sessionKey, savedMailIntKey, sendMailData.MailType, sendMailData.MailDetailXml(savedMailIntKey, sendMailData.RecipientIntKey, sendMailData.EmailSubject), sendMailData.ComposeMailAcction, sendMailData.DraftBox);
                 //Verify email was sent
                 validations.Add(mailRequest.ValidateIntKeySentMail(intKeySentMail));
                 //Verify draft email has been removed
-                mailDetail = mailRequest.GetMailDetails(sessionKey, sendMailData.MailBox, savedMailIntKey);
+                mailDetail = mailRequest.GetMailDetails(sessionKey, sendMailData.DraftBox, savedMailIntKey);
                 validations.Add(mailRequest.ValidateEmailsInMailBox(mailDetail, false));
 
                 //Log out, 
@@ -51,7 +51,7 @@ namespace KiewitTeamBinder.Api.Tests
                 //Then log in with a recipient user
                 sessionKey = sessionRequest.LogonWithApplication(teambinderTestAccount2.Username, teambinderTestAccount2.Company, teambinderTestAccount2.Password, sendMailData.ProjectNumber, sendMailData.ConnectingProduct);
                 //Verify email exists
-                mailDetail = mailRequest.GetMailDetails(sessionKey, sendMailData.MailBox, int.Parse(intKeySentMail));
+                mailDetail = mailRequest.GetMailDetails(sessionKey, sendMailData.Inbox, int.Parse(intKeySentMail));
                 validations.Add(mailRequest.ValidateEmailsInMailBox(mailDetail, true));
 
                 validations.Add(new KeyValuePair<string, bool>("Release " + sessionKey, sessionRequest.ValidateLogoffStatusSuccessfully(sessionRequest.LogoffStatus(sessionKey)).Value));

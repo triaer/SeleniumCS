@@ -23,7 +23,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
         private static By _asteriskLabel(string fieldLabel) => By.XPath($"//span[text()='{fieldLabel}']/following::span[1]");
         private static By _textField(string fieldLabel) => By.XPath($"//*[span[(text()= '{fieldLabel}')]]/following-sibling::*[2]//*[contains(@class,'Text')]");
         private static By _dropdownList(string fieldLabel, string type) => By.XPath($"//*[span[(text()= '{fieldLabel}')]]/following-sibling::*[2]//input[contains(@id, '{type}')]");
-        private static By _itemDropdown(string dropdownListName) => By.XPath($"//ul/li[text()='{dropdownListName}']");
+        private static By _itemDropdown(string dropdownListName) => By.XPath($"//ul/li[starts-with(text(),'{dropdownListName}')]");
         private static By _saveDocButton => By.Id("SaveDocToolBar");
 
         public IWebElement HeaderLabel { get { return StableFindElement(_headerLabel); } }
@@ -82,6 +82,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 
+
         public AlertDialog ClickSaveInToolbarHeader(bool checkProgressPopup = false)
         {
             ClickToolbarButtonOnWinPopup<PopupWindow>(ToolbarButton.Save, checkProgressPopup);
@@ -105,7 +106,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 
-        public virtual KeyValuePair<string, bool> ValidateItemDropdownIsHighlighted(string value, string idDropdown)
+        public KeyValuePair<string, bool> ValidateItemDropdownIsHighlighted(string value, string idDropdown)
         {
             var node = StepNode();
             try
@@ -113,7 +114,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
                 node.Info("The Dropdown: " + idDropdown);
                 string actual;
                 int i = 0;
-                if (idDropdown.Contains("Contract Number"))
+                if (idDropdown.Contains("Contract Number") ||  idDropdown.Contains("Rev") || idDropdown.Contains("Category"))
                 {
                     ScrollIntoView(ItemDropdown(value));
                     WaitForElementDisplay(_itemDropdown(value));
@@ -135,7 +136,6 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
                 return SetErrorValidation(node, Validation.Item_Dropdown_Is_Highlighted + idDropdown, e);
             }
         }
-
         public KeyValuePair<string, bool> ValidateItemDropdownIsSelected(string value, string idDropdownButton)
         {
             var node = StepNode();

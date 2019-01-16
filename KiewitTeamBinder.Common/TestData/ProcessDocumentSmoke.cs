@@ -36,12 +36,12 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
         public SingleDocumentInfo SingleDocInformation = new SingleDocumentInfo()
         {
             DocumentNo = Utils.GetRandomValue("DOCUMENTNO"),
-            RevStatus = "01 - Rev 01",
-            Status = "VSUB - Vendor Submission",
+            RevStatus = "01",
+            Status = "VSUB",
             Title = Utils.GetRandomValue("Title"),
-            Category = "BM - BILL OF MATERIAL",
-            Discipline = "CON - Contruction",
-            Type = "SUB - Submittal"
+            Category = "BM",
+            Discipline = "CON",
+            Type = "SUB"
         };
     }
 }
