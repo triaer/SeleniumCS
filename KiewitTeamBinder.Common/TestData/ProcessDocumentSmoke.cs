@@ -11,7 +11,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
 {
     public class ProcessDocumentSmoke
     {
-        public string ProjectName = "Automation Project 1";
+        public string ProjectName = "Automation Project 2";
         public string DefaultFilterAtHoldingAreaPane = "New Documents";
         public string GridViewHoldingAreaName = "GridViewHoldingArea"; 
         public string GridViewDocumentName = "GridViewDocReg";
@@ -36,12 +36,12 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
         public SingleDocumentInfo SingleDocInformation = new SingleDocumentInfo()
         {
             DocumentNo = Utils.GetRandomValue("DOCUMENTNO"),
-            RevStatus = "01 - Rev 01",
-            Status = "VSUB - Vendor Submission",
+            RevStatus = "01",
+            Status = "VSUB",
             Title = Utils.GetRandomValue("Title"),
-            Category = "BM - BILL OF MATERIAL",
-            Discipline = "CON - Contruction",
-            Type = "SUB - Submittal"
+            Category = "BM",
+            Discipline = "CON",
+            Type = "SUB"
         };
     }
 }
