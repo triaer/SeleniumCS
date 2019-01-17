@@ -52,6 +52,22 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
 
             return this;
         }
+
+        public KeyValuePair<string, bool> ValidateDeliverableLinkItemClosed(int countWindow)
+        {
+            var node = StepNode();
+            try
+            {
+                if (WebDriver.WindowHandles.Count == countWindow - 1)
+                    return SetPassValidation(node, string.Format(Validation.Deliverable_Link_Items_Window_Is_Closed));
+                else
+                    return SetFailValidation(node, string.Format(Validation.Deliverable_Link_Items_Window_Is_Closed));
+            }
+            catch (Exception e)
+            {
+                return SetErrorValidation(node, string.Format(Validation.Deliverable_Link_Items_Window_Is_Closed), e);
+            }
+        }
         public List<KeyValuePair<string, bool>> ValidateSelectedItemShowInDropdownBoxesCorrect(DeliverableLine deliverableItemInfo)
         {
             var validation = new List<KeyValuePair<string, bool>>();
@@ -62,6 +78,11 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             validation.Add(ValidateItemDropdownIsSelected(deliverableItemInfo.Criticality, DropdownListInput(DeliverableField.Criticality.ToDescription()).GetAttribute("id")));
             validation.Add(ValidateItemDropdownIsSelected(deliverableItemInfo.Status, DropdownListInput(DeliverableField.Status.ToDescription()).GetAttribute("id")));
             return validation;
+        }
+
+        private static class Validation
+        {
+            public static string Deliverable_Link_Items_Window_Is_Closed  = "Validate that the deliverable link items window is closed";
         }
         #endregion
     }

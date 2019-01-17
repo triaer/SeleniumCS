@@ -29,14 +29,14 @@ namespace KiewitTeamBinder.UI.Pages.Global
         private static By _helpButtonDropdown => By.XPath("//div[@id='divHelpButton']");
         private static By _helpButtonDropDownData => By.XPath("//div[@id='HelpDropDown_detached']/ul/li");
         private static By _vendorButton => By.Id("divVendorData");
-        private static By _viewFilter => By.Id("lblView");        
+        private static By _viewFilter => By.Id("lblView");
         private static By _formTitle => By.Id("formTitle");
         private static By _subMenuItemLink(string value) => By.XPath($"//span[(text()='{value}')]");
         private static By _moduleButton(string value) => By.XPath($"//div[@id = 'div{value}']");
         private static By _subPageTable(string value) => By.XPath($"//table[@id='ctl00_cntPhMain_{value}_ctl00']");
         private static By _itemsNumberLabel(string gridViewName) => By.XPath($"//span[contains(@id, '{gridViewName}_ctl00DSC')]");
-        private static By _divSubMenu => By.XPath("//div[@id='divSubMenu']");        
-        private static By _subPageHeader => By.Id("lblRegisterCaption");              
+        private static By _divSubMenu => By.XPath("//div[@id='divSubMenu']");
+        private static By _subPageHeader => By.Id("lblRegisterCaption");
         private static By _paneTable(string gridViewName) => By.XPath($"//table[contains(@id, '{gridViewName}_ctl00_Header')]/thead");
         private static By _visibleRows(string gridViewName) => By.XPath($"//div[contains(@id, '{gridViewName}_GridData')]//tr[@class != 'rgNoRecords' and not(contains(@style, 'hidden'))]");
         private static By _documentsTable(string gridViewName) => By.XPath($"//div[contains(@id, '{gridViewName}_GridData')]");
@@ -54,12 +54,12 @@ namespace KiewitTeamBinder.UI.Pages.Global
         private static By _registerViewCheckbox(string view) => By.XPath($"//a[span = '{view}']/img");
         private static By _currentPageSize(string gridViewName) => By.XPath($"//input[contains(@id, '{gridViewName}') and contains(@id,'PageSizeComboBox_Input')]");
 
-        private static string _filterItemsXpath = "//tr[@valign='top' and not(contains(@style, 'hidden'))]";        
+        private static string _filterItemsXpath = "//tr[@valign='top' and not(contains(@style, 'hidden'))]";
         private static string _headerButtonXpath = "//a[span='{0}']";
         private static string _filterTextBoxXpath = "//table[contains(@id,'{0}')]//tr[@class='rgFilterRow']/td[{1}]";
         private static string _panelXpath = "//div[@id='ctl00_cntPhMain_GridUpdatePanel']/div[@class='GridViewPlaceHolder' and not(contains(@style,'display: none;'))]";
 
-        public IWebElement FormTitle { get { return StableFindElement(_formTitle); } }        
+        public IWebElement FormTitle { get { return StableFindElement(_formTitle); } }
         public IWebElement ViewFilter { get { return StableFindElement(_viewFilter); } }
         public IWebElement VendorButton { get { return StableFindElement(_vendorButton); } }
         public IWebElement SubPageHeader { get { return StableFindElement(_subPageHeader); } }
@@ -95,7 +95,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
         #region Actions
         public ProjectsDashboard(IWebDriver webDriver) : base(webDriver)
-        {  }
+        { }
 
         public ProjectsDashboard ShowProjectList()
         {
@@ -103,7 +103,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             WaitForElementAttribute(ProjectListSumary, "display", "block");
             return this;
         }
-        
+
         private void ClickMenuItem(string menuItem)
         {
             var node = StepNode();
@@ -122,9 +122,9 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
         public T SelectFilterOption<T>(string nameOrIndex, bool byName = true, bool waitForLoading = true)
         {
-            if (byName)            
-                ImageOfFilterOptionByName("NotSelected", nameOrIndex).Click();            
-            else            
+            if (byName)
+                ImageOfFilterOptionByName("NotSelected", nameOrIndex).Click();
+            else
                 ImageOfFilterOptionByIndex("NotSelected", nameOrIndex).Click();
 
             if (waitForLoading)
@@ -137,7 +137,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         {
             if (menuItem != "")
                 ClickMenuItem(menuItem);
-            
+
             if (subMenuItem != "")
                 ClickSubMenuItem(subMenuItem);
 
@@ -149,7 +149,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             SelectModuleMenuItem(menuItem, subMenuItem);
             if (waitForLoading)
                 WaitForLoadingPanel();
-            return (T)Activator.CreateInstance(typeof(T), WebDriver);            
+            return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 
         public HelpAboutDialog OpenHelpDialog(string option)
@@ -159,7 +159,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             var helpAboutDialog = new HelpAboutDialog(WebDriver);
             WebDriver.SwitchTo().Frame(helpAboutDialog.IFrameName);
             WaitUntil(driver => helpAboutDialog.OkButton != null);
-            
+
             return helpAboutDialog;
         }
 
@@ -187,15 +187,15 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
             if (waitForLoading && tableName != null)
                 WaitForElement(_subPageTable(tableName));
-            
+
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
-                
-        public T ClickHeaderDropdownItem<T>(MainPaneHeaderDropdownItem item, bool switchWindow, bool switchPopUp = false)
+
+        public T ClickHeaderDropdownItem<T>(MainPaneHeaderDropdownItem item, bool switchWindow, bool switchPopUp = false, bool walkMe = true)
         {
             var node = StepNode();
             node.Info("Click the item: " + item.ToDescription());
-            
+
             if (switchWindow)
             {
                 string currentWindow;
@@ -207,7 +207,8 @@ namespace KiewitTeamBinder.UI.Pages.Global
             if (switchPopUp)
                 WebDriver.SwitchTo().ActiveElement();
 
-            WaitForElementDisplay(_walkMe);
+            if (walkMe)
+                WaitForElementDisplay(_walkMe);
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 
@@ -258,8 +259,8 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 WaitForLoadingPanel();
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
-        
-        protected IReadOnlyCollection<IWebElement> GetAvailableItemsOnCurrentPage(string gridViewName, List<KeyValuePair<string, string>> columnValuePairList, bool contains=true)
+
+        protected IReadOnlyCollection<IWebElement> GetAvailableItemsOnCurrentPage(string gridViewName, List<KeyValuePair<string, string>> columnValuePairList, bool contains = true)
         {
             int rowIndex, colIndex = 1;
             string itemsXpath = _filterItemsXpath;
@@ -342,7 +343,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
                     WaitForLoadingPanel(longTimeout);
                 }
                 else
-                    rowsCount =  VisibleRows(gridViewName).Count;
+                    rowsCount = VisibleRows(gridViewName).Count;
                 node.Info("Get total number of items in table: " + rowsCount);
                 return rowsCount;
             }
@@ -372,7 +373,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             {
                 //int rowIndex, colIndex = -1;
                 //GetTableCellValueIndex(PaneTable(gridViewName), columnName, out rowIndex, out colIndex, "th");
-                
+
                 if (SortButton(columnName).IsDisplayed())
                     return SetPassValidation(node, Validation.Column_Is_Sorted);
                 else
@@ -483,7 +484,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             try
             {
                 int totalRecords = GetTotalRowsVisibleInGrid(gridViewName);
-                
+
                 if (totalRecords == expectedNumberOfClearRecord)
                     return SetPassValidation(node, Validation.Filtered_Records_Are_Cleared + totalRecords.ToString());
                 else
@@ -536,7 +537,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             var node = StepNode();
             try
             {
-                WaitForElementDisplay(_viewFilter); 
+                WaitForElementDisplay(_viewFilter);
                 if (ViewFilter.Text == filterOption)
                     return SetPassValidation(node, string.Format(Validation.Default_Filter_Display, filterOption));
 
@@ -578,10 +579,10 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 string highlight = "Selected";
                 if (!isHighlighted)
                     highlight = "NotSelected";
-                                
-                if (ImageOfFilterOptionByIndex(highlight, filterBoxIndex.ToString()).IsDisplayed())                
+
+                if (ImageOfFilterOptionByIndex(highlight, filterBoxIndex.ToString()).IsDisplayed())
                     return SetPassValidation(node, string.Format(Validation.Filter_Box_Is_Highlighted, filterBoxIndex + 1));
-                
+
                 return SetFailValidation(node, string.Format(Validation.Filter_Box_Is_Highlighted, filterBoxIndex + 1));
             }
             catch (Exception e)
@@ -595,11 +596,11 @@ namespace KiewitTeamBinder.UI.Pages.Global
             var node = StepNode();
             node.Info("Validate the view filter checkbox is highlighted.");
             try
-            {                
+            {
                 string highlight = "Selected";
                 if (!isHighlighted)
                     highlight = "NotSelected";
-                                
+
                 if (ImageOfFilterOptionByName(highlight, filterBoxName).IsDisplayed())
                     return SetPassValidation(node, string.Format(Validation.Filter_Box_Is_Highlighted, filterBoxName));
 
@@ -691,7 +692,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 return SetErrorValidation(node, Validation.Items_Are_Shown, e);
             }
         }
-        
+
         private static class Validation
         {
             public static string Item_Is_Not_Displayed = "Validate that item on main pane is not displayed";
@@ -709,7 +710,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             public static string Records_Matching_Filter_Are_Returned = "Validate that the records matching filter are returned: ";
             public static string Value_In_Column_Is_Correct = "Validate that the value in column is correct: ";
             public static string Filtered_Records_Are_Cleared = "Validate that the filtered records are cleared, and return the total records before filtering: ";
-            public static string Register_View_Is_Correct = "Validate that the register view is correct"; 
+            public static string Register_View_Is_Correct = "Validate that the register view is correct";
             public static string Excel_Items_Count = "Validate that the excel items count matches the items count on the Web";
             public static string Column_Is_Sorted = "Validate that the column is sorted";
         }

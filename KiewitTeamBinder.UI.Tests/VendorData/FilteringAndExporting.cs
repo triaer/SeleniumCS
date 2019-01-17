@@ -72,29 +72,78 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
 
                 //projectDashBoard.SelectModuleMenuItem<ProjectsList>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription(), waitForLoading: false);               
                 vendorDataRegister.DoubleClickItem(filteringAndExportingData.ContractNumber, filteringAndExportingData.GridViewContract, filteringAndExportingData.ContractNumberDescription)
-                    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateItemsCountedAreMatches(filteringAndExportingData.GridViewItem))
-                    .ClickOnCheckBox(filteringAndExportingData.GridViewItem, filteringAndExportingData.ItemDescription, uncheck: false)
-                    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateLineItemsIsHighlighted(filteringAndExportingData.GridViewItem, filteringAndExportingData.ItemDescription))
-                    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateSelectedCountInCreased(filteringAndExportingData.GridViewItem, filteringAndExportingData.ItemDescription));
+                    //.LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateItemsCountedAreMatches(filteringAndExportingData.GridViewItem))
+                    .ClickOnCheckBox(filteringAndExportingData.GridViewItem, filteringAndExportingData.ItemDescription, uncheck: false);
+                //.LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateLineItemsIsHighlighted(filteringAndExportingData.GridViewItem, filteringAndExportingData.ItemDescription))
+                //.LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateSelectedCountInCreased(filteringAndExportingData.GridViewItem, filteringAndExportingData.ItemDescription));
 
-                int selectedRow = vendorDataRegister.GetSelectedRecordCount();
+                //                int selectedRow = vendorDataRegister.GetSelectedRecordCount();
 
                 vendorDataRegister.ClickOnCheckBox(filteringAndExportingData.GridViewItem, filteringAndExportingData.ItemDescription, uncheck: true)
-                    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateSelectedCountDeCreased(filteringAndExportingData.GridViewItem, filteringAndExportingData.ItemDescription, selectedRow))
+                    //.LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateSelectedCountDeCreased(filteringAndExportingData.GridViewItem, filteringAndExportingData.ItemDescription, selectedRow))
                     .DoubleClickItem(filteringAndExportingData.ItemID, filteringAndExportingData.GridViewItem, filteringAndExportingData.ItemDescription)
-                    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateItemsCountedAreMatches(filteringAndExportingData.GridViewDeliverable))
-                    .ClickOnCheckBox(filteringAndExportingData.GridViewDeliverable, filteringAndExportingData.DeliverableDescription, uncheck: false)
-                    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateLineItemsIsHighlighted(filteringAndExportingData.GridViewDeliverable, filteringAndExportingData.DeliverableDescription))
-                    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateSelectedCountInCreased(filteringAndExportingData.GridViewDeliverable, filteringAndExportingData.DeliverableDescription));
+                    //.LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateItemsCountedAreMatches(filteringAndExportingData.GridViewDeliverable))
+                    .ClickOnCheckBox(filteringAndExportingData.GridViewDeliverable, filteringAndExportingData.DeliverableDescription, uncheck: false);
+                    //.LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateLineItemsIsHighlighted(filteringAndExportingData.GridViewDeliverable, filteringAndExportingData.DeliverableDescription))
+                    //.LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateSelectedCountInCreased(filteringAndExportingData.GridViewDeliverable, filteringAndExportingData.DeliverableDescription));
 
-                selectedRow = vendorDataRegister.GetSelectedRecordCount();
+                //selectedRow = vendorDataRegister.GetSelectedRecordCount();
 
                 vendorDataRegister.ClickOnCheckBox(filteringAndExportingData.GridViewDeliverable, filteringAndExportingData.DeliverableDescription, uncheck: true)
-                    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateSelectedCountDeCreased(filteringAndExportingData.GridViewDeliverable, filteringAndExportingData.DeliverableDescription, selectedRow))
+                    //.LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateSelectedCountDeCreased(filteringAndExportingData.GridViewDeliverable, filteringAndExportingData.DeliverableDescription, selectedRow))
                     .DoubleClickItem(filteringAndExportingData.DeliverableNumber, filteringAndExportingData.GridViewDeliverable, filteringAndExportingData.DeliverableDescription)
-                    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateItemsCountedAreMatches(filteringAndExportingData.GridViewDocument))
+                    //.LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateItemsCountedAreMatches(filteringAndExportingData.GridViewDocument))
                     .ClickOnBlueHeader(filteringAndExportingData.ContractNumber);
 
+                //when - User Story 123550 - 120790 Filtering & Exporting Vendor Data Register Validation Part 4
+                test = LogTest("US 123549 - 120790 Filtering & Exporting Vendor Data Register Validation - Part 4");
+                string documentNo;
+                string deliverableItemWindow = filteringAndExportingData.DeliverableItemWindow + filteringAndExportingData.DeliverableNumber;
+
+                vendorDataRegister.DoubleClickItem(filteringAndExportingData.ContractNumber, filteringAndExportingData.GridViewContract, filteringAndExportingData.ContractNumberDescription)
+                                  .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateBredCrumbTrailDisplayCorrect(filteringAndExportingData.ItemPurchased, filteringAndExportingData.ContractNumber))
+                                  .DoubleClickItem(filteringAndExportingData.ItemID, filteringAndExportingData.GridViewItem, filteringAndExportingData.ItemDescription)
+                                  .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateBredCrumbTrailDisplayCorrect(filteringAndExportingData.Deliverables, filteringAndExportingData.ContractNumber, filteringAndExportingData.ItemID));                                                  
+                VendorDeliverableDetail vendorDeliverableDetail = vendorDataRegister.ClickOnBlueDeliverableLineItemNumber(filteringAndExportingData.DeliverableNumber);
+                vendorDeliverableDetail.LogValidation<VendorDeliverableDetail>(ref validations, vendorDataRegister.ValidateWindowIsOpened(deliverableItemWindow))
+                                       .ClickHeaderButton<VendorDeliverableDetail>(MainPaneTableHeaderButton.More, false);                                       
+                LinkItems linkItems = vendorDeliverableDetail.ClickHeaderDropdownItem<LinkItems>(MainPaneHeaderDropdownItem.LinkItems, true, false, false);
+                string currentWindow = linkItems.GetCurrentWindow();
+                int countWindow = linkItems.GetCountWindow();
+                linkItems.LogValidation<LinkItems>(ref validations, linkItems.ValidateWindowIsOpened(filteringAndExportingData.LinkItemsWindow))
+                         .ClickToolbarButton<LinkItems>(ToolbarButton.Add);
+                AddDocument addDocument = linkItems.ClickHeaderDropdownItem<AddDocument>(MainPaneHeaderDropdownItem.Documents, false, true, false);
+                addDocument.LogValidation<AddDocument>(ref validations, addDocument.ValidateDocumentSearchWindowStatus())
+                           .SwitchToFrameOnAddDocument()
+                           .SelectOptionInRegisterViewDropDown(filteringAndExportingData.OptionAll)
+                           .ClickToobarBottomButton<AddDocument>(ToolbarButton.Search.ToDescription(), filteringAndExportingData.GridViewAddDocName)
+                           .SelectItemByIndex(1, out documentNo)
+                           .LogValidation<AddDocument>(ref validations, addDocument.ValidateDocumentIsHighlighted(documentNo: "", byIndex: true, index: 1))
+                           .LogValidation<AddDocument>(ref validations, addDocument.ValidateCheckBoxStatus(index: 1, uncheck: false))
+                           .ClickToobarBottomButton<LinkItems>(ToolbarButton.OK.ToDescription(), filteringAndExportingData.GridViewLinkItemsName, true);
+                linkItems.LogValidation<LinkItems>(ref validations, addDocument.ValidateDocumentSearchWindowStatus(true))
+                         .LogValidation<LinkItems>(ref validations, linkItems.ValidateDocumentIsAttached(documentNo))
+                         .ClickSaveButton<LinkItems>()
+                         .LogValidation<LinkItems>(ref validations, linkItems.ValidateMessageDisplayCorrect(filteringAndExportingData.SaveMessageOnLinkItem))
+                         .ClickOkButtonOnPopUp<LinkItems>()
+                         .LogValidation<LinkItems>(ref validations, linkItems.ValidateSaveDialogStatus(true))
+                         .ClickToolbarButton<VendorDeliverableDetail>(ToolbarButton.Close)
+                         .SwitchToWindow(currentWindow);
+                countWindow = linkItems.GetCountWindow();
+                vendorDeliverableDetail.LogValidation<VendorDeliverableDetail>(ref validations, linkItems.ValidateLinkItemsWindowIsClosed(countWindow))
+                                       .ClickCloseButtonOnPopUp<VendorDataRegister>();
+                vendorDataRegister.LogValidation<VendorDataRegister>(ref validations, vendorDeliverableDetail.ValidateDeliverableLinkItemClosed(countWindow))
+                                  .DoubleClickItem(filteringAndExportingData.DeliverableNumber, filteringAndExportingData.GridViewDeliverable, filteringAndExportingData.DeliverableDescription)
+                                  .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateBredCrumbTrailDisplayCorrect(filteringAndExportingData.Documents, filteringAndExportingData.ContractNumber, filteringAndExportingData.ItemID, filteringAndExportingData.DeliverableNumber))
+                                  .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateItemsCountedAreMatches(filteringAndExportingData.GridViewDocument))
+                                  .ClickOnCheckBox(filteringAndExportingData.GridViewDeliverable, filteringAndExportingData.DeliverableDescription, uncheck: false)
+                                  .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateLineItemsIsHighlighted(filteringAndExportingData.GridViewDeliverable, filteringAndExportingData.DeliverableDescription))
+                                  .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateSelectedCountInCreased(filteringAndExportingData.GridViewDeliverable, filteringAndExportingData.DeliverableDescription));
+                int selectedRow = vendorDataRegister.GetSelectedRecordCount();
+                vendorDataRegister.ClickOnCheckBox(filteringAndExportingData.GridViewDeliverable, filteringAndExportingData.DeliverableDescription, uncheck: true)
+                                  .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateSelectedCountDeCreased(filteringAndExportingData.GridViewDeliverable, filteringAndExportingData.DeliverableDescription, selectedRow))
+                                  .ClickOnBlueHeader(filteringAndExportingData.ContractNumber);
+                
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);
                 Console.WriteLine(string.Join(System.Environment.NewLine, validations.ToArray()));

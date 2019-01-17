@@ -12,18 +12,24 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
     {
         #region Entities 
         private string _checkBoxXpath = "./preceding::td[1]/input[contains(@id,'CheckBox')]";
+        private string _documentNoXpath = "./td[2]";
         private static By _toobarBottomButton(string value, string nameButton) => By.XPath($"//input[@value='{value}' and contains(@name, '{nameButton}')]");
         private static By _iframeWrapper => By.Name("RadWindowAddItems");
         private static By _iframe => By.Id("ifrmFilter");
         private static By _DocumentNoTextBox => By.Id("DataSelectionDocNo_RadTextBoxValue");
         private static By _gridVewData => By.XPath("//table[@id='GridView_ctl00']/tbody");
         private static By _documentSearchWindow => By.Id("RadWindowWrapper_RadWindowAddItems");
+        private static By _registerViewDropdown => By.XPath("//a[contains(@id, 'ComboxSelectionView1')]");
+        private static By _registerViewDropdownData => By.XPath("//div[contains(@id, 'ComboxSelectionView1')]//ul/li");
+        private static By _rowItemInAddDocumentPopup(int index) => By.XPath($"//div[@id='GridView_GridData']//tbody//tr[{index}]");    
 
         public IWebElement IframeWrapper { get { return StableFindElement(_iframeWrapper); } }
         public IWebElement Iframe { get { return StableFindElement(_iframe); } }
         public IWebElement DocumentNoTextBox { get { return StableFindElement(_DocumentNoTextBox); } }
         public IWebElement ToobarBottomButton(string value, string nameButton) => StableFindElement(_toobarBottomButton(value, nameButton));
         public IWebElement GridVewData { get { return StableFindElement(_gridVewData); } }
+        public IWebElement RegisterViewDropdown { get { return StableFindElement(_registerViewDropdown); } }
+        public IWebElement RowItemInAddDocumentPopup(int index) => StableFindElement(_rowItemInAddDocumentPopup(index));
         #endregion
 
         #region Actions
@@ -74,6 +80,15 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             CheckBox.Click();
             return this;
         }
+        public AddDocument SelectItemByIndex(int index, out string documentNo)
+        {
+            var node = StepNode();
+            SwitchFrameParrent();
+            IWebElement CheckBox = RowItemInAddDocumentPopup(index).StableFindElement(By.XPath("./td/input[contains(@id,'CheckBox')]"));
+            CheckBox.Click();
+            documentNo = RowItemInAddDocumentPopup(index).StableFindElement(By.XPath(_documentNoXpath)).Text;
+            return this;
+        }
 
         public IWebElement FindItemByDocumentNo(string documentNo)
         {
@@ -83,17 +98,35 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             return Element;
         }
 
+        public AddDocument SelectOptionInRegisterViewDropDown(string value)
+        {
+            string separator = " -- ";
+            if (value == "All")
+            {
+                value = value.Insert(0, separator);
+                value = value.Insert(value.Length, separator).Trim();
+            }
+            SelectComboboxByText(RegisterViewDropdown, _registerViewDropdownData, value);
+            return this;
+        }
+
         private void SwitchFrameParrent()
         {
             WebDriver.SwitchTo().DefaultContent();
             WebDriver.SwitchTo().Frame(IframeWrapper);
         }
 
-        public KeyValuePair<string, bool> ValidateDocumentIsHighlighted(string documentNo)
+        public KeyValuePair<string, bool> ValidateDocumentIsHighlighted(string documentNo = "", bool byIndex = false, int index = 0)
         {
             var node = StepNode();
-            IWebElement Element = FindItemByDocumentNo(documentNo);
-            IWebElement ItemRow = Element.StableFindElement(By.XPath("./.."));
+            IWebElement ItemRow;
+            if (byIndex)
+                ItemRow = RowItemInAddDocumentPopup(index);
+            else
+            {
+                IWebElement Element = FindItemByDocumentNo(documentNo);
+                ItemRow = Element.StableFindElement(By.XPath("./.."));
+            }
             try
             {
                 if (ItemRow.GetAttribute("class").Contains("HoveredRow"))
@@ -133,11 +166,39 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             }
         }
 
+        public KeyValuePair<string, bool> ValidateCheckBoxStatus(int index, bool uncheck = false)
+        {
+            var node = StepNode();
+            try
+            {
+                if (uncheck)
+                {
+                    if (RowItemInAddDocumentPopup(index).GetAttribute("class").Contains("SelectedRow"))
+                        return SetFailValidation(node, Validation.CheckBox_Is_Not_Retained);
+                    else
+                        return SetPassValidation(node, Validation.CheckBox_Is_Not_Retained);
+                }
+                else
+                {
+                    if (RowItemInAddDocumentPopup(index).GetAttribute("class").Contains("SelectedRow"))
+                        return SetPassValidation(node, Validation.CheckBox_Is_Retained);
+                    else
+                        return SetFailValidation(node, Validation.CheckBox_Is_Retained);
+                }
+            }
+            catch (Exception e)
+            {
+                return SetErrorValidation(node, Validation.Document_Search_Is_Opened, e);
+            }
+        }
+
         private static class Validation
         {
             public static string Document_Is_Highlighted = "Validate that the document is highlighted";
             public static string Document_Search_Is_Opened = "Validate that the document search is opened";
             public static string Document_Search_Is_Closed = "Validate that the document search is closed";
+            public static string CheckBox_Is_Retained = "Validate that the checkbox is retained";
+            public static string CheckBox_Is_Not_Retained = "Validate that the checkbox is not retained";
         }
         #endregion
     }
