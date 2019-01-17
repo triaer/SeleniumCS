@@ -57,6 +57,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             SelectItemInDropdown<DocumentDetail>("Discipline", singleDocumentInfo.Discipline, ref methodValidation);
             node.Info("Click Type dropdown, and select: " + singleDocumentInfo.Type);
             SelectItemInDropdown<DocumentDetail>("Type", singleDocumentInfo.Type, ref methodValidation);
+            node.Debug("After entering value in fields", AttachScreenshot(GetCaptureScreenshot()));
             return this;
         }              
 

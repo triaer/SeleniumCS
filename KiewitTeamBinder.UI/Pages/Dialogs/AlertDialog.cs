@@ -35,8 +35,13 @@ namespace KiewitTeamBinder.UI.Pages.Dialogs
         {
             var node = StepNode();
             node.Info("Click OK in Dialog Box");
-            OKButton.Click();
-            WebDriver.SwitchTo().DefaultContent();
+            try
+            {
+                OKButton.Click();
+            }
+            catch { }
+            WaitForJQueryLoad();
+            WebDriver.SwitchOutOfIFrame();
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 
