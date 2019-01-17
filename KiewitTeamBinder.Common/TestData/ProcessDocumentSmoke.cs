@@ -16,7 +16,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
         public string GridViewHoldingAreaName = "GridViewHoldingArea"; 
         public string GridViewDocumentName = "GridViewDocReg";
         public string WindowTitle = "Process Documents into Document Register";
-        public string[] listHeader = { "Document No.", "Title", "Rev", "Sts", "Discipline", "Category" };
+        public string[] listHeader = { "Rev", "Sts", "Discipline", "Category" };
         public string MessageOnValidateDocumentsDialog = "Document details are successfully validated.";
         public string ProcessMessage = "Processing Hold Documents in progress";
         public string ReceivedDate = DateTime.Now.AddDays(-7).ToString("MM/dd/yyyy");
