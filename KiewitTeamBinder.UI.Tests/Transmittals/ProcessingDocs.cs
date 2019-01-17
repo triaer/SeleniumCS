@@ -87,6 +87,7 @@ namespace KiewitTeamBinder.UI.Tests.Transmittals
                 test.Info("Open TeamBinder Web Page: " + teambinderTestAccount.Url);
                 var driver = Browser.Open(teambinderTestAccount.Url, browser);
                 test.Info("Log on TeamBinder via Other User Login: " + teambinderTestAccount.Username);
+                test.Info(Browser.GetActiveDriverInfo());
                 ProjectsList projectsList = new NonSsoSignOn(driver).Logon(teambinderTestAccount) as ProjectsList;
 
                 var processDocumentData = new ProcessDocumentSmoke();

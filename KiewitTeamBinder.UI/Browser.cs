@@ -126,5 +126,14 @@ namespace KiewitTeamBinder.UI
         {
             webDriver.Quit();
         }
+        public static string GetActiveDriverInfo()
+        {
+            ICapabilities capabilities = ((RemoteWebDriver)webDriver).Capabilities;
+            string info = "Browser Capabilities:\n"
+                        + "Name = " + capabilities.GetCapability("browserName").ToString() + "-\n"
+                        + "Version = " + capabilities.GetCapability("browserVersion").ToString() + "-\n";
+            //+ "Supports JavaScript  = " + capabilities.GetCapability("").ToString() + "\n"
+            return info;
+        }
     }
 }
