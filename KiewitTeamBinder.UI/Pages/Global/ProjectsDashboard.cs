@@ -252,9 +252,13 @@ namespace KiewitTeamBinder.UI.Pages.Global
             FilterTextBox.InputText(value);
             if (!useFilterMenu)
             {
-                FilterTextBox.SendKeys(Keys.Enter);
-                Wait(shortTimeout / 5);
-                FilterTextBox.SendKeys(Keys.Enter);
+                try
+                {
+                    FilterTextBox.SendKeys(Keys.Enter);
+                    Wait(shortTimeout / 5);
+                    FilterTextBox.SendKeys(Keys.Enter);
+                }
+                catch { }
             }
             else
             {

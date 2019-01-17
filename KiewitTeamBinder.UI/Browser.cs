@@ -92,7 +92,8 @@ namespace KiewitTeamBinder.UI
                 ieOptions.EnsureCleanSession = true;
                 ieOptions.AddAdditionalCapability("disable-popup-blocking", "true");
 
-                string ieWebDriver = Environment.GetEnvironmentVariable("IEWebDriver");
+                //string ieWebDriver = Environment.GetEnvironmentVariable("IEWebDriver");
+                string ieWebDriver = null;
                 if (string.IsNullOrEmpty(ieWebDriver))
                 {
                     webDriver = new InternetExplorerDriver(ieOptions);

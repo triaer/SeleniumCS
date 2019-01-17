@@ -8,6 +8,8 @@ using System.Threading;
 using KiewitTeamBinder.Common.Helper;
 using KiewitTeamBinder.Common.TestData;
 using KiewitTeamBinder.Api.Service;
+using System.Xml.Serialization;
+using System.IO;
 
 namespace KiewitTeamBinder.Api.Tests
 {
@@ -32,15 +34,21 @@ namespace KiewitTeamBinder.Api.Tests
                 validations.Add(sessionRequest.ValidateLogonWithApplicationSuccessfully(sessionKey));
 
                 MailApi mailRequest = new MailApi(GetServiceUrl(teambinderTestAccount1.Url));
+                DataSet dataSetResponse = mailRequest.GetStructureForComposeMail(sessionKey, sendMailData.DraftBox, sendMailData.MailType, sendMailData.ComposeMailAcction);
+                string mailDetailsXml = mailRequest.GetMailDetailsXml(dataSetResponse, sendMailData.Subject, sendMailData.MailType, sendMailData.IntKeyForNewMail, sendMailData.RecipientIntKey);
+                Console.WriteLine(dataSetResponse);
+
                 //Save email
-                int savedMailIntKey = int.Parse(mailRequest.SaveMail(sessionKey, sendMailData.MailType, sendMailData.MailDetailXml(sendMailData.IntKeyForNewMail, sendMailData.RecipientIntKey, sendMailData.EmailSubject), sendMailData.ComposeMailAcction, sendMailData.DraftBox));
+                int savedMailIntKey = int.Parse(mailRequest.SaveMail(sessionKey, sendMailData.MailType, mailDetailsXml, sendMailData.ComposeMailAcction, sendMailData.DraftBox));
                 //Verify email exists in draft view
                 DataSet mailDetail = mailRequest.GetMailDetails(sessionKey, sendMailData.DraftBox, savedMailIntKey);
                 validations.Add(mailRequest.ValidateEmailsInMailBox(mailDetail, true));
+
                 //Send Email
-                string intKeySentMail = mailRequest.SendMail(sessionKey, savedMailIntKey, sendMailData.MailType, sendMailData.MailDetailXml(savedMailIntKey, sendMailData.RecipientIntKey, sendMailData.EmailSubject), sendMailData.ComposeMailAcction, sendMailData.DraftBox);
+                string mailDetailsXml2 = mailRequest.GetMailDetailsXml(dataSetResponse, sendMailData.Subject, sendMailData.MailType, savedMailIntKey, sendMailData.RecipientIntKey);
+                int sentMailIntKey = int.Parse(mailRequest.SendMail(sessionKey, savedMailIntKey, sendMailData.MailType, mailDetailsXml2, sendMailData.ComposeMailAcction, sendMailData.DraftBox));
                 //Verify email was sent
-                validations.Add(mailRequest.ValidateIntKeySentMail(intKeySentMail));
+                validations.Add(mailRequest.ValidateIntKeySentMail(sentMailIntKey));
                 //Verify draft email has been removed
                 mailDetail = mailRequest.GetMailDetails(sessionKey, sendMailData.DraftBox, savedMailIntKey);
                 validations.Add(mailRequest.ValidateEmailsInMailBox(mailDetail, false));
@@ -51,7 +59,7 @@ namespace KiewitTeamBinder.Api.Tests
                 //Then log in with a recipient user
                 sessionKey = sessionRequest.LogonWithApplication(teambinderTestAccount2.Username, teambinderTestAccount2.Company, teambinderTestAccount2.Password, sendMailData.ProjectNumber, sendMailData.ConnectingProduct);
                 //Verify email exists
-                mailDetail = mailRequest.GetMailDetails(sessionKey, sendMailData.Inbox, int.Parse(intKeySentMail));
+                mailDetail = mailRequest.GetMailDetails(sessionKey, sendMailData.Inbox, sentMailIntKey);
                 validations.Add(mailRequest.ValidateEmailsInMailBox(mailDetail, true));
 
                 validations.Add(new KeyValuePair<string, bool>("Release " + sessionKey, sessionRequest.ValidateLogoffStatusSuccessfully(sessionRequest.LogoffStatus(sessionKey)).Value));
@@ -60,8 +68,6 @@ namespace KiewitTeamBinder.Api.Tests
                 Utils.AddCollectionToCollection(validations, methodValidations);
                 Console.WriteLine(string.Join(Environment.NewLine, validations.ToArray()));
                 validations.Should().OnlyContain(validations => validations.Value).Equals(bool.TrueString);
-
-
             }
             catch (Exception e)
             {
