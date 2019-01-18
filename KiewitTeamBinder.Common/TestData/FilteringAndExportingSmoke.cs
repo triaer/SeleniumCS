@@ -18,6 +18,7 @@ namespace KiewitTeamBinder.Common.TestData
         public string GridGridViewName = "GridViewContractsGrid";
         public string DefaultFilter = "Hierarchical View";
         public string GridViewFilter = "Grid View";
+        public string ExpeditingViewFilter = "Expediting View";
         public string RegisterView = "Default View";
         public string RowName = "Contracts";
         public string DownloadFilePath = Utils.GetDownloadFilesLocalPath() + "\\" + Utils.GetRandomValue("Contracts") + ".xlsx";
@@ -32,6 +33,7 @@ namespace KiewitTeamBinder.Common.TestData
         public string ContractNumber = "1234567";
         public string ItemIDNumber = "123";
         public string DeliverableNumber = "123456";
+
         public string ContractNumberDescription = "testing 120793";
         public string ItemDescription = "abc";
         public string DeliverableDescription = "123456";

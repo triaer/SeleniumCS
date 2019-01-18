@@ -27,10 +27,12 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
         private static By _checkBoxItemContract(string gridView, string description) => By.XPath($"//*[contains(text(),'{description}')]/ancestor::tr[contains(@id,'{gridView}_ctl00')]//input[contains(@id,'{gridView}_ctl00')]");
         private static By _selectedRecordCount => By.XPath("//span[@id='lblRegisterSelectedRecordCount']");
         private static By _blueHeader(string blueHeader) => By.XPath($"//div[@id='lblRegisterCaption']/span[text()='{blueHeader}']");
+        private static By _blueItem(string gridView, string itemName) => By.XPath($"//span[@class='HyperLinkWithNoLine']/ancestor::tr[contains(@id,'ctl00_cntPhMain_{gridView}_ctl00')]//span[text()='{itemName}']");
         private static By _itemsList(string gridView) => By.XPath($"//tr[contains(@id,'ctl00_cntPhMain_{gridView}_ctl00')]");
         private static By _totalItem(string gridView) => By.XPath($"//span[contains(@id,'ctl00_cntPhMain_{gridView}_ctl00DSC')]");
         private static By _selectedRow(string gridView, string Description) => By.XPath($"//*[contains(text(),'{Description}')]/ancestor::tr[contains(@id,'{gridView}_ctl00')]");
         private static By _headerTitlePage => By.XPath("//div[@id='lblRegisterCaption']");
+        
 
         private static string _filterItemsXpath = "//table[contains(@id,'GridViewItemsVendor')]//tr[@valign='top']";
 
@@ -42,6 +44,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
         public IWebElement CheckBoxItemContract(string gridView, string description) => StableFindElement(_checkBoxItemContract(gridView, description));
         public IWebElement SelectedRecordCount { get { return StableFindElement(_selectedRecordCount); } }
         public IWebElement BlueHeader(string blueHeader) => StableFindElement(_blueHeader(blueHeader));
+        public IWebElement BlueItem(string gridView, string itemName) => StableFindElement(_blueItem(gridView, itemName));
         public IWebElement TotalItem(string gridView) => StableFindElement(_totalItem(gridView));
         public IWebElement HeaderTitlePage { get { return StableFindElement(_headerTitlePage); } }
         public IReadOnlyCollection<IWebElement> ItemsList(string gridView) => StableFindElements(_itemsList(gridView));
@@ -104,7 +107,11 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             SwitchToNewPopUpWindow(DeliverableLineItem, out parrentWindow, true);
             return new VendorDeliverableDetail(WebDriver);
         }
-                
+
+        public static int GetWindowHandle() {
+            return WebDriver.WindowHandles.Count;
+        }
+
         public int GetTotalItems(string gridView, bool waitForLoading = true) {
             if (waitForLoading)
                 WaitForLoading(_totalItem(gridView));
@@ -123,9 +130,20 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             return  HeaderTitlePage.Text;
         }
 
+        public T ClickOnBlueItem<T>(string gridView, string blueItem)
+        {
+            var node = StepNode();
+            node.Info($"Click on the {blueItem}");
+
+            BlueItem(gridView, blueItem).Click();
+            WebDriver.SwitchTo().Window(WebDriver.WindowHandles.Last());
+            return (T)Activator.CreateInstance(typeof(T), WebDriver);
+        }
+
         public VendorDataRegister ClickOnBlueHeader(string blueHeader) {
             var node = StepNode();
-            node.Info($"Click on the {blueHeader} BlueHeader");
+            node.Info($"Click on the {blueHeader}");
+
             BlueHeader(blueHeader).Click();
             return this;
         }
@@ -153,6 +171,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
         public VendorDataRegister DoubleClickItem(string contractNumber, string gridView, string description, bool waitForLoading = true) {
             var node = StepNode();
             node.Info("Double click on a item");
+
             if (waitForLoading)
                 WaitForLoadingPanel(); 
             ScrollIntoView(ContractNumber(contractNumber, gridView, description));
@@ -312,16 +331,8 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
                 int selectedRow = GetSelectedRecordCount();
                 string actual;
 
-                foreach (IWebElement item in SelectedRow(gridView, description))
-                {
-                    actual = item.GetAttribute("class");
-                    if ((actual.Contains("Selected")))
-                    {
-                        count += 1;
-                    }
-                }
 
-                if ((expectedValue + count) > selectedRow)
+                if (expectedValue  > selectedRow)
                 {
                     return SetPassValidation(node, Validation.Selected_Count_Is_Decreased);
                 }
@@ -333,39 +344,61 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
                 return SetErrorValidation(node, Validation.Selected_Count_Is_Decreased, e);
             }
         }
-        public KeyValuePair<string, bool> ValidateLinkingPageAreShown(string contractNumber, string itemIDNumber = "", string deliverableNumber = "")
+        public KeyValuePair<string, bool> ValidateTitlePageAreShownCorrectly(string contractNumber = "", string itemIDNumber = "", string deliverableNumber = "")
         {
             var node = StepNode();
             try
             {
-                string value = GetHeaderTitle();
-                if (value.Contains("Item Purchased")) {
-                    
-                    if (value.Equals($"Vendor Data - {contractNumber} > Item Purchased"))
-                    {
-                        return SetPassValidation(node, Validation.Linking_Page_Are_Shown);
-                    }
-                    return SetFailValidation(node, Validation.Linking_Page_Are_Shown);
+                string title = GetHeaderTitle();
+                if (title.Contains("Item Purchased")) {
+                    if (title.Equals($"Vendor Data - {contractNumber} > Item Purchased"))
+                        return SetPassValidation(node, Validation.Title_Page_Are_Shown_Correctly);
+                    return SetFailValidation(node, Validation.Title_Page_Are_Shown_Correctly);
                 }
-                if (value.Contains("Deliverables")) {
-                    if (value.Equals($"Vendor Data - {contractNumber} > {itemIDNumber} > Deliverables"))
-                    {
-                        return SetPassValidation(node, Validation.Linking_Page_Are_Shown);
-                    }
-                    return SetFailValidation(node, Validation.Linking_Page_Are_Shown);
+                if (title.Contains("Deliverables")) {
+                    if (title.Equals($"Vendor Data - {contractNumber} > {itemIDNumber} > Deliverables"))
+                        return SetPassValidation(node, Validation.Title_Page_Are_Shown_Correctly);
+                    return SetFailValidation(node, Validation.Title_Page_Are_Shown_Correctly);
                 }
-                if (value.Contains("Documents")) {
-                    if (value.Equals($"Vendor Data - {contractNumber} > {itemIDNumber} > {deliverableNumber} > Documents"))
-                    {
-                        return SetPassValidation(node, Validation.Linking_Page_Are_Shown);
-                    }
-                    return SetFailValidation(node, Validation.Linking_Page_Are_Shown);
+                if (title.Contains("Documents")) {
+                    if (title.Equals($"Vendor Data - {contractNumber} > {itemIDNumber} > {deliverableNumber} > Documents"))
+                        return SetPassValidation(node, Validation.Title_Page_Are_Shown_Correctly);
+                    return SetFailValidation(node, Validation.Title_Page_Are_Shown_Correctly);
                 }
-                return SetFailValidation(node, Validation.Linking_Page_Are_Shown);
+                if (title.Contains("Contracts")) {
+                    if(title.Equals("Vendor Data - Contracts"))
+                        return SetPassValidation(node, Validation.Title_Page_Are_Shown_Correctly);
+                    return SetFailValidation(node, Validation.Title_Page_Are_Shown_Correctly);
+                }
+                return SetFailValidation(node, Validation.Title_Page_Are_Shown_Correctly);
             }
             catch (Exception e)
             {
-                return SetErrorValidation(node, Validation.Linking_Page_Are_Shown, e);
+                return SetErrorValidation(node, Validation.Title_Page_Are_Shown_Correctly, e);
+            }
+        }
+
+        public KeyValuePair<string, bool> ValidateWindowIsOpen(int expectedValue, bool open = true) {
+            var node = StepNode();
+            try
+            {
+                if (open) {
+                    if (expectedValue < GetWindowHandle()) 
+                        return SetPassValidation(node, Validation.Window_Is_Opened);
+                    return SetFailValidation(node, Validation.Window_Is_Opened);
+                }
+                else
+                {
+                    if (expectedValue == 1)
+                        return SetPassValidation(node, Validation.Window_Is_Closed);
+                    return SetFailValidation(node, Validation.Window_Is_Closed);
+                }
+            }
+            catch (Exception e)
+            {
+                if(open)
+                    return SetErrorValidation(node, Validation.Window_Is_Opened, e);
+                return SetErrorValidation(node, Validation.Window_Is_Closed, e);
             }
         }
 
@@ -374,11 +407,15 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
         {
             public static string Purchase_Items_Are_Shown = "Validate that purchase items are shown";
             public static string Items_Counted_Are_Matches = "Validate that number of line items matches the count";
-            public static string Line_Items_Is_Highlighted = "Validate that the line item is highlighted when cliked checkbox";
+            public static string Line_Items_Is_Highlighted = "Validate that the line item is highlighted when clicked checkbox";
             public static string Selected_Count_Is_Increased = "Validate that selected count increased on bottom right corner";
             public static string Selected_Count_Is_Decreased = "Validate that selected count decreased on bottom right corner";
             public static string Deliverables_Are_Shown = "Validate that deliverables are shown";
-            public static string Linking_Page_Are_Shown = "Validate that linking page are shown";
+            public static string Title_Page_Are_Shown_Correctly = "Validate that linking page are shown";
+            public static string Return_To_Vendor_Data_Contracts = "Validate that page return Vendor Data - Contracts when clicked the Blue Header";
+            public static string Window_Is_Opened = "Validate that window is opened";
+            public static string Window_Is_Closed = "Validate that window is closed";
+
         }
         #endregion
     }

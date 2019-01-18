@@ -261,7 +261,9 @@ namespace KiewitTeamBinder.Common
             [Description("Register View")]
             RegisterView,
             [Description("Contracts")]
-            Contracts
+            Contracts,
+            [Description("Expediting View")]
+            ExpeditingView
         }
 
         public enum DialogPopupButton
