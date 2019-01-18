@@ -135,11 +135,11 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                                        .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateBredCrumbTrailDisplayCorrect(filteringAndExportingData.Documents, filteringAndExportingData.ContractNumber, filteringAndExportingData.ItemID, filteringAndExportingData.DeliverableNumber))
                                        .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateItemsCountedAreMatches(filteringAndExportingData.GridViewDocument))
                                        .ClickOnCheckBox(filteringAndExportingData.GridViewDocument, documentNo, uncheck: false)
-                                       .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateLineItemsIsHighlighted(filteringAndExportingData.GridViewDeliverable, filteringAndExportingData.DeliverableDescription))
-                                       .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateSelectedCountInCreased(filteringAndExportingData.GridViewDeliverable, filteringAndExportingData.DeliverableDescription));
+                                       .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateLineItemsIsHighlighted(filteringAndExportingData.GridViewDocument, documentNo))
+                                       .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateSelectedCountInCreased(filteringAndExportingData.GridViewDocument, documentNo));
                 int selectedRow = vendorDataRegister.GetSelectedRecordCount();
                 vendorDataRegister.ClickOnCheckBox(filteringAndExportingData.GridViewDocument, documentNo, uncheck: true)
-                                  .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateSelectedCountDeCreased(filteringAndExportingData.GridViewDeliverable, filteringAndExportingData.DeliverableDescription, selectedRow))
+                                  .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateSelectedCountDeCreased(filteringAndExportingData.GridViewDocument, documentNo, selectedRow))
                                   .ClickOnBlueHeader(filteringAndExportingData.ContractNumber);
 
                 // then

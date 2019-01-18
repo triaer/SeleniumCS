@@ -138,9 +138,9 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             if (waitForLoading)
                 WaitForLoadingPanel();
             if (uncheck)
-                CheckBoxItemContract(gridView, contractDescription).UnCheck();
+                CheckBoxItemContract(gridView, contractDescription.Trim()).UnCheck();
             else
-                CheckBoxItemContract(gridView, contractDescription).Check();
+                CheckBoxItemContract(gridView, contractDescription.Trim()).Check();
             return this;
         }
 
@@ -263,7 +263,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
                 string actual;
                 int count = 0;
 
-                foreach (IWebElement item in SelectedRow(gridView, description))
+                foreach (IWebElement item in SelectedRow(gridView, description.Trim()))
                 {
                     actual = item.GetAttribute("class");
                     if ((actual.Contains("Selected")))
@@ -290,7 +290,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
                 int selectedRow = GetSelectedRecordCount();
                 string actual;
 
-                foreach (IWebElement item in SelectedRow(gridView, description))
+                foreach (IWebElement item in SelectedRow(gridView, description.Trim()))
                 {
                     actual = item.GetAttribute("class");
                     if ((actual.Contains("Selected")))
@@ -321,7 +321,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
                 int selectedRow = GetSelectedRecordCount();
                 string actual;
 
-                foreach (IWebElement item in SelectedRow(gridView, description))
+                foreach (IWebElement item in SelectedRow(gridView, description.Trim()))
                 {
                     actual = item.GetAttribute("class");
                     if ((actual.Contains("Selected")))

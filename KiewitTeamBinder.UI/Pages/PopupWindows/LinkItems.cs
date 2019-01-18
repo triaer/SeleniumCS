@@ -12,9 +12,9 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
     {
         #region Entities 
         private static By _gridViewLinkItems => By.XPath("//div[@id='LinkedDocumentsGrid_GridData']/table/tbody");
-        private static By _documentNoCol(int index) => By.XPath($"//div[@id='LinkedDocumentsGrid_GridData']/table//tr[{0}]/td[2]");
+        private static By _documentNoCol(int index) => By.XPath($"//div[@id='LinkedDocumentsGrid_GridData']/table//tr[{index}]/td[2]");
         private static By _linkedDocumentTableHeader => By.XPath("//div[@id='LinkedDocumentsGrid_GridHeader']/table//th/a");
-        private static By _linkedDocumentTableRow(int index) => By.XPath($"//div[@id='LinkedDocumentsGrid_GridData']/table//tr[{0}]");
+        private static By _linkedDocumentTableRow(int index) => By.XPath($"//div[@id='LinkedDocumentsGrid_GridData']/table//tr[{index}]");
 
         public IWebElement GridViewLinkItems { get { return StableFindElement(_gridViewLinkItems); } }
         public IWebElement DocumentNoCol(int index) => StableFindElement(_documentNoCol(index));
