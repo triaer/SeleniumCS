@@ -10,11 +10,11 @@ namespace KiewitTeamBinder.Common.TestData
 {
     public class SendMailSmoke
     {
-        public string ProjectNumber = "AUTO1";
+        public string ProjectNumber = "AUTO2";
         public string ConnectingProduct = "KiewitApiTest";
         public string DraftBox = "Drafts";
         public string Inbox = "Inbox";
-        public string Subject = "Automation send mail API427";
+        public string Subject = "Automation send mail API";
         public string MailType = "PCO";
         public string ComposeMailAcction = "New";
         public int IntKeyForNewMail = 0;

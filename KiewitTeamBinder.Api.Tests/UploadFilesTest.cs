@@ -16,7 +16,7 @@ namespace KiewitTeamBinder.Api.Tests
     public class UploadFilesTest : ApiTestBase
     {
         [TestMethod]
-        public void UploadFiles()
+        public void UploadFiles_API()
         {
             SessionApi sessionRequest = null;
             string sessionKey = "";

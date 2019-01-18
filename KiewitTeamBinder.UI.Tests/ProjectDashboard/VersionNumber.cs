@@ -25,7 +25,7 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
     [TestClass]
     public class VersionNumber : UITestBase
     {
-        [TestMethod]
+        //[TestMethod]
         public void General_TeamBinderVersionNumber_UI()
         {
             try
