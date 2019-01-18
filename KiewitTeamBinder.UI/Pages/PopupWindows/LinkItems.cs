@@ -12,8 +12,13 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
     {
         #region Entities 
         private static By _gridViewLinkItems => By.XPath("//div[@id='LinkedDocumentsGrid_GridData']/table/tbody");
+        private static By _documentNoCol(int index) => By.XPath($"//div[@id='LinkedDocumentsGrid_GridData']/table//tr[{0}]/td[2]");
+        private static By _linkedDocumentTableHeader => By.XPath("//div[@id='LinkedDocumentsGrid_GridHeader']/table//th/a");
+        private static By _linkedDocumentTableRow(int index) => By.XPath($"//div[@id='LinkedDocumentsGrid_GridData']/table//tr[{0}]");
 
         public IWebElement GridViewLinkItems { get { return StableFindElement(_gridViewLinkItems); } }
+        public IWebElement DocumentNoCol(int index) => StableFindElement(_documentNoCol(index));
+        public IWebElement LinkedDocumentTableRow(int index) =>  StableFindElement(_linkedDocumentTableRow(index));
         #endregion
 
         #region Actions
@@ -22,8 +27,19 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
 
         public int GetCountWindow()
         {
+            var node = StepNode();
+            test.Info("Get count window");
             return WebDriver.WindowHandles.Count;
         }
+
+        //public List<KeyValuePair<string, string>> GetInfoDocumentAttachedByIndex(int index)
+        //{
+        //    var listValue = new List<KeyValuePair<string, string>>();
+        //    List<IWebElement> ListNameHeader = StableFindElements(_linkedDocumentTableHeader).ToList();
+        //    List<IWebElement> ListInfo = LinkedDocumentTableRow(index).StableFindElements(By.XPath("./td")).ToList();
+            
+        //    return listValue;
+        //}
 
         public KeyValuePair<string, bool> ValidateLinkItemsWindowIsClosed(int countWindow)
         {
@@ -42,17 +58,27 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
 
         }
 
-        public KeyValuePair<string, bool> ValidateDocumentIsAttached(string documentNo)
+        public KeyValuePair<string, bool> ValidateDocumentIsAttached(string documentNo, bool byIndex = false, int index = 0)
         {
             var node = StepNode();
-            int rowIndex, colIndex;
-            GetTableCellValueIndex(GridViewLinkItems, documentNo, out rowIndex, out colIndex);
+            int rowIndex, colIndex;      
             try
             {
-                if (TableCell(GridViewLinkItems, rowIndex, colIndex) != null)
-                    return SetPassValidation(node, Validation.Document_Is_Attached);
-                else
+                if (byIndex == true)
+                {
+                    if (DocumentNoCol(index).Text == documentNo.Trim())
+                        return SetPassValidation(node, Validation.Document_Is_Attached);
                     return SetFailValidation(node, Validation.Document_Is_Attached);
+                }
+                else
+                {
+                    GetTableCellValueIndex(GridViewLinkItems, documentNo, out rowIndex, out colIndex);
+                    if (TableCell(GridViewLinkItems, rowIndex, colIndex) != null)
+                        return SetPassValidation(node, Validation.Document_Is_Attached);
+                    else
+                        return SetFailValidation(node, Validation.Document_Is_Attached);
+                }
+                
             }
             catch (Exception e)
             {

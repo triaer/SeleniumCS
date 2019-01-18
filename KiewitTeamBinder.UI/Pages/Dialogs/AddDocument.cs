@@ -85,8 +85,9 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             var node = StepNode();
             SwitchFrameParrent();
             IWebElement CheckBox = RowItemInAddDocumentPopup(index).StableFindElement(By.XPath("./td/input[contains(@id,'CheckBox')]"));
-            CheckBox.Click();
+            CheckBox.Check();
             documentNo = RowItemInAddDocumentPopup(index).StableFindElement(By.XPath(_documentNoXpath)).Text;
+            node.Info("Document No: " + documentNo);
             return this;
         }
 
@@ -100,12 +101,14 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
 
         public AddDocument SelectOptionInRegisterViewDropDown(string value)
         {
+            var node = StepNode();
             string separator = " -- ";
             if (value == "All")
             {
                 value = value.Insert(0, separator);
                 value = value.Insert(value.Length, separator).Trim();
             }
+            node.Info("Select Option: " + value);
             SelectComboboxByText(RegisterViewDropdown, _registerViewDropdownData, value);
             return this;
         }

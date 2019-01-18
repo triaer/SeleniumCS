@@ -133,24 +133,15 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
 
         public VendorDataRegister ClickOnCheckBox(string gridView, string contractDescription, bool uncheck = false, bool waitForLoading = true)
         {
+            var node = StepNode();
+            node.Info("Check box a line item");
+            if (waitForLoading)
+                WaitForLoadingPanel();
             if (uncheck)
-            {
-                var node = StepNode();
-                node.Info("Check box a line item");
-                if (waitForLoading)
-                    WaitForLoadingPanel();
-                CheckBoxItemContract(gridView, contractDescription).Click();
-                return this;
-            }
+                CheckBoxItemContract(gridView, contractDescription).UnCheck();
             else
-            {
-                var node = StepNode();
-                node.Info("Uncheck box a line item");
-                if (waitForLoading)
-                    WaitForLoadingPanel();
-                CheckBoxItemContract(gridView, contractDescription).Click();
-                return this;
-            }
+                CheckBoxItemContract(gridView, contractDescription).Check();
+            return this;
         }
 
         public VendorDataRegister DoubleClickItem(string contractNumber, string gridView, string description, bool waitForLoading = true)
@@ -378,7 +369,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
                 }
                 if (actual + type == expected + type)
                     return SetPassValidation(node, Validation.Bred_Crumb_Trail_Is_Displayed_Correct);
-                return SetFailValidation(node, Validation.Bred_Crumb_Trail_Is_Displayed_Correct);
+                return SetFailValidation(node, Validation.Bred_Crumb_Trail_Is_Displayed_Correct, expected + type, actual + type);
             }
             catch (Exception e)
             {

@@ -39,7 +39,9 @@ namespace KiewitTeamBinder.Common.TestData
         public string LinkItemsWindow = "Link Items";
         public string OptionAll = "All";
         public string GridViewAddDocName = "GridView_GridData";
-        public string GridViewLinkItemsName = "LinkedDocumentsGrid_GridData";
+        
+        public string GridViewLinkItemsName = "LinkedDocumentsGrid";
+        public string GridViewLinkItemsData = "LinkedDocumentsGrid_GridData";
         public string SaveMessageOnLinkItem = "Manual Links updated successfully.";
 
         public string ItemPurchased = "Item Purchased";
