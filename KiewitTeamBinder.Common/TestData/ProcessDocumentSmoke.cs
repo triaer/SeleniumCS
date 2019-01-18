@@ -11,12 +11,12 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
 {
     public class ProcessDocumentSmoke
     {
-        public string ProjectName = "Automation Project 1";
+        public string ProjectName = "Automation Project 2";
         public string DefaultFilterAtHoldingAreaPane = "New Documents";
         public string GridViewHoldingAreaName = "GridViewHoldingArea"; 
         public string GridViewDocumentName = "GridViewDocReg";
         public string WindowTitle = "Process Documents into Document Register";
-        public string[] listHeader = { "Document No.", "Title", "Rev", "Sts", "Discipline", "Category" };
+        public string[] listHeader = { "Rev", "Sts", "Discipline", "Category" };
         public string MessageOnValidateDocumentsDialog = "Document details are successfully validated.";
         public string ProcessMessage = "Processing Hold Documents in progress";
         public string ReceivedDate = DateTime.Now.AddDays(-7).ToString("MM/dd/yyyy");
@@ -36,12 +36,12 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
         public SingleDocumentInfo SingleDocInformation = new SingleDocumentInfo()
         {
             DocumentNo = Utils.GetRandomValue("DOCUMENTNO"),
-            RevStatus = "01 - Rev 01",
-            Status = "VSUB - Vendor Submission",
+            RevStatus = "01",
+            Status = "VSUB",
             Title = Utils.GetRandomValue("Title"),
-            Category = "BM - BILL OF MATERIAL",
-            Discipline = "CON - Contruction",
-            Type = "SUB - Submittal"
+            Category = "BM",
+            Discipline = "CON",
+            Type = "SUB"
         };
     }
 }

@@ -16,13 +16,24 @@ namespace KiewitTeamBinder.Common.TestData
         public string GridViewName = "GridViewContractVendor";
         public string GridViewItemsName = "GridViewItemsVendor";
         public string[] RequiredFields = {"Item ID", "Description", "Status"};
-        public ItemPurchased PurchaseInfo = new ItemPurchased()
+        public Contract ContractInfo = new Contract()
         {
-            ContractNumber = "1234567",
-            ItemID = Utils.GetRandomValue("ITEMID"),
-            Description = Utils.GetRandomValue("Description content"),
-            Status = "OPEN - OPEN",
+            ContractNumber = Utils.GetRandomValue("CONTRACT"),
+            Description = Utils.GetRandomValue("Description Contract"),
+            VendorCompany = "Kiewit",
+            ExpeditingContract = "No",
+            Status = "STARTED"
         };
+        public ItemPurchased PurchaseInfo(Contract ContractInfo)
+        {
+            return new ItemPurchased()
+            {
+                ContractNumber = ContractInfo.ContractNumber,
+                ItemID = Utils.GetRandomValue("ITEMID"),
+                Description = Utils.GetRandomValue("Description item content"),
+                Status = "OPEN",
+            };
+        }
 
         public List<KeyValuePair<string, string>> ExpectedContractValuesInColumnList(ItemPurchased PurchaseInfo)
         {

@@ -51,6 +51,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             var dashboard = new ProjectsDashboard(WebDriver);
             WaitForElementDisplay(_walkMe);
             WaitForElement(dashboard._dashBoardLabel);
+            HandleAutoRecoveryPopup();
             return dashboard;
         }
 
@@ -89,7 +90,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 else
                 {
                     IWebElement ProjectItem = StableFindElement(By.XPath(string.Format(_projectListRows, (rowIndex - 1))));
-                    ScrollToElement(TableCell(ProjGridDataTable, rowIndex, colIndex));
+                    TableCell(ProjGridDataTable, rowIndex, colIndex).HoverElement();
 
                     string actualAttribute = ProjectItem.GetAttribute("class");
               

@@ -25,7 +25,7 @@ namespace KiewitTeamBinder.Api.Service
         {
             _request = new MailServiceReference.MailWebServiceSoapClient(EndpointName, url + ServiceName);
         }
- 
+
         public DataSet GetStructureForComposeMail(string sessionKey, int parentMailIntKey, string parentMailBox, string mailType, string composeMailAction)
         {
             DataSet dataSetResponse = _request.GetStructureForComposeMail(sessionKey, parentMailIntKey, parentMailBox, mailType, composeMailAction);
@@ -54,7 +54,7 @@ namespace KiewitTeamBinder.Api.Service
                     expectedNumberOfTable = 1;
                     message = Validation.Emails_Not_In_Mail_Box;
                 }
-                    
+
 
                 int numberOfTable = dataSetResponse.Tables.Count;
                 if (numberOfTable == expectedNumberOfTable)
@@ -112,7 +112,7 @@ namespace KiewitTeamBinder.Api.Service
             return dataTableResponse;
 
         }
-        
+
         public string getValueOfResponseData(DataTable dataTableResponse, int i)
         {
             string value = "";
@@ -123,14 +123,14 @@ namespace KiewitTeamBinder.Api.Service
             return value;
         }
 
-        public string getIntKey (DataTable dataTableResponse)
+        public string getIntKey(DataTable dataTableResponse)
         {
             string IntKey = getValueOfResponseData(dataTableResponse, 6);
             return IntKey;
         }
-                        
+
         private string ConvertDataSetToXML(DataSet dataSet)
-        {            
+        {
             XmlSerializer ser = new XmlSerializer(typeof(DataSet));
             var memoryStream = new MemoryStream();
             TextWriter writer = new StreamWriter(memoryStream);
@@ -144,7 +144,7 @@ namespace KiewitTeamBinder.Api.Service
             DataSet dataSetRespone = _request.GetStructureForComposeMail(sessionKey, parentMailIntKey, parentMailBox, mailType, composeMailAction);
             return dataSetRespone;
         }
-        
+
         public string GetMailDetailsXml(DataSet structureForComposeMail, string subject, string mailType, int intKey, int recipientIntKey)
         {
             string xmlResponse = ConvertDataSetToXML(structureForComposeMail);
@@ -186,13 +186,13 @@ namespace KiewitTeamBinder.Api.Service
             return intKeyofSentMail;
         }
 
-        public KeyValuePair<string, bool> ValidateIntKeySavedMail (string intKeySavedMail)
+        public KeyValuePair<string, bool> ValidateIntKeySavedMail(string intKeySavedMail)
         {
             try
             {
                 int temp = int.Parse(intKeySavedMail);
                 return new KeyValuePair<string, bool>(Validation.IntKey_Saved_Mail, true);
-           
+
             }
             catch (Exception e)
             {
@@ -205,7 +205,7 @@ namespace KiewitTeamBinder.Api.Service
             try
             {
                 int temp = intKeySentMail;
-                return new KeyValuePair<string, bool>(Validation.IntKey_Sent_Mail, true);               
+                return new KeyValuePair<string, bool>(Validation.IntKey_Sent_Mail, true);
             }
             catch (Exception e)
             {

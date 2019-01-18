@@ -11,7 +11,7 @@ namespace KiewitTeamBinder.Common.TestData
 {
     public class UploadSingleDocSmoke
     {
-        public string ProjectName = "Automation Project 1";
+        public string ProjectName = "Automation Project 2";
         public string FileNames = "\"DocumentAttachFile.txt\" ";
         public string[] RequiredFields = { "Document No.", "Rev", "Status", "Title", "Category", "Discipline" };
         public Color ColorGrey = Color.FromArgb(207,207,207);
@@ -20,12 +20,12 @@ namespace KiewitTeamBinder.Common.TestData
         public SingleDocumentInfo SingleDocInformation = new SingleDocumentInfo()
         {
             DocumentNo = Utils.GetRandomValue("DocumentNo"),
-            RevStatus = "01 - Rev 01",
-            Status = "VSUB - Vendor Submission",
+            RevStatus = "01",
+            Status = "VSUB",
             Title = Utils.GetRandomValue("DocumentTitle"),
-            Category = "BM - BILL OF MATERIAL",
-            Discipline = "CON - Contruction",
-            Type = "SUB - Submittal",
+            Category = "BM",
+            Discipline = "CON",
+            Type = "SUB",
         };
     }
 }

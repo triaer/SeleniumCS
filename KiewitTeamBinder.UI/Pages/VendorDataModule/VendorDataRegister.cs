@@ -106,22 +106,26 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             return StableFindElements(By.XPath(itemsXpath));
 
         }
-
+        private void ReplaceValueOfStatusColumn(ref List<KeyValuePair<string, string>> columnValuePairList)
+        {
+            foreach (var columnValuePair in columnValuePairList)
+            {
+                if (columnValuePair.Key == "Status")
+                {
+                    string status = columnValuePair.Value.Split('-')[0].Trim();
+                    columnValuePairList.Remove(columnValuePair);
+                    columnValuePairList.Add(new KeyValuePair<string, string>("Status", status));
+                    break;
+                }
+            }
+        }
         public KeyValuePair<string, bool> ValidatePurchaseItemsAreShown(List<KeyValuePair<string, string>> columnValuePairList)
         {
             var node = StepNode();
             try
             {
-                foreach (var columnValuePair in columnValuePairList)
-                {
-                    if (columnValuePair.Key == "Status")
-                    {
-                        string status = columnValuePair.Value.Split('-')[0].Trim();
-                        columnValuePairList.Remove(columnValuePair);
-                        columnValuePairList.Add(new KeyValuePair<string, string>("Status", status));
-                        break;
-                    }
-                }
+                ReplaceValueOfStatusColumn(ref columnValuePairList);
+                
                 var PurchaseItemsList = GetAvailablePurchaseItems(columnValuePairList);
                 if (PurchaseItemsList.Count > 0)
                     return SetPassValidation(node, Validation.Purchase_Items_Are_Shown);
@@ -144,6 +148,8 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             var node = StepNode();
             try
             {
+                ReplaceValueOfStatusColumn(ref columnValuePairList);
+
                 var DeliverableList = GetAvalibleDeliverable(columnValuePairList);
                 if (DeliverableList.Count > 0)
                 {

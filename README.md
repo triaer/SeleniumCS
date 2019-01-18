@@ -1,20 +1,25 @@
-# Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+# KiewitTeamBinder Automation Test
 
-# Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+## InternetExplorer - Required Configuration
 
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
+In order for the TeamBinder tests to run well on the InternetExplorer 11 browser, you will need to configure the browser on the target machine (where you desire to run automation):
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://www.visualstudio.com/en-us/docs/git/create-a-readme). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+**Protected Mode Settings**
+You must set the Protected Mode settings same value for all the Zones. To set the Protected Mode settings, choose "Internet Options..." from the Tools menu, and click on the Security tab. For each zone, there will be a check box at the bottom of the tab labeled "Enable Protected Mode".
+Additionally, _"Enhanced Protected Mode"_ must be disabled for IE 10 and higher. This option is found in the Advanced tab of the Internet Options dialog.
+
+**Browser Zoom Level**
+The browser zoom level must be set to 100% so that the native mouse events can be set to the correct coordinates.
+
+**Pop-up Blocker**
+Pop-up Blocker need to turn off. This setting is found in the Privacy tab of the Internet Options dialog.
+
+**Setting Registry Key / Entry**
+For IE 11 only, you will need to set a registry entry on the target computer so that the driver can maintain a connection to the instance of Internet Explorer it creates. 
+For 32-bit Windows installations, the key you must examine in the registry editor is "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BFCACHE". 
+For 64-bit Windows installations, the key is "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BFCACHE". 
+Please note that the FEATURE_BFCACHE subkey may or may not be present, and should be created if it is not present. 
+**Important:** Inside this key, create a DWORD value named **iexplore.exe** with the value of 0.
+
+

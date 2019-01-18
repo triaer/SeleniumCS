@@ -35,7 +35,7 @@
     <Parameter name="browser" value="internetexplorer" />
     <Parameter name="headless" value="false" />
     <Parameter name="environment" value="test" />
-    <Parameter name="teamBinderVersion" value="19.1.00" />
+    <Parameter name="teamBinderVersion" value="19.1.02" />
     <Parameter name="excelUserSourcePath" value="C:\working\DT_CommonDataKiewitIn8.xls" />
     <Parameter name="localTempExcelUserTargetPath" value="C:\temp\DT_CommonDataKiewitIn8.xls" />
   </TestRunParameters>

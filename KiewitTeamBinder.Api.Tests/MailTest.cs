@@ -37,7 +37,7 @@ namespace KiewitTeamBinder.Api.Tests
                 DataSet dataSetResponse = mailRequest.GetStructureForComposeMail(sessionKey, sendMailData.DraftBox, sendMailData.MailType, sendMailData.ComposeMailAcction);
                 string mailDetailsXml = mailRequest.GetMailDetailsXml(dataSetResponse, sendMailData.Subject, sendMailData.MailType, sendMailData.IntKeyForNewMail, sendMailData.RecipientIntKey);
                 Console.WriteLine(dataSetResponse);
-                
+
                 //Save email
                 int savedMailIntKey = int.Parse(mailRequest.SaveMail(sessionKey, sendMailData.MailType, mailDetailsXml, sendMailData.ComposeMailAcction, sendMailData.DraftBox));
                 //Verify email exists in draft view
