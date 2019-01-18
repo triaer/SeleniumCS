@@ -105,28 +105,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             return this;
         }       
         
-        public void WaitForLoadingPanel(int timeout = sapShortTimeout)
-        {
-            var node = StepNode(); 
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
-            do
-            {
-                try
-                {
-                    WaitForLoading(_loadingPanel);
-                    WaitForElementDisplay(_walkMe, mediumTimeout);
-                    if (WaitForElementInvisible(_loadingPanel))
-                        break;
-                }
-                catch (Exception)
-                {   }
-            } while (stopwatch.Elapsed.TotalSeconds <= timeout);
-            if (stopwatch.Elapsed.TotalSeconds >= timeout)
-                node.Warning("The icon loading process is not completed in timeout: " + timeout);
-
-            stopwatch.Stop();
-        }
+        
             
         private void ClickMenuItem(string menuItem)
         {
@@ -186,8 +165,10 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
         public StandardReports OpenStandardReportsWindow(bool closePreviousWindow = false)
         {
+            var node = StepNode();
             string currentWindow;
             SwitchToNewPopUpWindow(ReportsButton, out currentWindow, closePreviousWindow);
+            node.Info("Click Reports in Top Right Corner of Dashboard, then Report window opens");
             return new StandardReports(WebDriver);
         }
 

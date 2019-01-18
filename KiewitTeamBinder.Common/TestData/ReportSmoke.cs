@@ -14,12 +14,12 @@ namespace KiewitTeamBinder.Common.TestData
         public string[] AvailableReports = { "001 - Details – by Contract Number", "005 - Details – by Item ID" };
         public string ContractNumberDropdownList = "Contract No.";
         public string ContractNumberItem = "1234567";
-        public string contractNumberKey = "Contract Number";
-        public string[] contractNumberValueArray = { "1234567" };
+        //public string contractNumberKey = "Contract Number";
+        //public string[] contractNumberValueArray = { "1234567" };
         public string ReportTab = "ReportTypesPanelBar";
         public string FavReportTab = "FavReportTypePanelBar";
-        public string[] favoriteItem = { "Myself", "My company", "My project" };
-        public string idButtonAddToFavouriteReportHeader = "btnAddRemoveFavouriteReport";
+        public string[] favoriteItems = { "Myself", "My company", "My project" };
+        public string AddToFavoritesButton = "Add to Favorites";
         public string radioButton = "Schedule";
         public string myselfFavReport = "Myself";
         public string mycompanyFavReport = "My company";

@@ -29,6 +29,8 @@ namespace KiewitTeamBinder.UI.Pages.Dialogs
 
         public StandardReports ClickCloseButton(ref By currentIframe, ref List<KeyValuePair<string, bool>> methodValidation)
         {
+            var node = StepNode();
+            node.Info("Click Close in the Generate Hyperlink Dialog box");
             CloseButton.Click();
             methodValidation.Add(ValidateGenerateHyperlinkDialogIsClosed());
             SwitchToFrame(ref currentIframe, null);
@@ -38,6 +40,8 @@ namespace KiewitTeamBinder.UI.Pages.Dialogs
 
         public string CopyHyperlink()
         {
+            var node = StepNode();
+            node.Info("Copy the report link to clipboard");
             Hyperlink.Click();
             Wait(shortTimeout / 2);
             SendKeys.SendWait(@"{Tab}");
