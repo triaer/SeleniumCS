@@ -17,7 +17,7 @@ namespace KiewitTeamBinder.UI.Tests.User
     [TestClass]
     public class SignOnTests : UITestBase
     {
-        [TestMethod]
+        //[TestMethod]
         public void General_NonSSOValidUserSignon_UI()
         {
             try
@@ -51,7 +51,7 @@ namespace KiewitTeamBinder.UI.Tests.User
             }
         }
 
-        [TestMethod]
+        //[TestMethod]
         public void General_SSOValidUserSignon_UI()
         {
             // given

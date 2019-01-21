@@ -106,7 +106,8 @@ namespace KiewitTeamBinder.Common.Helper
 
         public static string GetProjectPath(bool includeBinFolder = false)
         {
-            string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\";
+            //string path_old = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\";
+            string path = Directory.GetCurrentDirectory() + "\\";
             string actualPath = path;
             if (!includeBinFolder)
             {

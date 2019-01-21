@@ -162,10 +162,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\KiewitTeamBinder.Api\KiewitTeamBinder.Api.csproj">
-      <Project>{953E14AD-F154-426C-AD69-92A56FBDE62F}</Project>
-      <Name>KiewitTeamBinder.Api</Name>
-    </ProjectReference>
     <ProjectReference Include="..\KiewitTeamBinder.Common\KiewitTeamBinder.Common.csproj">
       <Project>{2F0E5A22-47A2-4953-951A-2BEE5A205DF3}</Project>
       <Name>KiewitTeamBinder.Common</Name>
