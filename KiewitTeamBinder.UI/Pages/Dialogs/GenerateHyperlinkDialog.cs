@@ -48,6 +48,7 @@ namespace KiewitTeamBinder.UI.Pages.Dialogs
             Wait(shortTimeout / 2);
             SendKeys.SendWait(@"{Enter}");
             Wait(shortTimeout / 2);
+            node.Info("Hyperlink: " + System.Windows.Clipboard.GetText());
             return System.Windows.Clipboard.GetText();
         }
 

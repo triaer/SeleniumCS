@@ -19,7 +19,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
     [TestClass]
     public class UploadUnrestrainedDocument : UITestBase
     {
-        [TestMethod]
+        //[TestMethod]
         public void HoldingArea_UploadUnrestrainedDocument_UI()
         {
             try

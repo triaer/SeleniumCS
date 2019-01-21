@@ -17,15 +17,21 @@ namespace KiewitTeamBinder.Api.Service
             string url = $"https://kiewittest.teambinder.com/TBWS/UploadFile.aspx?sessionKey={sessionKey}";
             var client = new RestClient(url);
             var request = new RestRequest(Method.POST);
-
-            string[] filePaths = new string[fileNames.Length];
-            for (int i = 0; i < filePaths.Length; i++)
+            try
             {
-                filePaths[i] = Utils.GetInputFilesLocalPath() + "\\" + fileNames[i];
-                request.AddFile("File" + (i + 1).ToString(), filePaths[i]);
+                string[] filePaths = new string[fileNames.Length];
+                for (int i = 0; i < filePaths.Length; i++)
+                {
+                    filePaths[i] = Utils.GetInputFilesLocalPath() + "\\" + fileNames[i];
+                    request.AddFile("File" + (i + 1).ToString(), filePaths[i]);
+                }
+                IRestResponse response = client.Execute(request);
+                return response.Content;
             }
-            IRestResponse response = client.Execute(request);
-            return response.Content;
+            catch (Exception e)
+            {
+                return e.ToString();
+            }
         }
 
         public KeyValuePair<string, bool> ValidateUploadFiles(string uploadFilesResponse, string[] expectedFileName)
@@ -34,7 +40,7 @@ namespace KiewitTeamBinder.Api.Service
             {
                 string[] uploadFilenames = uploadFilesResponse.Split(',');
                 if (uploadFilenames.Length != expectedFileName.Length)
-                    return new KeyValuePair<string, bool>(Validation.Files_Are_Uploaded + "number of upload response files is incorrect", false);
+                    return new KeyValuePair<string, bool>(Validation.Files_Are_Uploaded + "number of upload response files is incorrect. Response: " + uploadFilesResponse, false);
 
                 for (int i = 0; i < uploadFilenames.Length; i++)                
                     uploadFilenames[i] = uploadFilenames[i].Substring(0, uploadFilenames[i].IndexOf('(')) + uploadFilenames[i].Substring(uploadFilenames[i].IndexOf(')') + 1);

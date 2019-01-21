@@ -76,7 +76,7 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                 throw;
             }
         }
-        [TestMethod]
+        //[TestMethod]
         public void General_ScheduleAndFavoriteReport_UI()
         {
             try
