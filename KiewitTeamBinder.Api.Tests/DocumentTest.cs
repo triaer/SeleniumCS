@@ -15,7 +15,7 @@ namespace KiewitTeamBinder.Api.Tests.ApiTest
     [TestClass]
     public class DocumentTest : ApiTestBase
     {
-        [TestMethod]
+        //[TestMethod]
         public void Documents_VerifyDocumentCount_API()
         {
             SessionApi sessionRequest = null;
