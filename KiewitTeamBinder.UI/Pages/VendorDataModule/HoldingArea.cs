@@ -194,7 +194,23 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
                 return SetErrorValidation(node, Validation.Document_Row_Is_Highlighted, e);
             }
         }
-        
+
+        //public KeyValuePair<string, bool> ValidatePageDisplayCorrectOnHoldingArea(string namePage)
+        //{
+        //    var node = StepNode();
+        //    try
+        //    {
+        //        if (HoldingAreaLabel.Text == namePage)
+        //            return SetPassValidation(node, Validation.Page_Is_Diplayed_Correct);
+        //        return SetFailValidation(node, Validation.Page_Is_Diplayed_Correct, namePage, HoldingAreaLabel.Text);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return SetErrorValidation(node, Validation.Page_Is_Diplayed_Correct, e);
+        //    }
+        //}
+
+
         private static class Validation
         {
             public static string Holding_Area_Page_Displays = "Validate that the Vendor Data Module Holding Area page displays";
@@ -202,6 +218,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             public static string Item_Count_In_Bottom_Right_Corner_Displays_Correct = "Validate that item count in bottom right corner of holding area matches actual count of items in grid: ";
             public static string Holding_Area_Page_Shows_Data_Correct = "Validate that Holding Area page shows data correct ";
             public static string Document_Row_Is_Highlighted = "Validate that Document row is selected and highlighted";
+            public static string Page_Is_Diplayed_Correct = "Validate that page is displayed correctly on Holding Area.";
         }
         #endregion
     }

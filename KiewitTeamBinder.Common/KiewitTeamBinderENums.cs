@@ -459,6 +459,20 @@ namespace KiewitTeamBinder.Common
             [Description("Type")]
             Type,
         }
+
+        public enum ModuleSubItemsInContractorView
+        {
+            [Description("Documents Submitted")]
+            DocumentsSubmitted,
+            [Description("To be returned to Vendor")]
+            ReturnedToVendor,
+            [Description("Reviewed documents returned")]
+            ReviewedDocuments,
+            [Description("Deliverables due in next 30 days")]
+            DeliverablesDue,
+            [Description("Contracts")]
+            Contracts,
+        }
     }
 }
 

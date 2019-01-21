@@ -16,7 +16,6 @@ namespace KiewitTeamBinder.Common.TestData
         public string DefaultFilter = "Hierarchical View";
         public string GridViewFilter = "Grid View";
         public string RegisterView = "Default View";
-        public string RowName = "Contracts";
         public string DownloadFilePath = Utils.GetDownloadFilesLocalPath() + "\\" + Utils.GetRandomValue("Contracts") + ".xlsx";
         public string FilterValue = "CLOSED-OUT - Closed Out";
 
@@ -44,9 +43,11 @@ namespace KiewitTeamBinder.Common.TestData
         public string GridViewLinkItemsData = "LinkedDocumentsGrid_GridData";
         public string SaveMessageOnLinkItem = "Manual Links updated successfully.";
 
+        public string Contracts = "Contracts";
         public string ItemPurchased = "Item Purchased";
         public string Deliverables = "Deliverables";
         public string Documents = "Documents";
-
+        public string DocumentSubmitedPage = "Holding Area - Documents Submitted";
+        public string GridViewHoldingAreaName = "GridViewHoldingArea";
     }
 }
