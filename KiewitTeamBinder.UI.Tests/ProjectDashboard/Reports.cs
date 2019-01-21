@@ -43,9 +43,9 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                 //when User Story 123743 - 120801 Run Report
                 test = LogTest("Run Report");
                 StandardReports standardReports = projectDashBoard.OpenStandardReportsWindow(true);
-                standardReports.SelectReportModule(ref currentIframe, reportData.ReportTab, reportData.ModuleName)
-                    .LogValidation<StandardReports>(ref validations, standardReports.ValidateAvailableReportsDisplay(reportData.ReportTab, reportData.ModuleName, reportData.AvailableReports))
-                    .SelectReportModuleItem(ref currentIframe, reportData.ReportTab, reportData.ModuleName, reportData.ModuleItemName)
+                standardReports.SelectReportModule(ref currentIframe, reportData.ReportLeftPanel, reportData.ModuleName)
+                    .LogValidation<StandardReports>(ref validations, standardReports.ValidateAvailableReportsDisplay(reportData.ReportLeftPanel, reportData.ModuleName, reportData.AvailableReports))
+                    .SelectReportModuleItem(ref currentIframe, reportData.ReportLeftPanel, reportData.ModuleName, reportData.ModuleItemName)
                     .SelectItemInDropdown(ref currentIframe, reportData.ContractNumberDropdownList, reportData.ContractNumberItem, ref methodValidations)
                     .ClickSearchButton(ref currentIframe, waitLoadingPanel: true)
                     .LogValidation<StandardReports>(ref validations, standardReports.ValidateValueInReportDetailDisplaysCorrectly(reportData.contractNumberKey, reportData.contractNumberValueArray));
@@ -96,16 +96,18 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
 
                 //when User Story 123737 - 120803 Schedule a Report
                 test = LogTest("Schedule a Report");
+                string scheduleStartDate;
                 StandardReports standardReports = projectDashBoard.OpenStandardReportsWindow(true);
                 currentIframe = null;
-                standardReports.SelectReportModule(ref currentIframe, reportData.ReportTab, reportData.ModuleName)
-                    .SelectReportModuleItem(ref currentIframe, reportData.ReportTab, reportData.ModuleName, reportData.ModuleItemName)
+                standardReports.SelectReportModule(ref currentIframe, reportData.ReportLeftPanel, reportData.ModuleName)
+                    .SelectReportModuleItem(ref currentIframe, reportData.ReportLeftPanel, reportData.ModuleName, reportData.ModuleItemName)
                     .SelectItemInDropdown(ref currentIframe, reportData.ContractNumberDropdownList, reportData.ContractNumberItem, ref methodValidations)
                     .ClickSearchButton(ref currentIframe, waitLoadingPanel: true);
 
                 standardReports.ClickBackButton(ref currentIframe)
                     .LogValidation<StandardReports>(ref validations, standardReports.ValidateValuePreviouslyRemainsInReport(ref currentIframe, reportData.ContractNumberDropdownList, reportData.ContractNumberItem))
                     .ClickRadioButton(ref currentIframe, reportData.radioButton)
+                    .GetScheduleDate(out scheduleStartDate)
                     .LogValidation<StandardReports>(ref validations, standardReports.ValidateRadioButtonIsDepressed(reportData.radioButton))
                     .EnterDataInTheToField(reportData.contractUserName)
                     .LogValidation<StandardReports>(ref validations, standardReports.ValidateContactListAutoPopulated())
@@ -117,7 +119,7 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
 
                 //when User Story 123738 - 120804 Favorite a Report
                 test = LogTest("Favorite a Report");
-                standardReports.ClickButtonReportHeader(reportData.AddToFavoritesButton)
+                standardReports.ClickAddToFavorites()
                     .LogValidation<StandardReports>(ref validations, standardReports.ValidateFavoriteReportDialogIsOpen(closed: false))
                     .LogValidation<StandardReports>(ref validations, standardReports.ValidateItemListOfFavoriteFor(ref currentIframe, reportData.favoriteItems))
                     .SelectFavoriteReport(ref currentIframe, reportData.myselfFavReport)
@@ -126,19 +128,19 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                 successDialog.LogValidation<AlertDialog>(ref validations, successDialog.ValidateMessageDisplayCorrect(reportData.favSuccessfullyMsg))
                     .ClickOKOnMessageDialog<StandardReports>();
 
-                var columnValuePairList = new List<KeyValuePair<string, string>> { reportData.Title, reportData.StartDate };
+                var columnValuePairList = new List<KeyValuePair<string, string>> { reportData.Title, new KeyValuePair<string, string>("Start Date", scheduleStartDate) };
 
                 //when User Story 123740 - 120805 Validate Scheduled/Favorited
-                test = LogTest("Run test");
-                StandardReports standarReports = projectDashBoard.OpenStandardReportsWindow();
-                standarReports.SelectStandadReportsTabs(reportData.ScheduleTab)
-                                .LogValidation<StandardReports>(ref validations, standarReports.ValidateReportsAreShown(columnValuePairList))
-                                .SelectStandadReportsTabs(reportData.FavoritesTab)
-                                .LogValidation<StandardReports>(ref validations, standarReports.ValidateReportTabIsSelected(reportData.FavoritesTab))
-                                .SelectReportModule(ref currentIframe, reportData.FavReportTab, reportData.ModuleName)
-                                .SelectReportModuleItem(ref currentIframe, reportData.FavReportTab, reportData.ModuleName, reportData.ModuleItemName)
-                                .LogValidation<StandardReports>(ref validations, standarReports.ValidateFavoritedReportIsListed(reportData.FavoritedReport))
-                                .CloseBrowser(ref methodValidations);
+                test = LogTest("Validate Scheduled/Favorited");
+                //StandardReports standarReports = projectDashBoard.OpenStandardReportsWindow();
+                standardReports.SelectStandadReportsTabs(StandardReportsTab.Scheduled)
+                                .LogValidation<StandardReports>(ref validations, standardReports.ValidateReportsAreShown(columnValuePairList))
+                                .SelectStandadReportsTabs(StandardReportsTab.Favorites)
+                                .LogValidation<StandardReports>(ref validations, standardReports.ValidateReportTabIsSelected(StandardReportsTab.Favorites.ToDescription()))
+                                .SelectReportModule(ref currentIframe, reportData.FavLeftPanel, reportData.ModuleName)
+                                .SelectReportModuleItem(ref currentIframe, reportData.FavLeftPanel, reportData.ModuleName, reportData.ModuleItemName)
+                                .LogValidation<StandardReports>(ref validations, standardReports.ValidateFavoritedReportIsListed(reportData.ModuleItemName))
+                                .CloseReportWindow(ref methodValidations);
 
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);

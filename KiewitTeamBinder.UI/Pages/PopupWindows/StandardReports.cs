@@ -7,7 +7,10 @@ using static KiewitTeamBinder.UI.ExtentReportsHelper;
 using KiewitTeamBinder.UI.Pages.Dialogs;
 using KiewitTeamBinder.Common;
 using System.Windows.Forms;
-
+using static KiewitTeamBinder.Common.KiewitTeamBinderENums;
+using KiewitTeamBinder.Common.Helper;
+using KiewitTeamBinder.UI.Pages.Global;
+using System.Globalization;
 
 namespace KiewitTeamBinder.UI.Pages.PopupWindows
 {
@@ -45,6 +48,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
         private static By _reportTable => By.XPath("//table[contains(@id,'ReportScheduleGrid') and contains(@id,'Header')]/thead");
         private static By _selectedReportsTab(string tabName) => By.XPath($"//a[@class='rtsLink rtsSelected']//span[contains(text(),'{tabName}')]");
         private static By _favoritedReport(string favreport) => By.XPath($"//div[@id='FavReportTypePanelBar']//span[contains(@class,'rpText')][contains(text(),'{favreport}')]");
+        private static By _scheduleDateInput => By.XPath("//input[@id='ScheduleSetting_radScheduleTime_dateInput_ClientState']");
 
         public IWebElement ReportModuleButton(string tab, string moduleName) => StableFindElement(_reportModuleButton(tab, moduleName));
         public IWebElement ReportSubMenuItemLink(string tab, string moduleName, string subMenuItem) => ReportModuleButton(tab, moduleName).StableFindElement(_reportSubMenuItemLink(subMenuItem));
@@ -68,6 +72,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
         public IWebElement OtherUserLoginBtn { get { return StableFindElement(_otherUserLoginBtn); } }
         public IWebElement StandardReportsTabs(string tabName) => StableFindElement(_standardReportsTabs(tabName));
         public IWebElement ReportTable => StableFindElement(_reportTable);
+        public IWebElement ScheduleDateInput { get { return FindElement(_scheduleDateInput); } }
         #endregion
 
         #region Actions
@@ -174,22 +179,38 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             return new AlertDialog(WebDriver);
         }
 
-        public StandardReports ClickRadioButton(ref By currentIframe, string fieldLabel, bool waitLoadingPanel = true)
+        public StandardReports ClickRadioButton(ref By currentIframe, string fieldLabel)
         {
             var node = StepNode();
             node.Info($"Click {fieldLabel} Radio button under Run Report in Report Header");
             SwitchToFrame(ref currentIframe, null);
-            //if (waitLoadingPanel)
-            //    WaitForLoading(_radioButtonReportHeader(fieldLabel));
+            
             RadioButtonReportHeader(fieldLabel).Click();
             return this;
         }
-
+        public StandardReports GetScheduleDate(out string date)
+        {
+            string selectedText = "";
+            DateTime dateInput;
+            var valueString = ScheduleDateInput.GetValue().Replace("{", "").Replace("}", "");
+            string[] attributeValues = valueString.Split(',');
+            foreach (var attributeValue in attributeValues)
+            {
+                if (attributeValue.Contains("lastSetTextBoxValue"))
+                {
+                    selectedText = attributeValue.Substring(attributeValue.IndexOf(":") + 1);
+                    selectedText = selectedText.Replace("\"", "");
+                    break;
+                }
+            }
+            dateInput = DateTime.ParseExact(selectedText, "MM-dd-yyyy HH:mm", CultureInfo.InvariantCulture); //"01-21-2019 13:26"
+            date = dateInput.ToString("MM-dd-y hh:mm tt");  //"01-07-19 08:29 PM"
+            return this;
+        }
         public StandardReports SelectReportModule(ref By currentIframe, string tab, string moduleName, bool waitForLoading = true)
         {
             var node = StepNode();
             node.Info($"Select ' {moduleName} ' on the root node from Standard Reports Left Nav.");
-            //(ref currentIframe, null);
             ReportModuleButton(tab, moduleName).Click();
             if (waitForLoading)
                 WaitForLoadingPanel();
@@ -214,7 +235,22 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             ReportHeaderButton(buttonLabel).Click();
             return this;
         }
-
+        public StandardReports ClickAddToFavorites()
+        {
+            var node = StepNode();
+            try
+            {
+                ClickButtonReportHeader(StandardReportsButtonHeader.AddFavorites.ToDescription());
+            }
+            catch
+            {
+                if (ReportHeaderButton(StandardReportsButtonHeader.RemoveFavorites.ToDescription()) != null)
+                {
+                    node.Info($"The '{StandardReportsButtonHeader.RemoveFavorites.ToDescription()}' button existent, the report currently added to favorites");
+                }
+            }
+            return this;
+        }
         public StandardReports PressEnter()
         {
             var node = StepNode();
@@ -293,12 +329,19 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             return this;
         }
 
-        public StandardReports SelectStandadReportsTabs(string tabName)
+        public StandardReports SelectStandadReportsTabs(StandardReportsTab tabName)
         {
             var node = StepNode();
-            node.Info($"Select {tabName}");
-            StandardReportsTabs(tabName).Click();
+            node.Info($"Select {tabName.ToDescription()}");
+            StandardReportsTabs(tabName.ToDescription()).Click();
             return this;
+        }
+        public ProjectsDashboard CloseReportWindow(ref List<KeyValuePair<string, bool>> methodValidations)
+        {
+            int numberOfWindowsBeforeClose = WebDriver.WindowHandles.Count;
+            Browser.Close();
+            methodValidations.Add(ValidateReportsWindowIsClosed(numberOfWindowsBeforeClose));
+            return new ProjectsDashboard(WebDriver);
         }
         private IReadOnlyCollection<IWebElement> GetAvailableReports(List<KeyValuePair<string, string>> columnValuePairList)
         {
@@ -576,6 +619,28 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
 
         }
 
+        public KeyValuePair<string, bool> ValidateReportsWindowIsClosed(int numberOfWindowsBeforeClose)
+        {
+            var node = StepNode();
+            int numberOfWindowsAfterClose = WebDriver.WindowHandles.Count;
+
+            try
+            {
+                if (numberOfWindowsBeforeClose == numberOfWindowsAfterClose + 1)
+                {
+                    return SetPassValidation(node, Validation.Reports_Window_Is_Close);
+                }
+                return SetFailValidation(node, Validation.Reports_Window_Is_Close);
+
+            }
+            catch (Exception e)
+            {
+
+                return SetErrorValidation(node, Validation.Reports_Window_Is_Close, e);
+            }
+
+        }
+
         private static class Validation
         {
             public static string Available_Reports_Display = "Validate that all available reports display correctly: ";
@@ -593,6 +658,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             public static string Reports_Are_Shown = "Validate that reports are shown";
             public static string Report_Tab_Is_Selected = "Validate report tab is selected";
             public static string Favorited_Report_Is_Listed = "Favorited Report is listed ";
+            public static string Reports_Window_Is_Close = "Validate reports window is close";
         }
         #endregion
     }
