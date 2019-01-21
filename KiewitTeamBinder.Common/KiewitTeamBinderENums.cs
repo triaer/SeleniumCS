@@ -471,7 +471,27 @@ namespace KiewitTeamBinder.Common
             [Description("Deliverables due in next 30 days")]
             DeliverablesDue,
             [Description("Contracts")]
-            Contracts,
+            Contracts
+        }
+
+        public enum ModuleExpandedItemsInContractorView
+        {
+            [Description("New")]
+            NEW,
+            [Description("Accepted")]
+            ACCEPTED,
+            [Description("CLOSED-OUT")]
+            CLOSEDOUT,
+            [Description("OPEN")]
+            OPEN,
+            [Description("ON HOLD")]
+            ONHOLD,
+            [Description("IN REVIEW")]
+            INREVIEW,
+            [Description("STARTED")]
+            STARTED,
+            [Description("Approved")]
+            APPROVED
         }
     }
 }

@@ -550,7 +550,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         }
 
         // moduleName: Mail/Transmittals/Vendor Data
-        public virtual KeyValuePair<string, bool> ValidateRecordItemsCount(string gridViewName)
+        public KeyValuePair<string, bool> ValidateRecordItemsCount(string gridViewName)
         {
             int itemsNumber = GetTotalRowsVisibleInGrid(gridViewName);
             var node = StepNode();
@@ -562,6 +562,24 @@ namespace KiewitTeamBinder.UI.Pages.Global
                     return SetPassValidation(node, Validation.Number_Of_Items_Counted_Is_Valid + actualQuantity);
 
                 return SetFailValidation(node, Validation.Number_Of_Items_Counted_Is_Valid, itemsNumber.ToString(), actualQuantity);
+            }
+            catch (Exception e)
+            {
+                return SetErrorValidation(node, Validation.Number_Of_Items_Counted_Is_Valid, e);
+            }
+        }
+
+        public KeyValuePair<string, bool> ValidateRecordItemsCount(string gridViewName, int expectedCount)
+        {
+            var node = StepNode();
+            node.Info($"Validate number of record items is equals to: {expectedCount}");
+            try
+            {
+                var actualQuantity = ItemsNumberLabel(gridViewName).Text;
+                if (Int32.Parse(actualQuantity) == expectedCount)
+                    return SetPassValidation(node, Validation.Number_Of_Items_Counted_Is_Valid + actualQuantity);
+
+                return SetFailValidation(node, Validation.Number_Of_Items_Counted_Is_Valid, expectedCount.ToString(), actualQuantity);
             }
             catch (Exception e)
             {

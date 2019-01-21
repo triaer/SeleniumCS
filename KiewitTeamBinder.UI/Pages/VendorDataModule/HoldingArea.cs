@@ -195,22 +195,6 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             }
         }
 
-        //public KeyValuePair<string, bool> ValidatePageDisplayCorrectOnHoldingArea(string namePage)
-        //{
-        //    var node = StepNode();
-        //    try
-        //    {
-        //        if (HoldingAreaLabel.Text == namePage)
-        //            return SetPassValidation(node, Validation.Page_Is_Diplayed_Correct);
-        //        return SetFailValidation(node, Validation.Page_Is_Diplayed_Correct, namePage, HoldingAreaLabel.Text);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return SetErrorValidation(node, Validation.Page_Is_Diplayed_Correct, e);
-        //    }
-        //}
-
-
         private static class Validation
         {
             public static string Holding_Area_Page_Displays = "Validate that the Vendor Data Module Holding Area page displays";

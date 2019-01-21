@@ -17,10 +17,14 @@ namespace KiewitTeamBinder.UI.Pages.DashboardModule
         private static By _moreLessButton(string widgetUniqueName) => By.XPath($"//div[@widgetuniquename = '{widgetUniqueName}']//a[contains(@id,'More')]");
         private static By _rowInWidget(string widgetUniqueName, string rowName) => By.XPath($"//div[@widgetuniquename = '{widgetUniqueName}']//td[contains(@id,'tdCaption')][span = '{rowName}']");
         private static By _numberOnRowInWidget(string widgetUniqueName, string rowName) => By.XPath($"//div[@widgetuniquename = '{widgetUniqueName}']//td[contains(@id,'tdCaption')][span = '{rowName}']/preceding-sibling::td[contains(@id,'tdCount')]");
+        private static By _expandedButtonInWidget(string widgetUniqueName, string nameItem) => By.XPath($"//div[contains(@id,'{widgetUniqueName}')]//td[span='{nameItem}']/preceding::td[2]");
+        private static By _itemInExpandedWidget(string widgetUniqueName, string parrentItem , string nameItem) => By.XPath($"//div[@widgetuniquename = '{widgetUniqueName}']//td[@parentcptn = '{parrentItem}'][span = '{nameItem}']");
 
         public IWebElement MoreLessButton(string widgetUniqueName) => StableFindElement(_moreLessButton(widgetUniqueName));
         public IWebElement RowInWidget(string widgetUniqueName, string rowName) => StableFindElement(_rowInWidget(widgetUniqueName, rowName));
         public IWebElement NumberOnRowInWidget(string widgetUniqueName, string rowName) => StableFindElement(_numberOnRowInWidget(widgetUniqueName, rowName));
+        public IWebElement ExpandedButtonInWidget(string widgetUniqueName, string nameItem) => StableFindElement(_expandedButtonInWidget(widgetUniqueName, nameItem));
+        public IWebElement ItemInExpandedWidget(string widgetUniqueName, string parrentItem, string nameItem) => StableFindElement(_itemInExpandedWidget(widgetUniqueName, parrentItem, nameItem));
         #endregion
 
         #region Actions
@@ -29,11 +33,31 @@ namespace KiewitTeamBinder.UI.Pages.DashboardModule
 
         }
 
+        public Dashboard ClickExpandedButtonInWidget(string widgetUniqueName, string parrentItem)
+        {
+            ScrollIntoView(ExpandedButtonInWidget(widgetUniqueName, parrentItem));
+            ExpandedButtonInWidget(widgetUniqueName, parrentItem).Click();
+            WaitForElementAttribute(ExpandedButtonInWidget(widgetUniqueName, parrentItem), "class", "expanded");
+            return this;
+        }
+
+        public T ClickItemInExpandedWidget<T>(string widgetUniqueName, string parrentItem, string nameItem, ref int countOfItem)
+        {
+            var node = StepNode();
+            node.Info("Click " + nameItem + "");
+            ClickExpandedButtonInWidget(widgetUniqueName, parrentItem);
+            countOfItem = GetCountValueFromRow(widgetUniqueName, nameItem);
+            ItemInExpandedWidget(widgetUniqueName, parrentItem, nameItem).Click();
+            WaitForLoadingPanel();
+            return (T)Activator.CreateInstance(typeof(T), WebDriver);
+        }
+
         public T ClickNumberOnRow<T>(string widgetUniqueName, string rowName)
         {
             var NumberOnRow = NumberOnRowInWidget(widgetUniqueName, rowName);
             ScrollIntoView(NumberOnRow);
             NumberOnRow.Click();
+            WaitForLoadingPanel();
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 
