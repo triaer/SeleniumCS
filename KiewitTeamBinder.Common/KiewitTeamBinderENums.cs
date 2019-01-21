@@ -470,6 +470,14 @@ namespace KiewitTeamBinder.Common
             [Description("Remove from Favorites")]
             RemoveFavorites
         }
+        public enum FavoriteReportFor
+        {
+            Myself,
+            [Description("My company")]
+            MyCompany,
+            [Description("My project")]
+            MyProject
+        }
     }
 }
 

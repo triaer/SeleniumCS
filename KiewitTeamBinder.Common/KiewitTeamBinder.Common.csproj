@@ -61,8 +61,6 @@
     <Compile Include="TestData\CreateDeliverableItemSmoke.cs" />
     <Compile Include="TestData\CreatePurchaseItemSmoke.cs" />
     <Compile Include="TestData\ReportSmoke.cs" />
-    <Compile Include="TestData\ValidateContractorWidgetCountSmoke.cs" />
-    <Compile Include="TestData\ValidatePurchaseItemUnderContractSmoke.cs" />
     <Compile Include="TestData\FilteringSmoke.cs" />
     <Compile Include="TestData\ProcessDocumentSmoke.cs" />
     <Compile Include="TestData\SendMailSmoke.cs" />

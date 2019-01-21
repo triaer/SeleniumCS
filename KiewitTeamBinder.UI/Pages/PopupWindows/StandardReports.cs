@@ -190,6 +190,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
         }
         public StandardReports GetScheduleDate(out string date)
         {
+            var node = StepNode();
             string selectedText = "";
             DateTime dateInput;
             var valueString = ScheduleDateInput.GetValue().Replace("{", "").Replace("}", "");
@@ -203,7 +204,12 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
                     break;
                 }
             }
+            node.Info($"The date value shows in Schedule Setting form: {selectedText}");
             dateInput = DateTime.ParseExact(selectedText, "MM-dd-yyyy HH:mm", CultureInfo.InvariantCulture); //"01-21-2019 13:26"
+            //Convert date value
+            TimeZone localZone = TimeZone.CurrentTimeZone;
+            TimeSpan currentOffset = localZone.GetUtcOffset(dateInput);
+
             date = dateInput.ToString("MM-dd-y hh:mm tt");  //"01-07-19 08:29 PM"
             return this;
         }
@@ -247,8 +253,18 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
                 if (ReportHeaderButton(StandardReportsButtonHeader.RemoveFavorites.ToDescription()) != null)
                 {
                     node.Info($"The '{StandardReportsButtonHeader.RemoveFavorites.ToDescription()}' button existent, the report currently added to favorites");
+                    ClickRemoveFromFavorites();
                 }
             }
+            return this;
+        }
+        public StandardReports ClickRemoveFromFavorites()
+        {
+            var node = StepNode();
+            node.Info($"Remove the report from favorites list");
+            ClickButtonReportHeader(StandardReportsButtonHeader.RemoveFavorites.ToDescription());
+            new ConfirmDialog(WebDriver).ClickPopupButton<AlertDialog>(DialogPopupButton.Yes)
+                .ClickOKOnMessageDialog<StandardReports>();
             return this;
         }
         public StandardReports PressEnter()
@@ -256,7 +272,8 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             var node = StepNode();
             node.Info($"Press Enter when Users Name is Highlighted");
             WaitFor(_listContact);
-            SendKeys.SendWait(@"{Enter}");
+            SendKeys.SendWait("{Enter}");
+            ToInput.SendKeys(OpenQA.Selenium.Keys.Tab);
             return this;
         }
 
@@ -301,7 +318,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             return report;
         }
 
-        public StandardReports SelectFavoriteReport(ref By currentIframe, string nameFav, bool waitForLoading = true)
+        public StandardReports SelectFavoriteReport(ref By currentIframe, string nameFav)
         {
             var node = StepNode();
             node.Info($"Select {nameFav} radio button");
@@ -310,7 +327,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             return this;
         }
 
-        public AlertDialog clickOkFavoritePopup(ref By currentIframe)
+        public AlertDialog ClickOkFavoritePopup(ref By currentIframe)
         {
             var node = StepNode();
             node.Info("Click OK in Favorite Report Access Popup");
@@ -336,13 +353,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             StandardReportsTabs(tabName.ToDescription()).Click();
             return this;
         }
-        public ProjectsDashboard CloseReportWindow(ref List<KeyValuePair<string, bool>> methodValidations)
-        {
-            int numberOfWindowsBeforeClose = WebDriver.WindowHandles.Count;
-            Browser.Close();
-            methodValidations.Add(ValidateReportsWindowIsClosed(numberOfWindowsBeforeClose));
-            return new ProjectsDashboard(WebDriver);
-        }
+       
         private IReadOnlyCollection<IWebElement> GetAvailableReports(List<KeyValuePair<string, string>> columnValuePairList)
         {
             int rowIndex, colIndex = 1;
@@ -456,7 +467,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
                     if (ReportSubMenuItemLink(tab, moduleName, availableReport).IsDisplayed() == false)
                         return SetFailValidation(node, Validation.Available_Reports_Display + availableReport);
                 }
-                return SetPassValidation(node, Validation.Available_Reports_Display + availableReports);
+                return SetPassValidation(node, Validation.Available_Reports_Display + string.Join("/",availableReports));
             }
             catch (Exception e)
             {
@@ -467,7 +478,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
         public KeyValuePair<string, bool> ValidateValueInReportDetailDisplaysCorrectly(string valueKey, string[] expectedValueArray)
         {
             var node = StepNode();
-            node.Info("The selected Contract keyed earlier is listed in the report: " + expectedValueArray);
+            node.Info("The selected Contract keyed earlier is listed in the report: " + string.Join(",",expectedValueArray));
             node.Info(Validation.Value_In_Report_Detail_Displays_Correctly);
             try
             {
@@ -545,18 +556,30 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             }
         }
 
-        public KeyValuePair<string, bool> ValidateFavoritedForSelectedItem(string[] favoriteName, string selectedItem)
+        public KeyValuePair<string, bool> ValidateFavoritedForSelectedItem(string[] favoriteNames, string selectedItem)
         {
             var node = StepNode();
+            var result = false;
             node.Info(Validation.Dialog_Box_Is_Opened_With_Message_Display_Correctly);
 
             try
             {
-                if (RadioButtonFavReport(favoriteName[0]).Selected && !RadioButtonFavReport(favoriteName[1]).Selected && !RadioButtonFavReport(favoriteName[2]).Selected)
+                foreach (string name in favoriteNames)
                 {
-                    return SetPassValidation(node, Validation.Report_Is_Favorited_For_User_Only);
+                    if (name == selectedItem)
+                    {
+                        result = (RadioButtonFavReport(name).Selected) ? true : false ;
+                    }
+                    else
+                    {
+                        result = (!RadioButtonFavReport(name).Selected) ? true : false;
+                    }
+                    if (!result)
+                        break;
                 }
-                return SetFailValidation(node, Validation.Report_Is_Favorited_For_User_Only);
+                return (result)
+                    ? SetPassValidation(node, Validation.Report_Is_Favorited_For_User_Only)
+                    : SetFailValidation(node, Validation.Report_Is_Favorited_For_User_Only);
 
             }
             catch (Exception e)
@@ -619,28 +642,6 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
 
         }
 
-        public KeyValuePair<string, bool> ValidateReportsWindowIsClosed(int numberOfWindowsBeforeClose)
-        {
-            var node = StepNode();
-            int numberOfWindowsAfterClose = WebDriver.WindowHandles.Count;
-
-            try
-            {
-                if (numberOfWindowsBeforeClose == numberOfWindowsAfterClose + 1)
-                {
-                    return SetPassValidation(node, Validation.Reports_Window_Is_Close);
-                }
-                return SetFailValidation(node, Validation.Reports_Window_Is_Close);
-
-            }
-            catch (Exception e)
-            {
-
-                return SetErrorValidation(node, Validation.Reports_Window_Is_Close, e);
-            }
-
-        }
-
         private static class Validation
         {
             public static string Available_Reports_Display = "Validate that all available reports display correctly: ";
@@ -658,7 +659,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             public static string Reports_Are_Shown = "Validate that reports are shown";
             public static string Report_Tab_Is_Selected = "Validate report tab is selected";
             public static string Favorited_Report_Is_Listed = "Favorited Report is listed ";
-            public static string Reports_Window_Is_Close = "Validate reports window is close";
+
         }
         #endregion
     }

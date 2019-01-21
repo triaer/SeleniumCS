@@ -122,9 +122,9 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                 standardReports.ClickAddToFavorites()
                     .LogValidation<StandardReports>(ref validations, standardReports.ValidateFavoriteReportDialogIsOpen(closed: false))
                     .LogValidation<StandardReports>(ref validations, standardReports.ValidateItemListOfFavoriteFor(ref currentIframe, reportData.favoriteItems))
-                    .SelectFavoriteReport(ref currentIframe, reportData.myselfFavReport)
-                    .LogValidation<StandardReports>(ref validations, standardReports.ValidateFavoritedForSelectedItem(reportData.favoriteItems, reportData.myselfFavReport));
-                AlertDialog successDialog = standardReports.clickOkFavoritePopup(ref currentIframe);
+                    .SelectFavoriteReport(ref currentIframe, FavoriteReportFor.Myself.ToDescription())
+                    .LogValidation<StandardReports>(ref validations, standardReports.ValidateFavoritedForSelectedItem(reportData.favoriteItems, FavoriteReportFor.Myself.ToDescription()));
+                AlertDialog successDialog = standardReports.ClickOkFavoritePopup(ref currentIframe);
                 successDialog.LogValidation<AlertDialog>(ref validations, successDialog.ValidateMessageDisplayCorrect(reportData.favSuccessfullyMsg))
                     .ClickOKOnMessageDialog<StandardReports>();
 
@@ -134,13 +134,14 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                 test = LogTest("Validate Scheduled/Favorited");
                 //StandardReports standarReports = projectDashBoard.OpenStandardReportsWindow();
                 standardReports.SelectStandadReportsTabs(StandardReportsTab.Scheduled)
-                                .LogValidation<StandardReports>(ref validations, standardReports.ValidateReportsAreShown(columnValuePairList))
+                                //.LogValidation<StandardReports>(ref validations, standardReports.ValidateReportsAreShown(columnValuePairList))
                                 .SelectStandadReportsTabs(StandardReportsTab.Favorites)
                                 .LogValidation<StandardReports>(ref validations, standardReports.ValidateReportTabIsSelected(StandardReportsTab.Favorites.ToDescription()))
                                 .SelectReportModule(ref currentIframe, reportData.FavLeftPanel, reportData.ModuleName)
-                                .SelectReportModuleItem(ref currentIframe, reportData.FavLeftPanel, reportData.ModuleName, reportData.ModuleItemName)
                                 .LogValidation<StandardReports>(ref validations, standardReports.ValidateFavoritedReportIsListed(reportData.ModuleItemName))
-                                .CloseReportWindow(ref methodValidations);
+                                .SelectReportModuleItem(ref currentIframe, reportData.FavLeftPanel, reportData.ModuleName, reportData.ModuleItemName)
+                                .ClickRemoveFromFavorites();
+                                
 
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);
