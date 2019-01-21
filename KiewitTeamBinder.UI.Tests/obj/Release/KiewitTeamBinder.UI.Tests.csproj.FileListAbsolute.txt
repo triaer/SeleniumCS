@@ -1,7 +1,6 @@
 G:\Kiewit\Git0901\KiewitTeamBinder.UI.Tests\bin\Release\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll
 G:\Kiewit\Git0901\KiewitTeamBinder.UI.Tests\bin\Release\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll
 G:\Kiewit\Git0901\KiewitTeamBinder.UI.Tests\bin\Release\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll
-G:\Kiewit\Git0901\KiewitTeamBinder.UI.Tests\bin\Release\App.config
 G:\Kiewit\Git0901\KiewitTeamBinder.UI.Tests\bin\Release\ScenariosInputFiles\CreateDataOnRow\File1.txt
 G:\Kiewit\Git0901\KiewitTeamBinder.UI.Tests\bin\Release\ScenariosInputFiles\CreateDataOnRow\File10.txt
 G:\Kiewit\Git0901\KiewitTeamBinder.UI.Tests\bin\Release\ScenariosInputFiles\CreateDataOnRow\File11.txt
@@ -39,7 +38,6 @@ G:\Kiewit\Git0901\KiewitTeamBinder.UI.Tests\bin\Release\KiewitTeamBinder.UI.Test
 G:\Kiewit\Git0901\KiewitTeamBinder.UI.Tests\bin\Release\ExtentReports.dll
 G:\Kiewit\Git0901\KiewitTeamBinder.UI.Tests\bin\Release\FluentAssertions.dll
 G:\Kiewit\Git0901\KiewitTeamBinder.UI.Tests\bin\Release\HtmlAgilityPack.dll
-G:\Kiewit\Git0901\KiewitTeamBinder.UI.Tests\bin\Release\KiewitTeamBinder.Api.dll
 G:\Kiewit\Git0901\KiewitTeamBinder.UI.Tests\bin\Release\KiewitTeamBinder.Common.dll
 G:\Kiewit\Git0901\KiewitTeamBinder.UI.Tests\bin\Release\KiewitTeamBinder.UI.dll
 G:\Kiewit\Git0901\KiewitTeamBinder.UI.Tests\bin\Release\Microsoft.VisualStudio.TestPlatform.TestFramework.dll
@@ -56,12 +54,10 @@ G:\Kiewit\Git0901\KiewitTeamBinder.UI.Tests\bin\Release\System.Runtime.InteropSe
 G:\Kiewit\Git0901\KiewitTeamBinder.UI.Tests\bin\Release\System.ValueTuple.dll
 G:\Kiewit\Git0901\KiewitTeamBinder.UI.Tests\bin\Release\System.Web.Razor.dll
 G:\Kiewit\Git0901\KiewitTeamBinder.UI.Tests\bin\Release\WebDriver.dll
-G:\Kiewit\Git0901\KiewitTeamBinder.UI.Tests\bin\Release\RestSharp.dll
 G:\Kiewit\Git0901\KiewitTeamBinder.UI.Tests\bin\Release\WebDriver.Support.dll
 G:\Kiewit\Git0901\KiewitTeamBinder.UI.Tests\bin\Release\EPPlus.dll
 G:\Kiewit\Git0901\KiewitTeamBinder.UI.Tests\bin\Release\ExcelDataReader.dll
 G:\Kiewit\Git0901\KiewitTeamBinder.UI.Tests\bin\Release\ExcelDataReader.DataSet.dll
-G:\Kiewit\Git0901\KiewitTeamBinder.UI.Tests\bin\Release\KiewitTeamBinder.Api.pdb
 G:\Kiewit\Git0901\KiewitTeamBinder.UI.Tests\bin\Release\KiewitTeamBinder.Common.pdb
 G:\Kiewit\Git0901\KiewitTeamBinder.UI.Tests\bin\Release\KiewitTeamBinder.UI.pdb
 G:\Kiewit\Git0901\KiewitTeamBinder.UI.Tests\bin\Release\FluentAssertions.pdb
