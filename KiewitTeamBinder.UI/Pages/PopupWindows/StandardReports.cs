@@ -17,6 +17,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
         protected static By filterIframe => By.XPath("//iframe[@id='ifrmFilter']");
         protected static By reportViewIframe => By.XPath("//iframe[@id='ifrmReportView']");
         protected static By favoriteReportIframe => By.XPath("//iframe[@name='RadWindowFavReportAccess']");
+        private static string _filterItemsXpath = "//table[contains(@id,'ReportScheduleGrid')]//tr[@valign='top'and not(contains(@style,'hidden'))]";
 
         private static By _reportModuleButton(string tab, string moduleName) => By.XPath($"//div[@id= '{tab}']//span[contains(text(), '{moduleName}')]/ancestor::a[contains(@class, 'RootLink')]");
         private static By _reportSubMenuItemLink(string subMenuItem) => By.XPath($"./following-sibling::div//a[span = '{subMenuItem}']");
@@ -40,7 +41,11 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
         private static By _okButtonInFavReport => By.XPath("//input[@id='ButtonOk']");
         private static By _yesButtonInFavReport => By.XPath("//span[text()='Yes']");
         private static By _otherUserLoginBtn => By.XPath("//a[./span[text()='OTHER USER LOGIN']]");
-        
+        private static By _standardReportsTabs(string tabName) => By.XPath($"//span[@class ='rtsTxt'][contains(text(),'{tabName}')]");
+        private static By _reportTable => By.XPath("//table[contains(@id,'ReportScheduleGrid') and contains(@id,'Header')]/thead");
+        private static By _selectedReportsTab(string tabName) => By.XPath($"//a[@class='rtsLink rtsSelected']//span[contains(text(),'{tabName}')]");
+        private static By _favoritedReport(string favreport) => By.XPath($"//div[@id='FavReportTypePanelBar']//span[contains(@class,'rpText')][contains(text(),'{favreport}')]");
+
         public IWebElement ReportModuleButton(string tab, string moduleName) => StableFindElement(_reportModuleButton(tab, moduleName));
         public IWebElement ReportSubMenuItemLink(string tab, string moduleName, string subMenuItem) => ReportModuleButton(tab, moduleName).StableFindElement(_reportSubMenuItemLink(subMenuItem));
         public IWebElement SearchButton { get { return StableFindElement(_searchButton); } }
@@ -61,6 +66,8 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
         public IWebElement OkButtonInFavReport { get { return StableFindElement(_okButtonInFavReport); } }
         public IWebElement YesButtonInFavReport { get { return StableFindElement(_yesButtonInFavReport); } }
         public IWebElement OtherUserLoginBtn { get { return StableFindElement(_otherUserLoginBtn); } }
+        public IWebElement StandardReportsTabs(string tabName) => StableFindElement(_standardReportsTabs(tabName));
+        public IWebElement ReportTable => StableFindElement(_reportTable);
         #endregion
 
         #region Actions
@@ -286,6 +293,33 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             return this;
         }
 
+        public StandardReports SelectStandadReportsTabs(string tabName)
+        {
+            var node = StepNode();
+            node.Info($"Select {tabName}");
+            StandardReportsTabs(tabName).Click();
+            return this;
+        }
+        private IReadOnlyCollection<IWebElement> GetAvailableReports(List<KeyValuePair<string, string>> columnValuePairList)
+        {
+            int rowIndex, colIndex = 1;
+            string itemsXpath = _filterItemsXpath;
+            GetTableCellValueIndex(ReportTable, columnValuePairList.ElementAt(0).Key, out rowIndex, out colIndex, "th");
+            if (colIndex < 2)
+                return null;
+            itemsXpath += $"[td[{colIndex}][contains(., '{columnValuePairList.ElementAt(0).Value}')]";
+
+            for (int i = 1; i < columnValuePairList.Count; i++)
+            {
+                GetTableCellValueIndex(ReportTable, columnValuePairList.ElementAt(i).Key, out rowIndex, out colIndex, "th");
+                if (colIndex < 2)
+                    return null;
+                itemsXpath += $" and td[{colIndex}][contains(., '{columnValuePairList.ElementAt(i).Value}')]";
+            }
+            itemsXpath += "]";
+
+            return StableFindElements(By.XPath(itemsXpath));
+        }
         public KeyValuePair<string, bool> ValidateContactListAutoPopulated()
         {
             var node = StepNode();
@@ -379,7 +413,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
                     if (ReportSubMenuItemLink(tab, moduleName, availableReport).IsDisplayed() == false)
                         return SetFailValidation(node, Validation.Available_Reports_Display + availableReport);
                 }
-                return SetPassValidation(node, Validation.Available_Reports_Display + availableReports.ToString());
+                return SetPassValidation(node, Validation.Available_Reports_Display + availableReports);
             }
             catch (Exception e)
             {
@@ -390,7 +424,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
         public KeyValuePair<string, bool> ValidateValueInReportDetailDisplaysCorrectly(string valueKey, string[] expectedValueArray)
         {
             var node = StepNode();
-            node.Info("The selected Contract keyed earlier is listed in the report: " + expectedValueArray.ToString());
+            node.Info("The selected Contract keyed earlier is listed in the report: " + expectedValueArray);
             node.Info(Validation.Value_In_Report_Detail_Displays_Correctly);
             try
             {
@@ -487,8 +521,60 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
                 return SetErrorValidation(node, Validation.Report_Is_Favorited_For_User_Only, e);
             }
         }
+        public KeyValuePair<string, bool> ValidateReportsAreShown(List<KeyValuePair<string, string>> columnValuePairList)
+        {
+            var node = StepNode();
+            try
+            {
 
-        
+                var ReportsList = GetAvailableReports(columnValuePairList);
+                if (ReportsList.Count > 0)
+                    return SetPassValidation(node, Validation.Reports_Are_Shown);
+                return SetFailValidation(node, Validation.Reports_Are_Shown);
+            }
+            catch (Exception e)
+            {
+                return SetErrorValidation(node, Validation.Reports_Are_Shown, e);
+            }
+        }
+        public KeyValuePair<string, bool> ValidateReportTabIsSelected(string tabname)
+        {
+            var node = StepNode();
+            try
+            {
+                if (FindElement(_selectedReportsTab(tabname)) != null)
+                {
+                    return SetPassValidation(node, Validation.Report_Tab_Is_Selected);
+                }
+                return SetFailValidation(node, Validation.Report_Tab_Is_Selected);
+
+            }
+            catch (Exception e)
+            {
+
+                return SetErrorValidation(node, Validation.Report_Tab_Is_Selected, e);
+            }
+
+        }
+        public KeyValuePair<string, bool> ValidateFavoritedReportIsListed(string favreport)
+        {
+            var node = StepNode();
+            try
+            {
+                if (FindElement(_favoritedReport(favreport)) != null)
+                {
+                    return SetPassValidation(node, Validation.Favorited_Report_Is_Listed);
+                }
+                return SetFailValidation(node, Validation.Favorited_Report_Is_Listed);
+
+            }
+            catch (Exception e)
+            {
+
+                return SetErrorValidation(node, Validation.Favorited_Report_Is_Listed, e);
+            }
+
+        }
 
         private static class Validation
         {
@@ -504,6 +590,9 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             public static string User_Is_Able_To_Favorite_Report = "Validate that User is able to favorite report ";
             public static string Dialog_Box_Is_Opened_With_Message_Display_Correctly = "Validate that dialog dialog box is opend with displays message correctly";
             public static string Report_Is_Favorited_For_User_Only = "Validate that Report is favorited for user only";
+            public static string Reports_Are_Shown = "Validate that reports are shown";
+            public static string Report_Tab_Is_Selected = "Validate report tab is selected";
+            public static string Favorited_Report_Is_Listed = "Favorited Report is listed ";
         }
         #endregion
     }

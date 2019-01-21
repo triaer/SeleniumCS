@@ -23,52 +23,79 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
     public class Reports : UITestBase
     {
         [TestMethod]
-        public void General_RunReport_UI()
+        public void General_RunReportAndGenerateHyperlink_UI()
         {
             try
             {
                 // given
                 var teambinderTestAccount = GetTestAccount("AdminAccount1", environment, "NonSSO");
 
-                //test.Info("Open TeamBinder Web Page: " + teambinderTestAccount.Url);
-                //var driver = Browser.Open(teambinderTestAccount.Url, browser);
-                //// and log on via Other User Login Kiewit Account
-                //test.Info("Log on TeamBinder via Other User Login: " + teambinderTestAccount.Username);
-                //ProjectsList projectsList = new NonSsoSignOn(driver).Logon(teambinderTestAccount) as ProjectsList;
+                test.Info("Open TeamBinder Web Page: " + teambinderTestAccount.Url);
+                var driver = Browser.Open(teambinderTestAccount.Url, browser);
+                // and log on via Other User Login Kiewit Account
+                test.Info("Log on TeamBinder via Other User Login: " + teambinderTestAccount.Username);
+                ProjectsList projectsList = new NonSsoSignOn(driver).Logon(teambinderTestAccount) as ProjectsList;
                 var reportData = new ReportSmoke();
                 By currentIframe = null;
-                //test.Info("Navigate to DashBoard Page of Project: " + reportData.ProjectName);
-                //ProjectsDashboard projectDashBoard = projectsList.NavigateToProjectDashboardPage(reportData.ProjectName);
+                test.Info("Navigate to DashBoard Page of Project: " + reportData.ProjectName);
+                ProjectsDashboard projectDashBoard = projectsList.NavigateToProjectDashboardPage(reportData.ProjectName);
 
-                ////when User Story 123743 - 120801 Run Report
-                //test = LogTest("Run Report");
-                //StandardReports standardReports = projectDashBoard.OpenStandardReportsWindow(true);
-                //standardReports.SelectReportModule(ref currentIframe, reportData.ReportTab, reportData.ModuleName)
-                //    .LogValidation<StandardReports>(ref validations, standardReports.ValidateAvailableReportsDisplay(reportData.ReportTab, reportData.ModuleName, reportData.AvailableReports))
-                //    .SelectReportModuleItem(ref currentIframe, reportData.ReportTab, reportData.ModuleName, reportData.ModuleItemName)
-                //    .SelectItemInDropdown(ref currentIframe, reportData.ContractNumberDropdownList, reportData.ContractNumberItem, ref methodValidations)
-                //    .ClickSearchButton(ref currentIframe, waitLoadingPanel: true)
-                //    .LogValidation<StandardReports>(ref validations, standardReports.ValidateValueInReportDetailDisplaysCorrectly(reportData.contractNumberKey, reportData.contractNumberValueArray));
+                //when User Story 123743 - 120801 Run Report
+                test = LogTest("Run Report");
+                StandardReports standardReports = projectDashBoard.OpenStandardReportsWindow(true);
+                standardReports.SelectReportModule(ref currentIframe, reportData.ReportTab, reportData.ModuleName)
+                    .LogValidation<StandardReports>(ref validations, standardReports.ValidateAvailableReportsDisplay(reportData.ReportTab, reportData.ModuleName, reportData.AvailableReports))
+                    .SelectReportModuleItem(ref currentIframe, reportData.ReportTab, reportData.ModuleName, reportData.ModuleItemName)
+                    .SelectItemInDropdown(ref currentIframe, reportData.ContractNumberDropdownList, reportData.ContractNumberItem, ref methodValidations)
+                    .ClickSearchButton(ref currentIframe, waitLoadingPanel: true)
+                    .LogValidation<StandardReports>(ref validations, standardReports.ValidateValueInReportDetailDisplaysCorrectly(reportData.contractNumberKey, reportData.contractNumberValueArray));
 
-                ////when User Story 123735 - 120802 Generate/Navigate to Hyperlink
-                //test = LogTest("Generate/Navigate to Hyperlink");
-                //string reportRanByUser = standardReports.GetReport(ref currentIframe);
-                //GenerateHyperlinkDialog generateHyperlinkDialog = standardReports.ClickGenerateHyperlink();
-                //string reportUrl = generateHyperlinkDialog.CopyHyperlink();
-                //generateHyperlinkDialog.ClickCloseButton(ref currentIframe, ref methodValidations);
-                //Browser.Quit();
+                //when User Story 123735 - 120802 Generate/Navigate to Hyperlink
+                test = LogTest("Generate/Navigate to Hyperlink");
+                string reportRanByUser = standardReports.GetReport(ref currentIframe);
+                GenerateHyperlinkDialog generateHyperlinkDialog = standardReports.ClickGenerateHyperlink();
+                string reportUrl = generateHyperlinkDialog.CopyHyperlink();
+                generateHyperlinkDialog.ClickCloseButton(ref currentIframe, ref methodValidations);
+                Browser.Quit();
 
-                //currentIframe = null;
-                //driver = Browser.Open(reportUrl, browser);
-                //StandardReports newStandardReports = new StandardReports(driver).Logon(teambinderTestAccount);
-                //newStandardReports.LogValidation<StandardReports>(ref validations, newStandardReports.ValidateReportInHyperlinkIsIdenticalToReportRanByUser(ref currentIframe, reportRanByUser));
-                //Browser.Quit();
+                currentIframe = null;
+                driver = Browser.Open(reportUrl, browser);
+                StandardReports newStandardReports = new StandardReports(driver).Logon(teambinderTestAccount);
+                newStandardReports.LogValidation<StandardReports>(ref validations, newStandardReports.ValidateReportInHyperlinkIsIdenticalToReportRanByUser(ref currentIframe, reportRanByUser));
+                Browser.Quit();
+
+                // then
+                Utils.AddCollectionToCollection(validations, methodValidations);
+                Console.WriteLine(string.Join(System.Environment.NewLine, validations.ToArray()));
+                validations.Should().OnlyContain(validations => validations.Value).Equals(bool.TrueString);
+            }
+            catch (Exception e)
+            {
+                lastException = e;
+                validations = Utils.AddCollectionToCollection(validations, methodValidations);
+                throw;
+            }
+        }
+        [TestMethod]
+        public void General_ScheduleAndFavoriteReport_UI()
+        {
+            try
+            {
+                // given
+                var teambinderTestAccount = GetTestAccount("AdminAccount1", environment, "NonSSO");
+
+                test.Info("Open TeamBinder Web Page: " + teambinderTestAccount.Url);
+                var driver = Browser.Open(teambinderTestAccount.Url, browser);
+                // and log on via Other User Login Kiewit Account
+                test.Info("Log on TeamBinder via Other User Login: " + teambinderTestAccount.Username);
+                ProjectsList projectsList = new NonSsoSignOn(driver).Logon(teambinderTestAccount) as ProjectsList;
+                var reportData = new ReportSmoke();
+                By currentIframe = null;
+                test.Info("Navigate to DashBoard Page of Project: " + reportData.ProjectName);
+                ProjectsDashboard projectDashBoard = projectsList.NavigateToProjectDashboardPage(reportData.ProjectName);
 
                 //when User Story 123737 - 120803 Schedule a Report
                 test = LogTest("Schedule a Report");
-                var driver = Browser.Open(teambinderTestAccount.Url, browser);
-                ProjectsList projectsList = new NonSsoSignOn(driver).Logon(teambinderTestAccount) as ProjectsList;
-                ProjectsDashboard projectDashBoard = projectsList.NavigateToProjectDashboardPage(reportData.ProjectName);
                 StandardReports standardReports = projectDashBoard.OpenStandardReportsWindow(true);
                 currentIframe = null;
                 standardReports.SelectReportModule(ref currentIframe, reportData.ReportTab, reportData.ModuleName)
@@ -88,8 +115,6 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                     .ClickOKOnMessageDialog<StandardReports>();
                 standardReports.LogValidation<StandardReports>(ref validations, standardReports.ValidateSaveDialogStatus(closed: true));
 
-                //currentIframe = null;
-
                 //when User Story 123738 - 120804 Favorite a Report
                 test = LogTest("Favorite a Report");
                 standardReports.ClickButtonReportHeader(reportData.AddToFavoritesButton)
@@ -100,6 +125,20 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                 AlertDialog successDialog = standardReports.clickOkFavoritePopup(ref currentIframe);
                 successDialog.LogValidation<AlertDialog>(ref validations, successDialog.ValidateMessageDisplayCorrect(reportData.favSuccessfullyMsg))
                     .ClickOKOnMessageDialog<StandardReports>();
+
+                var columnValuePairList = new List<KeyValuePair<string, string>> { reportData.Title, reportData.StartDate };
+
+                //when User Story 123740 - 120805 Validate Scheduled/Favorited
+                test = LogTest("Run test");
+                StandardReports standarReports = projectDashBoard.OpenStandardReportsWindow();
+                standarReports.SelectStandadReportsTabs(reportData.ScheduleTab)
+                                .LogValidation<StandardReports>(ref validations, standarReports.ValidateReportsAreShown(columnValuePairList))
+                                .SelectStandadReportsTabs(reportData.FavoritesTab)
+                                .LogValidation<StandardReports>(ref validations, standarReports.ValidateReportTabIsSelected(reportData.FavoritesTab))
+                                .SelectReportModule(ref currentIframe, reportData.FavReportTab, reportData.ModuleName)
+                                .SelectReportModuleItem(ref currentIframe, reportData.FavReportTab, reportData.ModuleName, reportData.ModuleItemName)
+                                .LogValidation<StandardReports>(ref validations, standarReports.ValidateFavoritedReportIsListed(reportData.FavoritedReport))
+                                .CloseBrowser(ref methodValidations);
 
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);
