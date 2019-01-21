@@ -19,7 +19,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
     [TestClass]
     public class SingleDocUpload : UITestBase
     {
-        [TestMethod]
+        //[TestMethod]
         public void HoldingArea_UploadSingleDoc_UI()
         {
             try

@@ -144,7 +144,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
             }
         }
 
-        [TestMethod]
+        //[TestMethod]
         public void VendorDataRegister_CreateNewDeliverable_UI()
         {
             try
