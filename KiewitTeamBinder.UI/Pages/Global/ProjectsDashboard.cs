@@ -11,6 +11,8 @@ using KiewitTeamBinder.Common;
 using KiewitTeamBinder.Common.Helper;
 using static KiewitTeamBinder.Common.KiewitTeamBinderENums;
 using System.Diagnostics;
+using KiewitTeamBinder.UI.Pages.PopupWindows;
+
 
 namespace KiewitTeamBinder.UI.Pages.Global
 {
@@ -103,28 +105,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             return this;
         }       
         
-        public void WaitForLoadingPanel(int timeout = sapShortTimeout)
-        {
-            var node = StepNode(); 
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
-            do
-            {
-                try
-                {
-                    WaitForLoading(_loadingPanel);
-                    WaitForElementDisplay(_walkMe, mediumTimeout);
-                    if (WaitForElementInvisible(_loadingPanel))
-                        break;
-                }
-                catch (Exception)
-                {   }
-            } while (stopwatch.Elapsed.TotalSeconds <= timeout);
-            if (stopwatch.Elapsed.TotalSeconds >= timeout)
-                node.Warning("The icon loading process is not completed in timeout: " + timeout);
-
-            stopwatch.Stop();
-        }
+        
             
         private void ClickMenuItem(string menuItem)
         {
@@ -180,6 +161,15 @@ namespace KiewitTeamBinder.UI.Pages.Global
             WaitUntil(driver => helpAboutDialog.OkButton != null);
             
             return helpAboutDialog;
+        }
+
+        public StandardReports OpenStandardReportsWindow(bool closePreviousWindow = false)
+        {
+            var node = StepNode();
+            string currentWindow;
+            SwitchToNewPopUpWindow(ReportsButton, out currentWindow, closePreviousWindow);
+            node.Info("Click Reports in Top Right Corner of Dashboard, then Report window opens");
+            return new StandardReports(WebDriver);
         }
 
         public T ClickClearHyperlink<T>(bool waitForLoading = true)
@@ -269,17 +259,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
             if (waitForLoading)
                 WaitForLoadingPanel();
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
-        }
-
-        protected KeyValuePair<string, bool> ValidateProgressContentMessage(string message)
-        {
-            var node = StepNode();
-            IWebElement DialogMessage = FindElement(_progressMessage);
-            var actual = DialogMessage.GetAttribute("innerHTML");
-            if (actual.Contains(message))
-                return SetPassValidation(node, Validation.Progress_Message_Is_Displayed + message);
-            else
-                return SetFailValidation(node, Validation.Progress_Message_Is_Displayed, message, actual);
         }
         
         protected IReadOnlyCollection<IWebElement> GetAvailableItemsOnCurrentPage(string gridViewName, List<KeyValuePair<string, string>> columnValuePairList, bool contains=true)
@@ -386,6 +365,17 @@ namespace KiewitTeamBinder.UI.Pages.Global
             {
                 return -1;
             }
+        }
+
+        protected KeyValuePair<string, bool> ValidateProgressContentMessage(string message)
+        {
+            var node = StepNode();
+            IWebElement DialogMessage = FindElement(_progressMessage);
+            var actual = DialogMessage.GetAttribute("innerHTML");
+            if (actual.Contains(message))
+                return SetPassValidation(node, Validation.Progress_Message_Is_Displayed + message);
+            else
+                return SetFailValidation(node, Validation.Progress_Message_Is_Displayed, message, actual);
         }
 
         public KeyValuePair<string, bool> ValidateRecordsMatchingFilterAreReturned(string gridViewName, List<KeyValuePair<string, string>> ValueInColumn, int expectedNumberOfRecord)

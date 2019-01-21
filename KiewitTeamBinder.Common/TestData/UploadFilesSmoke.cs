@@ -8,7 +8,7 @@ namespace KiewitTeamBinder.Common.TestData
 {
     public class UploadFilesSmoke
     {
-        public string ProjectNumber = "AUTO2";
+        public string ProjectNumber = "AUTO1";
         public string ConnectingProduct = "KiewitApiTest";
         public string[] FileNames = { "Kiewit.jpg", "Kiewit2.jpg" };
     }

@@ -21,14 +21,14 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
         private static By _headerLabel => By.Id("LabelType");
         private static By _toolBarButton(string buttonName) => By.XPath($"//div[contains(@class, 'ToolBar')]//a[span='{buttonName}']");
         private static By _asteriskLabel(string fieldLabel) => By.XPath($"//span[text()='{fieldLabel}']/following::span[1]");
-        private static By _textField(string fieldLabel) => By.XPath($"//*[span[(text()= '{fieldLabel}')]]/following-sibling::*[2]//*[contains(@class,'Text')]");
-        private static By _dropdownList(string fieldLabel, string type) => By.XPath($"//*[span[(text()= '{fieldLabel}')]]/following-sibling::*[2]//input[contains(@id, '{type}')]");
+        private static By _textField(string fieldLabel) => By.XPath($"//*[span[(text()= '{fieldLabel}')]]/following-sibling::*[*]//*[contains(@class,'Text')]");
+        private static By _dropdownList(string fieldLabel, string type) => By.XPath($"//*[span[(text()= '{fieldLabel}')]]/following-sibling::*[*]//input[contains(@id, '{type}')]");
         private static By _itemDropdown(string dropdownListName) => By.XPath($"//ul/li[starts-with(text(),'{dropdownListName}')]");
         private static By _saveDocButton => By.Id("SaveDocToolBar");
 
         public IWebElement HeaderLabel { get { return StableFindElement(_headerLabel); } }
         public IWebElement DropdownListInput(string fieldLabel, string idType = "") => StableFindElement(_dropdownList(fieldLabel, idType + "_Input"));
-        public IWebElement DropdownListClientState(string fieldLabel, string idType = "") => StableFindElement(_dropdownList(fieldLabel, idType + "_ClientState"));
+        public IWebElement DropdownListClientState(string fieldLabel, string idType = "") => FindElement(_dropdownList(fieldLabel, idType + "_ClientState"));
         public IWebElement TextField(string fieldLabel) => StableFindElement(_textField(fieldLabel));
         public IWebElement ToolBarButton(string buttonName) => StableFindElement(_toolBarButton(buttonName));
         public IWebElement AsteriskLabel(string fieldLabel) => StableFindElement(_asteriskLabel(fieldLabel));

@@ -16,8 +16,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
     public class HoldingArea : ProjectsDashboard
     {
         #region Entities
-        private string _functionButton = "//li[@class='rtbItem rtbBtn'][a='{0}']";
-        private string _filterTextBoxXpath = "//tr[@class='rgFilterRow']/td[count(//tr/th[.='{0}']/preceding-sibling::th)+1]";
+        private string _functionButton = "//li[@class='rtbItem rtbBtn'][a='{0}']";        
         private string _checkboxInFirstColAtRow = ".//tbody/tr[{0}]/td[1]/input";
         private static By _holdingAreaLabel => By.Id("lblRegisterCaption");
         private static By _documentNoTextBox => By.XPath("//input[contains(@id,'FilterTextBox_GridColDocumentNo')]");
@@ -201,7 +200,6 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
                     if (!result)
                         return SetFailValidation(node, valMsg + " At Row: " + i, expectedMessage, actualContent);
                 }
-
                 return SetPassValidation(node, valMsg);
             }
             catch (Exception e)
@@ -235,8 +233,6 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             public static string Holding_Area_Page_Shows_Data_Correct = "Validate that Holding Area page shows data correct ";
             public static string Document_Row_Is_Highlighted = "Validate that Document row is selected and highlighted";
         }
-         
-
         #endregion
     }
 }
