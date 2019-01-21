@@ -28,8 +28,9 @@ namespace KiewitTeamBinder.Api.Tests
                 sessionRequest = new SessionApi(GetServiceUrl(testAccount.Url));
 
                 //when
-                sessionKey = sessionRequest.LogonWithApplication(testAccount.Username, testAccount.Company, testAccount.Password, uploadFilesdata.ProjectNumber, uploadFilesdata.ConnectingProduct);
+                sessionKey = sessionRequest.LogonWithApplication(testAccount.Username, testAccount.Company, testAccount.Password, uploadFilesdata.ProjectNumber, uploadFilesdata.ConnectingProduct);                
                 validations.Add(sessionRequest.ValidateLogonWithApplicationSuccessfully(sessionKey));
+                validations.Should().OnlyContain(validations => validations.Value).Equals(bool.TrueString);
 
                 //Upload Files
                 UploadFilesAPI uploadfileRequets = new UploadFilesAPI();
@@ -37,16 +38,17 @@ namespace KiewitTeamBinder.Api.Tests
                 validations.Add(uploadfileRequets.ValidateUploadFiles(filesNameResponse, uploadFilesdata.FileNames));
 
                 // then
-                validations.Add(new KeyValuePair<string, bool>("Release " + sessionKey, sessionRequest.ValidateLogoffStatusSuccessfully(sessionRequest.LogoffStatus(sessionKey)).Value));
                 Utils.AddCollectionToCollection(validations, methodValidations);
-                Console.WriteLine(string.Join(Environment.NewLine, validations.ToArray()));
                 validations.Should().OnlyContain(validations => validations.Value).Equals(bool.TrueString);
+                validations.Add(new KeyValuePair<string, bool>("Release " + sessionKey, sessionRequest.ValidateLogoffStatusSuccessfully(sessionRequest.LogoffStatus(sessionKey)).Value));
+                Console.WriteLine(string.Join(Environment.NewLine, validations.ToArray()));
             }
             catch (Exception e)
             {
                 validations.Add(new KeyValuePair<string, bool>("Release " + sessionKey, sessionRequest.ValidateLogoffStatusSuccessfully(sessionRequest.LogoffStatus(sessionKey)).Value));
                 methodValidations.Add(new KeyValuePair<string, bool>("Error: " + e, false));
                 validations = Utils.AddCollectionToCollection(validations, methodValidations);
+                Console.WriteLine(string.Join(Environment.NewLine, validations.ToArray()));
                 throw;
             }
         }

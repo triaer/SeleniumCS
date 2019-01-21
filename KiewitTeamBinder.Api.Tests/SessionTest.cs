@@ -35,15 +35,16 @@ namespace KiewitTeamBinder.Api.Tests.ApiTest
                 validations.Add(sessionRequest.ValidateLogoffStatusSuccessfully(respone));
 
                 // then
-                Utils.AddCollectionToCollection(validations, methodValidations);
-                Console.WriteLine(string.Join(Environment.NewLine, validations.ToArray()));
+                Utils.AddCollectionToCollection(validations, methodValidations);                
                 validations.Should().OnlyContain(validations => validations.Value).Equals(bool.TrueString);
+                Console.WriteLine(string.Join(Environment.NewLine, validations.ToArray()));
             }
             catch (Exception e)
             {
                 validations.Add(new KeyValuePair<string, bool>("Release " + sessionKey, sessionRequest.ValidateLogoffStatusSuccessfully(sessionRequest.LogoffStatus(sessionKey)).Value));
                 methodValidations.Add(new KeyValuePair<string, bool>("Error: " + e, false));
                 validations = Utils.AddCollectionToCollection(validations, methodValidations);
+                Console.WriteLine(string.Join(Environment.NewLine, validations.ToArray()));
                 throw;
             }
         }

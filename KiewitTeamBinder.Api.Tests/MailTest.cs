@@ -32,6 +32,7 @@ namespace KiewitTeamBinder.Api.Tests
                 //when
                 sessionKey = sessionRequest.LogonWithApplication(teambinderTestAccount1.Username, teambinderTestAccount1.Company, teambinderTestAccount1.Password, sendMailData.ProjectNumber, sendMailData.ConnectingProduct);
                 validations.Add(sessionRequest.ValidateLogonWithApplicationSuccessfully(sessionKey));
+                validations.Should().OnlyContain(validations => validations.Value).Equals(bool.TrueString);
 
                 MailApi mailRequest = new MailApi(GetServiceUrl(teambinderTestAccount1.Url));
                 DataSet dataSetResponse = mailRequest.GetStructureForComposeMail(sessionKey, sendMailData.DraftBox, sendMailData.MailType, sendMailData.ComposeMailAcction);
@@ -58,24 +59,26 @@ namespace KiewitTeamBinder.Api.Tests
                 validations.Add(sessionRequest.ValidateLogoffStatusSuccessfully(respone));
                 //Then log in with a recipient user
                 sessionKey = sessionRequest.LogonWithApplication(teambinderTestAccount2.Username, teambinderTestAccount2.Company, teambinderTestAccount2.Password, sendMailData.ProjectNumber, sendMailData.ConnectingProduct);
+                validations.Add(sessionRequest.ValidateLogonWithApplicationSuccessfully(sessionKey));
+                validations.Should().OnlyContain(validations => validations.Value).Equals(bool.TrueString);
                 //Verify email exists
                 mailDetail = mailRequest.GetMailDetails(sessionKey, sendMailData.Inbox, sentMailIntKey);
                 validations.Add(mailRequest.ValidateEmailsInMailBox(mailDetail, true));
-
-                validations.Add(new KeyValuePair<string, bool>("Release " + sessionKey, sessionRequest.ValidateLogoffStatusSuccessfully(sessionRequest.LogoffStatus(sessionKey)).Value));
-
+                
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);
-                Console.WriteLine(string.Join(Environment.NewLine, validations.ToArray()));
                 validations.Should().OnlyContain(validations => validations.Value).Equals(bool.TrueString);
+                validations.Add(new KeyValuePair<string, bool>("Release " + sessionKey, sessionRequest.ValidateLogoffStatusSuccessfully(sessionRequest.LogoffStatus(sessionKey)).Value));
+                Console.WriteLine(string.Join(Environment.NewLine, validations.ToArray()));
             }
             catch (Exception e)
             {
                 validations.Add(new KeyValuePair<string, bool>("Release " + sessionKey, sessionRequest.ValidateLogoffStatusSuccessfully(sessionRequest.LogoffStatus(sessionKey)).Value));
                 methodValidations.Add(new KeyValuePair<string, bool>("Error: " + e, false));
                 validations = Utils.AddCollectionToCollection(validations, methodValidations);
+                Console.WriteLine(string.Join(Environment.NewLine, validations.ToArray()));
                 throw;
-            }
+            }            
         }
     }
 }
