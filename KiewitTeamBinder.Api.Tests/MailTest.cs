@@ -16,7 +16,7 @@ namespace KiewitTeamBinder.Api.Tests
     [TestClass]
     public class MailTest : ApiTestBase
     {
-        //[TestMethod]
+        [TestMethod]
         public void Mail_SentMail_API()
         {
             SessionApi sessionRequest = null;

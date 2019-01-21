@@ -15,7 +15,7 @@ namespace KiewitTeamBinder.Api.Tests.ApiTest
     [TestClass]
     public class SessionTest : ApiTestBase
     {
-        //[TestMethod]
+        [TestMethod]
         public void General_NonSSOValidUserSignon_API()
         {
             SessionApi sessionRequest = null;
