@@ -23,6 +23,11 @@ namespace KiewitTeamBinder.Common.TestData
         public string RowName = "Contracts";
         public string DownloadFilePath = Utils.GetDownloadFilesLocalPath() + "\\" + Utils.GetRandomValue("Contracts") + ".xlsx";
         public string FilterValue = "CLOSED-OUT - Closed Out";
+        public string[] SubItemMenus = { KiewitTeamBinderENums.MainPaneHeaderDropdownItem.Contracts.ToDescription(),
+                                         KiewitTeamBinderENums.MainPaneHeaderDropdownItem.PurchaseItems.ToDescription(),
+                                         KiewitTeamBinderENums.MainPaneHeaderDropdownItem.Deliverables.ToDescription(),
+                                         KiewitTeamBinderENums.MainPaneHeaderDropdownItem.DocumentsAssociated.ToDescription(),
+                                         KiewitTeamBinderENums.MainPaneHeaderDropdownItem.ExpeditingView.ToDescription() };
 
         public string GridView = "Grid View";
         public string GridViewContract = "GridViewContractsGrid";

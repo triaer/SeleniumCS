@@ -49,5 +49,14 @@ namespace KiewitTeamBinder.Common.Helper
             excelDriver.Close();
             return numberOfRows;
         }
+
+        public static string GetExcelRowValue(string filePath, string sheetName, int rowIndex) {
+            var excelDriver = ExcelInterop.ExcelDriver.getExcelHelper(filePath);
+            excelDriver.Open(filePath, sheetName);
+            string rowValue = excelDriver.GetAllExcelRowsValue(rowIndex);
+            excelDriver.Close();
+            return rowValue;
+        }
+
     }
 }

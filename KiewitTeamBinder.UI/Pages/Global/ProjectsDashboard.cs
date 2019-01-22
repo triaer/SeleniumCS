@@ -51,6 +51,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         private static By _pageCountInNumPartOfGridPager(string gridViewName) => By.XPath($"//table[contains(@id,'{gridViewName}')]//div[contains(@class,'rgNumPart')]//a");
         private static By _arrowFirstPageInGridPager(string gridViewName) => By.XPath($"//table[contains(@id,'{gridViewName}')]//img[@title='First Page']");
         private static By _arrowLastPageInGridPager(string gridViewName) => By.XPath($"//table[contains(@id,'{gridViewName}')]//img[@title='Last Page']");
+        private static By _arrowNextPageInGridPager(string gridViewName) => By.XPath($"//table[contains(@id,'{gridViewName}')]//img[@title='Next Page']");
         private static By _reportsButton => By.Id("btnReports");
         private static By _registerViewCheckbox(string view) => By.XPath($"//a[span = '{view}']/img");
         private static By _currentPageSize(string gridViewName) => By.XPath($"//input[contains(@id, '{gridViewName}') and contains(@id,'PageSizeComboBox_Input')]");
@@ -89,6 +90,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         public IWebElement NumberPagesInfoOfGridPager(string gridViewName) => StableFindElement(_numberPagesInfoOfGridPager(gridViewName));
         public IWebElement ArrowFirstPageInGridPager(string gridViewName) => StableFindElement(_arrowFirstPageInGridPager(gridViewName));
         public IWebElement ArrowLastPageInGridPager(string gridViewName) => StableFindElement(_arrowLastPageInGridPager(gridViewName));
+        public IWebElement ArowNextPageInGridPager(string gridViewName) => StableFindElement(_arrowNextPageInGridPager(gridViewName));
         public IWebElement ReportsButton { get { return StableFindElement(_reportsButton); } }
         public IWebElement RegisterViewCheckbox(string gridViewName) => StableFindElement(_registerViewCheckbox(gridViewName));
         public IWebElement CurrentPageSize(string gridViewName) => StableFindElement(_currentPageSize(gridViewName));
@@ -216,9 +218,11 @@ namespace KiewitTeamBinder.UI.Pages.Global
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 
-        public void SelectItemOnHeaderDropdown(MainPaneHeaderDropdownItem item)
+        public T SelectItemOnHeaderDropdown<T>(MainPaneHeaderDropdownItem item)
         {
             HeaderDropdownItem(item.ToDescription()).Click();
+
+            return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
         public T SelectDropdownItemWithSwitchWindow<T>(MainPaneHeaderDropdownItem item)
         {
@@ -242,7 +246,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             var node = StepNode();
             node.Info($"Click the item: {item.ToDescription()}, and switch to dialog popup");
 
-            SelectItemOnHeaderDropdown(item);
+            SelectItemOnHeaderDropdown<T>(item);
             WebDriver.SwitchTo().ActiveElement();
             
             return (T)Activator.CreateInstance(typeof(T), WebDriver);

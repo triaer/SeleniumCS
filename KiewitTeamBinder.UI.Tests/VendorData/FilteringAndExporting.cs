@@ -119,13 +119,14 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 selectedRow = vendorDataRegister.GetSelectedRecordCount();
 
                 vendorDataRegister.LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateItemsCountedAreMatches(filteringAndExportingData.GridExpeditingContracts))
-                    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidatePageSizeDefaultIsCorrectly(filteringAndExportingData.GridViewContract, filteringAndExportingData.pageSizeDefault))
+                    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidatePageSizeDefaultIsCorrectly(filteringAndExportingData.GridExpeditingContracts, filteringAndExportingData.pageSizeDefault))
                     .ClickHeaderLabelToSort<VendorDataRegister>(MainPaneTableHeaderLabel.ContractNumber)
+                    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateColumnIsSorted(MainPaneTableHeaderLabel.ContractNumber.ToDescription()))
                     .ClickHeaderButton<VendorDataRegister>(MainPaneTableHeaderButton.Export, false)
-                    .SelectItemOnHeaderDropdown(MainPaneHeaderDropdownItem.ExpeditingView);
-                    //.DownloadFile<VendorDataRegister>(filteringAndExportingData.DownloadFilePath)
-                    //.LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateExcelItemsCount(filteringAndExportingData.HierarchicalGridViewName,
-                    //                                                                                               filteringAndExportingData.DownloadFilePath));
+                    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateDisplayedSubItemLinks(filteringAndExportingData.SubItemMenus))
+                    .SelectItemOnHeaderDropdown<VendorDataRegister>(MainPaneHeaderDropdownItem.ExpeditingView)
+                    .DownloadFile<VendorDataRegister>(filteringAndExportingData.DownloadFilePath)
+                    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateDataExcelCorrectly(filteringAndExportingData.GridExpeditingContracts, 0, filteringAndExportingData.DownloadFilePath));
 
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);

@@ -262,6 +262,12 @@ namespace KiewitTeamBinder.Common
             RegisterView,
             [Description("Contracts")]
             Contracts,
+            [Description("Purchase Items")]
+            PurchaseItems,
+            [Description("Deliverables")]
+            Deliverables,
+            [Description("Documents Associated with Deliverables")]
+            DocumentsAssociated,
             [Description("Expediting View")]
             ExpeditingView
         }
