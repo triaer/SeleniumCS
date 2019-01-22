@@ -179,6 +179,21 @@ namespace KiewitTeamBinder.UI
             driver.SwitchTo().DefaultContent();
         }
 
+        public static void WaitAndClick(this IWebElement Element)
+        {
+            try
+            {
+                WebDriverWait wait = Browser.Wait(mediumTimeout);
+                //wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.InvisibilityOfElementLocated(By.className("loader")));
+                wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(Element)).Click();
+            }
+            catch (WebDriverException)
+            {
+                ScrollIntoView(Element);
+                Element.Click();
+            }
+        }
+
         public static void ActionsClick(this IWebElement Element)
         {
             Actions actions = new Actions(WebDriver);
@@ -265,14 +280,12 @@ namespace KiewitTeamBinder.UI
             action.MoveToElement(Element);
             action.Perform();
         }
-
         public static void HoverAndClickWithJS(this IWebElement Element)
         {
             IJavaScriptExecutor jse = (IJavaScriptExecutor)WebDriver;
             Element.HoverWithJS();
             jse.ExecuteScript("arguments[0].click();", Element);
         }
-
         public static void HoverWithJS(this IWebElement Element)
         {
             var mouseOverScript = "if(document.createEvent){var evObj = document.createEvent('MouseEvents');"
@@ -281,7 +294,6 @@ namespace KiewitTeamBinder.UI
                 + "else if(document.createEventObject) { arguments[0].fireEvent('onmouseover'); }";
             ((IJavaScriptExecutor)WebDriver).ExecuteScript(mouseOverScript, Element);
         }
-
         public static void enableWithJS(this IWebElement Element)
         {
             ((IJavaScriptExecutor)WebDriver).ExecuteScript("arguments[0].style.display='block';",Element);

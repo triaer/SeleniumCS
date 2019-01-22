@@ -255,6 +255,23 @@ namespace KiewitTeamBinder.UI.Pages.Global
             wait.Until(driver => Element.GetAttribute(attribute).Contains(attributeValue));
 
         }
+        internal static bool WaitForElementInvisible(By elementDescription, int seconds = mediumTimeout)
+        {
+            var wait = Browser.Wait(seconds);
+            return wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.InvisibilityOfElementLocated(elementDescription));
+        }
+        internal static bool IsElementPresent(By elementDescription)
+        {
+            try
+            {
+                WebDriver.FindElement(elementDescription);
+                return true;
+            }
+            catch (NoSuchElementException e)
+            {
+                return false;
+            }
+        }
 
         /// <summary>
         /// Wait for progress appear and disappear
@@ -274,22 +291,40 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 //skip the action
             }
         }
-        
+
         internal static void WaitUntilJSReady(int timeoutSec = mediumTimeout)
         {
             var wait = Browser.Wait(timeoutSec);
-            wait.Until(driver => ((IJavaScriptExecutor)driver).ExecuteScript("return document.readyState").ToString().Equals("complete"));
-
+            wait.Until((driver) =>
+            {
+                try
+                {
+                    string readyState = ((IJavaScriptExecutor)driver).ExecuteScript(
+                        "if (document.readyState) return document.readyState;").ToString();
+                    return readyState.ToLower() == "complete";
+                }
+                catch (InvalidOperationException e)
+                {
+                    return e.Message.ToLower().Contains("unable to get browser");
+                }
+                catch (WebDriverException e)
+                {
+                    return e.Message.ToLower().Contains("unable to connect");
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+            });
         }
 
-        internal static void WaitForJQueryLoad(int timeout = 30)
+        internal static void WaitForJQueryLoad(int timeout = longTimeout)
         {
             var wait = Browser.Wait(timeout * 2);
-            //wait.Until(driver => (bool)((IJavaScriptExecutor)driver).ExecuteScript(
-            //    "var result = true; " +
-            //    "try { result = (typeof jQuery != 'undefined') ? jQuery.active == 0 : true } " +
-            //    "catch (e) {}; return result;"));
-            wait.Until(driver => (bool)((IJavaScriptExecutor)driver).ExecuteScript("return (window.jQuery != null) && (jQuery.active === 0);"));
+
+            WaitUntilJSReady(timeout);
+            //Wait JQuery until it is Ready!
+            wait.Until(driver => (bool)((IJavaScriptExecutor)driver).ExecuteScript("return ((typeof(jQuery) != 'undefined') && (jQuery.active === 0));"));
             WaitUntilJSReady(timeout);
         }
 
@@ -337,11 +372,10 @@ namespace KiewitTeamBinder.UI.Pages.Global
             action.MoveToElement(element);
             action.Perform();
         }
-
         internal static void ScrollIntoView(IWebElement Element)
         {
             IJavaScriptExecutor jse = (IJavaScriptExecutor)WebDriver;
-            jse.ExecuteScript("arguments[0].scrollIntoView();", Element);
+            jse.ExecuteScript("arguments[0].scrollIntoView(true);", Element);
         }
 
         internal static bool RetryingFindClick(IWebElement webElement)
@@ -439,7 +473,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
         {
             try
             {
-                string k = By.XPath(".//tr[" + rowIndex + "]/" + colType + "[" + colIndex + "]").ToString();
                 return TableElement.StableFindElement(By.XPath(".//tr[" + rowIndex + "]/" + colType + "[" + colIndex + "]"), timeout);
             }
             catch (Exception)
@@ -603,35 +636,42 @@ namespace KiewitTeamBinder.UI.Pages.Global
             parentWindow = WebDriver.CurrentWindowHandle;
             ReadOnlyCollection<string> originalHandles = WebDriver.WindowHandles;
 
-           
-            if(doubleClick == true)
+            try
             {
-                ScrollIntoView(ElementToBeClicked);
-                ElementToBeClicked.ClickTwice();
-            }
-            else
-                ElementToBeClicked.ActionsClick();
-
-            string popUpWindowHandle = Browser.Wait(timeout).Until<string>((d) =>
-            {
-                string foundHandle = null;
-
-                // Subtract out the list of known handles. In the case of a single
-                // popup, the newHandles list will only have one value.
-                List<string> newHandles = WebDriver.WindowHandles.Except(originalHandles).ToList();
-                if (newHandles.Count > 0)
+                if (doubleClick == true)
                 {
-                    foundHandle = newHandles[0];
+                    ScrollIntoView(ElementToBeClicked);
+                    ElementToBeClicked.ClickTwice();
                 }
+                else
+                    ElementToBeClicked.ActionsClick();
 
-                return foundHandle;
-            });
-            if (closePreviousWindow == true)
-            {
-                Browser.Close();
+                string popUpWindowHandle = Browser.Wait(timeout).Until<string>((d) =>
+                {
+                    string foundHandle = null;
+
+                    // Subtract out the list of known handles. In the case of a single
+                    // popup, the newHandles list will only have one value.
+                    List<string> newHandles = WebDriver.WindowHandles.Except(originalHandles).ToList();
+                    if (newHandles.Count > 0)
+                    {
+                        foundHandle = newHandles[0];
+                    }
+
+                    return foundHandle;
+                });
+                if (closePreviousWindow == true)
+                {
+                    Browser.Close();
+                }
+                WebDriver.SwitchTo().Window(popUpWindowHandle);
+                WebDriver.Manage().Window.Maximize();
             }
-            WebDriver.SwitchTo().Window(popUpWindowHandle);
-            WebDriver.Manage().Window.Maximize();
+            catch (WebDriverTimeoutException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            
         }
 
         internal static void SwitchToPopUpWindowByTitle(IWebElement ElementToBeClicked, string windowTitle)
@@ -678,67 +718,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
             WebDriver.SwitchTo().Window(listTabs[listTabs.Count() - 1]);
             WebDriver.Manage().Window.Maximize();
         }
-
-        internal static string GetIDValueOfDivElementByText(IWebElement parent, string elementXPath, string content)
-        {
-            By selector = By.XPath(string.Format(elementXPath, content));
-            WaitForElement(selector);
-            return parent.StableFindElement(selector).GetAttribute("id");
-        }
-
-        internal static IWebElement GetDivCellByRowAndColumnIDNumber(IWebElement elementParent, string rowIndx, string colIndx)
-        {
-            string partID = rowIndx + ":" + colIndx;
-            return elementParent.StableFindElement(By.CssSelector(string.Format("div[id$='{0}']", partID)));
-        }
-
-        //internal static void SelectDateOnCalendar(string dateString, IWebElement DatePicker, By calendarLocator)
-        //{
-        //    //Format of dateString: "MM/dd/yyyy"
-        //    string[] monthList = { "JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER" };
-        //    string _dayButtonXPath = ".//td[not(contains(@class,'k-other-month'))]/a[text()='{0}']";
-        //    By _displayMonthYear = By.XPath(".//div[@class='k-header']/a[contains(@class,'k-nav-fast')]");
-
-        //    string calMonth = null;
-        //    string calYear = null;
-        //    int jumMonthBy = 0;
-
-        //    //parse the target date
-        //    string[] parts = dateString.Split('/');
-        //    int expMonth = int.Parse(parts[0]);
-        //    int expDay = int.Parse(parts[1]);
-        //    int expYear = int.Parse(parts[2]);
-
-        //    //open the calendar
-        //    DatePicker.Click();
-        //    IWebElement CalendarPopup = StableFindElement(calendarLocator);
-        //    WaitForElementAttribute(CalendarPopup, "style", "block");
-
-        //    //Retrieve current selected month / year name from date picker popup
-        //    IWebElement DispMonthYear = CalendarPopup.StableFindElement(_displayMonthYear);
-        //    calMonth = DispMonthYear.Text.Split(' ')[0];
-        //    calYear = DispMonthYear.Text.Split(' ')[1];
-
-        //    //Calculate the differ month
-        //    jumMonthBy = ((expYear - int.Parse(calYear)) * 12) + (expMonth - (monthList.ToList().IndexOf(calMonth) + 1));
-
-        //    if (jumMonthBy > 0)
-        //    {
-        //        while (jumMonthBy-- > 0) CalendarPopup.FindElement(By.XPath(".//div[@class='k-header']/a[contains(@class,'k-nav-next')]")).Click();
-        //    }
-        //    else if (jumMonthBy < 0)
-        //    {
-        //        while (jumMonthBy++ < 0) CalendarPopup.FindElement(By.XPath(".//div[@class='k-header']/a[contains(@class,'k-nav-prev')]")).Click();
-        //    }
-
-        //    WaitUntil(dr => CalendarPopup.StableFindElement(_displayMonthYear).Text.Contains(monthList[expMonth - 1]));
-        //    //click on the target day 
-        //    By dayElement = By.XPath(string.Format(_dayButtonXPath, expDay));
-        //    WaitForAngularJSLoad();
-        //    IWebElement DayButton = CalendarPopup.StableFindElement(dayElement);
-        //    DayButton.Click();
-
-        //}
 
         internal static void SelectDateOnCalendar(string dateString, IWebElement DatePicker, By calendarLocator)
         {

@@ -17,10 +17,12 @@ namespace KiewitTeamBinder.UI.Pages.DashboardModule
         private static By _moreLessButton(string widgetUniqueName) => By.XPath($"//div[@widgetuniquename = '{widgetUniqueName}']//a[contains(@id,'More')]");
         private static By _rowInWidget(string widgetUniqueName, string rowName) => By.XPath($"//div[@widgetuniquename = '{widgetUniqueName}']//td[contains(@id,'tdCaption')][span = '{rowName}']");
         private static By _numberOnRowInWidget(string widgetUniqueName, string rowName) => By.XPath($"//div[@widgetuniquename = '{widgetUniqueName}']//td[contains(@id,'tdCaption')][span = '{rowName}']/preceding-sibling::td[contains(@id,'tdCount')]");
+        private static By _tableStateInWidget(string widgetUniqueName) => By.XPath($"//div[@widgetuniquename = '{widgetUniqueName}']//table[contains(@id,'tblStat')]");
 
         public IWebElement MoreLessButton(string widgetUniqueName) => StableFindElement(_moreLessButton(widgetUniqueName));
         public IWebElement RowInWidget(string widgetUniqueName, string rowName) => StableFindElement(_rowInWidget(widgetUniqueName, rowName));
         public IWebElement NumberOnRowInWidget(string widgetUniqueName, string rowName) => StableFindElement(_numberOnRowInWidget(widgetUniqueName, rowName));
+        public IWebElement TableStateInWidget(string widgetUniqueName) => StableFindElement(_tableStateInWidget(widgetUniqueName));
         #endregion
 
         #region Actions
@@ -46,19 +48,20 @@ namespace KiewitTeamBinder.UI.Pages.DashboardModule
         public Dashboard ClickMoreOrLessButton(string widgetUniqueName, bool clickMoreButton)
         {
             var moreLessButton = MoreLessButton(widgetUniqueName);
-            ScrollIntoView(moreLessButton);
+            ScrollIntoView(TableStateInWidget(widgetUniqueName));
             if ((moreLessButton.Text == "More") == clickMoreButton)
             {
-                moreLessButton.Click();
+                var currentRows = TableStateInWidget(widgetUniqueName).StableFindElements(By.TagName("tr")).Count;
+                moreLessButton.WaitAndClick();
                 WaitUntil(driver => MoreLessButton(widgetUniqueName).Text == "Less");
+                WaitUntil(driver => TableStateInWidget(widgetUniqueName).StableFindElements(By.TagName("tr")).Count > currentRows);
             }
-                
-            
             return this;
         }
 
         public int GetCountValueFromRow(string widgetUniqueName, string rowName)
         {
+            WaitUntil(driver => RowInWidget(widgetUniqueName, rowName) != null);
             return int.Parse(RowInWidget(widgetUniqueName, rowName).GetAttribute("count"));
         }
 

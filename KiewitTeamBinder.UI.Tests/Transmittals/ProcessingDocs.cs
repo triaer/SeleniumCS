@@ -43,10 +43,10 @@ namespace KiewitTeamBinder.UI.Tests.Transmittals
                 string[] selectedUsersWithCompanyName = new string[] { transmittalReceiptData.SelectedUserWithCompany.Description };
                 var columnValuesInConditionList = new List<KeyValuePair<string, string>> { transmittalReceiptData.ColumnValuesInConditionList.Subject };
 
-                projectDashBoard.SelectModuleMenuItem<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.TRANSMITTALS.ToDescription())
+                projectDashBoard.SelectModuleMenuItemOnLeftNav<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.TRANSMITTALS.ToDescription(), waitForLoading: false)
                     .LogValidation<ProjectsDashboard>(ref validations, projectDashBoard.ValidateDisplayedSubItemLinks(transmittalReceiptData.SubItemMenus));
 
-                Transmittal transmittal = projectDashBoard.SelectModuleMenuItem<Transmittal>(subMenuItem: ModuleSubMenuInLeftNav.INBOX.ToDescription());
+                Transmittal transmittal = projectDashBoard.SelectModuleMenuItemOnLeftNav<Transmittal>(subMenuItem: ModuleSubMenuInLeftNav.INBOX.ToDescription());
                 transmittal.LogValidation<Transmittal>(ref validations, transmittal.ValidateSubPageIsDislayed(ModuleSubMenuInLeftNav.INBOX.ToDescription()))
                     .LogValidation<Transmittal>(ref validations, transmittal.ValidateDisplayedViewFilterOption(transmittalReceiptData.DefaultFilter))
                     .LogValidation<Transmittal>(ref validations, transmittal.ValidateItemsAreShown(columnValuesInConditionList, transmittalReceiptData.GridViewName))
@@ -87,6 +87,7 @@ namespace KiewitTeamBinder.UI.Tests.Transmittals
                 test.Info("Open TeamBinder Web Page: " + teambinderTestAccount.Url);
                 var driver = Browser.Open(teambinderTestAccount.Url, browser);
                 test.Info("Log on TeamBinder via Other User Login: " + teambinderTestAccount.Username);
+                test.Info(Browser.GetActiveDriverInfo());
                 ProjectsList projectsList = new NonSsoSignOn(driver).Logon(teambinderTestAccount) as ProjectsList;
 
                 var processDocumentData = new ProcessDocumentSmoke();
@@ -97,17 +98,17 @@ namespace KiewitTeamBinder.UI.Tests.Transmittals
                 //Pre-Condition Upload Single Document
                 string currentWindow;
 
-                HoldingArea holdingArea = projectDashBoard.SelectModuleMenuItem<HoldingArea>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription(), subMenuItem: ModuleSubMenuInLeftNav.HOLDINGAREA.ToDescription());
+                HoldingArea holdingArea = projectDashBoard.SelectModuleMenuItemOnLeftNav<HoldingArea>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription(), subMenuItem: ModuleSubMenuInLeftNav.HOLDINGAREA.ToDescription());
                 DocumentDetail newDocument = holdingArea.ClickNewButton(out currentWindow);
                 newDocument.EnterDocumentInformation(processDocumentData.SingleDocInformation, ref methodValidations)
-                           .ClickSaveButton<DocumentDetail>()
-                           .ClickOkButtonOnPopUp<DocumentDetail>()
-                           .ClickToolbarButton<HoldingArea>(ToolbarButton.Close)
-                           .SwitchToWindow(currentWindow);
+                           .ClickSaveInToolbarHeader()
+                           .ClickOKOnMessageDialog<DocumentDetail>()
+                           .ClickCloseButtonOnPopUp<HoldingArea>();
 
                 //User Story 120013 - Process Document
+                test = LogTest("Process Document");
                 var columnValuesInConditionList = new List<KeyValuePair<string, string>> { processDocumentData.ColumnValuesInConditionList.DocumentNo };
-
+                projectDashBoard.SelectModuleMenuItemOnLeftNav<HoldingArea>(subMenuItem: ModuleSubMenuInLeftNav.HOLDINGAREA.ToDescription());
                 holdingArea.LogValidation<HoldingArea>(ref validations, holdingArea.ValidateDisplayedViewFilterOption(processDocumentData.DefaultFilterAtHoldingAreaPane))
                            .FilterDocumentsByGridFilterRow < HoldingArea >(processDocumentData.GridViewHoldingAreaName, MainPaneTableHeaderLabel.DocumentNo.ToDescription(), processDocumentData.SingleDocInformation.DocumentNo)
                            .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateRecordItemsCount(processDocumentData.GridViewHoldingAreaName))
@@ -124,7 +125,7 @@ namespace KiewitTeamBinder.UI.Tests.Transmittals
                 int countWindow = processDocuments.GetCountWindow();
                 AlertDialog validateDialog = processDocuments.ClickValidateDocumentDetails(ToolbarButton.Validate, ref methodValidations, processDocumentData.ProcessMessage);
                 validateDialog.LogValidation<AlertDialog>(ref validations, validateDialog.ValidateMessageDialogAsExpected(processDocumentData.MessageOnValidateDocumentsDialog))
-                              .ClickOKButton<ProcessDocuments>();
+                              .ClickOKOnMessageDialog<ProcessDocuments>();
 
                 DocumentReceivedDateDialog receivedDateDialog = processDocuments.ClickProcessDocumentDetails(ToolbarButton.Process);
                 receivedDateDialog.SelectDate<DocumentReceivedDateDialog>(processDocumentData.ReceivedDate);
@@ -138,7 +139,7 @@ namespace KiewitTeamBinder.UI.Tests.Transmittals
                            .SelectFilterOption<HoldingArea>(processDocumentData.AcceptedOptionFilterInHoldingArea)
                            .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateItemsAreShown(columnValuesInConditionList, processDocumentData.GridViewHoldingAreaName));
 
-                Document documentModule = projectDashBoard.SelectModuleMenuItem<Document>(ModuleNameInLeftNav.DOCUMENTS.ToDescription());
+                Document documentModule = projectDashBoard.SelectModuleMenuItemOnLeftNav<Document>(ModuleNameInLeftNav.DOCUMENTS.ToDescription());
                 documentModule.SelectFilterOption<Document>(processDocumentData.IndexOptionFilterInDocument, false)
                               .LogValidation<Document>(ref validations, documentModule.ValidateItemsAreShown(columnValuesInConditionList, processDocumentData.GridViewDocumentName))
                               .Logout();

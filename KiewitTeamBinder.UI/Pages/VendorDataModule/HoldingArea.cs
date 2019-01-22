@@ -59,7 +59,8 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             node.Info("Click New button in Holding Area Header");
             IWebElement FunctionButton = StableFindElement(By.XPath(string.Format(_functionButton, "New")));
             SwitchToNewPopUpWindow(FunctionButton, out currentWindow, false);
-            WaitForElementDisplay(By.Id("walkme-player"));
+            WaitForJQueryLoad();
+            WaitForElementDisplay(_walkMe);
             return new DocumentDetail(WebDriver);
         }
         public ProcessDocuments ClickProcessDocumentButton(string nameButton, out string currentWindow)
@@ -111,11 +112,40 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
                 }
                 else
                     RowCheckBox.UnCheck();
-            }
-            
+            }            
             return this;
         }
-        
+
+        public HoldingArea SelectRowsByDocumentNo(string gridViewName, string documentNo, int numberOfCheckbox, bool check, ref string[] selectedDocuments)
+        {
+            var node = StepNode();
+            node.Info("Select checkbox of document rows without the transmittal no. value in Holding Area grid");
+            int rowIndex, colIndex = 1;
+            
+            FilterDocumentsByGridFilterRow<HoldingArea>(gridViewName, MainPaneTableHeaderLabel.DocumentNo.ToDescription(), documentNo);
+            WaitForJQueryLoad();
+            GetTableCellValueIndex(PaneTable(gridViewName), "Document No.", out rowIndex, out colIndex, "th");
+            var conditions = new List<KeyValuePair<string, string>>
+            {
+                new KeyValuePair<string, string>(MainPaneTableHeaderLabel.DocumentNo.ToDescription(), documentNo)
+            };
+            IReadOnlyCollection<IWebElement> DocumentRows = GetAvailableItemsOnCurrentPage(gridViewName, conditions, true);
+            Math.Min(numberOfCheckbox, DocumentRows.Count);
+            for (int i = 0; i < numberOfCheckbox; i++)
+            {
+                IWebElement RowCheckBox = DocumentRows.ElementAt(i).StableFindElement(By.XPath(".//input[@type = 'checkbox']"));
+                if (check)
+                {
+                    //ScrollIntoView(RowCheckBox);
+                    RowCheckBox.Check();
+                    selectedDocuments[i] = DocumentRows.ElementAt(i).StableFindElement(By.XPath("./td[" + colIndex + "]")).Text;
+                }
+                else
+                    RowCheckBox.UnCheck();
+            }
+            return this;
+        }
+
         public List<KeyValuePair<string, bool>> ValidateHoldingAreaGridShownDataCorrect(string filterColumn, string filterValue)
         {
             var node = StepNode();

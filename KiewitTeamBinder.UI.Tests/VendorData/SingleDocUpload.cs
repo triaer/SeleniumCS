@@ -39,8 +39,8 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 test = LogTest("Upload Single Doc");
                 string username = projectDashBoard.GetUserNameLogon();
                 string currentWindow;
-                projectDashBoard.SelectModuleMenuItem<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription(), waitForLoading: false);
-                HoldingArea holdingArea = projectDashBoard.SelectModuleMenuItem<HoldingArea>(subMenuItem: ModuleSubMenuInLeftNav.HOLDINGAREA.ToDescription());
+                projectDashBoard.SelectModuleMenuItemOnLeftNav<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription(), waitForLoading: false);
+                HoldingArea holdingArea = projectDashBoard.SelectModuleMenuItemOnLeftNav<HoldingArea>(subMenuItem: ModuleSubMenuInLeftNav.HOLDINGAREA.ToDescription());
 
                 DocumentDetail newDocument = holdingArea.ClickNewButton(out currentWindow);
                 newDocument.LogValidation<DocumentDetail>(ref validations, newDocument.ValidateRequiredFieldsWithRedAsterisk(uploadSingleDocData.RequiredFields))
@@ -48,13 +48,13 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                     .LogValidation<DocumentDetail>(ref validations, newDocument.ValidateDocumentNoIsLimitRetained(uploadSingleDocData.MaxLengthOfDocNo))
                     .EnterDocumentInformation(uploadSingleDocData.SingleDocInformation, ref methodValidations)
                     .LogValidation<DocumentDetail>(ref validations, newDocument.ValidateSelectedItemShowInDropdownBoxesCorrect(uploadSingleDocData.SingleDocInformation))
-                    .ClickAttachFilesButton(Utils.GetInputFilesLocalPath(), uploadSingleDocData.FileNames)
-                    .ClickSaveButton<DocumentDetail>()
-                    .LogValidation<DocumentDetail>(ref validations, newDocument.ValidateSaveDialogStatus(closed: false))
-                    .LogValidation<DocumentDetail>(ref validations, newDocument.ValidateMessageDisplayCorrect(uploadSingleDocData.SaveMessage))
-                    .ClickOkButtonOnPopUp<DocumentDetail>()
+                    .ClickAttachFilesButton(Utils.GetInputFilesLocalPath(), uploadSingleDocData.FileNames);
+                AlertDialog messageDialog = newDocument.ClickSaveInToolbarHeader();
+                messageDialog.LogValidation<AlertDialog>(ref validations, newDocument.ValidateSaveDialogStatus(closed: false))
+                    .LogValidation<AlertDialog>(ref validations, messageDialog.ValidateMessageDisplayCorrect(uploadSingleDocData.SaveMessage))
+                    .ClickOKOnMessageDialog<DocumentDetail>()
                     .LogValidation<DocumentDetail>(ref validations, newDocument.ValidateSaveDialogStatus(closed: true))
-                    .ClickToolbarButton<HoldingArea>(ToolbarButton.Close);
+                    .ClickToolbarButtonOnWinPopup<HoldingArea>(ToolbarButton.Close);
 
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);
@@ -79,22 +79,25 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 test.Info("Open TeamBinder Web Page: " + teambinderTestAccount.Url);
                 var driver = Browser.Open(teambinderTestAccount.Url, browser);
                 test.Info("Log on TeamBinder via Other User Login: " + teambinderTestAccount.Username);
-                //string currentWindow;
+                string currentWindow;
                 ProjectsList projectsList = new NonSsoSignOn(driver).Logon(teambinderTestAccount) as ProjectsList;
 
                 var transmitSingleDocData = new TransmitSingleDocSmoke();
                 test.Info("Navigate to DashBoard Page of Project: " + transmitSingleDocData.ProjectName);
                 ProjectsDashboard projectDashBoard = projectsList.NavigateToProjectDashboardPage(transmitSingleDocData.ProjectName);
 
-                //when
-                //User Story 120222 - 120035 - Transmit Single Doc
+                test = LogTest("Pre-condition: Upload two documents");
+                projectDashBoard.SelectModuleMenuItemOnLeftNav<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription(), waitForLoading: false);
+                HoldingArea holdingArea = projectDashBoard.SelectModuleMenuItemOnLeftNav<HoldingArea>(subMenuItem: ModuleSubMenuInLeftNav.HOLDINGAREA.ToDescription());
+                BulkUploadDocuments bulkUploadDocuments = holdingArea.ClickBulkUploadButton(out currentWindow);
+                bulkUploadDocuments.CreateDataOnRow<HoldingArea>(2, transmitSingleDocData.DocumentNo);
+
+                //when User Story 120222 - 120035 - Transmit Single Doc
                 test = LogTest("Transmit Single Document");
                 string[] selectedDocuments = new string[transmitSingleDocData.NumberOfSelectedDocumentRow];
                 string[] selectedUsersWithCompanyName = new string[] { transmitSingleDocData.KiewitUser.Description };
-                projectDashBoard.SelectModuleMenuItem<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription());
-                HoldingArea holdingArea = projectDashBoard.SelectModuleMenuItem<HoldingArea>(subMenuItem: ModuleSubMenuInLeftNav.HOLDINGAREA.ToDescription());
-
-                holdingArea.SelectRowsWithoutTransmittalNo(transmitSingleDocData.GridViewHoldingAreaName, transmitSingleDocData.NumberOfSelectedDocumentRow, true, ref selectedDocuments)
+                                
+                holdingArea.SelectRowsByDocumentNo(transmitSingleDocData.GridViewHoldingAreaName, transmitSingleDocData.DocumentNo, transmitSingleDocData.NumberOfSelectedDocumentRow, true, ref selectedDocuments)
                     .ClickHeaderButton<HoldingArea>(MainPaneTableHeaderButton.Transmit, false);
 
                 NewTransmittal newTransmittal = holdingArea.ClickCreateTransmittalsButton();
@@ -121,7 +124,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                     //.LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateDocumentNumbersContainHyperlink(selectedDocuments))
                     //TO-DO: Failed by bug: No hyperlink in "Click here to download all Transmittal files."
                     //.LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateDownloadHyperlinkDisplays())
-                    .ClickToolbarButton<HoldingArea>(ToolbarButton.Close);
+                    .ClickToolbarButtonOnWinPopup<HoldingArea>(ToolbarButton.Close);
 
 
             }

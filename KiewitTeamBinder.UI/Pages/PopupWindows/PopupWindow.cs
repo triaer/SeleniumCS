@@ -23,11 +23,8 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
         private static By _asteriskLabel(string fieldLabel) => By.XPath($"//span[text()='{fieldLabel}']/following::span[1]");
         private static By _textField(string fieldLabel) => By.XPath($"//*[span[(text()= '{fieldLabel}')]]/following-sibling::*[*]//*[contains(@class,'Text')]");
         private static By _dropdownList(string fieldLabel, string type) => By.XPath($"//*[span[(text()= '{fieldLabel}')]]/following-sibling::*[*]//input[contains(@id, '{type}')]");
-        private static By _itemDropdown(string dropdownListName) => By.XPath($"//ul/li[text()='{dropdownListName}']");
+        private static By _itemDropdown(string dropdownListName) => By.XPath($"//ul/li[starts-with(text(),'{dropdownListName}')]");
         private static By _saveDocButton => By.Id("SaveDocToolBar");
-        private static By _okButtonOnPopUp => By.XPath("//div[contains(@id,'RadWindowWrapper_alert')]//span[text()='OK']");
-        private static By _saveItemPopUp => By.XPath("//div[contains(@id,'RadWindowWrapper_alert')]");
-        private static By _saveItemMessage => By.XPath("//div[contains(@id,'RadWindowWrapper_alert')]//div[contains(@id, '_message')]");
 
         public IWebElement HeaderLabel { get { return StableFindElement(_headerLabel); } }
         public IWebElement DropdownListInput(string fieldLabel, string idType = "") => StableFindElement(_dropdownList(fieldLabel, idType + "_Input"));
@@ -49,7 +46,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             return WebDriver.CurrentWindowHandle;
         }
 
-        public T ClickToolbarButton<T>(ToolbarButton buttonName, bool checkProgressPopup = false, bool isDisappear = false)
+        public T ClickToolbarButtonOnWinPopup<T>(ToolbarButton buttonName, bool checkProgressPopup = false, bool isDisappear = false)
         {
             var node = StepNode();
             node.Info("Click the button: " + buttonName.ToDescription());
@@ -71,6 +68,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             node.Info($"Enter {content} in {fieldLabel} Field.");
             WaitForElementEnable(_textField(fieldLabel));
             TextField(fieldLabel).InputText(content);
+            WaitForJQueryLoad();
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 
@@ -78,41 +76,38 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
         {
             IWebElement DropdownList = DropdownListInput(fieldLabel);
             DropdownList.Click();
+            WaitForJQueryLoad();
             methodValidation.Add(ValidateItemDropdownIsHighlighted(selectedValue, fieldLabel));
             ItemDropdown(selectedValue).Click();
             DropdownList.SendKeys(OpenQA.Selenium.Keys.Tab);
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 
-        public T ClickSaveButton<T>()
+
+        public AlertDialog ClickSaveInToolbarHeader(bool checkProgressPopup = false)
         {
-            ClickToolbarButton<T>(ToolbarButton.Save, true);
-            WebDriver.SwitchTo().ActiveElement();
-            return (T)Activator.CreateInstance(typeof(T), WebDriver);
+            ClickToolbarButtonOnWinPopup<PopupWindow>(ToolbarButton.Save, checkProgressPopup);
+            
+            return new AlertDialog(WebDriver);
         }
 
-        public T ClickOkButtonOnPopUp<T>()
-        {
-            OkButtonOnPopUp.Click();
-            WebDriver.SwitchOutOfIFrame();
-            return (T)Activator.CreateInstance(typeof(T), WebDriver);
-        }
         public AlertDialog ClickValidateDocumentDetails(ToolbarButton buttonName, ref List<KeyValuePair<string, bool>> methodValidation, string processMessage)
         {
-            var dialog = ClickToolbarButton<AlertDialog>(buttonName, true);
+            var dialog = ClickToolbarButtonOnWinPopup<AlertDialog>(buttonName, true);
             methodValidation.Add(ValidateProgressContentMessage(processMessage));
             return dialog;
         }
 
         public T ClickCloseButtonOnPopUp<T>()
         {
-            ClickToolbarButton<T>(ToolbarButton.Close);
+            ClickToolbarButtonOnWinPopup<T>(ToolbarButton.Close);
             WebDriver.SwitchTo().Window(WebDriver.WindowHandles.Last());
+            WaitForJQueryLoad();
             WaitForLoadingPanel();
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 
-        public virtual KeyValuePair<string, bool> ValidateItemDropdownIsHighlighted(string value, string idDropdown)
+        public KeyValuePair<string, bool> ValidateItemDropdownIsHighlighted(string value, string idDropdown)
         {
             var node = StepNode();
             try
@@ -120,6 +115,11 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
                 node.Info("The Dropdown: " + idDropdown);
                 string actual;
                 int i = 0;
+                if (idDropdown.Contains("Contract Number") ||  idDropdown.Contains("Rev") || idDropdown.Contains("Category"))
+                {
+                    ScrollIntoView(ItemDropdown(value));
+                    WaitForElementDisplay(_itemDropdown(value));
+                }
                 do
                 {
                     ItemDropdown(value).HoverElement();
@@ -137,7 +137,6 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
                 return SetErrorValidation(node, Validation.Item_Dropdown_Is_Highlighted + idDropdown, e);
             }
         }
-
         public KeyValuePair<string, bool> ValidateItemDropdownIsSelected(string value, string idDropdownButton)
         {
             var node = StepNode();
@@ -148,7 +147,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
                 if (idDropdownButton.Contains("Criticality"))
                 {
                     string actual = FindElement(By.Id(idDropdownButton)).GetAttribute("value");
-                    if (actual == value)
+                    if (actual.Split('-')[0].Trim() == value)
                         return SetPassValidation(node, message);
                     return SetFailValidation(node, message, value, actual);
                 }
@@ -165,7 +164,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
                             selectedText = attributeValue.Split(':')[1];
                             selectedText = selectedText.Replace("\"", "");
 
-                            if (selectedText.Trim() == value)
+                            if (selectedText.Split('-')[0].Trim() == value)
                                 return SetPassValidation(node, message);
                         }
                     }
@@ -201,51 +200,6 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             }
         }
 
-        public KeyValuePair<string, bool> ValidateSaveDialogStatus(bool closed = false)
-        {
-            var node = StepNode();
-
-            try
-            {
-                if (closed == true)
-                {
-                    if (StableFindElement(_saveItemPopUp) != null)
-                        return SetFailValidation(node, Validation.Save_PopUp_Closed);
-
-                    return SetPassValidation(node, Validation.Save_PopUp_Closed);
-                }
-
-                if (StableFindElement(_saveItemPopUp) != null)
-                    return SetPassValidation(node, Validation.Save_PopUp_Opened);
-
-                return SetFailValidation(node, Validation.Save_PopUp_Opened);
-            }
-            catch (Exception e)
-            {
-                if (closed == true)
-                    return SetErrorValidation(node, Validation.Save_PopUp_Closed, e);
-
-                return SetErrorValidation(node, Validation.Save_PopUp_Opened, e);
-            }
-        }
-
-        public KeyValuePair<string, bool> ValidateMessageDisplayCorrect(string expectedMessage)
-        {
-            var node = StepNode();
-            try
-            {
-                string actualMessage = SaveMessage.Text.Trim();
-                if (actualMessage == expectedMessage)
-                    return SetPassValidation(node, Validation.Message_Display_Correct);
-                else
-                    return SetFailValidation(node, Validation.Message_Display_Correct, expectedMessage, actualMessage);
-            }
-            catch (Exception e)
-            {
-                return SetErrorValidation(node, Validation.Message_Display_Correct, e);
-            }
-        }
-
         public KeyValuePair<string, bool> ValidateHeaderIsCorrect(string expectedHeader)
         {
             var node = StepNode();
@@ -253,7 +207,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             {
                 string actualHeader = HeaderLabel.Text.Trim();
                 if (actualHeader == expectedHeader)
-                    return SetPassValidation(node, Validation.Header_Is_Correct);
+                    return SetPassValidation(node, Validation.Header_Is_Correct + expectedHeader);
                 else
                     return SetFailValidation(node, Validation.Header_Is_Correct, expectedHeader, actualHeader);
             }
@@ -267,10 +221,8 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
         {
             public static string Required_Fields_Are_Marked_Red_Asterisk = "Validate that the Required Fields are marked red asterisk: - ";
             public static string Item_Dropdown_Is_Highlighted = "Validate that the item is highlighted when hovered or scrolled over in the dropdown: ";
-            public static string Save_PopUp_Closed = "Validate that the save popup is closed";
-            public static string Save_PopUp_Opened = "Validate that the save popup is opened";
             public static string Message_Display_Correct = "Validate that the message is displayed correctly";
-            public static string Header_Is_Correct = "Validate that the header is correct";
+            public static string Header_Is_Correct = "Validate that the header is correct: ";
             public static string Item_Dropdown_Is_Selected = "Validate that the {0} dropdown selected item '{1}' ";
         }
         #endregion
