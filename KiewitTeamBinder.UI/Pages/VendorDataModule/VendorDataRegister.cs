@@ -200,21 +200,26 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             return StableFindElements(By.XPath(itemsXpath));
         }
 
+        private void ReplaceValueOfStatusColumn(ref List<KeyValuePair<string, string>> columnValuePairList)
+        {
+            foreach (var columnValuePair in columnValuePairList)
+            {
+                if (columnValuePair.Key == "Status")
+                {
+                    string status = columnValuePair.Value.Split('-')[0].Trim();
+                    columnValuePairList.Remove(columnValuePair);
+                    columnValuePairList.Add(new KeyValuePair<string, string>("Status", status));
+                    break;
+                }
+            }
+        }
+
         public KeyValuePair<string, bool> ValidatePurchaseItemsAreShown(List<KeyValuePair<string, string>> columnValuePairList)
         {
             var node = StepNode();
             try
             {
-                foreach (var columnValuePair in columnValuePairList)
-                {
-                    if (columnValuePair.Key == "Status")
-                    {
-                        string status = columnValuePair.Value.Split('-')[0].Trim();
-                        columnValuePairList.Remove(columnValuePair);
-                        columnValuePairList.Add(new KeyValuePair<string, string>("Status", status));
-                        break;
-                    }
-                }
+                ReplaceValueOfStatusColumn(ref columnValuePairList);
                 var PurchaseItemsList = GetAvailablePurchaseItems(columnValuePairList);
                 if (PurchaseItemsList.Count > 0)
                     return SetPassValidation(node, Validation.Purchase_Items_Are_Shown);
@@ -344,6 +349,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
                 return SetErrorValidation(node, Validation.Selected_Count_Is_Decreased, e);
             }
         }
+
         public KeyValuePair<string, bool> ValidateTitlePageAreShownCorrectly(string contractNumber = "", string itemIDNumber = "", string deliverableNumber = "")
         {
             var node = StepNode();
@@ -402,7 +408,21 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             }
         }
 
-
+        public KeyValuePair<string, bool> ValidatePageSizeDefaultIsCorrectly(string gridViewName, int expectedSize) {
+                var node = StepNode();
+            try
+            {
+                int pageSize = GetPageSize(gridViewName);
+                if (pageSize == expectedSize)
+                    return SetPassValidation(node, Validation.Page_Size_Default);
+                return SetFailValidation(node, Validation.Page_Size_Default);
+            }
+            catch (Exception e)
+            {
+                return SetErrorValidation(node, Validation.Page_Size_Default, e);
+            }
+        }
+        
         private static class Validation
         {
             public static string Purchase_Items_Are_Shown = "Validate that purchase items are shown";
@@ -415,7 +435,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             public static string Return_To_Vendor_Data_Contracts = "Validate that page return Vendor Data - Contracts when clicked the Blue Header";
             public static string Window_Is_Opened = "Validate that window is opened";
             public static string Window_Is_Closed = "Validate that window is closed";
-
+            public static string Page_Size_Default = "Validate that page size default correctly";
         }
         #endregion
     }

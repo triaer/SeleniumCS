@@ -34,8 +34,6 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
         public IWebElement AsteriskLabel(string fieldLabel) => StableFindElement(_asteriskLabel(fieldLabel));
         public IWebElement ItemDropdown(string dropdownListName) => StableFindElement(_itemDropdown(dropdownListName));
         public IWebElement SaveDocButton { get { return StableFindElement(_saveDocButton); } }
-        public IWebElement OkButtonOnPopUp { get { return StableFindElement(_okButtonOnPopUp); } }
-        public IWebElement SaveMessage { get { return StableFindElement(_saveItemMessage); } }
         #endregion
 
         #region Actions

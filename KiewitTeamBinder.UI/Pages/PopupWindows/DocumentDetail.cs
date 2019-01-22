@@ -84,7 +84,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
         }
 
 
-        public override KeyValuePair<string, bool> ValidateItemDropdownIsHighlighted(string value, string idDropdown)
+        public KeyValuePair<string, bool> ValidateItemDropdownIsHighlighted(string value, string idDropdown)
         {
             var node = StepNode();
             try

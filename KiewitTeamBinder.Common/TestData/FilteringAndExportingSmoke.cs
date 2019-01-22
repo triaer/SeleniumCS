@@ -29,14 +29,19 @@ namespace KiewitTeamBinder.Common.TestData
         public string GridViewDeliverable = "GridViewDeliverablesGrid";
         public string GridViewItem = "GridViewItemsGrid";
         public string GridViewDocument = "GridViewDocumentsGrid";
+        public string GridExpeditingContracts = "RadGridExpeditingContracts";
+
 
         public string ContractNumber = "1234567";
         public string ItemIDNumber = "123";
         public string DeliverableNumber = "123456";
+        public string DocumentNumber = "05218-MM-00001";
 
         public string ContractNumberDescription = "testing 120793";
         public string ItemDescription = "abc";
         public string DeliverableDescription = "123456";
+
+        public int pageSizeDefault = 100;
 
 
     }

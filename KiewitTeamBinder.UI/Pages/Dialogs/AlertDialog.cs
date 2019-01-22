@@ -89,8 +89,6 @@ namespace KiewitTeamBinder.UI.Pages.Dialogs
             }
         }
 
-
-
         private static class Validation
         {
             public static string Message_On_Dialog = "Validate The Content Of Message On Dialog Displays Correctly: ";

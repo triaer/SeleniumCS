@@ -98,6 +98,10 @@ namespace KiewitTeamBinder.UI.Pages.Global
         public ProjectsDashboard(IWebDriver webDriver) : base(webDriver)
         {  }
 
+        public int GetPageSize(string gridViewName) {
+            return int.Parse(CurrentPageSize(gridViewName).Text);
+        }
+
         public ProjectsDashboard ShowProjectList()
         {
             ProjectListDropdown.Click();

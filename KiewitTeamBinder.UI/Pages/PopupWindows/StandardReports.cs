@@ -182,43 +182,42 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             return this;
         }
 
-        public StandardReports ClickYesFavoritePopup(ref By currentIframe, bool waitForLoading = true) {
+        public AlertDialog ClickYesFavoritePopup(ref By currentIframe, bool waitForLoading = true) {
             var node = StepNode();
             node.Info("Click Yes in Favorite Report Popup ");
             if (waitForLoading)
                 WaitForLoading(_yesButtonInFavReport);
             YesButtonInFavReport.Click();
-            return this;
+            return new AlertDialog(WebDriver);
         }
 
-        public StandardReports clickOkFavoritePopup( ref By currentIframe) {
+        public AlertDialog ClickOkFavoritePopup( ref By currentIframe) {
             var node = StepNode();
             node.Info("Click OK in Favorite Report Access Popup");
             OkButtonInFavReport.Click();
             SwitchToFrame(ref currentIframe, null);
-            return this;
-
+            return new AlertDialog(WebDriver);
         }
 
-
-        public StandardReports ClickSearchButton(ref By currentIframe, bool reportNow = true, bool waitLoadingPanel = true)
-        {
-            if (reportNow)
-            {
-                SwitchToFrame(ref currentIframe, filterIframe);
-                SearchButton.Click();
-                if (waitLoadingPanel)
-                    WaitForLoading(_loadingPanel);
-                SwitchToFrame(ref currentIframe, null);
-                SwitchToFrame(ref currentIframe, reportViewIframe);
-            }
-            else
-            {
-                SwitchToFrame(ref currentIframe, filterIframe);
-                SearchButton.Click();
-                SwitchToFrame(ref currentIframe, null);
-            }
+        public StandardReports ClickSearchButton(ref By currentIframe, bool waitLoadingPanel = true)
+        {            
+            SwitchToFrame(ref currentIframe, filterIframe);
+            SearchButton.Click();
+            if (waitLoadingPanel)
+                WaitForLoading(_loadingPanel);
+            SwitchToFrame(ref currentIframe, null);
+            SwitchToFrame(ref currentIframe, reportViewIframe);
+                
             return this;
+        }
+
+        public AlertDialog ClickSearchButton(ref By currentIframe)
+        {            
+            SwitchToFrame(ref currentIframe, filterIframe);
+            SearchButton.Click();
+            SwitchToFrame(ref currentIframe, null);
+            
+            return new AlertDialog(WebDriver);
         }
 
         public StandardReports SelectFavoriteReport(ref By currentIframe, string nameFav, bool waitForLoading = true) {
@@ -512,35 +511,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
                 return SetErrorValidation(node, Validation.User_Is_Able_To_Favorite_Report, e);
             }
         }
-
-
-        public KeyValuePair<string, bool> ValidateOpenDialogWithMessageCorrectly(string expectedValue, bool close = false) {
-            var node = StepNode();
-            node.Info(Validation.Dialog_Box_Is_Opened_With_Message_Display_Correctly);
-            try
-            {
-                var actualValue = ReportMsg.Text;
-                if (close == true)
-                {
-                    if (FindElement(_saveItemPopUp) == null)
-                        return SetPassValidation(node, Validation.Dialog_Box_Is_Closed);
-
-                    return SetFailValidation(node, Validation.Dialog_Box_Is_Closed);
-                }
-
-                if (StableFindElement(_saveItemPopUp) != null) {
-                    if (actualValue.Contains(expectedValue))
-                        return SetPassValidation(node, Validation.Dialog_Box_Is_Opened_With_Message_Display_Correctly);
-                    return SetPassValidation(node, Validation.Dialog_Box_Is_Closed);
-                }
-                return SetFailValidation(node, Validation.Dialog_Box_Is_Closed);
-            }
-            catch (Exception e)
-            {
-                return SetErrorValidation(node, Validation.Dialog_Box_Is_Opened_With_Message_Display_Correctly, e);
-            }
-        }
-
+        
         public KeyValuePair<string, bool> ValidateFavoritedForUserOnly(string[] favoriteName){
             var node = StepNode();
             node.Info(Validation.Dialog_Box_Is_Opened_With_Message_Display_Correctly);

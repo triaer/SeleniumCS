@@ -59,11 +59,11 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                     .LogValidation<StandardReports>(ref validations, standardReports.ValidateRadioButtonIsDepressed(reportData.radioButton))
                     .EnterToInputReportHeader(reportData.contractUserName)
                     .LogValidation<StandardReports>(ref validations, standardReports.ValidateContactListAutoPopulated())
-                    .PressEnter()
-                    .ClickSearchButton(ref currentIframe, false)
-                    .LogValidation<StandardReports>(ref validations, standardReports.ValidateValueInMessageReportDisplaysCorrectly(reportData.availableMsg))
-                    .ClickOkButtonOnPopUp<StandardReports>()
-                    .LogValidation<StandardReports>(ref validations, standardReports.ValidateCloseDialog(close: true));
+                    .PressEnter();
+                AlertDialog alertDialog = standardReports.ClickSearchButton(ref currentIframe);
+                alertDialog.LogValidation<AlertDialog>(ref validations, alertDialog.ValidateMessageDisplayCorrect(reportData.availableMsg))
+                    .ClickOKOnMessageDialog<StandardReports>();
+                standardReports.LogValidation<StandardReports>(ref validations, standardReports.ValidateSaveDialogStatus(true));
 
                 currentIframe = null;
 
@@ -73,14 +73,14 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                     //.LogValidation<StandardReports>(ref validations, standardReports.ValidateUserIsAbleToFavoriteReport(reportData.favoriteItem));
                     .SelectFavoriteReport(ref currentIframe, reportData.myselfFavReport)
                     .LogValidation<StandardReports>(ref validations, standardReports.ValidateUserIsAbleToFavoriteReport(reportData.favoriteItem))
-                    .LogValidation<StandardReports>(ref validations, standardReports.ValidateFavoritedForUserOnly(reportData.favoriteItem))
-                    .clickOkFavoritePopup(ref currentIframe)
-                    .LogValidation<StandardReports>(ref validations, standardReports.ValidateOpenDialogWithMessageCorrectly(reportData.favSuccessfullyMsg, close: false))
-                    .ClickOkButtonOnPopUp<StandardReports>()
-                    .LogValidation<StandardReports>(ref validations, standardReports.ValidateCloseDialog(close: true))
-                    .ClickButtonReportHeader(ref currentIframe, reportData.idButtonAddToFavouriteReportHeader)
-                    .ClickYesFavoritePopup(ref currentIframe)
-                    .ClickOkButtonOnPopUp<StandardReports>();
+                    .LogValidation<StandardReports>(ref validations, standardReports.ValidateFavoritedForUserOnly(reportData.favoriteItem));
+                alertDialog = standardReports.ClickOkFavoritePopup(ref currentIframe);
+                alertDialog.LogValidation<AlertDialog>(ref validations, alertDialog.ValidateMessageDisplayCorrect(reportData.favSuccessfullyMsg))
+                    .ClickOKOnMessageDialog<StandardReports>();
+                standardReports.LogValidation<StandardReports>(ref validations, standardReports.ValidateSaveDialogStatus(true))
+                    .ClickButtonReportHeader(ref currentIframe, reportData.idButtonAddToFavouriteReportHeader);
+                alertDialog = standardReports.ClickYesFavoritePopup(ref currentIframe);
+                alertDialog.ClickOKOnMessageDialog<StandardReports>();
 
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);

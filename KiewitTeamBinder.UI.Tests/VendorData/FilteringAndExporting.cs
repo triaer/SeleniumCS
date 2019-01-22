@@ -39,8 +39,8 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 //when - User Story 121133 - 120790 Filtering & Exporting Vendor Data Register Validation - Part 1
                 test = LogTest("US 121133 - 120790 Filtering & Exporting Vendor Data Register Validation - Part 1");
 
-                projectDashBoard.SelectModuleMenuItem<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription(), waitForLoading: false);
-                VendorDataRegister vendorDataRegister = projectDashBoard.SelectModuleMenuItem<VendorDataRegister>(subMenuItem: ModuleSubMenuInLeftNav.VENDODATAREGISTER.ToDescription());
+                projectDashBoard.SelectModuleMenuItemOnLeftNav<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription(), waitForLoading: false);
+                VendorDataRegister vendorDataRegister = projectDashBoard.SelectModuleMenuItemOnLeftNav<VendorDataRegister>(subMenuItem: ModuleSubMenuInLeftNav.VENDODATAREGISTER.ToDescription());
                 //vendorDataRegister.LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateDisplayedViewFilterOption(filteringAndExportingData.DefaultFilter));
                 //   .ClickHeaderButton<VendorDataRegister>(MainPaneTableHeaderButton.More, false)
                 //   .HoverHeaderDropdownItem<VendorDataRegister>(MainPaneHeaderDropdownItem.RegisterView)
@@ -54,7 +54,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
 
                 //when - User Story 123548 - 120790 Filtering & Exporting Vendor Data Register Validation - Part 2
                 test = LogTest("US 123548 - 120790 Filtering & Exporting Vendor Data Register Validation - Part 2");
-                Dashboard dashboard = vendorDataRegister.SelectModuleMenuItem<Dashboard>(ModuleNameInLeftNav.DASHBOARD.ToDescription());
+                Dashboard dashboard = vendorDataRegister.SelectModuleMenuItemOnLeftNav<Dashboard>(ModuleNameInLeftNav.DASHBOARD.ToDescription());
                 vendorDataRegister = dashboard.ClickNumberOnRow<VendorDataRegister>(WidgetUniqueName.CONTRACTORVIEW.ToDescription(), filteringAndExportingData.RowName);
                 //vendorDataRegister.LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateDisplayedViewFilterOption(filteringAndExportingData.GridViewFilter))
                 //    .ClickHeaderButton<VendorDataRegister>(MainPaneTableHeaderButton.More, false)
@@ -78,7 +78,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 //    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateLineItemsIsHighlighted(filteringAndExportingData.GridViewItem, filteringAndExportingData.ItemDescription))
                 //    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateSelectedCountInCreased(filteringAndExportingData.GridViewItem, filteringAndExportingData.ItemDescription));
 
-                //int selectedRow = vendorDataRegister.GetSelectedRecordCount();
+                int selectedRow = vendorDataRegister.GetSelectedRecordCount();
 
                 //vendorDataRegister.ClickOnCheckBox(filteringAndExportingData.GridViewItem, filteringAndExportingData.ItemDescription, uncheck: true)
                 //    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateSelectedCountDeCreased(filteringAndExportingData.GridViewItem, filteringAndExportingData.ItemDescription, selectedRow))
@@ -101,21 +101,28 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
 
                 //when - User Story 123595 - 120790 Filtering & Exporting Vendor Data Register Validation Part 5
                 test = LogTest("US 123595 - 120790 Filtering & Exporting Vendor Data Register Validation - Part 5");
+          
+                vendorDataRegister.DoubleClickItem(filteringAndExportingData.ContractNumber, filteringAndExportingData.GridViewContract, filteringAndExportingData.ContractNumberDescription)
+                    .DoubleClickItem(filteringAndExportingData.ItemIDNumber, filteringAndExportingData.GridViewItem, filteringAndExportingData.ItemDescription)
+                    .DoubleClickItem(filteringAndExportingData.DeliverableNumber, filteringAndExportingData.GridViewDeliverable, filteringAndExportingData.DeliverableDescription);
 
                 int countWindowHandles = driver.WindowHandles.Count;
 
-                VendorContractDetail contractDetail = vendorDataRegister.ClickOnBlueItem<VendorContractDetail>(filteringAndExportingData.GridViewContract, filteringAndExportingData.ContractNumber);
+                VendorContractDetail contractDetail = vendorDataRegister.ClickOnBlueItem<VendorContractDetail>(filteringAndExportingData.GridViewDocument, filteringAndExportingData.DocumentNumber);
                 contractDetail.LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateWindowIsOpen(countWindowHandles, open: true));
 
                 vendorDataRegister = contractDetail.ClickCloseButtonOnPopUp<VendorDataRegister>();
-
                 countWindowHandles = driver.WindowHandles.Count;
-
                 vendorDataRegister.LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateWindowIsOpen(countWindowHandles, open: false))
-                    .SelectFilterOption<VendorDataRegister>(filteringAndExportingData.ExpeditingViewFilter)
+                    .SelectFilterOption<VendorDataRegister>(filteringAndExportingData.ExpeditingViewFilter);
+
+                selectedRow = vendorDataRegister.GetSelectedRecordCount();
+
+                vendorDataRegister.LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateItemsCountedAreMatches(filteringAndExportingData.GridExpeditingContracts))
+                    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidatePageSizeDefaultIsCorrectly(filteringAndExportingData.GridViewContract, filteringAndExportingData.pageSizeDefault))
                     .ClickHeaderLabelToSort<VendorDataRegister>(MainPaneTableHeaderLabel.ContractNumber)
                     .ClickHeaderButton<VendorDataRegister>(MainPaneTableHeaderButton.Export, false)
-                    .ClickHeaderDropdownItem<VendorDataRegister>(MainPaneHeaderDropdownItem.ExpeditingView, false);
+                    .SelectItemOnHeaderDropdown(MainPaneHeaderDropdownItem.ExpeditingView);
                     //.DownloadFile<VendorDataRegister>(filteringAndExportingData.DownloadFilePath)
                     //.LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateExcelItemsCount(filteringAndExportingData.HierarchicalGridViewName,
                     //                                                                                               filteringAndExportingData.DownloadFilePath));
