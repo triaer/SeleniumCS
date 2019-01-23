@@ -77,7 +77,7 @@ namespace KiewitTeamBinder.UI.Tests.Transmittals
             }
         }
 
-        [TestMethod]
+        //[TestMethod]
         public void HoldingArea_ProcessDocument_UI()
         {
             try

@@ -83,6 +83,27 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             return this;
         }       
 
+        private IReadOnlyCollection<IWebElement> GetAvailablePurchaseItems(List<KeyValuePair<string, string>> columnValuePairList)
+        {
+            int rowIndex, colIndex = 1;
+            string itemsXpath = _filterItemsXpath;
+            GetTableCellValueIndex(PurchaseTable, columnValuePairList.ElementAt(0).Key, out rowIndex, out colIndex, "th");
+            if (colIndex < 2)
+                return null;
+            itemsXpath += $"[td[{colIndex}][contains(., '{columnValuePairList.ElementAt(0).Value}')]";                                    
+
+            for (int i = 1; i < columnValuePairList.Count; i++)
+            {
+                GetTableCellValueIndex(PurchaseTable, columnValuePairList.ElementAt(i).Key, out rowIndex, out colIndex, "th");
+                if (colIndex < 2)
+                    return null;
+                itemsXpath += $" and td[{colIndex}][contains(., '{columnValuePairList.ElementAt(i).Value}')]";                                        
+            }
+            itemsXpath += "]";
+
+            return StableFindElements(By.XPath(itemsXpath));
+        }
+        
         private IReadOnlyCollection<IWebElement> GetAvalibleDeliverable(List<KeyValuePair<string, string>> columnValuePairList)
         {
             int rowIndex, colIndex = 1;
@@ -183,26 +204,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             return this;
         }
 
-        private IReadOnlyCollection<IWebElement> GetAvailablePurchaseItems(List<KeyValuePair<string, string>> columnValuePairList)
-        {
-            int rowIndex, colIndex = 1;
-            string itemsXpath = _filterItemsXpath;
-            GetTableCellValueIndex(PurchaseTable, columnValuePairList.ElementAt(0).Key, out rowIndex, out colIndex, "th");
-            if (colIndex < 2)
-                return null;
-            itemsXpath += $"[td[{colIndex}][contains(., '{columnValuePairList.ElementAt(0).Value}')]";                                    
-
-            for (int i = 1; i < columnValuePairList.Count; i++)
-            {
-                GetTableCellValueIndex(PurchaseTable, columnValuePairList.ElementAt(i).Key, out rowIndex, out colIndex, "th");
-                if (colIndex < 2)
-                    return null;
-                itemsXpath += $" and td[{colIndex}][contains(., '{columnValuePairList.ElementAt(i).Value}')]";                                        
-            }
-            itemsXpath += "]";
-
-            return StableFindElements(By.XPath(itemsXpath));
-        }
+        
 
         private void ReplaceValueOfStatusColumn(ref List<KeyValuePair<string, string>> columnValuePairList)
         {
@@ -235,11 +237,13 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             }
         }
 
-        public KeyValuePair<string, bool> ValidateDeliverablesAreShown(List<KeyValuePair<string, string>> columnValuePairList)
+		public KeyValuePair<string, bool> ValidateDeliverablesAreShown(List<KeyValuePair<string, string>> columnValuePairList)
         {
             var node = StepNode();
             try
             {
+                ReplaceValueOfStatusColumn(ref columnValuePairList);
+
                 var DeliverableList = GetAvalibleDeliverable(columnValuePairList);
                 if (DeliverableList.Count > 0)
                 {

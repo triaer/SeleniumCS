@@ -16,7 +16,7 @@ using OpenQA.Selenium.Interactions;
 using System.Windows.Forms;
 using KiewitTeamBinder.Common.Helper;
 using AventStack.ExtentReports;
-
+using static KiewitTeamBinder.UI.ExtentReportsHelper;
 
 namespace KiewitTeamBinder.UI.Pages.Global
 {
@@ -29,6 +29,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         internal static string Url { get; set; }
         internal static IWebDriver WebDriver { get; set; }
 
+        public static By _walkMe => By.XPath("//div[@id='walkme-player']//div[contains(@class,'walkme-in')]");
         internal static By _loadingPanel => By.XPath("//div[contains(@id, 'LoadingPanel')]");
         internal static By _progressPopUp => By.Id("divProgressWindow");
         internal static By _progressMessage => By.Id("spanProgressMsg");
@@ -90,10 +91,27 @@ namespace KiewitTeamBinder.UI.Pages.Global
             StableFindElement(textbox).InputText(value);
         }
 
-        public void WaitForLoadingPanel(int timeout = 5)
+        public void WaitForLoadingPanel(int timeout = sapShortTimeout)
         {
-            WaitForLoading(_loadingPanel, timeout);
-            WaitForElementEnable(By.XPath("//div[contains(@id,'_GridData')]"));
+            var node = StepNode();
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            do
+            {
+                try
+                {
+                    WaitForLoading(_loadingPanel);
+                    WaitForElementDisplay(_walkMe, mediumTimeout);
+                    if (WaitForElementInvisible(_loadingPanel))
+                        break;
+                }
+                catch (Exception)
+                { }
+            } while (stopwatch.Elapsed.TotalSeconds <= timeout);
+            if (stopwatch.Elapsed.TotalSeconds >= timeout)
+                node.Warning("The icon loading process is not completed in timeout: " + timeout);
+
+            stopwatch.Stop();
         }
 
         internal static IWebElement StableFindElement(By by, long timeout = longTimeout)
