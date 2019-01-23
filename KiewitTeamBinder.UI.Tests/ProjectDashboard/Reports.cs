@@ -22,7 +22,7 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
     [TestClass]
     public class Reports : UITestBase
     {
-        //[TestMethod]
+        [TestMethod]
         public void General_RunReportAndGenerateHyperlink_UI()
         {
             try

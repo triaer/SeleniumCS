@@ -27,10 +27,11 @@ namespace KiewitTeamBinder.UI.Pages.Dialogs
         {
             //webDriver.SwitchTo().ActiveElement();
             var node = StepNode();
-            IWebElement Title = StableFindElement(_dialog).FindElement(_dialogTitle);
-            node.Info("Dialog shows title: " + Title.Text);
             try
             {
+                IWebElement Title = StableFindElement(_dialog).FindElement(_dialogTitle);
+                node.Info("Dialog shows title: " + Title.Text);
+            
                 IWebElement Frame = Title.FindElement(By.XPath("parent::iframe"));
                 node.Info("Frame id: " + Frame.GetAttribute("id"));
             }
