@@ -14,6 +14,7 @@ namespace KiewitTeamBinder.UI.Pages.Dialogs
         private static By _dialog => By.XPath("//div[@id= 'RadWindowWrapper_MicrosoftReportViewer_GenerateDocLink_RadWndGenerateLink']");
         private static By _closeButton => By.XPath("//input[contains(@id, 'btnClose_input')]");
         private static By _hyperlink => By.Id("lnkCopy");
+        private static By _dialogTitle => By.XPath(".//tr[@class='rwTitleRow']//tr//em");
         
         //public IWebElement Dialog { get { return StableFindElement(_dialog); } }
         public IWebElement CloseButton { get { return StableFindElement(_closeButton); } }
@@ -24,7 +25,17 @@ namespace KiewitTeamBinder.UI.Pages.Dialogs
         #region Actions
         public GenerateHyperlinkDialog(IWebDriver webDriver) : base(webDriver)
         {
-            webDriver.SwitchTo().ActiveElement();
+            //webDriver.SwitchTo().ActiveElement();
+            var node = StepNode();
+            IWebElement Title = StableFindElement(_dialog).FindElement(_dialogTitle);
+            node.Info("Dialog shows title: " + Title.Text);
+            try
+            {
+                IWebElement Frame = Title.FindElement(By.XPath("parent::iframe"));
+                node.Info("Frame id: " + Frame.GetAttribute("id"));
+            }
+            catch
+            { }
         }
 
         public StandardReports ClickCloseButton(ref By currentIframe, ref List<KeyValuePair<string, bool>> methodValidation)
