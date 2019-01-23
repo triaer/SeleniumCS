@@ -33,7 +33,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
         private static By _selectedRow(string gridView, string Description) => By.XPath($"//*[contains(text(),'{Description}')]/ancestor::tr[contains(@id,'{gridView}_ctl00')]");
         private static By _headerTitlePage => By.XPath("//div[@id='lblRegisterCaption']");
         private static By _pageSizeBox => By.XPath("//input[contains(@id,'PageSizeComboBox_ClientState') and contains(@id,'RadGridExpeditingContracts')]");
-        private static By _rowData => By.XPath("//a[text()='Contract Number']/ancestor::table[contains(@id,'RadGridExpeditingContracts')]/thead/tr");
+        private static By _rowData(string gridViewName) => By.XPath($"//a[contains(@onclick,'{gridViewName}')]/ancestor::th[contains(@class,'rgHeader')]");
 
         private static string _filterItemsXpath = "//table[contains(@id,'GridViewItemsVendor')]//tr[@valign='top']";
 
@@ -45,11 +45,11 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
         public IWebElement CheckBoxItemContract(string gridView, string description) => StableFindElement(_checkBoxItemContract(gridView, description));
         public IWebElement SelectedRecordCount { get { return StableFindElement(_selectedRecordCount); } }
         public IWebElement BlueHeader(string blueHeader) => StableFindElement(_blueHeader(blueHeader));
-        public IWebElement BlueItem(string gridView, string itemName) => StableFindElement(_blueItem(gridView, itemName));
-        public IWebElement TotalItem(string gridView) => StableFindElement(_totalItem(gridView));
+        public IWebElement BlueItem(string gridViewName, string itemName) => StableFindElement(_blueItem(gridViewName, itemName));
+        public IWebElement TotalItem(string gridViewName) => StableFindElement(_totalItem(gridViewName));
         public IWebElement HeaderTitlePage { get { return StableFindElement(_headerTitlePage); } }
         public IWebElement PageSizeBox { get { return FindElement(_pageSizeBox); } }
-        public IWebElement RowData { get { return FindElement(_rowData); } }
+        public IReadOnlyCollection<IWebElement> RowData(string gridViewName) => StableFindElements(_rowData(gridViewName));
         public IReadOnlyCollection<IWebElement> ItemsList(string gridView) => StableFindElements(_itemsList(gridView));
         public IReadOnlyCollection<IWebElement> SelectedRow(string gridView, string description) => StableFindElements(_selectedRow(gridView, description));
 
@@ -456,7 +456,22 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             var node = StepNode();
             try
             {
-                string expected = RowData.Text;
+                //string expected = RowData(gridViewName).Text;
+                string expected = "";
+                int numberOfColumns = RowData(gridViewName).Count;
+                for (int i = 0; i < numberOfColumns; i++)
+                {
+                    ScrollIntoView(RowData(gridViewName).ElementAt(i));
+                    expected += RowData(gridViewName).ElementAt(i).Text + ",";
+                }
+                expected = expected.Substring(expected.Length - 1);
+                //foreach (IWebElement data in RowData(gridViewName))
+                //{
+                //    if (data.Displayed == false)
+                //        ScrollIntoView(data);
+                //    expected += data.Text + ",";
+                //}
+
                 //int expected = int.Parse(ItemsNumberLabel(gridViewName).Text);
                 //int actual = ExcelUtils.GetNumberkOfRows(excelFilePath, sheetName) - 1;
                 string actual = ExcelUtils.GetExcelRowValue( excelFilePath, sheetName, rowIndex);

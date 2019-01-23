@@ -126,7 +126,9 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                     .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateDisplayedSubItemLinks(filteringAndExportingData.SubItemMenus))
                     .SelectItemOnHeaderDropdown<VendorDataRegister>(MainPaneHeaderDropdownItem.ExpeditingView)
                     .DownloadFile<VendorDataRegister>(filteringAndExportingData.DownloadFilePath)
-                    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateDataExcelCorrectly(filteringAndExportingData.GridExpeditingContracts, 0, filteringAndExportingData.DownloadFilePath));
+                    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateExcelItemsCount(filteringAndExportingData.HierarchicalGridViewName,
+                                                                                                                  filteringAndExportingData.DownloadFilePath))
+                    .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateDataExcelCorrectly(filteringAndExportingData.GridExpeditingContracts, 1, filteringAndExportingData.DownloadFilePath));
 
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);
