@@ -69,6 +69,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             node.Info("Choose files from window explorer form");
             node.Info("Files name: " + fileNames);
             UploadFiles(filePath, fileNames);
+            WaitForJQueryLoad();
             return this;
         }        
 

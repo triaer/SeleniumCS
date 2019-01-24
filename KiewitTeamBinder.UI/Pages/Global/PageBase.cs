@@ -814,12 +814,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
         }
 
-        internal static void ClickElement(By by)
-        {
-            WaitForElementClickable(by);
-            StableFindElement(by).Click();
-        }
-               
         internal static KeyValuePair<string, bool> SetPassValidation(ExtentTest test, string testInfo)
         {
             test.Pass(testInfo);

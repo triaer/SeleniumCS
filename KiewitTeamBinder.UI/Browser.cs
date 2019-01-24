@@ -84,14 +84,15 @@ namespace KiewitTeamBinder.UI
 
                 InternetExplorerOptions ieOptions = new InternetExplorerOptions();
                 ieOptions.EnableNativeEvents = true;
-                ieOptions.UnhandledPromptBehavior = UnhandledPromptBehavior.Accept;
+                ieOptions.UnhandledPromptBehavior = UnhandledPromptBehavior.Ignore;
                 ieOptions.EnablePersistentHover = true;
                 ieOptions.RequireWindowFocus = true;
                 ieOptions.IntroduceInstabilityByIgnoringProtectedModeSettings = true;
                 ieOptions.IgnoreZoomLevel = true;
                 ieOptions.EnsureCleanSession = true;
-                ieOptions.AddAdditionalCapability("disable-popup-blocking", "true");
-
+                ieOptions.AddAdditionalCapability("disable-popup-blocking", true);
+                
+                
                 //string ieWebDriver = Environment.GetEnvironmentVariable("IEWebDriver");
                 string ieWebDriver = null;
                 if (string.IsNullOrEmpty(ieWebDriver))

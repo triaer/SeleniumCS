@@ -117,7 +117,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
         {
             var node = StepNode();
             node.Info($"Click Generate hyperlink in Report Window Header");
-            GenerateHyperlink.Click();
+            GenerateHyperlink.HoverAndClickWithJS();
             return new GenerateHyperlinkDialog(WebDriver);
         }
 
@@ -641,7 +641,15 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             }
 
         }
+        public KeyValuePair<string, bool> ValidateGeneratedLinkValueIsValid(string linkText)
+        {
+            var node = StepNode();
+            if (linkText != "")
+                return SetPassValidation(node, Validation.Generated_Link_Text_Is_Valid);
+            else
+                return SetFailValidation(node, Validation.Generated_Link_Text_Is_Valid,"Without empty",linkText);
 
+        }
         private static class Validation
         {
             public static string Available_Reports_Display = "Validate that all available reports display correctly: ";
@@ -659,6 +667,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             public static string Reports_Are_Shown = "Validate that reports are shown";
             public static string Report_Tab_Is_Selected = "Validate report tab is selected";
             public static string Favorited_Report_Is_Listed = "Favorited Report is listed ";
+            public static string Generated_Link_Text_Is_Valid = "Hyperlink is generated and shown in the textbox properly ";
 
         }
         #endregion
