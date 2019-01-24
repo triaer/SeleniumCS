@@ -39,8 +39,8 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 //when - User Story 121133 - 120790 Filtering & Exporting Vendor Data Register Validation - Part 1
                 test = LogTest("US 121133 - 120790 Filtering & Exporting Vendor Data Register Validation - Part 1");
 
-                projectDashBoard.SelectModuleMenuItem<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription(), waitForLoading: false);
-                VendorDataRegister vendorDataRegister = projectDashBoard.SelectModuleMenuItem<VendorDataRegister>(subMenuItem: ModuleSubMenuInLeftNav.VENDODATAREGISTER.ToDescription());
+                projectDashBoard.SelectModuleMenuItemOnLeftNav<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription(), waitForLoading: false);
+                VendorDataRegister vendorDataRegister = projectDashBoard.SelectModuleMenuItemOnLeftNav<VendorDataRegister>(subMenuItem: ModuleSubMenuInLeftNav.VENDODATAREGISTER.ToDescription());
                 vendorDataRegister.LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateDisplayedViewFilterOption(filteringAndExportingData.DefaultFilter))
                 .ClickHeaderButton<VendorDataRegister>(MainPaneTableHeaderButton.More, false)
                 .HoverHeaderDropdownItem<VendorDataRegister>(MainPaneHeaderDropdownItem.RegisterView)
@@ -54,7 +54,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
 
                 //when - User Story 123548 - 120790 Filtering & Exporting Vendor Data Register Validation - Part 2
                 test = LogTest("US 123548 - 120790 Filtering & Exporting Vendor Data Register Validation - Part 2");
-                Dashboard dashboard = vendorDataRegister.SelectModuleMenuItem<Dashboard>(ModuleNameInLeftNav.DASHBOARD.ToDescription());
+                Dashboard dashboard = vendorDataRegister.SelectModuleMenuItemOnLeftNav<Dashboard>(ModuleNameInLeftNav.DASHBOARD.ToDescription());
                 vendorDataRegister = dashboard.ClickNumberOnRow<VendorDataRegister>(WidgetUniqueName.CONTRACTORVIEW.ToDescription(), ModuleSubItemsInContractorView.Contracts.ToDescription());
                 vendorDataRegister.LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateDisplayedViewFilterOption(filteringAndExportingData.GridViewFilter))
                     .ClickHeaderButton<VendorDataRegister>(MainPaneTableHeaderButton.More, false)
@@ -144,25 +144,25 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
 
                 //when - User Story 123595 - 120790 Filtering & Exporting Vendor Data Register Validation Part 6
                 test = LogTest("US 123595 - 120790 Filtering & Exporting Vendor Data Register Validation - Part 6");
-                projectDashBoard.SelectModuleMenuItem<Dashboard>(ModuleNameInLeftNav.DASHBOARD.ToDescription());
+                projectDashBoard.SelectModuleMenuItemOnLeftNav<Dashboard>(ModuleNameInLeftNav.DASHBOARD.ToDescription());
                 int countOfItem = dashboard.GetCountValueFromRow(WidgetUniqueName.CONTRACTORVIEW.ToDescription(), ModuleSubItemsInContractorView.DocumentsSubmitted.ToDescription());
                 HoldingArea holdingArea = dashboard.ClickNumberOnRow<HoldingArea>(WidgetUniqueName.CONTRACTORVIEW.ToDescription(), ModuleSubItemsInContractorView.DocumentsSubmitted.ToDescription());
                 holdingArea.LogValidation<HoldingArea>(ref validations, holdingArea.ValidateSubPageIsDislayed(filteringAndExportingData.DocumentSubmitedPage))
                            .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateRecordItemsCount(filteringAndExportingData.GridViewHoldingAreaName, countOfItem))
-                           .SelectModuleMenuItem<Dashboard>(ModuleNameInLeftNav.DASHBOARD.ToDescription());
+                           .SelectModuleMenuItemOnLeftNav<Dashboard>(ModuleNameInLeftNav.DASHBOARD.ToDescription());
                 dashboard.ClickItemInExpandedWidget<HoldingArea>(WidgetUniqueName.CONTRACTORVIEW.ToDescription(), ModuleSubItemsInContractorView.DocumentsSubmitted.ToDescription(), ModuleExpandedItemsInContractorView.NEW.ToDescription(), ref countOfItem);
                 holdingArea.LogValidation<HoldingArea>(ref validations, holdingArea.ValidateSubPageIsDislayed(filteringAndExportingData.NewDocumentSubmitedPage))
                            .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateRecordItemsCount(filteringAndExportingData.GridViewHoldingAreaName, countOfItem))
-                           .SelectModuleMenuItem<Dashboard>(ModuleNameInLeftNav.DASHBOARD.ToDescription());
+                           .SelectModuleMenuItemOnLeftNav<Dashboard>(ModuleNameInLeftNav.DASHBOARD.ToDescription());
                 dashboard.ClickItemInExpandedWidget<HoldingArea>(WidgetUniqueName.CONTRACTORVIEW.ToDescription(), ModuleSubItemsInContractorView.DocumentsSubmitted.ToDescription(), ModuleExpandedItemsInContractorView.ACCEPTED.ToDescription(), ref countOfItem);
                 holdingArea.LogValidation<HoldingArea>(ref validations, holdingArea.ValidateSubPageIsDislayed(filteringAndExportingData.AcceptedDocumentSubmitedPage))
                            .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateRecordItemsCount(filteringAndExportingData.GridViewHoldingAreaName, countOfItem))
-                           .SelectModuleMenuItem<Dashboard>(ModuleNameInLeftNav.DASHBOARD.ToDescription());
+                           .SelectModuleMenuItemOnLeftNav<Dashboard>(ModuleNameInLeftNav.DASHBOARD.ToDescription());
                 countOfItem = dashboard.GetCountValueFromRow(WidgetUniqueName.CONTRACTORVIEW.ToDescription(), ModuleSubItemsInContractorView.ReturnedToVendor.ToDescription());
                 dashboard.ClickNumberOnRow<HoldingArea>(WidgetUniqueName.CONTRACTORVIEW.ToDescription(), ModuleSubItemsInContractorView.ReturnedToVendor.ToDescription());
                 holdingArea.LogValidation<HoldingArea>(ref validations, holdingArea.ValidateSubPageIsDislayed(filteringAndExportingData.ReturnedToVendorDocumentsPage))
                            .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateRecordItemsCount(filteringAndExportingData.GridViewDocumentRegister, countOfItem))
-                           .SelectModuleMenuItem<Dashboard>(ModuleNameInLeftNav.DASHBOARD.ToDescription());
+                           .SelectModuleMenuItemOnLeftNav<Dashboard>(ModuleNameInLeftNav.DASHBOARD.ToDescription());
                 countOfItem = dashboard.GetCountValueFromRow(WidgetUniqueName.CONTRACTORVIEW.ToDescription(), ModuleSubItemsInContractorView.Contracts.ToDescription());
                 dashboard.ClickNumberOnRow<HoldingArea>(WidgetUniqueName.CONTRACTORVIEW.ToDescription(), ModuleSubItemsInContractorView.Contracts.ToDescription());
                 holdingArea.LogValidation<HoldingArea>(ref validations, holdingArea.ValidateSubPageIsDislayed(filteringAndExportingData.ContractsVendorDataPage))

@@ -54,7 +54,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                     .LogValidation<AlertDialog>(ref validations, messageDialog.ValidateMessageDisplayCorrect(uploadSingleDocData.SaveMessage))
                     .ClickOKOnMessageDialog<DocumentDetail>()
                     .LogValidation<DocumentDetail>(ref validations, newDocument.ValidateSaveDialogStatus(closed: true))
-                    .ClickToolbarButtonOnWinPopup<HoldingArea>(ToolbarButton.Close);
+                    .ClickToolbarButton<HoldingArea>(ToolbarButton.Close);
 
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);

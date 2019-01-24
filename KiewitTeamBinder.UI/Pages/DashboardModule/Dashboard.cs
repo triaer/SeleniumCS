@@ -19,24 +19,13 @@ namespace KiewitTeamBinder.UI.Pages.DashboardModule
         private static By _numberOnRowInWidget(string widgetUniqueName, string rowName) => By.XPath($"//div[@widgetuniquename = '{widgetUniqueName}']//td[contains(@id,'tdCaption')][span = '{rowName}']/preceding-sibling::td[contains(@id,'tdCount')]");
         private static By _expandedButtonInWidget(string widgetUniqueName, string nameItem) => By.XPath($"//div[contains(@id,'{widgetUniqueName}')]//td[span='{nameItem}']/preceding::td[2]");
         private static By _itemInExpandedWidget(string widgetUniqueName, string parrentItem, string nameItem) => By.XPath($"//div[@widgetuniquename = '{widgetUniqueName}']//td[@parentcptn = '{parrentItem}'][span = '{nameItem}']");
+        private static By _tableStateInWidget(string widgetUniqueName) => By.XPath($"//div[@widgetuniquename = '{widgetUniqueName}']//table[contains(@id,'tblStat')]");
 
         public IWebElement MoreLessButton(string widgetUniqueName) => StableFindElement(_moreLessButton(widgetUniqueName));
         public IWebElement RowInWidget(string widgetUniqueName, string rowName) => StableFindElement(_rowInWidget(widgetUniqueName, rowName));
         public IWebElement NumberOnRowInWidget(string widgetUniqueName, string rowName) => StableFindElement(_numberOnRowInWidget(widgetUniqueName, rowName));
         public IWebElement ExpandedButtonInWidget(string widgetUniqueName, string nameItem) => StableFindElement(_expandedButtonInWidget(widgetUniqueName, nameItem));
         public IWebElement ItemInExpandedWidget(string widgetUniqueName, string parrentItem, string nameItem) => StableFindElement(_itemInExpandedWidget(widgetUniqueName, parrentItem, nameItem));
-
-
-        private static string _widgetLabelXpath = "//span[@class='Title' and text()='{0}']";
-
-        private static By _moreLessButton(string widgetUniqueName) => By.XPath($"//div[@widgetuniquename = '{widgetUniqueName}']//a[contains(@id,'More')]");
-        private static By _rowInWidget(string widgetUniqueName, string rowName) => By.XPath($"//div[@widgetuniquename = '{widgetUniqueName}']//td[contains(@id,'tdCaption')][span = '{rowName}']");
-        private static By _numberOnRowInWidget(string widgetUniqueName, string rowName) => By.XPath($"//div[@widgetuniquename = '{widgetUniqueName}']//td[contains(@id,'tdCaption')][span = '{rowName}']/preceding-sibling::td[contains(@id,'tdCount')]");
-        private static By _tableStateInWidget(string widgetUniqueName) => By.XPath($"//div[@widgetuniquename = '{widgetUniqueName}']//table[contains(@id,'tblStat')]");
-
-        public IWebElement MoreLessButton(string widgetUniqueName) => StableFindElement(_moreLessButton(widgetUniqueName));
-        public IWebElement RowInWidget(string widgetUniqueName, string rowName) => StableFindElement(_rowInWidget(widgetUniqueName, rowName));
-        public IWebElement NumberOnRowInWidget(string widgetUniqueName, string rowName) => StableFindElement(_numberOnRowInWidget(widgetUniqueName, rowName));
         public IWebElement TableStateInWidget(string widgetUniqueName) => StableFindElement(_tableStateInWidget(widgetUniqueName));
         #endregion
 

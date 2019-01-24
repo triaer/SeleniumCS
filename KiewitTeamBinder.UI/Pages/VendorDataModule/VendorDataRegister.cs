@@ -50,7 +50,6 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
         public IWebElement BlueHeader(string blueHeader) => StableFindElement(_blueHeader(blueHeader));
         public IWebElement BlueItem(string gridViewName, string itemName) => StableFindElement(_blueItem(gridViewName, itemName));
         public IWebElement TotalItem(string gridViewName) => StableFindElement(_totalItem(gridViewName));
-        public IWebElement HeaderTitlePage { get { return StableFindElement(_headerTitlePage); } }
         public IWebElement PageSizeBox { get { return FindElement(_pageSizeBox); } }
         public IReadOnlyCollection<IWebElement> RowData(string gridViewName) => StableFindElements(_rowData(gridViewName));
         public IReadOnlyCollection<IWebElement> ItemsList(string gridView) => StableFindElements(_itemsList(gridView));
@@ -199,26 +198,6 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             return new VendorDeliverableDetail(WebDriver);
         }
 
-        private IReadOnlyCollection<IWebElement> GetAvailablePurchaseItems(List<KeyValuePair<string, string>> columnValuePairList)
-        {
-            int rowIndex, colIndex = 1;
-            string itemsXpath = _filterItemsXpath;
-            GetTableCellValueIndex(PurchaseTable, columnValuePairList.ElementAt(0).Key, out rowIndex, out colIndex, "th");
-            if (colIndex < 2)
-                return null;
-            itemsXpath += $"[td[{colIndex}][contains(., '{columnValuePairList.ElementAt(0).Value}')]";
-
-            for (int i = 1; i < columnValuePairList.Count; i++)
-            {
-                GetTableCellValueIndex(PurchaseTable, columnValuePairList.ElementAt(i).Key, out rowIndex, out colIndex, "th");
-                if (colIndex < 2)
-                    return null;
-                itemsXpath += $" and td[{colIndex}][contains(., '{columnValuePairList.ElementAt(i).Value}')]";
-            }
-            itemsXpath += "]";
-
-        
-
         private void ReplaceValueOfStatusColumn(ref List<KeyValuePair<string, string>> columnValuePairList)
         {
             foreach (var columnValuePair in columnValuePairList)
@@ -276,7 +255,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             var node = StepNode();
             try
             {
-                expectedValue = GetTotalItems(gridViewName);
+                expectedValue = GetTotalItems(gridView);
                 int itemListSize = 0;
                 //int itemListSize = ItemsList(gridView).Count;
                 foreach (IWebElement item in ItemsList(gridView))

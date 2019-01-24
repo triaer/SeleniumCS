@@ -25,19 +25,9 @@ namespace KiewitTeamBinder.Common.TestData
         public string ItemIDNumber = "123";
         public string DeliverableNumber = "123456";
         public string DocumentNumber = "05218-MM-00001";
-        public string ProjectName = "Automation Project 1";
-        public string ItemPurchasedHeader = "Item Purchased";
-        public string DeliverablesHeader = "Deliverables";
-        public string DocumentsHeader = "Documents";
-        public string HierarchicalGridViewName = "GridViewContractVendor";
         public string GridGridViewName = "GridViewContractsGrid";
-        public string DefaultFilter = "Hierarchical View";
-        public string GridViewFilter = "Grid View";
         public string ExpeditingViewFilter = "Expediting View";
-        public string RegisterView = "Default View";
         public string RowName = "Contracts";
-        public string DownloadFilePath = Utils.GetDownloadFilesLocalPath() + "\\" + Utils.GetRandomValue("Contracts") + ".xlsx";
-        public string FilterValue = "CLOSED-OUT - Closed Out";
         public string[] SubItemMenus = { KiewitTeamBinderENums.MainPaneHeaderDropdownItem.Contracts.ToDescription(),
                                          KiewitTeamBinderENums.MainPaneHeaderDropdownItem.PurchaseItems.ToDescription(),
                                          KiewitTeamBinderENums.MainPaneHeaderDropdownItem.Deliverables.ToDescription(),
@@ -53,7 +43,6 @@ namespace KiewitTeamBinder.Common.TestData
         public string ContractNumberDescription = "testing 120793";
         public string ItemID = "123";
         public string ItemDescription = "abc";
-        public string DeliverableNumber = "123456";
         public string DeliverableDescription = "123456";
         public string DeliverableItemWindow = "AUTO1 - ";
         public string LinkItemsWindow = "Link Items";

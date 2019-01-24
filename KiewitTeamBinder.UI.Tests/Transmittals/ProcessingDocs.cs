@@ -101,8 +101,8 @@ namespace KiewitTeamBinder.UI.Tests.Transmittals
                 HoldingArea holdingArea = projectDashBoard.SelectModuleMenuItemOnLeftNav<HoldingArea>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription(), subMenuItem: ModuleSubMenuInLeftNav.HOLDINGAREA.ToDescription());
                 DocumentDetail newDocument = holdingArea.ClickNewButton(out currentWindow);
                 newDocument.EnterDocumentInformation(processDocumentData.SingleDocInformation, ref methodValidations)
-                           .ClickSaveInToolbarHeader()
-                           .ClickOKOnMessageDialog<DocumentDetail>()
+                           .ClickSaveButton<DocumentDetail>()
+                           .ClickOkButtonOnPopUp<DocumentDetail>()
                            .ClickCloseButtonOnPopUp<HoldingArea>();
 
                 //User Story 120013 - Process Document

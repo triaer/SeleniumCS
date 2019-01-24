@@ -199,12 +199,12 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 deliverableDetail.LogValidation<VendorDeliverableDetail>(ref validations, deliverableDetail.ValidateSaveDialogStatus(closed: true));
 
                 parrentWindow = deliverableDetail.GetCurrentWindow();
-                deliverableDetail.ClickToolbarButtonOnWinPopup<VendorDeliverableDetail>(ToolbarButton.More, checkProgressPopup: false, isDisappear: true)
+                deliverableDetail.ClickToolbarButton<VendorDeliverableDetail>(ToolbarButton.More, checkProgressPopup: false, isDisappear: true)
                                      .LogValidation<VendorDeliverableDetail>(ref validations, deliverableDetail.ValidateDisplayedSubItemLinks(createNewDeliverableData.SubItemOfMoreFunction));
                 LinkItems linkItem = deliverableDetail.SelectDropdownItemWithSwitchWindow<LinkItems>(MainPaneHeaderDropdownItem.LinkItems);
 
                 linkItem.LogValidation<LinkItems>(ref validations, linkItem.ValidateWindowIsOpened(createNewDeliverableData.LinkItemsWindowTitle))
-                        .ClickToolbarButtonOnWinPopup<VendorDeliverableDetail>(ToolbarButton.Add)
+                        .ClickToolbarButton<VendorDeliverableDetail>(ToolbarButton.Add)
                         .LogValidation<VendorDeliverableDetail>(ref validations, linkItem.ValidateDisplayedSubItemLinks(createNewDeliverableData.SubItemOfAddFunction));
                 AddDocument addDocument = linkItem.SelectDropdownItemWithSwitchDialog<AddDocument>(MainPaneHeaderDropdownItem.Documents);
                 addDocument.LogValidation<AddDocument>(ref validations, addDocument.ValidateDocumentSearchWindowStatus())
@@ -219,7 +219,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 messageDialog = linkItem.ClickSaveInToolbarHeader();
                 messageDialog.LogValidation<AlertDialog>(ref validations, messageDialog.ValidateMessageDisplayCorrect(createNewDeliverableData.SaveMessageOnLinkItem))
                         .ClickOKOnMessageDialog<LinkItems>();
-                linkItem.ClickToolbarButtonOnWinPopup<VendorDeliverableDetail>(ToolbarButton.Close)
+                linkItem.ClickToolbarButton<VendorDeliverableDetail>(ToolbarButton.Close)
                         .SwitchToWindow(parrentWindow);
                 deliverableDetail.ClickSaveInToolbarHeader()
                     .LogValidation<AlertDialog>(ref validations, messageDialog.ValidateMessageDisplayCorrect(createNewDeliverableData.SaveMessage))

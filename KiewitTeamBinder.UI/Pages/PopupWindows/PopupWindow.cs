@@ -25,6 +25,8 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
         private static By _dropdownList(string fieldLabel, string type) => By.XPath($"//*[span[(text()= '{fieldLabel}')]]/following-sibling::*[*]//input[contains(@id, '{type}')]");
         private static By _itemDropdown(string dropdownListName) => By.XPath($"//ul/li[starts-with(text(),'{dropdownListName}')]");
         private static By _saveDocButton => By.Id("SaveDocToolBar");
+        private static By _saveItemMessage => By.XPath("//div[contains(@id,'RadWindowWrapper_alert')]//div[contains(@id, '_message')]");
+        private static By _okButtonOnPopUp => By.XPath("//div[contains(@id,'RadWindowWrapper_alert')]//span[text()='OK']");
 
         public IWebElement HeaderLabel { get { return StableFindElement(_headerLabel); } }
         public IWebElement DropdownListInput(string fieldLabel, string idType = "") => StableFindElement(_dropdownList(fieldLabel, idType + "_Input"));
@@ -34,6 +36,8 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
         public IWebElement AsteriskLabel(string fieldLabel) => StableFindElement(_asteriskLabel(fieldLabel));
         public IWebElement ItemDropdown(string dropdownListName) => StableFindElement(_itemDropdown(dropdownListName));
         public IWebElement SaveDocButton { get { return StableFindElement(_saveDocButton); } }
+        public IWebElement SaveMessage { get { return StableFindElement(_saveItemMessage); } }
+        public IWebElement OkButtonOnPopUp { get { return StableFindElement(_okButtonOnPopUp); } }
         #endregion
 
         #region Actions
@@ -44,6 +48,28 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             var node = StepNode();
             test.Info("Get current window");
             return WebDriver.CurrentWindowHandle;
+        }
+        public T ClickToolbarButtonOnWinPopup<T>(ToolbarButton buttonName, bool checkProgressPopup = false, bool isDisappear = false)
+        {
+            var node = StepNode();
+            node.Info("Click the button: " + buttonName.ToDescription());
+
+            if (isDisappear == true)
+                IWebElementExtensions.HoverAndClickWithJS(ToolBarButton(buttonName.ToDescription()));
+            else
+                ToolBarButton(buttonName.ToDescription()).Click();
+
+            if (checkProgressPopup)
+                WaitForLoading(_progressPopUp);
+
+            return (T)Activator.CreateInstance(typeof(T), WebDriver);
+        }
+
+        public AlertDialog ClickSaveInToolbarHeader(bool checkProgressPopup = false)
+        {
+            ClickToolbarButtonOnWinPopup<PopupWindow>(ToolbarButton.Save, checkProgressPopup);
+
+            return new AlertDialog(WebDriver);
         }
 
         public T ClickToolbarButton<T>(ToolbarButton buttonName, bool checkProgressPopup = false, bool isDisappear = false, bool switchWindow = false, string windowTitle = "")
@@ -88,30 +114,56 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 
-
-        public AlertDialog ClickSaveInToolbarHeader(bool checkProgressPopup = false)
+        public T ClickSaveButton<T>()
         {
-            ClickToolbarButtonOnWinPopup<PopupWindow>(ToolbarButton.Save, checkProgressPopup);
-            
-            return new AlertDialog(WebDriver);
-        }
-
-        public AlertDialog ClickValidateDocumentDetails(ToolbarButton buttonName, ref List<KeyValuePair<string, bool>> methodValidation, string processMessage)
-        {
-            var dialog = ClickToolbarButtonOnWinPopup<AlertDialog>(buttonName, true);
-            methodValidation.Add(ValidateProgressContentMessage(processMessage));
-            return dialog;
-        }
-
-        public T ClickCloseButtonOnPopUp<T>()
-        {
-            ClickToolbarButtonOnWinPopup<T>(ToolbarButton.Close);
-            WebDriver.SwitchTo().Window(WebDriver.WindowHandles.Last());
-            WaitForJQueryLoad();
-            WaitForLoadingPanel();
+            ClickToolbarButton<T>(ToolbarButton.Save, true);
+            WebDriver.SwitchTo().ActiveElement();
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 
+        public T ClickOkButtonOnPopUp<T>()
+        {
+            OkButtonOnPopUp.Click();
+            WebDriver.SwitchOutOfIFrame();
+            return (T)Activator.CreateInstance(typeof(T), WebDriver);
+        }
+
+        //public AlertDialog ClickSaveInToolbarHeader(bool checkProgressPopup = false)
+        //{
+        //    ClickToolbarButtonOnWinPopup<PopupWindow>(ToolbarButton.Save, checkProgressPopup);
+
+        //    return new AlertDialog(WebDriver);
+        //}
+
+        public AlertDialog ClickValidateDocumentDetails(ToolbarButton buttonName, ref List<KeyValuePair<string, bool>> methodValidation, string processMessage)
+        {
+            var dialog = ClickToolbarButton<AlertDialog>(buttonName, true);
+            methodValidation.Add(ValidateProgressContentMessage(processMessage));
+            return dialog;
+        }
+        public T ClickCloseButtonOnPopUp<T>()
+        {
+            ClickToolbarButton<T>(ToolbarButton.Close);
+            WebDriver.SwitchTo().Window(WebDriver.WindowHandles.Last());
+            WaitForLoadingPanel();
+            return (T)Activator.CreateInstance(typeof(T), WebDriver);
+        }
+        public KeyValuePair<string, bool> ValidateMessageDisplayCorrect(string expectedMessage)
+        {
+            var node = StepNode();
+            try
+            {
+                string actualMessage = SaveMessage.Text.Trim();
+                if (actualMessage == expectedMessage)
+                    return SetPassValidation(node, Validation.Message_Display_Correct);
+                else
+                    return SetFailValidation(node, Validation.Message_Display_Correct, expectedMessage, actualMessage);
+            }
+            catch (Exception e)
+            {
+                return SetErrorValidation(node, Validation.Message_Display_Correct, e);
+            }
+        }
         public KeyValuePair<string, bool> ValidateItemDropdownIsHighlighted(string value, string idDropdown)
         {
             var node = StepNode();

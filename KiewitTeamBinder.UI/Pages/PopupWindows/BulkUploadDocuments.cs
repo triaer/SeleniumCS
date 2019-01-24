@@ -239,7 +239,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
                 .SelectDataOfDocumentPropertyDropdown("CON - Contruction", DocBulkUploadDropdownType.Disc, documentRow: 1)
                 .SelectDataOfDocumentPropertyDropdown("CA - CALCULATION", DocBulkUploadDropdownType.Cat, documentRow: 1)
                 .SelectDataOfDocumentPropertyDropdown("SUB - Submittal", DocBulkUploadDropdownType.Type, documentRow: 1)
-                .ClickToolbarButtonOnWinPopup<BulkUploadDocuments>(ToolbarButton.CopyAttributes)
+                .ClickToolbarButton<BulkUploadDocuments>(ToolbarButton.CopyAttributes)
                 .HoverOnCopyAttributesMainItem("All", ref indexOfCopyAttributeItem);
 
             ApplyToNRowsDialog applyToNextNRowsDialog = ClickToNRowsItem(ref indexOfCopyAttributeItem);
