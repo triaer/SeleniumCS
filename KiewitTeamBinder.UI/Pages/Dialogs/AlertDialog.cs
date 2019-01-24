@@ -17,7 +17,7 @@ namespace KiewitTeamBinder.UI.Pages.Dialogs
     public class AlertDialog : LoggedInLanding
     {
         #region Entities
-
+        
         public static By _oKButton => By.XPath("//div[@class='rwDialogPopup radalert']//a");
         public static By _messageDialog => By.XPath("//div[@class='rwDialogPopup radalert']//div[@class='rwDialogText']");
         public IWebElement OKButton { get { return StableFindElement(_oKButton); } }
@@ -31,10 +31,17 @@ namespace KiewitTeamBinder.UI.Pages.Dialogs
             webDriver.SwitchTo().ActiveElement();
         }
 
-        public T ClickOKButton<T>()
+        public T ClickOKOnMessageDialog<T>()
         {
-            OKButton.Click();
-            WebDriver.SwitchTo().DefaultContent();
+            var node = StepNode();
+            node.Info("Click OK in Dialog Box");
+            try
+            {
+                OKButton.Click();
+            }
+            catch { }
+            WaitForJQueryLoad();
+            WebDriver.SwitchOutOfIFrame();
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 
@@ -43,17 +50,31 @@ namespace KiewitTeamBinder.UI.Pages.Dialogs
             return MessageDialog.Text;
         }
 
+        public KeyValuePair<string, bool> ValidateMessageDisplayCorrect(string expectedMessage)
+        {
+            var node = StepNode();
+            try
+            {
+                string actualMessage = GetDialogMessage().Replace(System.Environment.NewLine, string.Empty).Trim();
+                if (actualMessage == expectedMessage)
+                    return SetPassValidation(node, Validation.Message_On_Dialog + expectedMessage);
+                else
+                    return SetFailValidation(node, Validation.Message_On_Dialog, expectedMessage, actualMessage);
+            }
+            catch (Exception e)
+            {
+                return SetErrorValidation(node, Validation.Message_On_Dialog, e);
+            }
+        }
+
         public List<KeyValuePair<string, bool>> ValidateMessageDialogAsExpected(string expectedMessage)
         {
             var node = StepNode();
             var validation = new List<KeyValuePair<string, bool>>();
             try
             {
-                string actualContent = GetDialogMessage();
-                if (expectedMessage == actualContent)
-                    validation.Add(SetPassValidation(node, Validation.Message_On_Dialog + actualContent));
-                else
-                    validation.Add(SetFailValidation(node, Validation.Message_On_Dialog, expectedMessage, actualContent));
+                validation.Add(ValidateMessageDisplayCorrect(expectedMessage));
+                
                 if (StableFindElement(_oKButton) != null)
                     validation.Add(SetPassValidation(node, Validation.OK_Button_Displays));
                 else
@@ -63,12 +84,10 @@ namespace KiewitTeamBinder.UI.Pages.Dialogs
             }
             catch (Exception e)
             {
-                validation.Add(SetErrorValidation(node, Validation.Message_On_Dialog, e));
+                validation.Add(SetErrorValidation(node, Validation.OK_Button_Displays, e));
                 return validation;
             }
         }
-
-
 
         private static class Validation
         {

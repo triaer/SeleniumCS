@@ -1,41 +1,41 @@
-﻿using System;
-using System.Data;
-using System.Text;
-using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using FluentAssertions;
-using System.Threading;
+﻿using FluentAssertions;
+using KiewitTeamBinder.Api.Service;
 using KiewitTeamBinder.Common.Helper;
 using KiewitTeamBinder.Common.TestData;
-using KiewitTeamBinder.Api.Service;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-
-namespace KiewitTeamBinder.Api.Tests.ApiTest
+namespace KiewitTeamBinder.Api.Tests
 {
     [TestClass]
-    public class DocumentTest : ApiTestBase
+    public class UploadFilesTest : ApiTestBase
     {
         [TestMethod]
-        public void Documents_VerifyDocumentCount_API()
+        public void UploadFiles_API()
         {
             SessionApi sessionRequest = null;
             string sessionKey = "";
             try
             {
                 //given
-                var verifyDocumentCountData = new VerifyDocumentCountSmoke();
-                string[] fieldNamesWithValues = new string[] { verifyDocumentCountData.FilterOption.DocumentNo };
-                var teambinderTestAccount = GetTestAccount("AdminAccount2", environment, "NonSSO");
-                sessionRequest = new SessionApi(GetServiceUrl(teambinderTestAccount.Url));
+                var uploadFilesdata = new UploadFilesSmoke();
+                var testAccount = GetTestAccount("AdminAccount2", environment, "NonSSO");
+                sessionRequest = new SessionApi(GetServiceUrl(testAccount.Url));
 
                 //when
-                sessionKey = sessionRequest.LogonWithApplication(teambinderTestAccount.Username, teambinderTestAccount.Company, teambinderTestAccount.Password, verifyDocumentCountData.ProjectNumber, verifyDocumentCountData.ConnectingProduct);
+                sessionKey = sessionRequest.LogonWithApplication(testAccount.Username, testAccount.Company, testAccount.Password, uploadFilesdata.ProjectNumber, uploadFilesdata.ConnectingProduct);                
                 validations.Add(sessionRequest.ValidateLogonWithApplicationSuccessfully(sessionKey));
                 validations.Should().OnlyContain(validations => validations.Value).Equals(bool.TrueString);
 
-                DocumentApi documentRequest = new DocumentApi(GetServiceUrl(teambinderTestAccount.Url));
-                DataTable respone = documentRequest.ListDocumentsAll(sessionKey, fieldNamesWithValues);
-                validations.Add(documentRequest.ValidateRecordCountIsCorrect(respone, verifyDocumentCountData.ExpectedRecordCount));
+                //Upload Files
+                UploadFilesAPI uploadfileRequets = new UploadFilesAPI();
+                string filesNameResponse = uploadfileRequets.UploadFiles(sessionKey, uploadFilesdata.FileNames);
+                validations.Add(uploadfileRequets.ValidateUploadFiles(filesNameResponse, uploadFilesdata.FileNames));
 
                 // then
                 Utils.AddCollectionToCollection(validations, methodValidations);

@@ -51,6 +51,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             var dashboard = new ProjectsDashboard(WebDriver);
             WaitForElementDisplay(_walkMe);
             WaitForElement(dashboard._dashBoardLabel);
+            HandleAutoRecoveryPopup();
             return dashboard;
         }
 

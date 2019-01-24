@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using KiewitTeamBinder.Common.Helper;
 using static KiewitTeamBinder.Common.Models.LoggedUserInfo;
 
 namespace KiewitTeamBinder.Common.TestData
@@ -26,5 +26,6 @@ namespace KiewitTeamBinder.Common.TestData
             CompanyName = "Kiewit",
             Description = "Automation Admin1 (Kiewit)"
         };
+        public string DocumentNo = Utils.GetRandomValue("TRANSMITSINGLEDOCUMENT");
     }
 }

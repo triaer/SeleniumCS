@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static KiewitTeamBinder.Common.KiewitTeamBinderENums;
+using KiewitTeamBinder.Common.Helper;
 
 namespace KiewitTeamBinder.Common.TestData
 {
@@ -16,17 +18,19 @@ namespace KiewitTeamBinder.Common.TestData
         public string ContractNumberItem = "1234567";
         public string contractNumberKey = "Contract Number";
         public string[] contractNumberValueArray = { "1234567" };
-        public string[] favoriteItem = { "Myself", "My company", "My project" };
-        public string idButtonAddToFavouriteReportHeader = "btnAddRemoveFavouriteReport";
-        public string ReportTab = "ReportTypesPanelBar";
-        public string FavReportTab = "FavReportTypePanelBar";
+        public string ReportLeftPanel = "ReportTypesPanelBar";
+        public string FavLeftPanel = "FavReportTypePanelBar";
+        //public string[] favoriteItems = { "Myself", "My company", "My project" };
+        public string[] favoriteItems = Enum.GetValues(typeof(FavoriteReportFor)).Cast<FavoriteReportFor>().Select(x => x.ToDescription()).ToArray();
         public string radioButton = "Schedule";
-        public string myselfFavReport = "Myself";
-        public string mycompanyFavReport = "My company";
-        public string myprojectFavReport = "My project";
+        //public string myselfFavReport = "Myself";
+        //public string mycompanyFavReport = "My company";
+        //public string myprojectFavReport = "My project";
         public string reporterHeader = "Report Title:";
         public string contractUserName = "Automation";
-        public string availableMsg = "Your report request is being processed and you will be notified via email once the report becomes available.";
+        public string availableMessage = "Your report request is being processed and you will be notified via email once the report becomes available.";
         public string favSuccessfullyMsg = "Selected report successfully added to Favorites.";
+
+        public KeyValuePair<string, string> Title = new KeyValuePair<string, string>("Title", "Vendor Data Details – by Contract Number");
     }
 }

@@ -52,7 +52,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
             PasswordTextbox.InputText(account.Password, true);
 
             //Click LogIn button
-            //LoginBtn.Click();
             SwitchToNewPopUpWindow(LoginBtn, out logonWindow, true);
 
             var projectsListPage = new ProjectsList(WebDriver);

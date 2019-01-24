@@ -10,6 +10,7 @@ using KiewitTeamBinder.UI.Pages.Dialogs;
 using KiewitTeamBinder.Common;
 using KiewitTeamBinder.Common.Helper;
 using static KiewitTeamBinder.Common.KiewitTeamBinderENums;
+using System.Diagnostics;
 using KiewitTeamBinder.UI.Pages.PopupWindows;
 
 
@@ -50,6 +51,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         private static By _pageCountInNumPartOfGridPager(string gridViewName) => By.XPath($"//table[contains(@id,'{gridViewName}')]//div[contains(@class,'rgNumPart')]//a");
         private static By _arrowFirstPageInGridPager(string gridViewName) => By.XPath($"//table[contains(@id,'{gridViewName}')]//img[@title='First Page']");
         private static By _arrowLastPageInGridPager(string gridViewName) => By.XPath($"//table[contains(@id,'{gridViewName}')]//img[@title='Last Page']");
+        private static By _arrowNextPageInGridPager(string gridViewName) => By.XPath($"//table[contains(@id,'{gridViewName}')]//img[@title='Next Page']");
         private static By _reportsButton => By.Id("btnReports");
         private static By _registerViewCheckbox(string view) => By.XPath($"//a[span = '{view}']/img");
         private static By _currentPageSize(string gridViewName) => By.XPath($"//input[contains(@id, '{gridViewName}') and contains(@id,'PageSizeComboBox_Input')]");
@@ -88,6 +90,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         public IWebElement NumberPagesInfoOfGridPager(string gridViewName) => StableFindElement(_numberPagesInfoOfGridPager(gridViewName));
         public IWebElement ArrowFirstPageInGridPager(string gridViewName) => StableFindElement(_arrowFirstPageInGridPager(gridViewName));
         public IWebElement ArrowLastPageInGridPager(string gridViewName) => StableFindElement(_arrowLastPageInGridPager(gridViewName));
+        public IWebElement ArowNextPageInGridPager(string gridViewName) => StableFindElement(_arrowNextPageInGridPager(gridViewName));
         public IWebElement ReportsButton { get { return StableFindElement(_reportsButton); } }
         public IWebElement RegisterViewCheckbox(string gridViewName) => StableFindElement(_registerViewCheckbox(gridViewName));
         public IWebElement CurrentPageSize(string gridViewName) => StableFindElement(_currentPageSize(gridViewName));
@@ -96,6 +99,10 @@ namespace KiewitTeamBinder.UI.Pages.Global
         #region Actions
         public ProjectsDashboard(IWebDriver webDriver) : base(webDriver)
         { }
+
+        public int GetPageSize(string gridViewName) {
+            return int.Parse(CurrentPageSize(gridViewName).Text);
+        }
 
         public ProjectsDashboard ShowProjectList()
         {
@@ -109,7 +116,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
             var node = StepNode();
             node.Info($"Click on the root node: {menuItem}");
             ModuleButton(menuItem).Click();
-            WaitForElement(_divSubMenu, shortTimeout);
         }
 
         private void ClickSubMenuItem(string subMenuItem)
@@ -117,7 +123,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
             var node = StepNode();
             node.Info($"Click on the sub node: {subMenuItem}");
             SubMenuItemLink(subMenuItem).Click();
-            WaitForElement(_subPageHeader);
         }
 
         public T SelectFilterOption<T>(string nameOrIndex, bool byName = true, bool waitForLoading = true)
@@ -133,7 +138,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 
-        private ProjectsDashboard SelectModuleMenuItem(string menuItem, string subMenuItem)
+        public T SelectModuleMenuItemOnLeftNav<T>(string menuItem = "", string subMenuItem = "", bool waitForLoading = true)
         {
             if (menuItem != "")
                 ClickMenuItem(menuItem);
@@ -141,15 +146,14 @@ namespace KiewitTeamBinder.UI.Pages.Global
             if (subMenuItem != "")
                 ClickSubMenuItem(subMenuItem);
 
-            return this;
-        }
-
-        public T SelectModuleMenuItem<T>(string menuItem = "", string subMenuItem = "", bool waitForLoading = true)
-        {
-            SelectModuleMenuItem(menuItem, subMenuItem);
             if (waitForLoading)
+            {
                 WaitForLoadingPanel();
-            return (T)Activator.CreateInstance(typeof(T), WebDriver);
+                if (menuItem != ModuleNameInLeftNav.DASHBOARD.ToDescription())
+                    WaitForElement(_subPageHeader);
+            }
+
+            return (T)Activator.CreateInstance(typeof(T), WebDriver);            
         }
 
         public HelpAboutDialog OpenHelpDialog(string option)
@@ -165,8 +169,10 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
         public StandardReports OpenStandardReportsWindow(bool closePreviousWindow = false)
         {
+            var node = StepNode();
             string currentWindow;
             SwitchToNewPopUpWindow(ReportsButton, out currentWindow, closePreviousWindow);
+            node.Info("Click Reports in Top Right Corner of Dashboard, then Report window opens");
             return new StandardReports(WebDriver);
         }
 
@@ -188,6 +194,40 @@ namespace KiewitTeamBinder.UI.Pages.Global
             if (waitForLoading && tableName != null)
                 WaitForElement(_subPageTable(tableName));
 
+            return (T)Activator.CreateInstance(typeof(T), WebDriver);
+        }
+
+        public T SelectItemOnHeaderDropdown<T>(MainPaneHeaderDropdownItem item)
+        {
+            HeaderDropdownItem(item.ToDescription()).Click();
+
+            return (T)Activator.CreateInstance(typeof(T), WebDriver);
+        }
+        public T SelectDropdownItemWithSwitchWindow<T>(MainPaneHeaderDropdownItem item)
+        {
+            var node = StepNode();
+            node.Info($"Click the item: {item.ToDescription()}, and switch to new window popup");
+           
+            string currentWindow;
+            SwitchToNewPopUpWindow(HeaderDropdownItem(item.ToDescription()), out currentWindow, false);
+            try
+            {
+                WaitForJQueryLoad();
+                WaitForElementDisplay(_walkMe);
+            }
+            catch { }
+            
+            return (T)Activator.CreateInstance(typeof(T), WebDriver);
+        }
+
+        public T SelectDropdownItemWithSwitchDialog<T>(MainPaneHeaderDropdownItem item)
+        {
+            var node = StepNode();
+            node.Info($"Click the item: {item.ToDescription()}, and switch to dialog popup");
+
+            SelectItemOnHeaderDropdown<T>(item);
+            WebDriver.SwitchTo().ActiveElement();
+            
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 
@@ -245,9 +285,13 @@ namespace KiewitTeamBinder.UI.Pages.Global
             FilterTextBox.InputText(value);
             if (!useFilterMenu)
             {
-                FilterTextBox.SendKeys(Keys.Enter);
-                Wait(shortTimeout / 5);
-                FilterTextBox.SendKeys(Keys.Enter);
+                try
+                {
+                    FilterTextBox.SendKeys(Keys.Enter);
+                    Wait(shortTimeout / 5);
+                    FilterTextBox.SendKeys(Keys.Enter);
+                }
+                catch { }
             }
             else
             {
@@ -395,7 +439,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
             else
                 return SetFailValidation(node, Validation.Progress_Message_Is_Displayed, message, actual);
         }
-
         public KeyValuePair<string, bool> ValidateExcelItemsCount(string gridViewName, string excelFilePath, string sheetName = "")
         {
             var node = StepNode();

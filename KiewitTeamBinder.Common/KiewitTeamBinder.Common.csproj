@@ -87,8 +87,6 @@
     <Compile Include="TestData\FilteringAndExportingSmoke.cs" />
     <Compile Include="TestData\ReportSmoke.cs" />
     <Compile Include="TestData\FilteringExportingVendorDataRegisterValidationSmoke.cs" />
-    <Compile Include="TestData\ValidateContractorWidgetCountSmoke.cs" />
-    <Compile Include="TestData\ValidatePurchaseItemUnderContractSmoke.cs" />
     <Compile Include="TestData\FilteringSmoke.cs" />
     <Compile Include="TestData\ProcessDocumentSmoke.cs" />
     <Compile Include="TestData\SendMailSmoke.cs" />
@@ -100,6 +98,7 @@
     <Compile Include="TestData\TeamBinderVersionSmoke.cs" />
     <Compile Include="TestData\TransmitSingleDocSmoke.cs" />
     <Compile Include="TestData\TransmittalReceiptSmoke.cs" />
+	<Compile Include="TestData\UploadFilesSmoke.cs" />
     <Compile Include="TestData\UploadUnrestrainedDocSmoke.cs" />
     <Compile Include="TestData\UploadSingleDocSmoke.cs" />
     <Compile Include="TestData\VerifyDocumentCountSmoke.cs" />

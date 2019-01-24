@@ -19,6 +19,8 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
     public class VendorDataRegister : ProjectsDashboard
     {
         #region Entities
+        private static string _filterItemsXpath = "//table[contains(@id,'GridViewItemsVendor')]//tr[@valign='top']";
+
         private static By _deliverableLineItem => By.XPath("//span[(text()='Deliverable Line Item')]");
         private static By _purchaseTable => By.XPath("//table[contains(@id,'GridViewItemsVendor')]/thead");
         private static By _deliverableTable => By.XPath("//table[contains(@id,'GridViewItemsVendor') and contains(@id, 'ViewDeliverableVendor')]/thead");
@@ -27,15 +29,15 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
         private static By _checkBoxItemContract(string gridView, string description) => By.XPath($"//*[contains(text(),'{description}')]/ancestor::tr[contains(@id,'{gridView}_ctl00')]//input[contains(@id,'{gridView}_ctl00')]");
         private static By _selectedRecordCount => By.XPath("//span[@id='lblRegisterSelectedRecordCount']");
         private static By _blueHeader(string blueHeader) => By.XPath($"//div[@id='lblRegisterCaption']/span[text()='{blueHeader}']");
+        private static By _blueItem(string gridView, string itemName) => By.XPath($"//span[@class='HyperLinkWithNoLine']/ancestor::tr[contains(@id,'ctl00_cntPhMain_{gridView}_ctl00')]//span[text()='{itemName}']");
         private static By _itemsList(string gridView) => By.XPath($"//tr[contains(@id,'ctl00_cntPhMain_{gridView}_ctl00')]");
         private static By _totalItem(string gridView) => By.XPath($"//span[contains(@id,'ctl00_cntPhMain_{gridView}_ctl00DSC')]");
         private static By _selectedRow(string gridView, string Description) => By.XPath($"//*[contains(text(),'{Description}')]/ancestor::tr[contains(@id,'{gridView}_ctl00')]");
         private static By _deliverableLineItemNmberItem(string value) => By.XPath($"//span[@class='HyperLinkWithNoLine' and text() = '{value}']");
         private static By _itemSubRegisterCaption => By.XPath("//div[@id='lblRegisterCaption']/span");
         private static By _registerCaptionLabel => By.Id("lblRegisterCaption");
-
-
-        private static string _filterItemsXpath = "//table[contains(@id,'GridViewItemsVendor')]//tr[@valign='top']";
+        private static By _pageSizeBox => By.XPath("//input[contains(@id,'PageSizeComboBox_ClientState') and contains(@id,'RadGridExpeditingContracts')]");
+        private static By _rowData(string gridViewName) => By.XPath($"//a[contains(@onclick,'{gridViewName}')]/ancestor::th[contains(@class,'rgHeader')]");
 
         public IWebElement DeliverableLineItemNmberItem(string value) => StableFindElement(_deliverableLineItemNmberItem(value));
         public IWebElement DeliverableTable { get { return StableFindElement(_deliverableTable); } }
@@ -46,7 +48,11 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
         public IWebElement CheckBoxItemContract(string gridView, string description) => StableFindElement(_checkBoxItemContract(gridView, description));
         public IWebElement SelectedRecordCount { get { return StableFindElement(_selectedRecordCount); } }
         public IWebElement BlueHeader(string blueHeader) => StableFindElement(_blueHeader(blueHeader));
-        public IWebElement TotalItem(string gridView) => StableFindElement(_totalItem(gridView));
+        public IWebElement BlueItem(string gridViewName, string itemName) => StableFindElement(_blueItem(gridViewName, itemName));
+        public IWebElement TotalItem(string gridViewName) => StableFindElement(_totalItem(gridViewName));
+        public IWebElement HeaderTitlePage { get { return StableFindElement(_headerTitlePage); } }
+        public IWebElement PageSizeBox { get { return FindElement(_pageSizeBox); } }
+        public IReadOnlyCollection<IWebElement> RowData(string gridViewName) => StableFindElements(_rowData(gridViewName));
         public IReadOnlyCollection<IWebElement> ItemsList(string gridView) => StableFindElements(_itemsList(gridView));
         //public IReadOnlyCollection<IWebElement> SelectedRow(string gridView, string description) => StableFindElements(_selectedRow(gridView, description));
         public IWebElement SelectedRow(string gridView, string description) => StableFindElement(_selectedRow(gridView, description));
@@ -81,6 +87,27 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             return this;
         }
 
+        private IReadOnlyCollection<IWebElement> GetAvailablePurchaseItems(List<KeyValuePair<string, string>> columnValuePairList)
+        {
+            int rowIndex, colIndex = 1;
+            string itemsXpath = _filterItemsXpath;
+            GetTableCellValueIndex(PurchaseTable, columnValuePairList.ElementAt(0).Key, out rowIndex, out colIndex, "th");
+            if (colIndex < 2)
+                return null;
+            itemsXpath += $"[td[{colIndex}][contains(., '{columnValuePairList.ElementAt(0).Value}')]";                                    
+
+            for (int i = 1; i < columnValuePairList.Count; i++)
+            {
+                GetTableCellValueIndex(PurchaseTable, columnValuePairList.ElementAt(i).Key, out rowIndex, out colIndex, "th");
+                if (colIndex < 2)
+                    return null;
+                itemsXpath += $" and td[{colIndex}][contains(., '{columnValuePairList.ElementAt(i).Value}')]";                                        
+            }
+            itemsXpath += "]";
+
+            return StableFindElements(By.XPath(itemsXpath));
+        }
+        
         private IReadOnlyCollection<IWebElement> GetAvalibleDeliverable(List<KeyValuePair<string, string>> columnValuePairList)
         {
             int rowIndex, colIndex = 1;
@@ -109,10 +136,11 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             return new VendorDeliverableDetail(WebDriver);
         }
 
-        public int GetTotalItems(string gridView, bool waitForLoading = true)
-        {
-            if (waitForLoading)
-                WaitForLoading(_totalItem(gridView));
+        public static int GetWindowHandle() {
+            return WebDriver.WindowHandles.Count;
+        }
+
+        public int GetTotalItems(string gridView, bool waitForLoading = true) {
             return int.Parse(TotalItem(gridView).Text);
         }
 
@@ -189,7 +217,20 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             }
             itemsXpath += "]";
 
-            return StableFindElements(By.XPath(itemsXpath));
+        
+
+        private void ReplaceValueOfStatusColumn(ref List<KeyValuePair<string, string>> columnValuePairList)
+        {
+            foreach (var columnValuePair in columnValuePairList)
+            {
+                if (columnValuePair.Key == "Status")
+                {
+                    string status = columnValuePair.Value.Split('-')[0].Trim();
+                    columnValuePairList.Remove(columnValuePair);
+                    columnValuePairList.Add(new KeyValuePair<string, string>("Status", status));
+                    break;
+                }
+            }
         }
 
         public KeyValuePair<string, bool> ValidatePurchaseItemsAreShown(List<KeyValuePair<string, string>> columnValuePairList)
@@ -197,16 +238,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             var node = StepNode();
             try
             {
-                foreach (var columnValuePair in columnValuePairList)
-                {
-                    if (columnValuePair.Key == "Status")
-                    {
-                        string status = columnValuePair.Value.Split('-')[0].Trim();
-                        columnValuePairList.Remove(columnValuePair);
-                        columnValuePairList.Add(new KeyValuePair<string, string>("Status", status));
-                        break;
-                    }
-                }
+                ReplaceValueOfStatusColumn(ref columnValuePairList);
                 var PurchaseItemsList = GetAvailablePurchaseItems(columnValuePairList);
                 if (PurchaseItemsList.Count > 0)
                     return SetPassValidation(node, Validation.Purchase_Items_Are_Shown);
@@ -218,11 +250,13 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             }
         }
 
-        public KeyValuePair<string, bool> ValidateDeliverablesAreShown(List<KeyValuePair<string, string>> columnValuePairList)
+		public KeyValuePair<string, bool> ValidateDeliverablesAreShown(List<KeyValuePair<string, string>> columnValuePairList)
         {
             var node = StepNode();
             try
             {
+                ReplaceValueOfStatusColumn(ref columnValuePairList);
+
                 var DeliverableList = GetAvalibleDeliverable(columnValuePairList);
                 if (DeliverableList.Count > 0)
                 {
@@ -242,7 +276,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             var node = StepNode();
             try
             {
-                expectedValue = GetTotalItems(gridView);
+                expectedValue = GetTotalItems(gridViewName);
                 int itemListSize = 0;
                 //int itemListSize = ItemsList(gridView).Count;
                 foreach (IWebElement item in ItemsList(gridView))
@@ -251,6 +285,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
                     {
                         itemListSize += 1;
                     }
+                    
                 }
                 if (itemListSize == expectedValue)
                     return SetPassValidation(node, Validation.Items_Counted_Are_Matches);
@@ -446,6 +481,75 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
             public static string Selected_Count_Is_Decreased = "Validate that selected count decreased on bottom right corner";
             public static string Deliverables_Are_Shown = "Validate that deliverables are shown";
             public static string Bred_Crumb_Trail_Is_Displayed_Correct = "Validate that bred crumb is displayed correctly";
+            public static string Title_Page_Are_Shown_Correctly = "Validate that linking page are shown";
+            public static string Return_To_Vendor_Data_Contracts = "Validate that page return Vendor Data - Contracts when clicked the Blue Header";
+            public static string Window_Is_Opened = "Validate that window is opened";
+            public static string Window_Is_Closed = "Validate that window is closed";
+            public static string Page_Size_Is_Default = "Validate that page size default correctly";
+            public static string Drop_Down_Items_Are_Shown = "Validate that drop down items are shown";
+            public static string Data_Excel_are_correctly = "Validate that data excel are correctly";
+        }
+        public KeyValuePair<string, bool> ValidateDataExcelCorrectly(string gridViewName, int rowIndex, string excelFilePath, string sheetName = "")
+        {
+            var node = StepNode();
+            try
+            {
+                //string expected = RowData(gridViewName).Text;
+                string expected = "";
+                int numberOfColumns = RowData(gridViewName).Count;
+                for (int i = 0; i < numberOfColumns; i++)
+                {
+                    ScrollIntoView(RowData(gridViewName).ElementAt(i));
+                    expected += RowData(gridViewName).ElementAt(i).Text + ",";
+                }
+                expected = expected.Substring(expected.Length - 1);
+                //foreach (IWebElement data in RowData(gridViewName))
+                //{
+                //    if (data.Displayed == false)
+                //        ScrollIntoView(data);
+                //    expected += data.Text + ",";
+                //}
+
+                //int expected = int.Parse(ItemsNumberLabel(gridViewName).Text);
+                //int actual = ExcelUtils.GetNumberkOfRows(excelFilePath, sheetName) - 1;
+                string actual = ExcelUtils.GetExcelRowValue(excelFilePath, sheetName, rowIndex);
+                if (actual == expected)
+                    return SetPassValidation(node, Validation.Data_Excel_are_correctly);
+                else
+                    return SetFailValidation(node, Validation.Data_Excel_are_correctly, expected.ToString(), actual.ToString());
+            }
+            catch (Exception e)
+            {
+                return SetErrorValidation(node, Validation.Data_Excel_are_correctly, e);
+            }
+        }
+
+        public KeyValuePair<string, bool> ValidatePageSizeDefaultIsCorrectly(string gridViewName, int expectedSize)
+        {
+            var node = StepNode();
+            try
+            {
+                //int pageSize = GetPageSize(gridViewName);
+                string selectedText = "";
+                string pageSize = PageSizeBox.GetAttribute("value");
+                string[] attributeValues = pageSize.Split(',');
+
+                foreach (var attributeValue in attributeValues)
+                {
+                    if (attributeValue.Contains("value"))
+                    {
+                        selectedText = attributeValue.Split(':')[1];
+                        selectedText = selectedText.Replace("\"", "");
+                    }
+                }
+                if (int.Parse(selectedText) == expectedSize)
+                    return SetPassValidation(node, Validation.Page_Size_Is_Default);
+                return SetFailValidation(node, Validation.Page_Size_Is_Default);
+            }
+            catch (Exception e)
+            {
+                return SetErrorValidation(node, Validation.Page_Size_Is_Default, e);
+            }
         }
         #endregion
     }

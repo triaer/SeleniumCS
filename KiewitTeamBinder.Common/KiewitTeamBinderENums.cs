@@ -261,7 +261,15 @@ namespace KiewitTeamBinder.Common
             [Description("Register View")]
             RegisterView,
             [Description("Contracts")]
-            Contracts
+            Contracts,
+            [Description("Purchase Items")]
+            PurchaseItems,
+            [Description("Deliverables")]
+            Deliverables,
+            [Description("Documents Associated with Deliverables")]
+            DocumentsAssociated,
+            [Description("Expediting View")]
+            ExpeditingView
         }
 
         public enum DialogPopupButton
@@ -492,6 +500,27 @@ namespace KiewitTeamBinder.Common
             STARTED,
             [Description("Approved")]
             APPROVED
+        }
+        public enum StandardReportsTab
+        {
+            Reports,
+            Scheduled,
+            Favorites
+        }
+        public enum StandardReportsButtonHeader
+        {
+            [Description("Add to Favorites")]
+            AddFavorites,
+            [Description("Remove from Favorites")]
+            RemoveFavorites
+        }
+        public enum FavoriteReportFor
+        {
+            Myself,
+            [Description("My company")]
+            MyCompany,
+            [Description("My project")]
+            MyProject
         }
     }
 }
