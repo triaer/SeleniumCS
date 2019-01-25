@@ -51,7 +51,11 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             node.Info("Click the button: " + buttonName.ToDescription());
 
             if (isDisappear == true)
-                IWebElementExtensions.HoverAndClickWithJS(ToolBarButton(buttonName.ToDescription()));   
+            {
+                node.Info("Clicking using JS: " + buttonName.ToDescription());
+                ToolBarButton(buttonName.ToDescription()).HoverAndClickWithJS();
+                node.Debug("After clicking save", AttachScreenshot(GetCaptureScreenshot()));
+            }
             else 
                 ToolBarButton(buttonName.ToDescription()).Click();
 

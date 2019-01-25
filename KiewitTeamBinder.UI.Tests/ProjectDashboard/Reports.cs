@@ -22,7 +22,7 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
     [TestClass]
     public class Reports : UITestBase
     {
-        //[TestMethod]
+        [TestMethod]
         public void General_RunReportAndGenerateHyperlink_UI()
         {
             try
@@ -56,6 +56,8 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                 GenerateHyperlinkDialog generateHyperlinkDialog = standardReports.ClickGenerateHyperlink();
                 string reportUrl = generateHyperlinkDialog.CopyHyperlink();
                 generateHyperlinkDialog.ClickCloseButton(ref currentIframe, ref methodValidations);
+                standardReports.LogValidation(ref validations, standardReports.ValidateGeneratedLinkValueIsValid(reportUrl));
+                validations.Should().OnlyContain(validations => validations.Value).Equals(bool.TrueString);
                 Browser.Quit();
 
                 currentIframe = null;

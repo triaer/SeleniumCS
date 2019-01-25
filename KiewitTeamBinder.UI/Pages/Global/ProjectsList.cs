@@ -70,7 +70,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 ProjectNoTextBox.SendKeys(Keys.Enter);
             }
 
-            WaitForAngularJSLoad();
+            WaitForJQueryLoad();
             Console.WriteLine(StableFindElements(_projectRows).Count);
             rowIndex = 1;
             colIndex = StableFindElements(By.XPath(string.Format(_headerColumns, filterBy))).Count + 1;
