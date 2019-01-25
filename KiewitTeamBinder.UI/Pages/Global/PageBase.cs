@@ -16,6 +16,7 @@ using OpenQA.Selenium.Interactions;
 using System.Windows.Forms;
 using KiewitTeamBinder.Common.Helper;
 using AventStack.ExtentReports;
+using static KiewitTeamBinder.UI.ExtentReportsHelper;
 
 namespace KiewitTeamBinder.UI.Pages.Global
 {
@@ -28,6 +29,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         internal static string Url { get; set; }
         internal static IWebDriver WebDriver { get; set; }
 
+        public static By _walkMe => By.XPath("//div[@id='walkme-player']//div[contains(@class,'walkme-in')]");
         internal static By _loadingPanel => By.XPath("//div[contains(@id, 'LoadingPanel')]");
         internal static By _progressPopUp => By.Id("divProgressWindow");
         internal static By _progressMessage => By.Id("spanProgressMsg");
@@ -87,6 +89,29 @@ namespace KiewitTeamBinder.UI.Pages.Global
                     Box.Click();
             
             StableFindElement(textbox).InputText(value);
+        }
+
+        public void WaitForLoadingPanel(int timeout = sapShortTimeout)
+        {
+            var node = StepNode();
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            do
+            {
+                try
+                {
+                    WaitForLoading(_loadingPanel);
+                    WaitForElementDisplay(_walkMe, mediumTimeout);
+                    if (WaitForElementInvisible(_loadingPanel))
+                        break;
+                }
+                catch (Exception)
+                { }
+            } while (stopwatch.Elapsed.TotalSeconds <= timeout);
+            if (stopwatch.Elapsed.TotalSeconds >= timeout)
+                node.Warning("The icon loading process is not completed in timeout: " + timeout);
+
+            stopwatch.Stop();
         }
 
         internal static IWebElement StableFindElement(By by, long timeout = longTimeout)
@@ -353,13 +378,9 @@ namespace KiewitTeamBinder.UI.Pages.Global
             }
         }
 
-        internal static void ScrollToElement(IWebElement Element)
-        {
-            Actions action = new Actions(WebDriver);
-            action.MoveToElement(Element);
-            action.Perform();
-        }
-        internal static void ScrollToElement(By by, int timeout = longTimeout)
+        
+        
+        internal static void HoverElement(By by, int timeout = longTimeout)
         {
             var element = StableFindElement(by, timeout);
 
@@ -367,7 +388,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
             action.MoveToElement(element);
             action.Perform();
         }
-
         internal static void ScrollIntoView(IWebElement Element)
         {
             IJavaScriptExecutor jse = (IJavaScriptExecutor)WebDriver;
@@ -794,12 +814,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
         }
 
-        internal static void ClickElement(By by)
-        {
-            WaitForElementClickable(by);
-            StableFindElement(by).Click();
-        }
-               
         internal static KeyValuePair<string, bool> SetPassValidation(ExtentTest test, string testInfo)
         {
             test.Pass(testInfo);

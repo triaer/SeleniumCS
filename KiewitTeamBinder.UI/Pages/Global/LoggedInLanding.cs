@@ -18,7 +18,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
         #region Entities
 
-        public static By _walkMe => By.XPath("//div[@id='walkme-player']//div[contains(@class,'walkme-in')]");
         private static By _userNameLable => By.XPath("//div[@id='divUserName']/span");
         private static By _logoutLink => By.Id("LogoutLabel");
         private static By _logoutYesButton => By.XPath("//div[@class='rwDialogPopup radconfirm']//a[.//span[text()='Yes']]");
@@ -28,15 +27,16 @@ namespace KiewitTeamBinder.UI.Pages.Global
         private static By _saveItemPopUp => By.XPath("//div[contains(@id,'RadWindowWrapper_alert')]");
         private static By _iframeAutoRecovery => By.XPath("//iframe[@name='RadWindowAutoRecovery']");
         private static By _recoveryCancelButton => By.Id("divCancel");
+        private static By _recoveryNoButton => By.Id("divNo");
 
 
         public IWebElement LogoutLink { get { return StableFindElement(_logoutLink); } }
         public IWebElement LogoutYesButton { get { return StableFindElement(_logoutYesButton); } }
         public IWebElement SaveChangeYesButton { get { return StableFindElement(_saveChangeYesButton); } }
         public IWebElement SaveChangeNoButton { get { return StableFindElement(_saveChangeNoButton); } }
-        public IWebElement WalkMe { get { return StableFindElement(_walkMe); } }
         public IWebElement IframeAutoRecovery { get { return StableFindElement(_iframeAutoRecovery); } }
         public IWebElement RecoveryCancelButton { get { return StableFindElement(_recoveryCancelButton); } }
+        public IWebElement RecoveryNoButton { get { return StableFindElement(_recoveryNoButton); } }
         #endregion
 
 
@@ -75,8 +75,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             if (IsElementPresent(_iframeAutoRecovery))
             {
                 WebDriver.SwitchTo().Frame("RadWindowAutoRecovery");
-                //RecoveryCancelButton.Click();
-                Console.WriteLine(RecoveryCancelButton.GetAttribute("id"));
+                RecoveryNoButton.Click();
                 WebDriver.SwitchTo().DefaultContent();
             }
             return this;
@@ -95,11 +94,18 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
                     return SetPassValidation(node, Validation.Save_PopUp_Closed);
                 }
+                else
+                {
+                    if (FindElement(_saveItemPopUp) != null)
+                        node.Info("dialog is opening");
+                    else
+                        node.Info("dialog is not opening");
 
-                if (StableFindElement(_saveItemPopUp) != null)
-                    return SetPassValidation(node, Validation.Save_PopUp_Opened);
+                    if (StableFindElement(_saveItemPopUp) != null)
+                        return SetPassValidation(node, Validation.Save_PopUp_Opened);
 
-                return SetFailValidation(node, Validation.Save_PopUp_Opened);
+                    return SetFailValidation(node, Validation.Save_PopUp_Opened);
+                }
             }
             catch (Exception e)
             {

@@ -125,6 +125,7 @@
     <Compile Include="ExtentReportsHelper.cs" />
     <Compile Include="IWebElementExtensions.cs" />
     <Compile Include="Pages\DashboardModule\Dashboard.cs" />
+    <Compile Include="Pages\Dialogs\GenerateHyperlinkDialog.cs" />
     <Compile Include="Pages\Dialogs\ConfirmDialog.cs" />
     <Compile Include="Pages\Dialogs\AlertDialog.cs" />
     <Compile Include="Pages\Dialogs\ApplyToNRowsDialog.cs" />
@@ -148,6 +149,7 @@
     <Compile Include="Pages\Global\PageBase.cs" />
     <Compile Include="Pages\MailModule\Mail.cs" />
     <Compile Include="Pages\PopupWindows\PopupWindow.cs" />
+    <Compile Include="Pages\PopupWindows\StandardReports.cs" />
     <Compile Include="Pages\PopupWindows\ProcessDocuments.cs" />
     <Compile Include="Pages\PopupWindows\VendorContractDetail.cs" />
     <Compile Include="Pages\PublishedReportsModule\PublishedReports.cs" />

@@ -18,8 +18,9 @@ namespace KiewitTeamBinder.UI.Pages.Dialogs
     {
         #region Entities
         
-        public static By _oKButton => By.XPath("//div[@class='rwDialogPopup radalert']//a");
-        public static By _messageDialog => By.XPath("//div[@class='rwDialogPopup radalert']//div[@class='rwDialogText']");
+        private static By _oKButton => By.XPath("//div[@class='rwDialogPopup radalert']//a");
+        private static By _messageDialog => By.XPath("//div[@class='rwDialogPopup radalert']//div[@class='rwDialogText']");
+        private static By _dialog => By.XPath("//div[@class='rwDialogPopup radalert']");
         public IWebElement OKButton { get { return StableFindElement(_oKButton); } }
         public IWebElement MessageDialog { get { return StableFindElement(_messageDialog); } }
 
@@ -28,15 +29,31 @@ namespace KiewitTeamBinder.UI.Pages.Dialogs
         #region Actions
         public AlertDialog(IWebDriver webDriver) : base(webDriver)
         {
-            webDriver.SwitchTo().ActiveElement();
+			try
+			{
+				var node = StepNode();
+            	if (WaitUntil(driver => StableFindElement(_dialog) != null))
+                	node.Info("Success dialog shows");
+            	else
+                	node.Info("Success dialog does not show");
+			}
+			catch
+			{
+	            webDriver.SwitchTo().ActiveElement();
+			}
         }
 
         public T ClickOKOnMessageDialog<T>()
         {
             var node = StepNode();
             node.Info("Click OK in Dialog Box");
-            OKButton.Click();
-            WebDriver.SwitchTo().DefaultContent();
+            try
+            {
+                OKButton.Click();
+            }
+            catch { }
+            WaitForJQueryLoad();
+            WebDriver.SwitchOutOfIFrame();
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 
@@ -83,8 +100,6 @@ namespace KiewitTeamBinder.UI.Pages.Dialogs
                 return validation;
             }
         }
-
-
 
         private static class Validation
         {

@@ -26,7 +26,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
             try
             {
                 // given
-                var teambinderTestAccount = GetTestAccount("VendorAccount2", environment, "NonSSO");
+                var teambinderTestAccount = GetTestAccount("AdminAccount1", environment, "NonSSO");
                 test.Info("Open TeamBinder Web Page: " + teambinderTestAccount.Url);
                 var driver = Browser.Open(teambinderTestAccount.Url, browser);
                 test.Info("Log on TeamBinder via Other User Login: " + teambinderTestAccount.Username);

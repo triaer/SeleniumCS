@@ -43,7 +43,7 @@ namespace KiewitTeamBinder.UI.Tests.Transmittals
                 string[] selectedUsersWithCompanyName = new string[] { transmittalReceiptData.SelectedUserWithCompany.Description };
                 var columnValuesInConditionList = new List<KeyValuePair<string, string>> { transmittalReceiptData.ColumnValuesInConditionList.Subject };
 
-                projectDashBoard.SelectModuleMenuItemOnLeftNav<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.TRANSMITTALS.ToDescription())
+                projectDashBoard.SelectModuleMenuItemOnLeftNav<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.TRANSMITTALS.ToDescription(), waitForLoading: false)
                     .LogValidation<ProjectsDashboard>(ref validations, projectDashBoard.ValidateDisplayedSubItemLinks(transmittalReceiptData.SubItemMenus));
 
                 Transmittal transmittal = projectDashBoard.SelectModuleMenuItemOnLeftNav<Transmittal>(subMenuItem: ModuleSubMenuInLeftNav.INBOX.ToDescription());
@@ -77,7 +77,7 @@ namespace KiewitTeamBinder.UI.Tests.Transmittals
             }
         }
 
-        [TestMethod]
+        //[TestMethod]
         public void HoldingArea_ProcessDocument_UI()
         {
             try
@@ -87,6 +87,7 @@ namespace KiewitTeamBinder.UI.Tests.Transmittals
                 test.Info("Open TeamBinder Web Page: " + teambinderTestAccount.Url);
                 var driver = Browser.Open(teambinderTestAccount.Url, browser);
                 test.Info("Log on TeamBinder via Other User Login: " + teambinderTestAccount.Username);
+                test.Info(Browser.GetActiveDriverInfo());
                 ProjectsList projectsList = new NonSsoSignOn(driver).Logon(teambinderTestAccount) as ProjectsList;
 
                 var processDocumentData = new ProcessDocumentSmoke();

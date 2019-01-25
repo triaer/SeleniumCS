@@ -220,7 +220,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
         }
 
                 
-        public T CreateDataOnRow<T>(int numberOfRow)
+        public T CreateDataOnRow<T>(int numberOfRow, string documentNo)
         {
             string fileNames = "";
             for (int i = 0; i < numberOfRow; i++)
@@ -234,7 +234,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             AddFilesInBulk(Utils.GetInputFilesLocalPath(), fileNames)
                 .ClickACheckboxInDocumentRow(documentRow: 1)
                 .SelectDataOfDocumentPropertyDropdown("00 - Rev 00", DocBulkUploadDropdownType.Rev, documentRow: 1)
-                .SelectDataOfDocumentPropertyDropdown("VSUB - Vendor Submission", DocBulkUploadDropdownType.Sts, documentRow: 1)
+                .SelectDataOfDocumentPropertyDropdown("IFR - Issued for Review", DocBulkUploadDropdownType.Sts, documentRow: 1)
                 .EnterDataOfDocumentPropertyTextbox("Vendor Submitted Document", DocBulkUploadInputText.Title.ToDescription(), documentRow: 1)
                 .SelectDataOfDocumentPropertyDropdown("CON - Contruction", DocBulkUploadDropdownType.Disc, documentRow: 1)
                 .SelectDataOfDocumentPropertyDropdown("CA - CALCULATION", DocBulkUploadDropdownType.Cat, documentRow: 1)
@@ -246,7 +246,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             applyToNextNRowsDialog.EnterNumberOfRow(numberOfRow - 1)
                 .ClickOKButton<BulkUploadDocuments>();
 
-            EnterTextboxes(Utils.GetRandomValue("AUTO"), DocBulkUploadInputText.DocumentNo.ToDescription());
+            EnterTextboxes(documentNo, DocBulkUploadInputText.DocumentNo.ToDescription());
 
             ConfirmDialog saveDocumentDialog = ClickSaveBulkUploadDocuments(ref methodValidations);
             saveDocumentDialog.ClickPopupButton<T>(DialogPopupButton.No, true);

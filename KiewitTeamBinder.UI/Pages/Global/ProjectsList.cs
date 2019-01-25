@@ -70,7 +70,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 ProjectNoTextBox.SendKeys(Keys.Enter);
             }
 
-            WaitForAngularJSLoad();
+            WaitForJQueryLoad();
             Console.WriteLine(StableFindElements(_projectRows).Count);
             rowIndex = 1;
             colIndex = StableFindElements(By.XPath(string.Format(_headerColumns, filterBy))).Count + 1;
@@ -90,7 +90,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 else
                 {
                     IWebElement ProjectItem = StableFindElement(By.XPath(string.Format(_projectListRows, (rowIndex - 1))));
-                    ScrollToElement(TableCell(ProjGridDataTable, rowIndex, colIndex));
+                    TableCell(ProjGridDataTable, rowIndex, colIndex).HoverElement();
 
                     string actualAttribute = ProjectItem.GetAttribute("class");
               

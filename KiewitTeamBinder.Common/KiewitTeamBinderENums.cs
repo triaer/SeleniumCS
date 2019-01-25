@@ -457,6 +457,27 @@ namespace KiewitTeamBinder.Common
             [Description("Type")]
             Type,
         }
+        public enum StandardReportsTab
+        {
+            Reports,
+            Scheduled,
+            Favorites
+        }
+        public enum StandardReportsButtonHeader
+        {
+            [Description("Add to Favorites")]
+            AddFavorites,
+            [Description("Remove from Favorites")]
+            RemoveFavorites
+        }
+        public enum FavoriteReportFor
+        {
+            Myself,
+            [Description("My company")]
+            MyCompany,
+            [Description("My project")]
+            MyProject
+        }
     }
 }
 

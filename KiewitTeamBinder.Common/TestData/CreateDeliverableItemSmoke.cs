@@ -38,7 +38,7 @@ namespace KiewitTeamBinder.Common.TestData
             Description = Utils.GetRandomValue("Description Contract"),
             VendorCompany = "Kiewit",
             ExpeditingContract = "No",
-            Status = "STARTED - STARTED"
+            Status = "STARTED"
         };
         public ItemPurchased PurchaseInfo(Contract ContractInfo)
         {
@@ -47,7 +47,7 @@ namespace KiewitTeamBinder.Common.TestData
                 ContractNumber = ContractInfo.ContractNumber,
                 ItemID = Utils.GetRandomValue("ITEMID"),
                 Description = Utils.GetRandomValue("Description item content"),
-                Status = "OPEN - OPEN",
+                Status = "OPEN",
             };
         }
         public DeliverableLine DeliverableInfo(ItemPurchased PurchaseInfo)
@@ -56,11 +56,11 @@ namespace KiewitTeamBinder.Common.TestData
             {
                 ContractNumber = PurchaseInfo.ContractNumber,
                 ItemID = PurchaseInfo.ItemID,
-                LineItemNumber = Utils.GetRandomValue("LineItemNumber"),
+                LineItemNumber = Utils.GetRandomValue("LINEITEM"),
                 Description = Utils.GetRandomValue("Description Deliverable"),
-                DeliverableType = "AR - ARCHITECTURAL (PRE-ENGINEERED METAL BUILDINGS)",
+                DeliverableType = "AR",
                 Criticality = "Normal",
-                Status = "OPEN - OPEN",
+                Status = "OPEN",
             };
         }
 
@@ -69,19 +69,19 @@ namespace KiewitTeamBinder.Common.TestData
 
         public List<KeyValuePair<string, string>> ExpectedContractValuesInColumnList(DeliverableLine DeliverableInfo)
         {
-            return new List<KeyValuePair<string, string>> { new KeyValuePair<string, string>("Contract Number", DeliverableInfo.ContractNumber) };
+            return new List<KeyValuePair<string, string>> { new KeyValuePair<string, string>("Contract Number", DeliverableInfo.ContractNumber.ToUpper()) };
         }
 
         public List<KeyValuePair<string, string>> ExpectedPurchasedValuesInColumnList(DeliverableLine DeliverableInfo)
         {
-            return new List<KeyValuePair<string, string>> { new KeyValuePair<string, string>("Item ID", DeliverableInfo.ItemID) };
+            return new List<KeyValuePair<string, string>> { new KeyValuePair<string, string>("Item ID", DeliverableInfo.ItemID.ToUpper()) };
         }
 
         public List<KeyValuePair<string, string>> ExpectedDeliverableValuesInColumnList(DeliverableLine DeliverableInfo)
         {
             return new List<KeyValuePair<string, string>>
             {
-                new KeyValuePair<string, string>("Deliverable Line Item Number", DeliverableInfo.LineItemNumber),
+                new KeyValuePair<string, string>("Deliverable Line Item Number", DeliverableInfo.LineItemNumber.ToUpper()),
                 new KeyValuePair<string, string>("Description", DeliverableInfo.Description),
                 new KeyValuePair<string, string>("Status", DeliverableInfo.Status)
             };

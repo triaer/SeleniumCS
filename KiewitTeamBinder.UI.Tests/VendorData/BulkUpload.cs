@@ -41,7 +41,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 test = LogTest("Bulk Upload Documents to Holding Area");
                 string currentWindow;
                 int indexOfCopyAttributeItem = 0;
-                projectDashBoard.SelectModuleMenuItemOnLeftNav<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription())
+                projectDashBoard.SelectModuleMenuItemOnLeftNav<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription(), waitForLoading: false)
                     .LogValidation(ref validations, projectDashBoard.ValidateDisplayedSubItemLinks(bulkUploadData.SubItemLinks));
 
                 HoldingArea holdingArea = projectDashBoard.SelectModuleMenuItemOnLeftNav<HoldingArea>(subMenuItem: ModuleSubMenuInLeftNav.HOLDINGAREA.ToDescription());
@@ -120,17 +120,17 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 ProjectsDashboard projectDashBoard = projectsList.NavigateToProjectDashboardPage(transmitDocData.ProjectName);
 
                 test = LogTest("Pre-condition: Upload two documents");
-                projectDashBoard.SelectModuleMenuItemOnLeftNav<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription());
+                projectDashBoard.SelectModuleMenuItemOnLeftNav<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription(), waitForLoading: false);
                 HoldingArea holdingArea = projectDashBoard.SelectModuleMenuItemOnLeftNav<HoldingArea>(subMenuItem: ModuleSubMenuInLeftNav.HOLDINGAREA.ToDescription());
                 BulkUploadDocuments bulkUploadDocuments = holdingArea.ClickBulkUploadButton(out currentWindow);
-                bulkUploadDocuments.CreateDataOnRow<HoldingArea>(2);
+                bulkUploadDocuments.CreateDataOnRow<HoldingArea>(2, transmitDocData.DocumentNo);
 
                 //when User Story 120157 - 119696 Transmit Documents
                 test = LogTest("Transmit Documents");
                 string[] selectedDocuments = new string[transmitDocData.NumberOfSelectedDocumentRow];
                 string[] selectedUsersWithCompanyName = new string[] { transmitDocData.KiewitUser.Description };
 
-                holdingArea.SelectRowsWithoutTransmittalNo(transmitDocData.GridViewHoldingAreaName, transmitDocData.NumberOfSelectedDocumentRow, true, ref selectedDocuments)
+                holdingArea.SelectRowsByDocumentNo(transmitDocData.GridViewHoldingAreaName, transmitDocData.DocumentNo, transmitDocData.NumberOfSelectedDocumentRow, true, ref selectedDocuments)
                     .ClickHeaderButton<HoldingArea>(MainPaneTableHeaderButton.Transmit, false);
 
                 NewTransmittal newTransmittal = holdingArea.ClickCreateTransmittalsButton();

@@ -14,7 +14,7 @@ namespace KiewitTeamBinder.Common.TestData
     public class UploadUnrestrainedDocSmoke
     {
         //User Story 120278 - 120081 - Upload Unrestrained Document Part 1
-        public string ProjectName = "Automation Project 1";
+        public string ProjectName = "Automation Project 3";
         public string FileNames = "\"UnrestrainedDocAttachFile.txt\" ";
         public string[] RequiredFields = { "Document No.", "Rev", "Status", "Title", "Category", "Discipline" };
         public Color ColorGrey = Color.FromArgb(207,207,207);
@@ -22,13 +22,13 @@ namespace KiewitTeamBinder.Common.TestData
         public string SaveMessage = "Document details saved successfully.";
         public SingleDocumentInfo SingleDocInformation = new SingleDocumentInfo()
         {
-            DocumentNo = Utils.GetRandomValue("Unrestrained_DocumentNo"),
-            RevStatus = "F - Rev F",
-            Status = "IFR - Issued for Review",
-            Title = Utils.GetRandomValue("Unrestrained DocumentTitle"),
-            Category = "RE - REFERENCE",
-            Discipline = "87 - Misc Specialty Work",
-            Type = "SUB - Submittal",
+            DocumentNo = Utils.GetRandomValue("Unrestrained_DocNo").ToUpper(),
+            RevStatus = "F",
+            Status = "IFR",
+            Title = Utils.GetRandomValue("Unrestrained DocTitle"),
+            Category = "RE",
+            Discipline = "87",
+            Type = "SUB",
         };
 
         //User Story 120278 - 120081 - Upload Unrestrained Document Part 2

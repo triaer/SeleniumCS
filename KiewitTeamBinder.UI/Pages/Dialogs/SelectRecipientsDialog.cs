@@ -144,7 +144,7 @@ namespace KiewitTeamBinder.UI.Pages.Dialogs
             {
                 foreach (var item in selectedUsers)
                 {
-                    ScrollToElement(UserNameInTable(toTable, item, nameCompny));
+                    UserNameInTable(toTable, item, nameCompny).HoverElement();
                     if (UserNameInTable(toTable, item, nameCompny).GetAttribute("class").Contains("HoveredRow"))
                         validation.Add(SetPassValidation(node, string.Format(Validation.User_Is_Highlighted_In_The_Table, item)));
                     else

@@ -49,7 +49,7 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                 //User Story 121267 - 119703 Navigate to Modules from the Left Nav - Part 1 -  Email Modules
                 test = LogTest("119703 Navigate to Modules from Left Nav - Mail Modules");
                 string dashboardWindow;
-                projectDashBoard.SelectModuleMenuItemOnLeftNav<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.MAIL.ToDescription())
+                projectDashBoard.SelectModuleMenuItemOnLeftNav<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.MAIL.ToDescription(), waitForLoading: false)
                     .LogValidation<ProjectsDashboard>(ref validations, projectDashBoard.ValidateDisplayedSubItemLinks(mailData.SubItemMenus));
 
                 Mail mailModule = projectDashBoard.SelectModuleMenuItemOnLeftNav<Mail>(subMenuItem: ModuleSubMenuInLeftNav.INBOX.ToDescription());
@@ -94,7 +94,7 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                 var transmittalsData = new NavigateToModulesFromTheLeftNavSmoke.TransmittalsModules();
                 var columnValuesInConditionList = new List<KeyValuePair<string, string>> { transmittalsData.ColumnValuesInConditionList.Subject };
 
-                projectDashBoard.SelectModuleMenuItemOnLeftNav<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.TRANSMITTALS.ToDescription())
+                projectDashBoard.SelectModuleMenuItemOnLeftNav<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.TRANSMITTALS.ToDescription(), waitForLoading: false)
                     .LogValidation<ProjectsDashboard>(ref validations, projectDashBoard.ValidateDisplayedSubItemLinks(transmittalsData.SubItemMenus));
 
                 Transmittal transmittalsModule = projectDashBoard.SelectModuleMenuItemOnLeftNav<Transmittal>(subMenuItem: ModuleSubMenuInLeftNav.INBOX.ToDescription());
@@ -133,7 +133,7 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                 var packagesData = new NavigateToModulesFromTheLeftNavSmoke.PackagesModules();
                 columnValuesInConditionList = new List<KeyValuePair<string, string>> { packagesData.ColumnValuesInConditionList.PackageType };
 
-                projectDashBoard.SelectModuleMenuItemOnLeftNav<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.PACKAGES.ToDescription())
+                projectDashBoard.SelectModuleMenuItemOnLeftNav<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.PACKAGES.ToDescription(), waitForLoading: false)
                     .LogValidation<ProjectsDashboard>(ref validations, projectDashBoard.ValidateDisplayedSubItemLinks(packagesData.SubItemMenus));
 
                 Package packagesModule = projectDashBoard.SelectModuleMenuItemOnLeftNav<Package>(subMenuItem: ModuleSubMenuInLeftNav.INBOX.ToDescription());
@@ -165,7 +165,7 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                 var tasksData = new NavigateToModulesFromTheLeftNavSmoke.TasksModules();
                 columnValuesInConditionList = new List<KeyValuePair<string, string>> { tasksData.ColumnValuesInConditionList.Subject };
 
-                projectDashBoard.SelectModuleMenuItemOnLeftNav<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.TASKS.ToDescription())
+                projectDashBoard.SelectModuleMenuItemOnLeftNav<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.TASKS.ToDescription(), waitForLoading: false)
                     .LogValidation<ProjectsDashboard>(ref validations, projectDashBoard.ValidateDisplayedSubItemLinks(tasksData.SubItemMenus));
 
                 Task tasksModule = projectDashBoard.SelectModuleMenuItemOnLeftNav<Task>(subMenuItem: ModuleSubMenuInLeftNav.INBOX.ToDescription());
@@ -227,7 +227,7 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
                 var vendorDataData = new NavigateToModulesFromTheLeftNavSmoke.VendorDataModules();
                 columnValuesInConditionList = new List<KeyValuePair<string, string>> { vendorDataData.ColumnValuesInConditionList.ContractNumber };
 
-                projectDashBoard.SelectModuleMenuItemOnLeftNav<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription())
+                projectDashBoard.SelectModuleMenuItemOnLeftNav<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription(), waitForLoading: false)
                     .LogValidation<ProjectsDashboard>(ref validations, projectDashBoard.ValidateDisplayedSubItemLinks(vendorDataData.SubItemMenus));
 
                 VendorDataRegister vendorDataRegister = projectDashBoard.SelectModuleMenuItemOnLeftNav<VendorDataRegister>(subMenuItem: ModuleSubMenuInLeftNav.VENDODATAREGISTER.ToDescription());

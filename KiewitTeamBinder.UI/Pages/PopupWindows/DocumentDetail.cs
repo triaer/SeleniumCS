@@ -16,7 +16,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
     public class DocumentDetail : PopupWindow
     {
         #region Entities
-        private static By _itemDropdown(string dropdownListName) => By.XPath($"//ul/li[text()='{dropdownListName}']");
+        
         private static By _documentNoTextBox => By.Id("txtDocumentNo");
         private static By _revStatusDropdown => By.Id("ComboDocumentRev_Input");
         private static By _statusDropdown => By.Id("ComboDocumentSts_Input");
@@ -57,6 +57,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             SelectItemInDropdown<DocumentDetail>("Discipline", singleDocumentInfo.Discipline, ref methodValidation);
             node.Info("Click Type dropdown, and select: " + singleDocumentInfo.Type);
             SelectItemInDropdown<DocumentDetail>("Type", singleDocumentInfo.Type, ref methodValidation);
+            node.Debug("After entering value in fields", AttachScreenshot(GetCaptureScreenshot()));
             return this;
         }
 
@@ -68,6 +69,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             node.Info("Choose files from window explorer form");
             node.Info("Files name: " + fileNames);
             UploadFiles(filePath, fileNames);
+            WaitForJQueryLoad();
             return this;
         }
 
@@ -83,33 +85,33 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
         }
 
 
-        public override KeyValuePair<string, bool> ValidateItemDropdownIsHighlighted(string value, string idDropdown)
-        {
-            var node = StepNode();
-            try
-            {
-                node.Info("The Dropdown: " + idDropdown);
-                string actual;
+        //public override KeyValuePair<string, bool> ValidateItemDropdownIsHighlighted(string value, string idDropdown)
+        //{
+        //    var node = StepNode();
+        //    try
+        //    {
+        //        node.Info("The Dropdown: " + idDropdown);
+        //        string actual;
 
-                if (idDropdown.Contains("Rev") || idDropdown.Contains("Category"))
-                {
-                    ScrollIntoView(ItemDropdown(value));
-                    WaitForElementDisplay(_itemDropdown(value));
-                    ScrollToElement(ItemDropdown(value));
-                }
+        //        if (idDropdown.Contains("Rev") || idDropdown.Contains("Category"))
+        //        {
+        //            ScrollIntoView(ItemDropdown(value));
+        //            WaitForElementDisplay(_itemDropdown(value));
+        //            ScrollToElement(ItemDropdown(value));
+        //        }
 
-                ScrollToElement(ItemDropdown(value));
-                actual = ItemDropdown(value).GetAttribute("class");
-                if (actual.Contains("Hovered"))
-                    return SetPassValidation(node, Validation.Item_Dropdown_Is_Highlighted + idDropdown);
+        //        ScrollToElement(ItemDropdown(value));
+        //        actual = ItemDropdown(value).GetAttribute("class");
+        //        if (actual.Contains("Hovered"))
+        //            return SetPassValidation(node, Validation.Item_Dropdown_Is_Highlighted + idDropdown);
 
-                return SetFailValidation(node, Validation.Item_Dropdown_Is_Highlighted + idDropdown);
-            }
-            catch (Exception e)
-            {
-                return SetErrorValidation(node, Validation.Item_Dropdown_Is_Highlighted + idDropdown, e);
-            }
-        }
+        //        return SetFailValidation(node, Validation.Item_Dropdown_Is_Highlighted + idDropdown);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return SetErrorValidation(node, Validation.Item_Dropdown_Is_Highlighted + idDropdown, e);
+        //    }
+        //}
 
         public List<KeyValuePair<string, bool>> ValidateFromUserFieldShowCorrectDataAndFormat(string usernameData, Color color)
         {
