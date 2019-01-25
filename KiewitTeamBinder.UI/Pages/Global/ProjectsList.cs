@@ -44,7 +44,8 @@ namespace KiewitTeamBinder.UI.Pages.Global
         public ProjectsDashboard NavigateToProjectDashboardPage(string filterValue)
         {
             //Filter project by title
-            IWebElement ProjectItem = FilterProjectByIDOrTitle("Project Title", filterValue);
+            //IWebElement ProjectItem = FilterProjectByIDOrTitle("Project Title", filterValue);
+            IWebElement ProjectItem = TableCell(ProjGridDataTable, filterValue);
             //click on the project
             ProjectItem.Click();
             //WaitForJQueryLoad();

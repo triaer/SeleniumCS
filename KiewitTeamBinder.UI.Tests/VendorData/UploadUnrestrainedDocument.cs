@@ -65,10 +65,10 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 holdingArea.SwitchToWindow(currentWindow);
                 holdingArea.SelectModuleMenuItemOnLeftNav<HoldingArea>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription(), subMenuItem: ModuleSubMenuInLeftNav.HOLDINGAREA.ToDescription())
                            .EnterDocumentNo(uploadUnrestrainedDocData.SingleDocInformation.DocumentNo)
-                           .PressEnterKey<HoldingArea>(uploadUnrestrainedDocData.GridViewHoldingAreaData)
+                           //.PressEnterKey<HoldingArea>(uploadUnrestrainedDocData.GridViewHoldingAreaData)
                            .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateRecordsMatchingFilterAreReturned(uploadUnrestrainedDocData.GridViewHoldingAreaName, columnValuesInConditionList, 1))
-                           .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateItemsAreShown(columnValuesInConditionList, uploadUnrestrainedDocData.GridViewHoldingAreaName))
-                           .OpenDocumentByIndex<DocumentDetail>(1, out currentWindow);
+                           .LogValidation<HoldingArea>(ref validations, holdingArea.ValidateItemsAreShown(columnValuesInConditionList, uploadUnrestrainedDocData.GridViewHoldingAreaName));
+                           //.OpenDocumentByIndex<DocumentDetail>(1, out currentWindow);
                 newDocument.LogValidation<DocumentDetail>(ref validations, newDocument.ValidateWindowIsOpened(uploadUnrestrainedDocData.DocumentDetailWindow(uploadUnrestrainedDocData.SingleDocInformation)))
                            .LogValidation<DocumentDetail>(ref validations, newDocument.ValidateDocumentDetailsDisplayCorrect(columnValuePairList))
                            .ClickToolbarButtonOnWinPopup<HoldingArea>(ToolbarButton.Close)

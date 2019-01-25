@@ -19,7 +19,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
     [TestClass]
     public class SingleDocUpload : UITestBase
     {
-        //[TestMethod]
+        [TestMethod]
         public void HoldingArea_UploadSingleDoc_UI()
         {
             try
@@ -28,6 +28,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 var teambinderTestAccount = GetTestAccount("VendorAccount1", environment, "NonSSO");
                 test.Info("Open TeamBinder Web Page: " + teambinderTestAccount.Url);
                 var driver = Browser.Open(teambinderTestAccount.Url, browser);
+                test.Info(Browser.GetActiveDriverInfo());
                 test.Info("Log on TeamBinder via Other User Login: " + teambinderTestAccount.Username);
                 ProjectsList projectsList = new NonSsoSignOn(driver).Logon(teambinderTestAccount) as ProjectsList;
 
