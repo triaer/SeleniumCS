@@ -202,7 +202,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
 
         public VendorDataRegister DoubleClickItem(string selectedValue, string gridView, string description)
         {
-            var node = StepNode();
+            var node = StepNode(); 
             node.Info("Double click on a item");
             while (DescriptionColInGridView(selectedValue, gridView, description) == null)
                 ArowNextPageInGridPager(gridView).Click();
