@@ -224,7 +224,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
                 return SetErrorValidation(node, Validation.Document_Row_Is_Highlighted, e);
             }
         }
-
+        
         private static class Validation
         {
             public static string Holding_Area_Page_Displays = "Validate that the Vendor Data Module Holding Area page displays";
