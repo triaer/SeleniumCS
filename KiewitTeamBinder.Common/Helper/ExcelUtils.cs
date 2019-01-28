@@ -45,7 +45,7 @@ namespace KiewitTeamBinder.Common.Helper
         {
             var excelDriver = ExcelInterop.ExcelDriver.getExcelHelper(filePath);
             excelDriver.Open(filePath, sheetName);
-            int numberOfRows = excelDriver.GetExcelTotalRows();
+            int numberOfRows = excelDriver.GetExcelTotalRows() - 1;
             excelDriver.Close();
             return numberOfRows;
         }

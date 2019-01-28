@@ -14,6 +14,7 @@ using System.Diagnostics;
 using System.Net;
 using System.Threading;
 using System.IO;
+using Microsoft.Win32;
 
 namespace KiewitTeamBinder.UI
 {
@@ -91,6 +92,23 @@ namespace KiewitTeamBinder.UI
                 ieOptions.IgnoreZoomLevel = true;
                 ieOptions.EnsureCleanSession = true;
                 ieOptions.AddAdditionalCapability("disable-popup-blocking", "true");
+
+                if (fileDownloadLocation != null)
+                {
+                    RegistryKey myKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Internet Explorer\\Main", true);
+                    if (myKey != null)
+                    {
+                        myKey.SetValue("Default Download Directory", fileDownloadLocation);
+                        myKey.Close();
+                    }
+
+                    myKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\\Zones\\3", true);
+                    if (myKey != null)
+                    {
+                        myKey.SetValue("1803", 0);
+                        myKey.Close();
+                    }
+                }
 
                 //string ieWebDriver = Environment.GetEnvironmentVariable("IEWebDriver");
                 string ieWebDriver = null;

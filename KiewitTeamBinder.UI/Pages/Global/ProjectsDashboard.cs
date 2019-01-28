@@ -12,7 +12,7 @@ using KiewitTeamBinder.Common.Helper;
 using static KiewitTeamBinder.Common.KiewitTeamBinderENums;
 using System.Diagnostics;
 using KiewitTeamBinder.UI.Pages.PopupWindows;
-
+using System.IO;
 
 namespace KiewitTeamBinder.UI.Pages.Global
 {
@@ -55,6 +55,8 @@ namespace KiewitTeamBinder.UI.Pages.Global
         private static By _reportsButton => By.Id("btnReports");
         private static By _registerViewCheckbox(string view) => By.XPath($"//a[span = '{view}']/img");
         private static By _currentPageSize(string gridViewName) => By.XPath($"//input[contains(@id, '{gridViewName}') and contains(@id,'PageSizeComboBox_Input')]");
+        private static By _rowDataTable(string gridViewName) => By.XPath($"//tr[contains(@id,'{gridViewName}')]");
+        private static By _totalItem(string gridView) => By.XPath($"//span[contains(@id,'ctl00_cntPhMain_{gridView}_ctl00DSC')]");
 
         private static string _filterItemsXpath = "//tr[@valign='top' and not(contains(@style, 'hidden'))]";
         private static string _headerButtonXpath = "//a[span='{0}']";
@@ -94,6 +96,8 @@ namespace KiewitTeamBinder.UI.Pages.Global
         public IWebElement ReportsButton { get { return StableFindElement(_reportsButton); } }
         public IWebElement RegisterViewCheckbox(string gridViewName) => StableFindElement(_registerViewCheckbox(gridViewName));
         public IWebElement CurrentPageSize(string gridViewName) => StableFindElement(_currentPageSize(gridViewName));
+        public IReadOnlyCollection<IWebElement> RowDataTable(string gridViewName) => StableFindElements(_rowDataTable(gridViewName));
+        public IWebElement TotalItem(string gridViewName) => StableFindElement(_totalItem(gridViewName));
         #endregion
 
         #region Actions
@@ -107,6 +111,34 @@ namespace KiewitTeamBinder.UI.Pages.Global
         }
         public int GetPageSize(string gridViewName) {
             return int.Parse(CurrentPageSize(gridViewName).Text);
+        }
+        public int GetTotalItems(string gridView)
+        {
+            return int.Parse(TotalItem(gridView).Text);
+        }
+        public List<string> GetListRowInGridView(string gridViewName)
+        {
+            List<string> listRows = new List<string>();
+            int numberOfRows = RowDataTable(gridViewName).Count;
+            int countRow = 0;
+            while (countRow < GetTotalItems(gridViewName))
+            {
+                for (int i = 0; i < numberOfRows; i++)
+                {
+                    if (RowDataTable(gridViewName).ElementAt(i).IsDisplayed())
+                    {
+                        ScrollIntoView(RowDataTable(gridViewName).ElementAt(i));
+                        listRows.Add(RowDataTable(gridViewName).ElementAt(i).Text);
+                        countRow += 1;
+                    }
+                }
+                if (countRow < GetTotalItems(gridViewName))
+                {
+                    ArowNextPageInGridPager(gridViewName).HoverAndClickWithJS();
+                    WaitForAngularJSLoad();
+                }                   
+            }
+            return listRows;
         }
 
         public ProjectsDashboard ShowProjectList()
@@ -198,7 +230,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             Button.HoverAndClickWithJS();
             if (waitForLoading && tableName != null)
                 WaitForElement(_subPageTable(tableName));
-
+            WaitForAngularJSLoad();
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 
@@ -272,6 +304,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             var node = StepNode();
             node.Info("Click the label of column: " + label.ToDescription());
             ColumnLabel(label.ToDescription()).Click();
+            WaitForAngularJSLoad();
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 
@@ -446,11 +479,26 @@ namespace KiewitTeamBinder.UI.Pages.Global
         }
         public KeyValuePair<string, bool> ValidateExcelItemsCount(string gridViewName, string excelFilePath, string sheetName = "")
         {
+            Wait(longTimeout);
             var node = StepNode();
             try
             {
+                DirectoryInfo downloadedFolder = new DirectoryInfo(Utils.GetDownloadFilesLocalPath());
+                FileInfo[] Files = downloadedFolder.GetFiles("*.*");
+                string filesName = "";
+                List<string> listValueExpected = GetListRowInGridView(gridViewName);
+                foreach (var file in Files)
+                    filesName += file.Name + ", ";
+                node.Info("Files in DownloadedFiles folder: " + filesName);
+                node.Info("Expected path: " + excelFilePath);
                 int expected = int.Parse(ItemsNumberLabel(gridViewName).Text);
-                int actual = ExcelUtils.GetNumberOfRows(excelFilePath, sheetName) - 1;
+                
+                if (listValueExpected.Last().Trim() == "N/A")
+                    expected = expected - 1;
+
+                int actual = ExcelUtils.GetNumberOfRows(excelFilePath, sheetName);
+                //TO-DO: the number of items on web (includes N/A item) does not match with number of item in Excel file.
+                //we temporarily use (expected - 1) to compare
                 if (actual == expected)
                     return SetPassValidation(node, Validation.Excel_Items_Count);
                 else

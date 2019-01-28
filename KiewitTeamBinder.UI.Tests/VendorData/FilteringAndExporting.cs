@@ -50,10 +50,9 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 .ClickHeaderDropdownItem<VendorDataRegister>(MainPaneHeaderDropdownItem.Contracts, false)
                 .DownloadFile<VendorDataRegister>(filteringAndExportingData.DownloadFilePath)
                 .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateExcelItemsCount(filteringAndExportingData.HierarchicalGridViewName,
-                                                                                                               filteringAndExportingData.DownloadFilePath))
-                .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateDataExcelCorrectly(filteringAndExportingData.HierarchicalGridViewName, filteringAndExportingData.DownloadFilePath));
+                                                                                                               filteringAndExportingData.DownloadFilePath));
 
-                //when - User Story 123548 - 120790 Filtering & Exporting Vendor Data Register Validation - Part 2
+                //when - User Story 123548 - 120790 Filtering & Exporting Vendor Data Register Validation -Part 2
                 test = LogTest("US 123548 - 120790 Filtering & Exporting Vendor Data Register Validation - Part 2");
                 Dashboard dashboard = vendorDataRegister.SelectModuleMenuItemOnLeftNav<Dashboard>(ModuleNameInLeftNav.DASHBOARD.ToDescription());
                 vendorDataRegister = dashboard.ClickNumberOnRow<VendorDataRegister>(WidgetUniqueName.CONTRACTORVIEW.ToDescription(), ModuleSubItemsInContractorView.Contracts.ToDescription());
@@ -127,21 +126,20 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 //         .ClickToolbarButtonOnWinPopup<VendorDeliverableDetail>(ToolbarButton.Close, false, false, true, deliverableItemWindow);
                 //vendorDeliverableDetail.LogValidation<VendorDeliverableDetail>(ref validations, linkItems.ValidateLinkItemsWindowIsClosed(countWindow));
                 //countWindow = linkItems.GetCountWindow();
-                //vendorDeliverableDetail.ClickToolbarButtonOnWinPopup<VendorDataRegister>(ToolbarButton.Close, false, false, true, filteringAndExportingData.ProjectName)
-                //                       .LogValidation<VendorDataRegister>(ref validations, vendorDeliverableDetail.ValidateDeliverableLinkItemClosed(countWindow))
-                //                       .DoubleClickItem(filteringAndExportingData.DeliverableNumber, filteringAndExportingData.GridViewDeliverableGrid, filteringAndExportingData.DeliverableDescription)
-                //                       .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateBredCrumbTrailDisplayCorrect(filteringAndExportingData.Documents, false, filteringAndExportingData.ContractNumber, filteringAndExportingData.ItemID, filteringAndExportingData.DeliverableNumber))
-                //                       .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateItemsCountedAreMatches(filteringAndExportingData.GridViewDocumentGrid))
-                //                       .ClickOnCheckBox(filteringAndExportingData.GridViewDocumentGrid, documentNo, uncheck: false)
-                //                       .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateLineItemIsHighlighted(filteringAndExportingData.GridViewDocumentGrid, documentNo))
-                //                       .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateSelectedCountStatus(rowSelectedCount: 1));
-                //vendorDataRegister.ClickOnCheckBox(filteringAndExportingData.GridViewDocumentGrid, documentNo, uncheck: true)
+                //vendorDeliverableDetail.ClickToolbarButtonOnWinPopup<VendorDataRegister>(ToolbarButton.Close, false, false, true, filteringAndExportingData.ProjectName);
+                //vendorDataRegister.LogValidation<VendorDataRegister>(ref validations, vendorDeliverableDetail.ValidateDeliverableLinkItemClosed(countWindow))
+                //                  .DoubleClickItem(filteringAndExportingData.DeliverableNumber, filteringAndExportingData.GridViewDeliverableGrid, filteringAndExportingData.DeliverableDescription)
+                //                  .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateBredCrumbTrailDisplayCorrect(filteringAndExportingData.Documents, false, filteringAndExportingData.ContractNumber, filteringAndExportingData.ItemID, filteringAndExportingData.DeliverableNumber))
+                //                  .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateItemsCountedAreMatches(filteringAndExportingData.GridViewDocumentGrid))
+                //                  .ClickOnCheckBox(filteringAndExportingData.GridViewDocumentGrid, documentNo, uncheck: false)
+                //                  .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateLineItemIsHighlighted(filteringAndExportingData.GridViewDocumentGrid, documentNo))
+                //                  .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateSelectedCountStatus(rowSelectedCount: 1))
+                //                   .ClickOnCheckBox(filteringAndExportingData.GridViewDocumentGrid, documentNo, uncheck: true)
                 //                  .LogValidation<VendorDataRegister>(ref validations, vendorDataRegister.ValidateSelectedCountStatus(rowSelectedCount: 0, isDeCreased: true))
                 //                  .ClickOnBlueHeader(blueHeader);
 
                 ////when - User Story 123572 - 120790 Filtering & Exporting Vendor Data Register Validation Part 5
                 //test = LogTest("US 123572 - 120790 Filtering & Exporting Vendor Data Register Validation - Part 5");
-
                 //vendorDataRegister.DoubleClickItem(filteringAndExportingData.ContractNumber, filteringAndExportingData.GridViewContract, filteringAndExportingData.ContractNumberDescription)
                 //    .DoubleClickItem(filteringAndExportingData.ItemIDNumber, filteringAndExportingData.GridViewItem, filteringAndExportingData.ItemDescription)
                 //    .DoubleClickItem(filteringAndExportingData.DeliverableNumber, filteringAndExportingData.GridViewDeliverable, filteringAndExportingData.DeliverableDescription);
