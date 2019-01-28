@@ -15,6 +15,7 @@ namespace KiewitTeamBinder.Common.TestData
     {
         //User Story 120278 - 120081 - Upload Unrestrained Document Part 1
         public string ProjectName = "Automation Project 3";
+        public string ProjectNumber = "AUTO3";
         public string FileNames = "\"UnrestrainedDocAttachFile.txt\" ";
         public string[] RequiredFields = { "Document No.", "Rev", "Status", "Title", "Category", "Discipline" };
         public Color ColorGrey = Color.FromArgb(207,207,207);
@@ -32,7 +33,6 @@ namespace KiewitTeamBinder.Common.TestData
         };
 
         //User Story 120278 - 120081 - Upload Unrestrained Document Part 2
-        public string ProjectNumber = "AUTO1";
         public string DescriptionUserVendor2 = "Automation Vendor2 (AUTOVENDOR)";
         public string GridViewHoldingAreaName = "GridViewHoldingArea";
         public string GridViewHoldingAreaData = "_GridViewHoldingArea_GridData";
@@ -43,7 +43,7 @@ namespace KiewitTeamBinder.Common.TestData
                                     + SingleDocInformation.RevStatus.Split('-')[0].Trim().ToUpper() + " - "
                                     + SingleDocInformation.Status.Split('-')[0].Trim().ToUpper();
         }
-        public string VendorDocumentSubmissionWindow = "AUTO1 - " + "New Vendor Document Submission";
+        public string VendorDocumentSubmissionWindow = "AUTO3 - " + "New Vendor Document Submission";
         public string ToButton = "toBtn";
         public string toTableTo = "To";
         public string toTableCc = "Cc";
@@ -53,7 +53,7 @@ namespace KiewitTeamBinder.Common.TestData
         public List<string> ListUserCc = new List<string>() { "Automation User2" };
         public string Subject = "Test - Upload Unrestrained Document";
         public string Message = "This is a test - Upload Unrestrained Document";
-        public string TransmittalDetailWindow = "AUTO1 - Transmittal: {0} - {1}";
+        public string TransmittalDetailWindow = "AUTO3 - Transmittal: {0} - {1}";
         public ColumnValuesInCondition ColumnValuesInConditionList = new ColumnValuesInCondition();
 
         public class ColumnValuesInCondition
