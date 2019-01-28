@@ -49,27 +49,23 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             test.Info("Get current window");
             return WebDriver.CurrentWindowHandle;
         }
-        public T ClickToolbarButtonOnWinPopup<T>(ToolbarButton buttonName, bool checkProgressPopup = false, bool isDisappear = false)
+        public T ClickToolbarButtonOnWinPopup<T>(ToolbarButton buttonName, bool checkProgressPopup = false, bool isDisappear = false, bool switchWindow = false, string windowTitle = "")
         {
             var node = StepNode();
             node.Info("Click the button: " + buttonName.ToDescription());
-
-            if (isDisappear == true)
-                IWebElementExtensions.HoverAndClickWithJS(ToolBarButton(buttonName.ToDescription()));
+            if (switchWindow == true)
+                SwitchToPopUpWindowByTitle(ToolBarButton(buttonName.ToDescription()), windowTitle);
             else
-                ToolBarButton(buttonName.ToDescription()).Click();
+            {
+                if (isDisappear == true)
+                    IWebElementExtensions.HoverAndClickWithJS(ToolBarButton(buttonName.ToDescription()));
+                else
+                    ToolBarButton(buttonName.ToDescription()).Click();
 
-            if (checkProgressPopup)
-                WaitForLoading(_progressPopUp);
-
+                if (checkProgressPopup)
+                    WaitForLoading(_progressPopUp);
+            }
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
-        }
-
-        public AlertDialog ClickSaveInToolbarHeader(bool checkProgressPopup = false)
-        {
-            ClickToolbarButtonOnWinPopup<PopupWindow>(ToolbarButton.Save, checkProgressPopup);
-
-            return new AlertDialog(WebDriver);
         }
 
         public T ClickToolbarButton<T>(ToolbarButton buttonName, bool checkProgressPopup = false, bool isDisappear = false, bool switchWindow = false, string windowTitle = "")
@@ -116,10 +112,18 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
 
         public T ClickSaveButton<T>()
         {
-            ClickToolbarButton<T>(ToolbarButton.Save, true);
+            ClickToolbarButtonOnWinPopup<T>(ToolbarButton.Save, true);
             WebDriver.SwitchTo().ActiveElement();
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
+
+        public AlertDialog ClickSaveInToolbarHeader(bool checkProgressPopup = false)
+        {
+            ClickToolbarButtonOnWinPopup<PopupWindow>(ToolbarButton.Save, checkProgressPopup);
+
+            return new AlertDialog(WebDriver);
+        }
+
 
         public T ClickOkButtonOnPopUp<T>()
         {
@@ -128,23 +132,18 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 
-        //public AlertDialog ClickSaveInToolbarHeader(bool checkProgressPopup = false)
-        //{
-        //    ClickToolbarButtonOnWinPopup<PopupWindow>(ToolbarButton.Save, checkProgressPopup);
-
-        //    return new AlertDialog(WebDriver);
-        //}
-
         public AlertDialog ClickValidateDocumentDetails(ToolbarButton buttonName, ref List<KeyValuePair<string, bool>> methodValidation, string processMessage)
         {
-            var dialog = ClickToolbarButton<AlertDialog>(buttonName, true);
+            var dialog = ClickToolbarButtonOnWinPopup<AlertDialog>(buttonName, true);
             methodValidation.Add(ValidateProgressContentMessage(processMessage));
             return dialog;
         }
         public T ClickCloseButtonOnPopUp<T>()
         {
-            ClickToolbarButton<T>(ToolbarButton.Close);
-            WebDriver.SwitchTo().Window(WebDriver.WindowHandles.Last());
+            var node = StepNode();
+            ClickToolbarButtonOnWinPopup<T>(ToolbarButton.Close);
+            SwitchToWindow(WebDriver.WindowHandles.Last());
+            WaitForJQueryLoad();
             WaitForLoadingPanel();
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }

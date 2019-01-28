@@ -25,22 +25,6 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
         public LinkItems(IWebDriver webDriver) : base(webDriver)
         { }
 
-        public int GetCountWindow()
-        {
-            var node = StepNode();
-            test.Info("Get count window");
-            return WebDriver.WindowHandles.Count;
-        }
-
-        //public List<KeyValuePair<string, string>> GetInfoDocumentAttachedByIndex(int index)
-        //{
-        //    var listValue = new List<KeyValuePair<string, string>>();
-        //    List<IWebElement> ListNameHeader = StableFindElements(_linkedDocumentTableHeader).ToList();
-        //    List<IWebElement> ListInfo = LinkedDocumentTableRow(index).StableFindElements(By.XPath("./td")).ToList();
-            
-        //    return listValue;
-        //}
-
         public KeyValuePair<string, bool> ValidateLinkItemsWindowIsClosed(int countWindow)
         {
             var node = StepNode();

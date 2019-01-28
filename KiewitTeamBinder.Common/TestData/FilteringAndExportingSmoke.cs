@@ -11,6 +11,7 @@ namespace KiewitTeamBinder.Common.TestData
     public class FilteringAndExportingSmoke
     {
         public string ProjectName = "Automation Project 1";
+        public string FridViewContractVendorPannel = "GridViewContractVendorPanel";
         public string HierarchicalGridViewName = "GridViewContractVendor";
         public string DefaultFilter = "Hierarchical View";
         public string GridViewFilter = "Grid View";
@@ -24,7 +25,6 @@ namespace KiewitTeamBinder.Common.TestData
         public string ContractNumber = "1234567";
         public string ItemIDNumber = "123";
         public string DeliverableNumber = "123456";
-        public string DocumentNumber = "05218-MM-00001";
         public string GridGridViewName = "GridViewContractsGrid";
         public string ExpeditingViewFilter = "Expediting View";
         public string RowName = "Contracts";
@@ -38,7 +38,6 @@ namespace KiewitTeamBinder.Common.TestData
         public string GridViewContract = "GridViewContractsGrid";
         public string GridViewDeliverable = "GridViewDeliverablesGrid";
         public string GridViewItem = "GridViewItemsGrid";
-        public string GridViewDocument = "GridViewDocumentsGrid";
         public string GridExpeditingContracts = "RadGridExpeditingContracts";
         public string ContractNumberDescription = "testing 120793";
         public string ItemID = "123";
@@ -62,6 +61,6 @@ namespace KiewitTeamBinder.Common.TestData
         public string ContractsVendorDataPage = "Vendor Data - Contracts";
         public string GridViewHoldingAreaName = "GridViewHoldingArea";
         public string GridViewDocumentRegister = "GridViewDocReg";
-        public int pageSizeDefault = 100;
+        public int PageSizeDefault = 100;
     }
 }

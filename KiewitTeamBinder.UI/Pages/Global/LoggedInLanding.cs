@@ -56,6 +56,8 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
         public T DownloadFile<T>(string fileName)
         {
+            var node = StepNode();
+            node.Info("Download file");
             DownloadFileByIE(fileName);
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }

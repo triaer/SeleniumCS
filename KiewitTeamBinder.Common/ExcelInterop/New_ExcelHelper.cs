@@ -85,11 +85,14 @@ namespace KiewitTeamBinder.Common.ExcelInterop
                     {
                         try
                         {
-                            strCellValue += workSheet.Cells[rowIndex, colIndex].Value.ToString() + ",";
+                            string value = workSheet.Cells[rowIndex, colIndex].Value.ToString();
+                            if (value == "")
+                                value = value + " ";
+                            strCellValue += value + " ";
                         }
                         catch (NullReferenceException)
                         {
-                            strCellValue += "" + ",";
+                            strCellValue += " ";
                         }
 
                     }

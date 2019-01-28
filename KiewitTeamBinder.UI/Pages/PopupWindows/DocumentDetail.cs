@@ -83,32 +83,19 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             return validation;
         }
 
-
-        public KeyValuePair<string, bool> ValidateItemDropdownIsHighlighted(string value, string idDropdown)
+        public KeyValuePair<string, bool> ValidateDocumentDetailWindowIsClosed(int countWindow)
         {
             var node = StepNode();
+            node.Info("Validate document detail window is closed");
             try
             {
-                node.Info("The Dropdown: " + idDropdown);
-                string actual;
-
-                if (idDropdown.Contains("Rev") || idDropdown.Contains("Category"))
-                {
-                    ScrollIntoView(ItemDropdown(value));
-                    WaitForElementDisplay(_itemDropdown(value));
-                    ItemDropdown(value).HoverElement();
-                }
-
-                ItemDropdown(value).HoverElement();
-                actual = ItemDropdown(value).GetAttribute("class");
-                if (actual.Contains("Hovered"))
-                    return SetPassValidation(node, Validation.Item_Dropdown_Is_Highlighted + idDropdown);
-
-                return SetFailValidation(node, Validation.Item_Dropdown_Is_Highlighted + idDropdown);
+                if (WebDriver.WindowHandles.Count == countWindow - 1)
+                    return SetPassValidation(node, Validation.Document_Detail_Window_Is_Closed);
+                return SetFailValidation(node, Validation.Document_Detail_Window_Is_Closed);
             }
             catch (Exception e)
             {
-                return SetErrorValidation(node, Validation.Item_Dropdown_Is_Highlighted + idDropdown, e);
+                return SetErrorValidation(node, Validation.Document_Detail_Window_Is_Closed, e);
             }
         }
 
@@ -197,6 +184,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             public static string User_Fields_Cannot_Update = "Validate that the User Field is cannot updated";
             public static string Document_No_Limit_Retained = "Validate that the Document No is retained limited";
             public static string Item_Dropdown_Is_Highlighted = "Validate that the item is highlighted when hovered or scrolled over in the dropdown: ";
+            public static string Document_Detail_Window_Is_Closed = "Validate that document detail window is closed";
         }
         #endregion
     }

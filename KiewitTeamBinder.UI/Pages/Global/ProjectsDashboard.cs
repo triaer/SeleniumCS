@@ -99,7 +99,12 @@ namespace KiewitTeamBinder.UI.Pages.Global
         #region Actions
         public ProjectsDashboard(IWebDriver webDriver) : base(webDriver)
         { }
-
+        public int GetCountWindow()
+        {
+            var node = StepNode();
+            test.Info("Get count window");
+            return WebDriver.WindowHandles.Count;
+        }
         public int GetPageSize(string gridViewName) {
             return int.Parse(CurrentPageSize(gridViewName).Text);
         }
@@ -127,6 +132,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
         public T SelectFilterOption<T>(string nameOrIndex, bool byName = true, bool waitForLoading = true)
         {
+            var node = StepNode();
             if (byName)
                 ImageOfFilterOptionByName("NotSelected", nameOrIndex).Click();
             else
@@ -186,11 +192,10 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
         public T ClickHeaderButton<T>(MainPaneTableHeaderButton buttonName, bool waitForLoading = true, string tableName = null)
         {
-            IWebElement Button = StableFindElement(By.XPath(string.Format(_headerButtonXpath, buttonName.ToDescription())));
             var node = StepNode();
+            IWebElement Button = StableFindElement(By.XPath(string.Format(_headerButtonXpath, buttonName.ToDescription())));
             node.Info("Click the button: " + buttonName.ToDescription());
             Button.HoverAndClickWithJS();
-
             if (waitForLoading && tableName != null)
                 WaitForElement(_subPageTable(tableName));
 
@@ -199,8 +204,10 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
         public T SelectItemOnHeaderDropdown<T>(MainPaneHeaderDropdownItem item)
         {
+            var node = StepNode();
+            node.Info("Selected item: " + item.ToDescription());
             HeaderDropdownItem(item.ToDescription()).Click();
-
+            WaitForAngularJSLoad();
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
         public T SelectDropdownItemWithSwitchWindow<T>(MainPaneHeaderDropdownItem item)
@@ -413,11 +420,9 @@ namespace KiewitTeamBinder.UI.Pages.Global
         public KeyValuePair<string, bool> ValidateColumnIsSorted(string columnName)
         {
             var node = StepNode();
+            node.Info("Validate that the column is sorted");
             try
             {
-                //int rowIndex, colIndex = -1;
-                //GetTableCellValueIndex(PaneTable(gridViewName), columnName, out rowIndex, out colIndex, "th");
-
                 if (SortButton(columnName).IsDisplayed())
                     return SetPassValidation(node, Validation.Column_Is_Sorted);
                 else
@@ -566,7 +571,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
                     if (SubMenuItemLink(item).IsDisplayed() == false)
                         return SetFailValidation(node, Validation.Sub_Item_links_Are_Displayed);
                 }
-
                 return SetPassValidation(node, Validation.Sub_Item_links_Are_Displayed);
             }
             catch (Exception e)

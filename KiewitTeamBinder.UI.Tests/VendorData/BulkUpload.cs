@@ -64,7 +64,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                     .SelectDataOfDocumentPropertyDropdown(bulkUploadData.DataOfComboBoxDics, DocBulkUploadDropdownType.Disc, documentRow: 1)
                     .SelectDataOfDocumentPropertyDropdown(bulkUploadData.DataOfComboBoxCat, DocBulkUploadDropdownType.Cat, documentRow: 1)
                     .SelectDataOfDocumentPropertyDropdown(bulkUploadData.DataOfComboBoxType, DocBulkUploadDropdownType.Type, documentRow: 1)
-                    .ClickToolbarButton<BulkUploadDocuments>(ToolbarButton.CopyAttributes)
+                    .ClickToolbarButtonOnWinPopup<BulkUploadDocuments>(ToolbarButton.CopyAttributes)
                     .HoverOnCopyAttributesMainItem(bulkUploadData.HoverCopyAttributesItem, ref indexOfCopyAttributeItem)
                     .LogValidation<BulkUploadDocuments>(ref validations,
                                                         bulkUploadDocuments.ValidateSubMenuDisplaysAfterHovering(ref indexOfCopyAttributeItem));

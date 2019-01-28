@@ -75,7 +75,7 @@ namespace KiewitTeamBinder.Common.ExcelInterop
             else
             {
                 for (int colIndex = 0; colIndex < colCount; colIndex++)
-                    strCellValue += table.Rows[rowIndex][colIndex].ToString() + ",";
+                    strCellValue += table.Rows[rowIndex][colIndex].ToString() + " ";
 
                 strCellValue = strCellValue.Remove(strCellValue.Length - 1);
 

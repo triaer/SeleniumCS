@@ -60,6 +60,7 @@ namespace KiewitTeamBinder.UI.Pages.DashboardModule
             var NumberOnRow = NumberOnRowInWidget(widgetUniqueName, rowName);
             ScrollIntoView(NumberOnRow);
             NumberOnRow.Click();
+            WaitForLoadingPanel();
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 
