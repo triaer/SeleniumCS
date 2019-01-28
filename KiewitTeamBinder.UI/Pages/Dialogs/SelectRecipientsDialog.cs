@@ -45,7 +45,7 @@ namespace KiewitTeamBinder.UI.Pages.Dialogs
         #region Actions
         public SelectRecipientsDialog(IWebDriver webDriver) : base(webDriver)
         {
-            webDriver.SwitchTo().ActiveElement();
+            
         }
 
         public SelectRecipientsDialog SwitchToFrame()

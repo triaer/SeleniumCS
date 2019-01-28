@@ -39,6 +39,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
         private static By _closeButtonInBottomPage = By.XPath("//div[@id='divTransmittalDetailFooter']//span[text()='Close']");
         private static By _downloadHyperlink => By.XPath("//a[text() = 'Click here to download all Transmittal files.']");
         private static By _documentHyperlink(string documentNo) => By.XPath($"//a[text() = '{documentNo}']");
+        private static By _pageTitle => By.XPath("//div[@id='divTransmittalDetailContent']//td[text()='Document Transmittal']");
         public IWebElement CloseButtonInBottomPage { get { return StableFindElement(_closeButtonInBottomPage); } }
         public IWebElement TabMenu(string nameMenu) => StableFindElement(_tabMenu(nameMenu));
         public IWebElement LinkText(string text) => StableFindElement(_linkText(text));
@@ -58,7 +59,10 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
         #endregion
 
         #region Actions
-        public TransmittalDetail(IWebDriver webDriver) : base(webDriver) { }
+        public TransmittalDetail(IWebDriver webDriver) : base(webDriver)
+        {
+            WaitUntil(driver => StableFindElement(_pageTitle) != null);
+        }
 
         public T ClickCloseInBottomPage<T>()
         {
@@ -101,7 +105,8 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
 
         public string GetTransmittalNo()
         {
-            return HeaderTransmittalNoInfo.Text;
+            WaitUntil(driver => TransmittalNoInfo != null);
+            return TransmittalNoInfo.Text;
         }
 
         /// <summary>
