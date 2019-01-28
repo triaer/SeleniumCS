@@ -92,7 +92,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                     .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateProjectNumberIsCorrect(uploadUnrestrainedDocData.ProjectNumber))
                     .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateProjectNameIsCorrect(uploadUnrestrainedDocData.ProjectName))
                     .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateTransmittalNoIsCorrectWithTheHeader())
-                    .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateFromUserInfoIsCorrect(uploadUnrestrainedDocData.DescriptionUserVendor2))
+                    .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateFromUserInfoIsCorrect(uploadUnrestrainedDocData.DescriptionAdminUser))
                     .LogValidation<TransmittalDetail>(ref validations, transmittalDetail.ValidateRecipentsAreDisplayed(selectedUsersWithCompanyName, false, uploadUnrestrainedDocData.CompanyName))
                     .ClickToolbarButtonOnWinPopup<HoldingArea>(ToolbarButton.Close)
                     .LogValidation<HoldingArea>(ref validations, transmittalDetail.ValidateTransmittalDetailWindowIsClosed());

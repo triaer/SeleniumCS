@@ -111,12 +111,12 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
 
         public TransmittalDetail ClickSendButton(ref List<KeyValuePair<string, bool>> methodValidation)
         {
-            var normalPageLoadTime = WebDriver.Manage().Timeouts().PageLoad;
-            WebDriver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(sapShortTimeout);
+            //var normalPageLoadTime = WebDriver.Manage().Timeouts().PageLoad;
+            //WebDriver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(sapShortTimeout);
             ClickToolbarButtonOnWinPopup<TransmittalDetail>(KiewitTeamBinderENums.ToolbarButton.Send);
-            methodValidation.Add(ValidateProgressContentMessage("Please wait while transmittal is being sent"));
+            //methodValidation.Add(ValidateProgressContentMessage("Please wait while transmittal is being sent"));
             WaitUntilJSReady();
-            WebDriver.Manage().Timeouts().PageLoad = normalPageLoadTime;
+            //WebDriver.Manage().Timeouts().PageLoad = normalPageLoadTime;
             return new TransmittalDetail(WebDriver);
         }
 
