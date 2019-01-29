@@ -42,7 +42,7 @@ namespace KiewitTeamBinder.UI.Pages.Dialogs
             try
             {
                 var actualVersion = TeamBinderVersion.Text;
-                if (actualVersion == version)
+                if (actualVersion.Trim() == version.Trim())
                     return SetPassValidation(node,
                     Validation.TeamBinder_Version_Field_Displayed_Correctly + " - " + actualVersion);
 

@@ -89,8 +89,11 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
 
         public AlertDialog ClickSaveInToolbarHeader(bool checkProgressPopup = false)
         {
+            var normalPageLoadTime = WebDriver.Manage().Timeouts().PageLoad;
+            WebDriver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(sapShortTimeout);
             ClickToolbarButtonOnWinPopup<PopupWindow>(ToolbarButton.Save, checkProgressPopup);
-            
+            WaitUntilJSReady();
+            WebDriver.Manage().Timeouts().PageLoad = normalPageLoadTime;
             return new AlertDialog(WebDriver);
         }
 

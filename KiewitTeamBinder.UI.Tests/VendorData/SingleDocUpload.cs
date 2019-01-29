@@ -28,6 +28,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 var teambinderTestAccount = GetTestAccount("VendorAccount1", environment, "NonSSO");
                 test.Info("Open TeamBinder Web Page: " + teambinderTestAccount.Url);
                 var driver = Browser.Open(teambinderTestAccount.Url, browser);
+                test.Info(Browser.GetActiveDriverInfo());
                 test.Info("Log on TeamBinder via Other User Login: " + teambinderTestAccount.Username);
                 ProjectsList projectsList = new NonSsoSignOn(driver).Logon(teambinderTestAccount) as ProjectsList;
 
@@ -90,7 +91,7 @@ namespace KiewitTeamBinder.UI.Tests.VendorData
                 projectDashBoard.SelectModuleMenuItemOnLeftNav<ProjectsDashboard>(menuItem: ModuleNameInLeftNav.VENDORDATA.ToDescription(), waitForLoading: false);
                 HoldingArea holdingArea = projectDashBoard.SelectModuleMenuItemOnLeftNav<HoldingArea>(subMenuItem: ModuleSubMenuInLeftNav.HOLDINGAREA.ToDescription());
                 BulkUploadDocuments bulkUploadDocuments = holdingArea.ClickBulkUploadButton(out currentWindow);
-                bulkUploadDocuments.CreateDataOnRow<HoldingArea>(2, transmitSingleDocData.DocumentNo);
+                bulkUploadDocuments.CreateDataOnRow<HoldingArea>(1, transmitSingleDocData.DocumentNo);
 
                 //when User Story 120222 - 120035 - Transmit Single Doc
                 test = LogTest("Transmit Single Document");

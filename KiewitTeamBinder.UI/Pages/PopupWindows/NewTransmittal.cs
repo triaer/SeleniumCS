@@ -52,14 +52,16 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
         #region Actions
         public NewTransmittal(IWebDriver webDriver) : base(webDriver) { }
 
-        public SelectRecipientsDialog ClickRecipientsButton(string buttonName)
+        public SelectRecipientsDialog ClickRecipientsButton(string buttonName, bool switchToFrame = true)
         {
             RecipientsButton(buttonName).Click();
 
             var selectRecipientsDialog = new SelectRecipientsDialog(WebDriver);
-            WebDriver.SwitchTo().Frame(selectRecipientsDialog.IFrameName);
-            WaitUntil(driver => selectRecipientsDialog.DropdownFilterButon != null);
-
+            if (switchToFrame)
+            {
+                WebDriver.SwitchTo().Frame(selectRecipientsDialog.IFrameName);
+                WaitUntil(driver => selectRecipientsDialog.DropdownFilterButon != null);
+            }
             return selectRecipientsDialog;
         }
 
@@ -108,9 +110,13 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
         }
 
         public TransmittalDetail ClickSendButton(ref List<KeyValuePair<string, bool>> methodValidation)
-        {            
+        {
+            //var normalPageLoadTime = WebDriver.Manage().Timeouts().PageLoad;
+            //WebDriver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(sapShortTimeout);
             ClickToolbarButtonOnWinPopup<TransmittalDetail>(KiewitTeamBinderENums.ToolbarButton.Send);
-            methodValidation.Add(ValidateProgressContentMessage("Please wait while transmittal is being sent"));
+            //methodValidation.Add(ValidateProgressContentMessage("Please wait while transmittal is being sent"));
+            WaitUntilJSReady();
+            //WebDriver.Manage().Timeouts().PageLoad = normalPageLoadTime;
             return new TransmittalDetail(WebDriver);
         }
 
@@ -151,30 +157,39 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             }
         }
 
-        public KeyValuePair<string, bool> ValidateSelectedUsersPopulateInTheToField(string[] selectedUsers)
+        public List<KeyValuePair<string, bool>> ValidateSelectedUsersPopulateInTheToField(string[] selectedUsers, string companyName = "")
         {
             var node = StepNode();
+            var validation = new List<KeyValuePair<string, bool>>();
             try
             {
                 bool flag;
+                if (companyName != "")
+                    for (int itemUser = 0; itemUser < selectedUsers.Length; itemUser++)
+                        selectedUsers[itemUser] = selectedUsers[itemUser] + " (" + companyName + ")";
+                 
                 foreach (var selectedUser in SelectedUsersInToField)
                 {
                     flag = false;
                     for (int i = 0; i < selectedUsers.Length; i++)
                     {
                         if (selectedUsers[i] == selectedUser.Text)
+                        {
                             flag = true;
+                            break;
+                        }                           
                     }
-                    if (flag == false)                    
-                        return SetFailValidation(node, Validation.Selected_Users_Populate_In_The_To_Field);
-                    
-                }
-                return SetPassValidation(node, Validation.Selected_Users_Populate_In_The_To_Field);
-
+                    if (flag == false)
+                        validation.Add(SetFailValidation(node, Validation.Selected_Users_Populate_In_The_To_Field));
+                    else
+                        validation.Add(SetPassValidation(node, Validation.Selected_Users_Populate_In_The_To_Field));
+                }                
+                return validation;
             }
             catch (Exception e)
             {
-                return SetErrorValidation(node, Validation.Selected_Users_Populate_In_The_To_Field, e);
+                validation.Add(SetErrorValidation(node, Validation.Selected_Users_Populate_In_The_To_Field, e));
+                return validation;
             }
         }
 

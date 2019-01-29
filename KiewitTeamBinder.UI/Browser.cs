@@ -91,8 +91,11 @@ namespace KiewitTeamBinder.UI
                 ieOptions.IgnoreZoomLevel = true;
                 ieOptions.EnsureCleanSession = true;
                 ieOptions.AddAdditionalCapability("disable-popup-blocking", true);
-                
-                
+                ieOptions.AddAdditionalCapability(CapabilityType.IsJavaScriptEnabled, true);
+                //ieOptions.AddAdditionalCapability(CapabilityType.UnexpectedAlertBehavior, "ignore");
+
+
+
                 //string ieWebDriver = Environment.GetEnvironmentVariable("IEWebDriver");
                 string ieWebDriver = null;
                 if (string.IsNullOrEmpty(ieWebDriver))
@@ -130,11 +133,12 @@ namespace KiewitTeamBinder.UI
         public static string GetActiveDriverInfo()
         {
             ICapabilities capabilities = ((RemoteWebDriver)webDriver).Capabilities;
-            string info = "Browser Capabilities:\n"
-                        + "Name = " + capabilities.GetCapability("browserName").ToString() + "-\n"
-                        + "Version = " + capabilities.GetCapability("browserVersion").ToString() + "-\n";
-            //+ "Supports JavaScript  = " + capabilities.GetCapability("").ToString() + "\n"
-            return info;
+            //string info = "Browser Capabilities:\n"
+            //            + "Name = " + capabilities.GetCapability("browserName").ToString() + "-\n"
+            //            + "Version = " + capabilities.GetCapability("browserVersion").ToString() + "-\n"
+            //            + "Supports JavaScript  = " + capabilities.GetCapability(CapabilityType.IsJavaScriptEnabled).ToString() + "-\n"
+            //            + "Handles Alerts = " + capabilities.GetCapability(CapabilityType.HandlesAlerts);
+            return capabilities.ToString();
         }
     }
 }

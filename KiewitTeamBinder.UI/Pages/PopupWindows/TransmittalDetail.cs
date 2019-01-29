@@ -39,6 +39,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
         private static By _closeButtonInBottomPage = By.XPath("//div[@id='divTransmittalDetailFooter']//span[text()='Close']");
         private static By _downloadHyperlink => By.XPath("//a[text() = 'Click here to download all Transmittal files.']");
         private static By _documentHyperlink(string documentNo) => By.XPath($"//a[text() = '{documentNo}']");
+        private static By _pageTitle => By.XPath("//div[@id='divTransmittalDetailContent']//td[text()='Document Transmittal']");
         public IWebElement CloseButtonInBottomPage { get { return StableFindElement(_closeButtonInBottomPage); } }
         public IWebElement TabMenu(string nameMenu) => StableFindElement(_tabMenu(nameMenu));
         public IWebElement LinkText(string text) => StableFindElement(_linkText(text));
@@ -58,7 +59,10 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
         #endregion
 
         #region Actions
-        public TransmittalDetail(IWebDriver webDriver) : base(webDriver) { }
+        public TransmittalDetail(IWebDriver webDriver) : base(webDriver)
+        {
+            WaitUntil(driver => StableFindElement(_pageTitle) != null);
+        }
 
         public T ClickCloseInBottomPage<T>()
         {
@@ -97,6 +101,12 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             }
 
             return recipientList;
+        }
+
+        public string GetTransmittalNo()
+        {
+            WaitUntil(driver => TransmittalNoInfo != null);
+            return TransmittalNoInfo.Text;
         }
 
         /// <summary>
@@ -330,28 +340,40 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             }
         }
 
-        public KeyValuePair<string, bool> ValidateRecipentsAreDisplayed(string[] selectedUsersWithCompanyName, bool ccList = false)
+        public List<KeyValuePair<string, bool>> ValidateRecipentsAreDisplayed(string[] selectedUsersWithCompanyName, bool ccList = false, string companyName = "")
         {
             var node = StepNode();
-            node.Info("");
+            var validation = new List<KeyValuePair<string, bool>>();
+            node.Info("Validate recipents are displayed");
             try
             {
+                if (companyName != "")
+                    for (int i = 0; i < selectedUsersWithCompanyName.Length; i++)
+                        selectedUsersWithCompanyName[i] = selectedUsersWithCompanyName[i] + " (" + companyName + ")";
+
                 foreach (var recipient in GetRecipientList(ccList))
                 {
                     bool flag = false;
                     for (int i = 0; i < selectedUsersWithCompanyName.Length && flag == false; i++)
+                    {
+                        string b = selectedUsersWithCompanyName[i];
                         if (recipient == selectedUsersWithCompanyName[i])
+                        {
                             flag = true;
-
+                            break;
+                        }
+                    }
                     if (flag == false)
-                        return SetFailValidation(node, Validation.Recipents_Are_Displayed);
-                     
+                        validation.Add(SetFailValidation(node, Validation.Recipents_Are_Displayed));
+                    else
+                        validation.Add(SetPassValidation(node, Validation.Recipents_Are_Displayed));
                 }
-                return SetPassValidation(node, Validation.Recipents_Are_Displayed);
+                return validation;
             }
             catch (Exception e)
             {
-                return SetErrorValidation(node, Validation.Recipents_Are_Displayed, e);
+                validation.Add(SetErrorValidation(node, Validation.Recipents_Are_Displayed, e));
+                return validation;
             }
         }
 
