@@ -836,7 +836,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
         internal static void DownloadFileByIE(string fileName)
         {
-            Wait(shortTimeout / 2);
+            Wait(shortTimeout);
             SendKeys.SendWait("%N");
             Wait(shortTimeout / 3);
             SendKeys.SendWait("{TAB}");

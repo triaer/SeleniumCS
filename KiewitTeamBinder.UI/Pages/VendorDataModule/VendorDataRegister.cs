@@ -31,14 +31,12 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
         private static By _blueHeader(string blueHeader) => By.XPath($"//div[@id='lblRegisterCaption']/span[text()='{blueHeader}']");
         private static By _blueItem(string gridView, string itemName) => By.XPath($"//span[@class='HyperLinkWithNoLine']/ancestor::tr[contains(@id,'ctl00_cntPhMain_{gridView}_ctl00')]//span[text()='{itemName}']");
         private static By _itemsList(string gridView) => By.XPath($"//tr[contains(@id,'ctl00_cntPhMain_{gridView}_ctl00')]");
-        //private static By _totalItem(string gridView) => By.XPath($"//span[contains(@id,'ctl00_cntPhMain_{gridView}_ctl00DSC')]");
         private static By _selectedRow(string gridView, string Description) => By.XPath($"//*[contains(text(),'{Description}')]/ancestor::tr[contains(@id,'{gridView}_ctl00')]");
         private static By _deliverableLineItemNmberItem(string value) => By.XPath($"//span[@class='HyperLinkWithNoLine' and text() = '{value}']");
         private static By _itemSubRegisterCaption => By.XPath("//div[@id='lblRegisterCaption']/span");
         private static By _registerCaptionLabel => By.Id("lblRegisterCaption");
         private static By _pageSizeBox => By.XPath("//input[contains(@id,'PageSizeComboBox_ClientState') and contains(@id,'RadGridExpeditingContracts')]");
         private static By _documentRow(int index) => By.XPath($"//div[contains(@id, 'GridViewDocumentsGrid_GridData')]/table/tbody/tr[{index}]/td");
-       // private static By _rowDataTable(string gridViewName) => By.XPath($"//tr[contains(@id,'{gridViewName}') and contains(@style, 'visible')]");
         private static By _rowColumnName(string gridViewName) => By.XPath($"//a[contains(@onclick,'{gridViewName}')]/ancestor::th[contains(@class,'rgHeader')]");
 
         public IWebElement BlueItem(string gridViewName, string itemName) => StableFindElement(_blueItem(gridViewName, itemName));
@@ -50,13 +48,11 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
         public IWebElement CheckBoxItemContract(string gridView, string description) => StableFindElement(_checkBoxItemContract(gridView, description));
         public IWebElement SelectedRecordCount { get { return StableFindElement(_selectedRecordCount); } }
         public IWebElement BlueHeader(string blueHeader) => StableFindElement(_blueHeader(blueHeader));
-        //public IWebElement TotalItem(string gridViewName) => StableFindElement(_totalItem(gridViewName));
         public IWebElement PageSizeBox { get { return FindElement(_pageSizeBox); } }
         public IReadOnlyCollection<IWebElement> ItemsList(string gridView) => StableFindElements(_itemsList(gridView));
         public IWebElement SelectedRow(string gridView, string description) => StableFindElement(_selectedRow(gridView, description));
         public IWebElement RegisterCaptionLabel { get { return StableFindElement(_registerCaptionLabel); } }
         public IReadOnlyCollection<IWebElement> RowColumnName(string gridViewName) => StableFindElements(_rowColumnName(gridViewName));
-        //public IReadOnlyCollection<IWebElement> RowDataTable(string gridViewName) => StableFindElements(_rowDataTable(gridViewName));
         #endregion
 
         #region Actions
@@ -424,23 +420,7 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
                     expectedHeader = expectedHeader + RowColumnName(gridViewName).ElementAt(i).Text + " ";
                 }
 
-                List<string> expectedData = GetListRowInGridView(gridViewName);
-                //List<string> expectedData = new List<string>();
-                //while (countRow < GetTotalItems(gridViewName))
-                //{
-                //    for (int i = 0; i < numberOfRows; i++)
-                //    {
-                //        if (RowDataTable(gridViewName).ElementAt(i).IsDisplayed())
-                //        {
-                //            ScrollIntoView(RowDataTable(gridViewName).ElementAt(i));
-                //            expectedData.Add(RowDataTable(gridViewName).ElementAt(i).Text);
-                //            countRow += 1;
-                //        }
-                //    }
-                //    if (countRow < GetTotalItems(gridViewName))
-                //        ArowNextPageInGridPager(gridViewName).HoverAndClickWithJS();                       
-                //}
-
+                List<string> expectedData = GetListRowsInGridView(gridViewName);
                 List<string> actualData = new List<string>();
                 for (int i = 0; i <= ExcelUtils.GetNumberOfRows(excelFilePath, sheetName); i++)
                     actualData.Add(ExcelUtils.GetExcelRowValue(excelFilePath, sheetName, i + 1));

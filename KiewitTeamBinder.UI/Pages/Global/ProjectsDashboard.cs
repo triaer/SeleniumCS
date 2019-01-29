@@ -18,7 +18,12 @@ namespace KiewitTeamBinder.UI.Pages.Global
 {
     public class ProjectsDashboard : LoggedInLanding
     {
-        #region Entities              
+        #region Entities     
+        private static string _filterItemsXpath = "//tr[@valign='top' and not(contains(@style, 'hidden'))]";
+        private static string _headerButtonXpath = "//a[span='{0}']";
+        private static string _filterTextBoxXpath = "//table[contains(@id,'{0}')]//tr[@class='rgFilterRow']/td[{1}]";
+        private static string _panelXpath = "//div[@id='ctl00_cntPhMain_GridUpdatePanel']/div[@class='GridViewPlaceHolder' and not(contains(@style,'display: none;'))]";
+
         public By _dashBoardLabel => By.XPath("//span[.='Dashboard']");
         public By _gridViewFilterListData => By.XPath("//div[substring(@id, string-length(@id) - string-length('_rfltMenu_detached') +1) = '_rfltMenu_detached'][contains(@style,'block')]/ul/li");
         public By _columnLabel(string titleColumn) => By.XPath(_panelXpath + $"//a[text() ='{titleColumn}']");
@@ -57,11 +62,8 @@ namespace KiewitTeamBinder.UI.Pages.Global
         private static By _currentPageSize(string gridViewName) => By.XPath($"//input[contains(@id, '{gridViewName}') and contains(@id,'PageSizeComboBox_Input')]");
         private static By _rowDataTable(string gridViewName) => By.XPath($"//tr[contains(@id,'{gridViewName}')]");
         private static By _totalItem(string gridView) => By.XPath($"//span[contains(@id,'ctl00_cntPhMain_{gridView}_ctl00DSC')]");
-
-        private static string _filterItemsXpath = "//tr[@valign='top' and not(contains(@style, 'hidden'))]";
-        private static string _headerButtonXpath = "//a[span='{0}']";
-        private static string _filterTextBoxXpath = "//table[contains(@id,'{0}')]//tr[@class='rgFilterRow']/td[{1}]";
-        private static string _panelXpath = "//div[@id='ctl00_cntPhMain_GridUpdatePanel']/div[@class='GridViewPlaceHolder' and not(contains(@style,'display: none;'))]";
+        private static By _gridViewLoading(string gridViewName) => By.XPath($"//div[contains(@id,'{gridViewName}')]//div[@class='raDiv']");
+        private static By _gridViewData(string gridViewName) => By.XPath($"//div[contains(@id,'{gridViewName}')]");
 
         public IWebElement FormTitle { get { return StableFindElement(_formTitle); } }
         public IWebElement ViewFilter { get { return StableFindElement(_viewFilter); } }
@@ -98,6 +100,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         public IWebElement CurrentPageSize(string gridViewName) => StableFindElement(_currentPageSize(gridViewName));
         public IReadOnlyCollection<IWebElement> RowDataTable(string gridViewName) => StableFindElements(_rowDataTable(gridViewName));
         public IWebElement TotalItem(string gridViewName) => StableFindElement(_totalItem(gridViewName));
+        public IWebElement GridViewLoading(string gridViewName) => StableFindElement(_gridViewLoading(gridViewName));
         #endregion
 
         #region Actions
@@ -116,7 +119,18 @@ namespace KiewitTeamBinder.UI.Pages.Global
         {
             return int.Parse(TotalItem(gridView).Text);
         }
-        public List<string> GetListRowInGridView(string gridViewName)
+
+        public void WaitForLoadPage(string gridViewName)
+        {
+            while (true)
+            {
+                if (GridViewLoading(gridViewName) != null)
+                    WaitForElement(_gridViewData(gridViewName));
+                else
+                    break;
+            }
+        }
+        public List<string> GetListRowsInGridView(string gridViewName)
         {
             List<string> listRows = new List<string>();
             int numberOfRows = RowDataTable(gridViewName).Count;
@@ -135,7 +149,8 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 if (countRow < GetTotalItems(gridViewName))
                 {
                     ArowNextPageInGridPager(gridViewName).HoverAndClickWithJS();
-                    WaitForAngularJSLoad();
+                    WaitForLoadPage(gridViewName);
+                    numberOfRows = RowDataTable(gridViewName).Count;
                 }                   
             }
             return listRows;
@@ -230,7 +245,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
             Button.HoverAndClickWithJS();
             if (waitForLoading && tableName != null)
                 WaitForElement(_subPageTable(tableName));
-            WaitForAngularJSLoad();
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 
@@ -420,11 +434,13 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 if (pagesCount > 1)
                 {
                     ArrowLastPageInGridPager(gridViewName).Click();
-                    WaitForLoadingPanel();
+                    //WaitForLoadingPanel();
+                    WaitForLoadPage(gridViewName);
                     rowsCount = (pagesCount - 1) * int.Parse(CurrentPageSize(gridViewName).GetAttribute("value")) + VisibleRows(gridViewName).Count;
                     //return back 1st page
                     ArrowFirstPageInGridPager(gridViewName).Click();
-                    WaitForLoadingPanel(longTimeout);
+                    //WaitForLoadingPanel(longTimeout);
+                    WaitForLoadPage(gridViewName);
                 }
                 else
                     rowsCount = VisibleRows(gridViewName).Count;
@@ -486,17 +502,20 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 DirectoryInfo downloadedFolder = new DirectoryInfo(Utils.GetDownloadFilesLocalPath());
                 FileInfo[] Files = downloadedFolder.GetFiles("*.*");
                 string filesName = "";
-                List<string> listValueExpected = GetListRowInGridView(gridViewName);
+                List<string> listValueExpected = GetListRowsInGridView(gridViewName);
+
                 foreach (var file in Files)
                     filesName += file.Name + ", ";
                 node.Info("Files in DownloadedFiles folder: " + filesName);
                 node.Info("Expected path: " + excelFilePath);
+
                 int expected = int.Parse(ItemsNumberLabel(gridViewName).Text);
                 
-                if (listValueExpected.Last().Trim() == "N/A")
+                if (listValueExpected.Last().Trim().Contains("N/A"))
                     expected = expected - 1;
 
                 int actual = ExcelUtils.GetNumberOfRows(excelFilePath, sheetName);
+
                 //TO-DO: the number of items on web (includes N/A item) does not match with number of item in Excel file.
                 //we temporarily use (expected - 1) to compare
                 if (actual == expected)
