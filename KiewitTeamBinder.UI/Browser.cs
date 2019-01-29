@@ -85,13 +85,17 @@ namespace KiewitTeamBinder.UI
 
                 InternetExplorerOptions ieOptions = new InternetExplorerOptions();
                 ieOptions.EnableNativeEvents = true;
-                ieOptions.UnhandledPromptBehavior = UnhandledPromptBehavior.Accept;
+                ieOptions.UnhandledPromptBehavior = UnhandledPromptBehavior.Ignore;
                 ieOptions.EnablePersistentHover = true;
                 ieOptions.RequireWindowFocus = true;
                 ieOptions.IntroduceInstabilityByIgnoringProtectedModeSettings = true;
                 ieOptions.IgnoreZoomLevel = true;
                 ieOptions.EnsureCleanSession = true;
-                ieOptions.AddAdditionalCapability("disable-popup-blocking", "true");
+                ieOptions.AddAdditionalCapability("disable-popup-blocking", true);
+                ieOptions.AddAdditionalCapability(CapabilityType.IsJavaScriptEnabled, true);
+                //ieOptions.AddAdditionalCapability(CapabilityType.UnexpectedAlertBehavior, "ignore");
+
+
 
                 if (fileDownloadLocation != null)
                 {
@@ -147,11 +151,12 @@ namespace KiewitTeamBinder.UI
         public static string GetActiveDriverInfo()
         {
             ICapabilities capabilities = ((RemoteWebDriver)webDriver).Capabilities;
-            string info = "Browser Capabilities:\n"
-                        + "Name = " + capabilities.GetCapability("browserName").ToString() + "-\n"
-                        + "Version = " + capabilities.GetCapability("browserVersion").ToString() + "-\n";
-            //+ "Supports JavaScript  = " + capabilities.GetCapability("").ToString() + "\n"
-            return info;
+            //string info = "Browser Capabilities:\n"
+            //            + "Name = " + capabilities.GetCapability("browserName").ToString() + "-\n"
+            //            + "Version = " + capabilities.GetCapability("browserVersion").ToString() + "-\n"
+            //            + "Supports JavaScript  = " + capabilities.GetCapability(CapabilityType.IsJavaScriptEnabled).ToString() + "-\n"
+            //            + "Handles Alerts = " + capabilities.GetCapability(CapabilityType.HandlesAlerts);
+            return capabilities.ToString();
         }
     }
 }

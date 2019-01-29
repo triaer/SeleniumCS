@@ -425,7 +425,8 @@ namespace KiewitTeamBinder.UI.Pages.Global
         internal static void GetTableCellValueIndex(IWebElement TableElement, string cellValue, out int rowIndex, out int columnIndex, string colType = "td", bool equalComparison = true)
         {
             rowIndex = columnIndex = -1;
-            ReadOnlyCollection<IWebElement> rowCollection = TableElement.StableFindElements(By.TagName("tr"));
+            //ReadOnlyCollection<IWebElement> rowCollection = TableElement.StableFindElements(By.TagName("tr"));
+            ReadOnlyCollection<IWebElement> rowCollection = TableElement.StableFindElements(By.XPath("./tr"));
             foreach (var rowItem in rowCollection)
             {
                 bool exitLoop = false;

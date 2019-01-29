@@ -19,7 +19,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         private string _projectListRows = "//table[contains(@id,'GridViewProjList')]//tbody/tr[@id='GridViewProjList_ctl00__{0}']";
         private string _headerColumns = "//div[@id='GridViewProjList_GridHeader']//thead//th[.='{0}']/preceding-sibling::th";
         private static By _projListTitle => By.Id ("ProjListTitle");
-        private static By _projGridDataTable => By.XPath("//div[@id='GridViewProjList_GridData']/table//tbody");
+        private static By _projGridDataTable => By.XPath("//div[@id='GridViewProjList_GridData']/table/tbody");
         private static By _projectTitleTextBox => By.XPath("//input[contains(@id,'ProjTitle')]");
         private static By _projectNoTextBox => By.XPath("//input[contains(@id,'ProjNo')]");
         private static By _projectNoImgFilter => By.XPath("//img[contains(@id,'ProjNo')]");
@@ -44,7 +44,8 @@ namespace KiewitTeamBinder.UI.Pages.Global
         public ProjectsDashboard NavigateToProjectDashboardPage(string filterValue)
         {
             //Filter project by title
-            IWebElement ProjectItem = FilterProjectByIDOrTitle("Project Title", filterValue);
+            //IWebElement ProjectItem = FilterProjectByIDOrTitle("Project Title", filterValue);
+            IWebElement ProjectItem = TableCell(ProjGridDataTable, filterValue);
             //click on the project
             ProjectItem.Click();
             //WaitForJQueryLoad();
@@ -70,7 +71,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 ProjectNoTextBox.SendKeys(Keys.Enter);
             }
 
-            WaitForAngularJSLoad();
+            WaitForJQueryLoad();
             Console.WriteLine(StableFindElements(_projectRows).Count);
             rowIndex = 1;
             colIndex = StableFindElements(By.XPath(string.Format(_headerColumns, filterBy))).Count + 1;

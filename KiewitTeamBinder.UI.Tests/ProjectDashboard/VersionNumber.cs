@@ -35,6 +35,7 @@ namespace KiewitTeamBinder.UI.Tests.ProjectDashboard
 
                 test.Info("Open TeamBinder Web Page: " + teambinderTestAccount.Url);
                 var driver = Browser.Open(teambinderTestAccount.Url, browser);
+               
                 // and log on via Other User Login Kiewit Account
                 test.Info("Log on TeamBinder via Other User Login: " + teambinderTestAccount.Username);
                 ProjectsList projectsList = new NonSsoSignOn(driver).Logon(teambinderTestAccount) as ProjectsList;

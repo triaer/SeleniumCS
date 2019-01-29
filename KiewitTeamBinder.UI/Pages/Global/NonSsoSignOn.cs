@@ -42,7 +42,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             Browser.MaximizeWindow();
             //SwitchToNewPopUpWindow(OtherUserLoginBtn, out logonWindow, true);
             OtherUserLoginBtn.Click();
-            WaitForElementDisplay(By.Id("walkme-player"));
+            //WaitForElementDisplay(By.Id("walkme-player"));
 
             //Fill account fields
             UserIdTextbox.InputText(account.Username, true);

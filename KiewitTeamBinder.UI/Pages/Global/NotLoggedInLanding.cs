@@ -12,7 +12,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
     {
         #region Entities 
 
-        private static By _otherUserLoginBtn => By.XPath("//a[./span[text()='OTHER USER LOGIN']]");
+        private static By _otherUserLoginBtn => By.XPath("//a[span='OTHER USER LOGIN']");
         private static By _kiewitUserLoginBtn => By.XPath("//a[./span[text()='KIEWIT USER LOGIN']]");
 
         public IWebElement OtherUserLoginBtn { get { return StableFindElement(_otherUserLoginBtn); } }

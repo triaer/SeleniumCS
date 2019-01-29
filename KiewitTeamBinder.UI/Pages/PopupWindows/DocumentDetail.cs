@@ -24,9 +24,9 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
         private static By _categoryDropdown => By.Id("ComboDocumentCategory_Input");
         private static By _disciplineDropdown => By.Id("ComboDocumentDisc_Input");
         private static By _typeDropdown => By.Id("ComboDocumentType_Input");
-        private static By _attachFilesButton => By.Id("fileUpload");       
+        private static By _attachFilesButton => By.Id("fileUpload");
         private static By _fromUserLabel => By.Id("txtUploadFromUser");
-        
+
         public IWebElement DocumentNoTextBox { get { return StableFindElement(_documentNoTextBox); } }
         public IWebElement RevStatusDropdown { get { return StableFindElement(_revStatusDropdown); } }
         public IWebElement StatusDropdown { get { return StableFindElement(_statusDropdown); } }
@@ -59,7 +59,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             SelectItemInDropdown<DocumentDetail>("Type", singleDocumentInfo.Type, ref methodValidation);
             node.Debug("After entering value in fields", AttachScreenshot(GetCaptureScreenshot()));
             return this;
-        }              
+        }
 
         public DocumentDetail ClickAttachFilesButton(string filePath, string fileNames)
         {
@@ -69,8 +69,9 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             node.Info("Choose files from window explorer form");
             node.Info("Files name: " + fileNames);
             UploadFiles(filePath, fileNames);
+            WaitForJQueryLoad();
             return this;
-        }        
+        }
 
         public List<KeyValuePair<string, bool>> ValidateSelectedItemShowInDropdownBoxesCorrect(SingleDocumentInfo singleDocumentInfo)
         {
@@ -158,7 +159,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             int b = Int32.Parse(listValue[2].Trim());
             Color colorConvert = Color.FromArgb(r, g, b);
             return "#" + colorConvert.R.ToString("X2") + colorConvert.G.ToString("X2") + colorConvert.B.ToString("X2");
-        }               
+        }
 
         public KeyValuePair<string, bool> ValidateDocumentNoIsLimitRetained(int maxLength)
         {
@@ -169,14 +170,52 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
                 if (actual == maxLength.ToString())
                     return SetPassValidation(node, Validation.Document_No_Limit_Retained);
                 else
-                return SetFailValidation(node, Validation.Document_No_Limit_Retained, maxLength.ToString(), actual);
+                    return SetFailValidation(node, Validation.Document_No_Limit_Retained, maxLength.ToString(), actual);
             }
             catch (Exception e)
             {
                 return SetErrorValidation(node, Validation.Document_No_Limit_Retained, e);
             }
         }
-        
+
+        public List<KeyValuePair<string, bool>> ValidateDocumentDetailsDisplayCorrect(List<KeyValuePair<string, string>> columnValuePairList)
+        {
+            var node = StepNode();
+            var validation = new List<KeyValuePair<string, bool>>();
+            try
+            {
+                foreach (var columnValuePair in columnValuePairList)
+                {
+                    if (columnValuePair.Key == "Document No." || columnValuePair.Key == "Title")
+                    {
+                        string expected = columnValuePair.Value;
+                        if (columnValuePair.Key == "Document No.")
+                            expected = columnValuePair.Value.ToUpper();
+                        node.Info("Document Field: " + columnValuePair.Key);
+                        if (TextField(columnValuePair.Key).GetValue() == expected)
+                            validation.Add(SetPassValidation(node, Validation.Document_Detail_Is_Displayed_Correct + expected));
+                        else
+                            validation.Add(SetFailValidation(node, Validation.Document_Detail_Is_Displayed_Correct + expected, expected, TextField(columnValuePair.Key).GetValue()));
+                    }
+                    else
+                    {
+                        node.Info("Document Field: " + columnValuePair.Key);
+                        if (DropdownListInput(columnValuePair.Key, "").GetValue() == columnValuePair.Value)
+                            validation.Add(SetPassValidation(node, Validation.Document_Detail_Is_Displayed_Correct + columnValuePair.Value));
+                        else
+                            validation.Add(SetFailValidation(node, Validation.Document_Detail_Is_Displayed_Correct + columnValuePair.Value, columnValuePair.Value, TextField(columnValuePair.Key).GetValue()));
+                    }
+                }
+
+                return validation;
+            }
+            catch (Exception e)
+            {
+                validation.Add(SetErrorValidation(node, Validation.Document_Detail_Is_Displayed_Correct, e));
+                return validation;
+            }
+        }
+
         private static class Validation
         {
             public static string User_Field_Display_Correct = "Validate that the User Field is displayed correctly";
@@ -184,6 +223,7 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             public static string User_Fields_Cannot_Update = "Validate that the User Field is cannot updated";
             public static string Document_No_Limit_Retained = "Validate that the Document No is retained limited";
             public static string Item_Dropdown_Is_Highlighted = "Validate that the item is highlighted when hovered or scrolled over in the dropdown: ";
+            public static string Document_Detail_Is_Displayed_Correct = "Validate that the document detail is displayed correctly: ";
             public static string Document_Detail_Window_Is_Closed = "Validate that document detail window is closed";
         }
         #endregion
