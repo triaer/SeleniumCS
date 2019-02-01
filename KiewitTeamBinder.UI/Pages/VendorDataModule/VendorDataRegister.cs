@@ -347,26 +347,13 @@ namespace KiewitTeamBinder.UI.Pages.VendorDataModule
                 for (int item = 0; item < path.Length; item++)
                 {
                     if (path[item] != "")
-                    {
-                        expected = expected.Insert(expected.Length, path[item]);
-                        expected += " > ";
-                    }
+                        expected += (path[item] + " > ");                    
                 }
-                string actual = bredCrumbTrail;
-                if (isContracts)
-                    actual = RegisterCaptionLabel.Text;
-                else
-                {
-                    List<IWebElement> ListElement = StableFindElements(_itemSubRegisterCaption).ToList();
-                    foreach (var item in ListElement)
-                    {
-                        actual = actual.Insert(actual.Length, item.Text);
-                        actual += " > ";
-                    }
-                    actual = actual + type;
-                }
+                expected += type;
+
+                string actual = RegisterCaptionLabel.Text;               
                 
-                if (actual == expected + type)
+                if (actual == expected)
                     return SetPassValidation(node, Validation.Bred_Crumb_Trail_Is_Displayed_Correct);
                 return SetFailValidation(node, Validation.Bred_Crumb_Trail_Is_Displayed_Correct, expected + type, actual);
             }

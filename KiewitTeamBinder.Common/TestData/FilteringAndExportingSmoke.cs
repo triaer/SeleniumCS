@@ -10,7 +10,8 @@ namespace KiewitTeamBinder.Common.TestData
 {
     public class FilteringAndExportingSmoke
     {
-        public string ProjectName = "Automation Project 1";
+        public string ProjectName = "Automation Project 2";
+        public string ProjectID = "AUTO2";
         public string Contracts = "Contracts";
         public string ItemPurchased = "Item Purchased";
         public string Deliverables = "Deliverables";
@@ -54,8 +55,7 @@ namespace KiewitTeamBinder.Common.TestData
         public string ItemDescription = "abc";
         public string DeliverableNumber = "123456";
         public string DeliverableDescription = "123456";
-
-        public string DeliverableItemWindow = "AUTO1 - ";
+               
         public string LinkItemsWindow = "Link Items";
         public string DocumentSubmitedPage = "Holding Area - Documents Submitted";
         public string NewDocumentSubmitedPage = "Holding Area - Documents Submitted - New";

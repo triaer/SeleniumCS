@@ -68,27 +68,6 @@ namespace KiewitTeamBinder.UI.Pages.PopupWindows
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 
-        public T ClickToolbarButton<T>(ToolbarButton buttonName, bool checkProgressPopup = false, bool isDisappear = false, bool switchWindow = false, string windowTitle = "")
-        {
-            var node = StepNode();
-            node.Info("Click the button: " + buttonName.ToDescription());
-            if (switchWindow == true)
-                SwitchToPopUpWindowByTitle(ToolBarButton(buttonName.ToDescription()), windowTitle);
-            else
-            {
-                if (isDisappear == true)
-                    IWebElementExtensions.HoverAndClickWithJS(ToolBarButton(buttonName.ToDescription()));
-                else
-                    ToolBarButton(buttonName.ToDescription()).Click();
-
-                if (checkProgressPopup)
-                    WaitForLoading(_progressPopUp);
-            }
-            
-
-            return (T)Activator.CreateInstance(typeof(T), WebDriver);
-        }
-
         public T EnterTextField<T>(string fieldLabel, string content)
         {
             var node = StepNode();
