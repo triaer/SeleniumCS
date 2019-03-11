@@ -32,33 +32,33 @@ namespace KiewitTeamBinder.UI.Pages.Global
         {
         }
 
-        public LoggedInLanding Logon(TestAccount account)
-        {
-            string logonWindow;
+        //public LoggedInLanding Logon(TestAccount account)
+        //{
+        //    string logonWindow;
 
-            //Click OtherUserLogin Button and Switch to OtherUserLogin Window
-            if (OtherUserLoginBtn == null)
-                Browser.MinimizeWindow();
-            Browser.MaximizeWindow();
-            //SwitchToNewPopUpWindow(OtherUserLoginBtn, out logonWindow, true);
-            OtherUserLoginBtn.Click();
-            //WaitForElementDisplay(By.Id("walkme-player"));
+        //    //Click OtherUserLogin Button and Switch to OtherUserLogin Window
+        //    if (OtherUserLoginBtn == null)
+        //        Browser.MinimizeWindow();
+        //    Browser.MaximizeWindow();
+        //    //SwitchToNewPopUpWindow(OtherUserLoginBtn, out logonWindow, true);
+        //    OtherUserLoginBtn.Click();
+        //    //WaitForElementDisplay(By.Id("walkme-player"));
 
-            //Fill account fields
-            UserIdTextbox.InputText(account.Username, true);
-            WaitForElementEnable(_companyIdTextbox);
-            CompanyIdTextbox.InputText(account.Company, true);
-            WaitForElementEnable(_passwordTextbox);
-            PasswordTextbox.InputText(account.Password, true);
+        //    //Fill account fields
+        //    UserIdTextbox.InputText(account.Username, true);
+        //    WaitForElementEnable(_companyIdTextbox);
+        //    CompanyIdTextbox.InputText(account.Company, true);
+        //    WaitForElementEnable(_passwordTextbox);
+        //    PasswordTextbox.InputText(account.Password, true);
 
-            //Click LogIn button
-            SwitchToNewPopUpWindow(LoginBtn, out logonWindow, true);
+        //    //Click LogIn button
+        //    SwitchToNewPopUpWindow(LoginBtn, out logonWindow, true);
 
-            var projectsListPage = new ProjectsList(WebDriver);
-            WaitUntil(driver => projectsListPage.ProjListTitle != null);
+        //    var projectsListPage = new ProjectsList(WebDriver);
+        //    WaitUntil(driver => projectsListPage.ProjListTitle != null);
 
-            return projectsListPage;
-        }
+        //    return projectsListPage;
+        //}
 
     }
     #endregion

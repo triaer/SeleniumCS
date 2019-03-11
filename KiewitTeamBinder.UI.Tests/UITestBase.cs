@@ -71,7 +71,7 @@ namespace KiewitTeamBinder.UI.Tests
 
             string report = Utils.GetRandomValue(TestContext.TestName);
             reportPath = captureLocation + report + ".html";
-            extent = ExtentReportsHelper.ReportCreation(reportPath, TestContext.TestName);
+            extent = ExtentReportsHelper.CreateReport(reportPath, TestContext.TestName);
             extent.AddSystemInfo("Environment", TestContext.Properties["environment"].ToString());
             extent.AddSystemInfo("Browser", TestContext.Properties["browser"].ToString());
             test = ExtentReportsHelper.LogTest("Pre-condition");
@@ -115,7 +115,6 @@ namespace KiewitTeamBinder.UI.Tests
                 catch (Exception e)
                 {
                     Console.WriteLine("TakeScreenshot encountered an error. " + e.Message);
-                    throw;
                 }
                 finally
                 {

@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KiewitTeamBinder.Api", "Kie
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KiewitTeamBinder.Common", "KiewitTeamBinder.Common\KiewitTeamBinder.Common.csproj", "{2F0E5A22-47A2-4953-951A-2BEE5A205DF3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KiewitTeamBinder.Api.Tests", "KiewitTeamBinder.Api.Tests\KiewitTeamBinder.Api.Tests.csproj", "{E740A93D-45DC-4672-BF68-CFF580AB48F8}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KiewitTeamBinder.UI", "KiewitTeamBinder.UI\KiewitTeamBinder.UI.csproj", "{3F432CCC-DF01-4722-A4F0-3B8496A194F3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KiewitTeamBinder.UI.Tests", "KiewitTeamBinder.UI.Tests\KiewitTeamBinder.UI.Tests.csproj", "{3DFC64D3-4C3D-4BF7-A976-03852EE33267}"
@@ -37,14 +35,6 @@ Global
 		{2F0E5A22-47A2-4953-951A-2BEE5A205DF3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2F0E5A22-47A2-4953-951A-2BEE5A205DF3}.Release|x86.ActiveCfg = Release|Any CPU
 		{2F0E5A22-47A2-4953-951A-2BEE5A205DF3}.Release|x86.Build.0 = Release|Any CPU
-		{E740A93D-45DC-4672-BF68-CFF580AB48F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E740A93D-45DC-4672-BF68-CFF580AB48F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E740A93D-45DC-4672-BF68-CFF580AB48F8}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{E740A93D-45DC-4672-BF68-CFF580AB48F8}.Debug|x86.Build.0 = Debug|Any CPU
-		{E740A93D-45DC-4672-BF68-CFF580AB48F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E740A93D-45DC-4672-BF68-CFF580AB48F8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E740A93D-45DC-4672-BF68-CFF580AB48F8}.Release|x86.ActiveCfg = Release|Any CPU
-		{E740A93D-45DC-4672-BF68-CFF580AB48F8}.Release|x86.Build.0 = Release|Any CPU
 		{3F432CCC-DF01-4722-A4F0-3B8496A194F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3F432CCC-DF01-4722-A4F0-3B8496A194F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3F432CCC-DF01-4722-A4F0-3B8496A194F3}.Debug|x86.ActiveCfg = Debug|Any CPU

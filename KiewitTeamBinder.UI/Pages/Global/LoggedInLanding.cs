@@ -56,9 +56,10 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
         public T DownloadFile<T>(string fileName)
         {
-            var node = StepNode();
+            var node = CreateStepNode();
             node.Info("Download file");
             DownloadFileByIE(fileName);
+            EndStepNode(node);
             return (T)Activator.CreateInstance(typeof(T), WebDriver);
         }
 
@@ -91,8 +92,8 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
         public KeyValuePair<string, bool> ValidateSaveDialogStatus(bool closed = false)
         {
-            var node = StepNode();
-
+            var node = CreateStepNode();
+            var validation = new KeyValuePair<string, bool>();
             try
             {
                 if (closed == true)
@@ -111,17 +112,22 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
                     if (StableFindElement(_saveItemPopUp) != null)
                         return SetPassValidation(node, Validation.Save_PopUp_Opened);
-
-                    return SetFailValidation(node, Validation.Save_PopUp_Opened);
+                    EndStepNode(node);
+                    validation = SetFailValidation(node, Validation.Save_PopUp_Opened);
                 }
             }
             catch (Exception e)
             {
                 if (closed == true)
-                    return SetErrorValidation(node, Validation.Save_PopUp_Closed, e);
+                    validation = SetErrorValidation(node, Validation.Save_PopUp_Closed, e);
 
-                return SetErrorValidation(node, Validation.Save_PopUp_Opened, e);
+                validation =  SetErrorValidation(node, Validation.Save_PopUp_Opened, e);
             }
+            finally
+            {
+                EndStepNode(node);
+            }
+            return validation;
         }
 
         public string GetUrl()

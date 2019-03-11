@@ -298,5 +298,16 @@ namespace KiewitTeamBinder.UI
         {
             ((IJavaScriptExecutor)WebDriver).ExecuteScript("arguments[0].style.display='block';",Element);
         }
+
+        public static void SelectItem(this IWebElement element, string item, string selectby = "Text")
+        {
+            SelectElement selector = new SelectElement(element);
+            if (selectby == "Value")
+                selector.SelectByValue(item);
+            else if (selectby == "Index")
+                selector.SelectByIndex(int.Parse(item) - 1);
+            else
+                selector.SelectByText(item);
+        }
     }
 }

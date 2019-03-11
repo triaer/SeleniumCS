@@ -93,7 +93,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
         public void WaitForLoadingPanel(int timeout = sapShortTimeout)
         {
-            var node = StepNode();
+            var node = CreateStepNode();
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
             do
@@ -112,6 +112,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 node.Warning("The icon loading process is not completed in timeout: " + timeout);
 
             stopwatch.Stop();
+            EndStepNode(node);
         }
 
         internal static IWebElement StableFindElement(By by, long timeout = longTimeout)
@@ -872,13 +873,19 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
             }
 
+            catch (UnhandledAlertException)
+            {
+                IAlert alert = WebDriver.SwitchTo().Alert();
+                alert.Dismiss();
+                Screenshot screenshot = ((ITakesScreenshot)Browser.Driver).GetScreenshot();
+                screenshot.SaveAsFile(filePath, ScreenshotImageFormat.Png);
+            }
+
             catch (Exception e)
 
             {
 
                 Console.WriteLine("TakeScreenshot encountered an error. " + e.Message);
-
-                throw;
 
             }
 
