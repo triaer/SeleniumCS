@@ -145,6 +145,7 @@
     <Compile Include="UITestBase.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
+    <Compile Include="User\MainPageTest.cs" />
     <Compile Include="User\SignOnTests.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>

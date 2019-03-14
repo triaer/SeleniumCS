@@ -19,8 +19,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         #region Entities
 
         private static By _userNameLable => By.XPath("//div[@id='divUserName']/span");
-        private static By _logoutLink => By.Id("LogoutLabel");
-        private static By _logoutYesButton => By.XPath("//div[@class='rwDialogPopup radconfirm']//a[.//span[text()='Yes']]");
+        static readonly By _lnkLogout = By.XPath("//a[@href='logout.do']");
         private static By _alertPopup => By.Id("kendoAlertWindow");
         private static By _saveChangeYesButton => By.Id("Yes");
         private static By _saveChangeNoButton => By.Id("No");
@@ -30,8 +29,10 @@ namespace KiewitTeamBinder.UI.Pages.Global
         private static By _recoveryNoButton => By.Id("divNo");
 
 
-        public IWebElement LogoutLink { get { return StableFindElement(_logoutLink); } }
-        public IWebElement LogoutYesButton { get { return StableFindElement(_logoutYesButton); } }
+        public IWebElement LnkLogout
+        {
+            get { return StableFindElement(_lnkLogout); }
+        }
         public IWebElement SaveChangeYesButton { get { return StableFindElement(_saveChangeYesButton); } }
         public IWebElement SaveChangeNoButton { get { return StableFindElement(_saveChangeNoButton); } }
         public IWebElement IframeAutoRecovery { get { return StableFindElement(_iframeAutoRecovery); } }

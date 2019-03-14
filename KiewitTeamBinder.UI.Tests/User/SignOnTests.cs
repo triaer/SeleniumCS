@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using KiewitTeamBinder.Common;
 using KiewitTeamBinder.Common.Helper;
+using KiewitTeamBinder.Common.TestData;
 using KiewitTeamBinder.UI.Pages;
 using KiewitTeamBinder.UI.Pages.Global;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -34,7 +35,7 @@ namespace KiewitTeamBinder.UI.Tests.User
 
                 test = LogTest("DA_LOGIN_TC001 - Verify that user can login specific repository successfully via Dashboard login page with correct credentials.");
                 Login loginPage = new Login(driver);
-                MainPage mainPage = loginPage.SignOn("administrators", "");
+                MainPage mainPage = loginPage.SignOn("administrator", "");
 
                 //Then
                 //VP: Verify that Dashboard Mainpage appears
@@ -47,9 +48,74 @@ namespace KiewitTeamBinder.UI.Tests.User
                 lastException = e;
                 throw;
             }
-
-
         }
+
+        [TestMethod]
+        public void TC002()
+        {
+
+            try
+            {
+                //Given
+                //1. Navigate to Dashboard login page.
+                test.Info("Navigate to Dashboard login page.");
+                var driver = Browser.Open(Constant.HomePage, "chrome");
+                var signOnData = new SignOnData();
+                //When
+                //2. Enter valid username and password.
+                //3. Click on "Login" button
+
+                test = LogTest("DA_LOGIN_TC002 - Verify Dashboard Error message \"Username or password is invalid\" appears");
+                Login loginPage = new Login(driver);
+                MainPage mainPage = loginPage.SignOn("test", "123", true);
+
+                //Then
+                //VP: Verify that Dashboard Mainpage appears
+                validations.Add(mainPage.ValidateTextInAlertPopup(signOnData.errorMsgLoginFail));
+                Console.WriteLine(string.Join(System.Environment.NewLine, validations.ToArray()));
+                validations.Should().OnlyContain(validations => validations.Value).Equals(bool.TrueString);
+            }
+            catch (Exception e)
+            {
+                lastException = e;
+                throw;
+            }
+        }
+
+        [TestMethod]
+        public void TC003()
+        {
+            try
+            {
+                //Given
+                //1. Navigate to Dashboard login page.
+                test.Info("Navigate to Dashboard login page.");
+                var driver = Browser.Open(Constant.HomePage, "chrome");
+                var signOnData = new SignOnData();
+
+                //When
+                //2. Select repository: SampleRepository
+                //3. Enter valid username and invalid password: administrator/123
+                //4. Click on "Login" button
+                test = LogTest("DA_LOGIN_TC003 - Verify user fails to log in specific repository via Dashboard login page with correct username and incorrect password");
+                Login loginPage = new Login(driver);
+                loginPage.SignOn(signOnData.username, "123", true);
+
+                MainPage mainPage = new MainPage(driver);
+                //Then
+                //VP: Verify Dashboard Error message "Username or password is invalid" appears
+                validations.Add(mainPage.ValidateTextInAlertPopup(signOnData.errorMsgLoginFail));
+                Console.WriteLine(string.Join(System.Environment.NewLine, validations.ToArray()));
+                validations.Should().OnlyContain(validations => validations.Value).Equals(bool.TrueString);
+            }
+            catch(Exception e)
+            {
+                lastException = e;
+                throw;
+            }
+        }
+
+        
 
         //[TestMethod]
         //public void General_NonSSOValidUserSignon_UI()

@@ -58,7 +58,7 @@ namespace KiewitTeamBinder.UI.Pages
         /// <param name="repositoryName">Name of the repository.</param>
         /// <Author>Long and Phat</Author>
         /// <returns></returns>
-        public MainPage SignOn(string username, string password, string repositoryName = null)
+        public MainPage SignOn(string username, string password, bool isWaitForAlert = false, string repositoryName = null)
         {
             if (repositoryName != null)
             {
@@ -67,6 +67,10 @@ namespace KiewitTeamBinder.UI.Pages
             TxtUsername.SendKeys(username);
             TxtPassword.SendKeys(password);
             BtnLogin.Click();
+            if (isWaitForAlert)
+            {
+                WaitUntil(SeleniumExtras.WaitHelpers.ExpectedConditions.AlertIsPresent());
+            }
             return new MainPage(WebDriver);
         }
 

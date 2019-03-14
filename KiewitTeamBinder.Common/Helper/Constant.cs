@@ -8,6 +8,6 @@ namespace KiewitTeamBinder.Common.Helper
 {
     public static class Constant
     {
-        public const string HomePage = "http://192.168.171.105/TADashboard/login.jsp";
+        public const string HomePage = "http://localhost/TADashboard/login.jsp";
     }
 }
