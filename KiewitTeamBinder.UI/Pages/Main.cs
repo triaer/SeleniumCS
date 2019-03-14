@@ -325,12 +325,12 @@ namespace KiewitTeamBinder.UI.Pages
             return validation;
         }
 
-        public Login Logout()
-        {
-            LnkAccount.Click();
-            LnkLogout.Click();
-            return new Login(WebDriver);
-        }
+        //public Login Logout()
+        //{
+        //    LnkAccount.Click();
+        //    LnkLogout.Click();
+        //    return new Login(WebDriver);
+        //}
 
         public MainPage DeleteOnePage(string pageName, bool isWaitForDisappear = false)
         {

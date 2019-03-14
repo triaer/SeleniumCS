@@ -49,9 +49,8 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
         public NonSsoSignOn Logout()
         {
-            LogoutLink.Click();
-            WebDriver.SwitchTo().ActiveElement();
-            LogoutYesButton.Click();
+            LnkAccount.Click();
+            LnkLogout.Click();
             return new NonSsoSignOn(WebDriver);
         }               
 
