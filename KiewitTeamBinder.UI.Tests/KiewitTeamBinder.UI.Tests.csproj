@@ -142,6 +142,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="User\MainPageTests.cs" />
     <Compile Include="UITestBase.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>

@@ -221,10 +221,8 @@ namespace KiewitTeamBinder.UI.Pages.Global
         }
 
         internal static void WaitFor(By elementDescription)
-
         {
             var wait = Browser.Wait();
-
             wait.Until(driver => driver.FindElement(elementDescription));
         }
 
@@ -262,7 +260,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
         internal static void WaitForElementCSSAttribute(IWebElement Element, string cssAttribute, string cssAttributeValue, int seconds = mediumTimeout)
         {
             var wait = Browser.Wait(seconds);
-
             wait.Until(driver => Element.GetCssValue(cssAttribute).Contains(cssAttributeValue));
 
         }
@@ -270,7 +267,6 @@ namespace KiewitTeamBinder.UI.Pages.Global
         internal static void WaitForElementAttribute(IWebElement Element, string attribute, string attributeValue, int seconds = 15)
         {
             var wait = Browser.Wait(seconds);
-
             wait.Until(driver => Element.GetAttribute(attribute).Contains(attributeValue));
 
         }

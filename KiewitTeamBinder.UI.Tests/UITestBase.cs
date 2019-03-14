@@ -63,9 +63,7 @@ namespace KiewitTeamBinder.UI.Tests
             }
 
             if (!System.IO.Directory.Exists(captureLocation))
-
             {
-
                 Directory.CreateDirectory(captureLocation);
             }
 

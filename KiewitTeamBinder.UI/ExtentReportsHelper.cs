@@ -18,15 +18,15 @@ namespace KiewitTeamBinder.UI
         public static ExtentTest test;
         public static List<ExtentTest> extentTestList;
         public static List<ExtentTest> nodeList;
+
         public static ExtentReports CreateReport(string reportPath, string reportName)
         {
-            
             System.IO.File.Create(reportPath).Dispose();
             var htmlReporter = new ExtentV3HtmlReporter(reportPath);
             //htmlReporter.LoadConfig(Utils.GetProjectPath() + "extent-config.xml");
             htmlReporter.Config.ReportName = reportName;
             htmlReporter.Config.DocumentTitle = reportName;
-            htmlReporter.Config.Theme = AventStack.ExtentReports.Reporter.Configuration.Theme.Standard;
+            htmlReporter.Config.Theme = AventStack.ExtentReports.Reporter.Configuration.Theme.Dark;
             extent = new ExtentReports();
             extent.AttachReporter(htmlReporter);
             extentTestList = new List<ExtentTest>();

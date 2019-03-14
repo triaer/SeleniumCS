@@ -6,11 +6,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static KiewitTeamBinder.UI.ExtentReportsHelper;
 
 namespace KiewitTeamBinder.UI.Pages
 {
     public class Login : PageBase
     {
+        private IWebDriver _driver;
 
         #region Locators
 
@@ -46,8 +48,9 @@ namespace KiewitTeamBinder.UI.Pages
 
         #region Methods
 
-        public Login(IWebDriver webDriver) : base(webDriver)
+        public Login(IWebDriver driver) : base(driver)
         {
+            this._driver = driver;
         }
 
         /// <summary>
@@ -68,6 +71,45 @@ namespace KiewitTeamBinder.UI.Pages
             TxtPassword.SendKeys(password);
             BtnLogin.Click();
             return new MainPage(WebDriver);
+        }
+
+        public Login SignOnFailed(string username, string password, string repositoryName = null)
+        {
+            if (repositoryName != null)
+            {
+                CmbRepo.SelectItem(repositoryName);
+            }
+            TxtUsername.SendKeys(username);
+            TxtPassword.SendKeys(password);
+            BtnLogin.Click();
+            Browser.Wait().Until(SeleniumExtras.WaitHelpers.ExpectedConditions.AlertIsPresent());
+            return new Login(WebDriver);
+        }
+
+        public KeyValuePair<string, bool> ValidateDashboardDashboardErrorMessageAppeared()
+        {
+            var node = CreateStepNode();
+            var validation = new KeyValuePair<string, bool>();
+            try
+            {
+                String foundErrorMessage = _driver.SwitchTo().Alert().Text;
+                if (foundErrorMessage.Equals("Username or password is invalid"))
+                    validation = SetPassValidation(node, ValidationMessage.ValidateDashboardErrorMessage);
+                else
+                    validation = SetFailValidation(node, ValidationMessage.ValidateDashboardErrorMessage);
+            }
+            catch (Exception e)
+            {
+                validation = SetErrorValidation(node, ValidationMessage.ValidateDashboardErrorMessage, e);
+            }
+
+            EndStepNode(node);
+            return validation;
+        }
+
+        private static class ValidationMessage
+        {
+            public static string ValidateDashboardErrorMessage = "Validate That Error Message Is Correct";
         }
 
         #endregion
