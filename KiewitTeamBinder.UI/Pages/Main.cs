@@ -246,7 +246,8 @@ namespace KiewitTeamBinder.UI.Pages
         /// <param "isPublic"> If value is "yes", check the checkbox. Else the value is "no", uncheck the checkbox </param>
         public MainPage FillInfoInPageDiaglog(string pageName = null, bool isWaitForPage = false, string parentPage = null, int numberOfColumns = 2, string displayAfter = null, string isPublic = "Default")
         {
-            if(pageName != null)
+            string txtNameValue = TxtNewPagePageName.Text;
+            if (pageName != null)
             {
                 TxtNewPagePageName.InputText(pageName);
             }
@@ -269,6 +270,7 @@ namespace KiewitTeamBinder.UI.Pages
                 else if (isPublic == CheckValue.No.ToDescription())
                     ChbPublic.UnCheck();
             }
+            BtnPageOK.Click();
             if (isWaitForPage)
             {
                 string locator;
@@ -277,18 +279,17 @@ namespace KiewitTeamBinder.UI.Pages
                     string newPageName = pageName.Replace(" ", "\u00a0");
                     locator = string.Format(_lnkPage, newPageName);
                 }
-                else if(pageName == null && (TxtNewPagePageName.Text).Contains(" "))
+                else if(pageName == null && txtNameValue.Contains(" "))
                 {
-                    string newPageName = (TxtNewPagePageName.Text).Replace(" ", "\u00a0");
+                    string newPageName = txtNameValue.Replace(" ", "\u00a0");
                     locator = string.Format(_lnkPage, newPageName);
                 }
                 else
                 {
-                    locator = string.Format(_lnkPage, pageName);
+                    locator = string.Format(_lnkPage, txtNameValue);
                 }
                 WaitForElementDisplay(By.XPath(locator));
             }
-            BtnPageOK.Click();
             return this;
         }
 

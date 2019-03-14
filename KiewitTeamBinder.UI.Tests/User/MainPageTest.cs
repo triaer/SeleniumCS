@@ -151,51 +151,54 @@ namespace KiewitTeamBinder.UI.Tests.User
                 //9. Click OK button
                 //10. Click on "Test" page
                 //11. Click on "Edit this page" icon
-                Login loginPage = new Login(driver);
-                MainPage mainPage = loginPage.SignOn(signOnData.username, signOnData.password, false, signOnData.repository)
-                                             .AddPage(pageData.pageName, true)
-                                             .AddPage(pageData.anotherPageName, true, null, 2, null, CheckValue.Yes.ToDescription())
-                                             .ClickPage(pageData.pageName)
-                                             .ClickSubSymbolMenu(SymbolMenu.GlobalSettings.ToDescription(), SubMenu.Edit.ToDescription())
-                                             .LogValidation<MainPage>(ref validations, mainPage.ValidateDialogDisplayed(Dialog.EditPage.ToDescription()))
-                                             .FillInfoInPageDiaglog(null, true, null, 2, null, CheckValue.Yes.ToDescription())
-                                             .ClickPage(pageData.anotherPageName)
-                                             .ClickSubSymbolMenu(SymbolMenu.GlobalSettings.ToDescription(), SubMenu.Edit.ToDescription())
-                                             .LogValidation<MainPage>(ref validations, mainPage.ValidateDialogDisplayed(Dialog.EditPage.ToDescription()))
-                                             .FillInfoInPageDiaglog(null, true, null, 2, null, CheckValue.No.ToDescription());
-
-                mainPage.Logout();                           
-                                             
                 //Then
                 //VP1: Check "Edit Page" pop up window is displayed
-
                 //When
                 //12. Check Public checkbox
                 //13. Click OK button
                 //14. Click on "Another Test" page
                 //15. Click on "Edit this page" icon
-
                 //Then
                 //VP2: Check "Edit Page" pop up window is displayed
-
                 //When
                 //16. Uncheck Public checkbox
                 //17. Click OK button
                 //18. Click Log out link
                 //19. Log in with another valid account
-
                 //Then
                 //VP3: Check "Test" Page is visibled and can be accessed
                 //VP4: Check "Another Test" page is invisible
+                test = LogTest("DA_LOGIN_TC019 - Verify user is able to edit the \"Public\" setting of any page successfully");
+                Login loginPage = new Login(driver);
+                MainPage mainPage = new MainPage(driver);
+                loginPage.SignOn(signOnData.username, signOnData.password, false, signOnData.repository)
+                            .AddPage(pageData.pageName, true)
+                            .AddPage(pageData.anotherPageName, true, null, 2, null, CheckValue.Yes.ToDescription())
+                            .ClickPage(pageData.pageName)
+                            .ClickSubSymbolMenu(SymbolMenu.GlobalSettings.ToDescription(), SubMenu.Edit.ToDescription())
+                            .LogValidation<MainPage>(ref validations, mainPage.ValidateDialogDisplayed(Dialog.EditPage.ToDescription()))
+                            .FillInfoInPageDiaglog(null, true, null, 2, null, CheckValue.Yes.ToDescription())
+                            .ClickPage(pageData.anotherPageName)
+                            .ClickSubSymbolMenu(SymbolMenu.GlobalSettings.ToDescription(), SubMenu.Edit.ToDescription())
+                            .LogValidation<MainPage>(ref validations, mainPage.ValidateDialogDisplayed(Dialog.EditPage.ToDescription()))
+                            .FillInfoInPageDiaglog(null, true, null, 2, null, CheckValue.No.ToDescription())
+                            .Logout();
 
+                loginPage.SignOn(signOnData.anotherUsername, signOnData.anotherPassword, false, signOnData.repository)
+                            .LogValidation<MainPage>(ref validations, mainPage.ValidatePageVisible(pageData.pageName, false, true))
+                            .LogValidation<MainPage>(ref validations, mainPage.ValidatePageVisible(pageData.anotherPageName, true));
+                mainPage.Logout();            
                 //Post-condition
                 //Log in  as creator page account and delete newly added page
-
+                string[] page = { pageData.pageName, pageData.anotherPageName };
+                loginPage.SignOn(signOnData.username, signOnData.password, false, signOnData.repository)
+                            .DeletePage(page);
 
             }
             catch (Exception e)
             {
-
+                lastException = e;
+                throw;
             }
         }
 
@@ -207,7 +210,7 @@ namespace KiewitTeamBinder.UI.Tests.User
             var pageData = new PageData();
 
             Login loginPage = new Login(driver);
-            MainPage mainPage = loginPage.SignOn(signOnData.username, signOnData.password);
+            MainPage mainPage = loginPage.SignOn(signOnData.username, signOnData.password, false, signOnData.repository);
             string[] pageName = { pageData.pageName, pageData.anotherPageName };
             mainPage.DeletePage(pageName);
         }

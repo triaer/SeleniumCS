@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace KiewitTeamBinder.UI.Pages
 {
-    public class Login : PageBase
+    public class Login : MainPage
     {
 
         #region Locators

@@ -18,8 +18,10 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
         #region Entities
 
-        private static By _userNameLable => By.XPath("//div[@id='divUserName']/span");
+        
+        static readonly By _lnkAccount = By.XPath("//a[@href='#Welcome']");
         static readonly By _lnkLogout = By.XPath("//a[@href='logout.do']");
+        private static By _userNameLable => By.XPath("//div[@id='divUserName']/span");
         private static By _alertPopup => By.Id("kendoAlertWindow");
         private static By _saveChangeYesButton => By.Id("Yes");
         private static By _saveChangeNoButton => By.Id("No");
@@ -32,6 +34,11 @@ namespace KiewitTeamBinder.UI.Pages.Global
         public IWebElement LnkLogout
         {
             get { return StableFindElement(_lnkLogout); }
+        }
+
+        public IWebElement LnkAccount
+        {
+            get { return StableFindElement(_lnkAccount); }
         }
         public IWebElement SaveChangeYesButton { get { return StableFindElement(_saveChangeYesButton); } }
         public IWebElement SaveChangeNoButton { get { return StableFindElement(_saveChangeNoButton); } }
