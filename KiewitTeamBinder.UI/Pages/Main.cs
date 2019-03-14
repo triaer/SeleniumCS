@@ -148,7 +148,7 @@ namespace KiewitTeamBinder.UI.Pages
             {
                 // just leave it blank
             }
-
+            BtnPageOK.Click();
             return this;
         }
         
