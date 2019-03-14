@@ -560,6 +560,12 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 }
         }
 
+        internal static void SelectDropdownByText(IWebElement dropDown, string data)
+        {
+            SelectElement selectElement = new SelectElement(dropDown);
+            selectElement.SelectByText(data);
+        }
+
         internal static void SelectFilterByText(IWebElement Combobox, By data, string value, int timeout = mediumTimeout, bool isEqual = true)
         {
 

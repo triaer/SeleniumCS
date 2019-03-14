@@ -9,7 +9,7 @@ using static KiewitTeamBinder.UI.ExtentReportsHelper;
 
 namespace KiewitTeamBinder.UI.Pages
 {
-    public class MainPage : PageBase
+    public class MainPage : LoggedInLanding
     {
         private IWebDriver _driverMainPage;
 
@@ -28,12 +28,22 @@ namespace KiewitTeamBinder.UI.Pages
         static readonly By _lblRepositoryName = By.XPath("//a[@href='#Repository']/span");
         static readonly By _tabSetting = By.XPath("//li[@class='mn-setting']");
         static readonly By _btnChoosePanels = By.XPath("//a[@id='btnChoosepanel']");
+
+
         static string _lnkMainMenu = "//li[@class='sep']/parent::*/../a[contains(.,'{0}')]";
         static string _lnkSubMenu = "//li[@class='sep']/parent::*/../a[contains(.,'{0}')]/following::a[contains(.,'{1}')]";
         static string _lnkSettingItem = "//li[@class='mn-setting']//a[ .='{0}']";
         static string _cbbName = "//td[contains(text(), '{0}')]/following-sibling::*/descendant::select";
         static string _lnkPage = "//a[.='{0}']";
-
+        private static By _subGlobalSetting(string subtab) => By.XPath($"//a[contains(text(),'{subtab}')]");
+        private static By _globalSettingIcon => By.XPath("//li[@class='mn-setting']");
+        private static By _pageName => By.XPath("//input[@id='name']");
+        private static By _popupForm => By.XPath("//div[@class='buildin_popup']");
+        private static By _parentpageDropdown => By.XPath("//select[@name='parent']");
+        private static By _parentPageItems => By.XPath("//select[@id='parent']//option");
+        private static By _numberColumnDropdown => By.XPath("//select[@id='columnnumber']");
+        private static By _displayAfter => By.XPath("//select[@id='afterpage']");
+        private static By _okButton => By.XPath("//td[@align='right']//input[@value='OK']");
         #endregion
 
         #region Elements
@@ -102,6 +112,14 @@ namespace KiewitTeamBinder.UI.Pages
             get { return StableFindElement(_btnChoosePanels); }
         }
 
+        public IWebElement SubGlobalSettingMenu(string subTab) => StableFindElement(_subGlobalSetting(subTab));
+
+        public IWebElement GlobalSettingIcon { get { return StableFindElement(_globalSettingIcon); } }
+        public IWebElement PageName { get{ return StableFindElement(_pageName); } }
+        public IWebElement ParentPageDropdown { get { return StableFindElement(_parentpageDropdown); } }
+        public IWebElement NumberColumnDropdowm { get { return StableFindElement(_numberColumnDropdown); } }
+        public IWebElement DisplayAfterDropdown { get { return StableFindElement(_displayAfter); } }
+        public IWebElement ButtonOk { get { return StableFindElement(_okButton); } }
         #endregion
 
         #region Methods
@@ -110,6 +128,49 @@ namespace KiewitTeamBinder.UI.Pages
             : base(driver)
         {
             this._driverMainPage = driver;
+        }
+
+        public MainPage SelectSubMenu(string subTab)
+        {
+            //string currentWindow;
+            HoverElement(_globalSettingIcon);
+            SubGlobalSettingMenu(subTab).Click();
+            //PageName.InputText("sdasdsa");
+            WaitForElement(_popupForm);
+            //SwitchToNewPopUpWindow(SubGlobalSettingMenu(subTab), out currentWindow, false);
+
+            return this;
+        }
+
+
+        public MainPage InputPageName(string pageName)
+        {
+            PageName.InputText(pageName);
+            return this;
+        }
+
+        public MainPage SelectParentPage(string parentPageName)
+        {
+            SelectDropdownByText(ParentPageDropdown, parentPageName);
+            return this;
+        }
+
+        public MainPage SelectNumberCoumn(string columnNumber)
+        {
+            SelectDropdownByText(NumberColumnDropdowm, columnNumber);
+            return this;
+        }
+
+        public MainPage SelectDisplayAfter(string displayApter)
+        {
+            SelectDropdownByText(DisplayAfterDropdown, displayApter);
+            return this;
+        }
+
+        public MainPage ClickOKButton()
+        {
+            ButtonOk.Click();
+            return this;
         }
 
         public KeyValuePair<string, bool> ValidateDashboardMainPageDisplayed()
@@ -131,13 +192,34 @@ namespace KiewitTeamBinder.UI.Pages
 
             EndStepNode(node);
             return validation;           
-    }
+        }
+
+        public KeyValuePair<string, bool> VlidateTest()
+        {
+            var node = CreateStepNode();
+            var validation = new KeyValuePair<string, bool>();
+            try
+            {
+                if (1 == 1)
+                {
+                    validation = SetPassValidation(node, ValidationMessage.ValidateTest);
+                }
+            }
+            catch (Exception e)
+            {
+
+                validation = SetErrorValidation(node, ValidationMessage.ValidateTest, e);
+            }
+            EndStepNode(node);
+            return validation;
+        }
 
         #endregion
 
         private static class ValidationMessage
         {
-            public static string ValidateDashboardMainPageDisplayed = "Validate That TA Dashboard Main Page Displayed"; 
+            public static string ValidateDashboardMainPageDisplayed = "Validate That TA Dashboard Main Page Displayed";
+            public static string ValidateTest = "TA";
         }
     }
 }

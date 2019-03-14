@@ -34,10 +34,10 @@
     <!-- <Parameter name="browser" value="chrome" /> -->
     <Parameter name="browser" value="chrome" />
     <Parameter name="headless" value="false" />
-    <Parameter name="environment" value="test" />
-    <!--<Parameter name="teamBinderVersion" value="19.1.20" />
-    <Parameter name="excelUserSourcePath" value="C:\working\DT_CommonDataKiewitIn8.xls" />
-    <Parameter name="localTempExcelUserTargetPath" value="C:\temp\DT_CommonDataKiewitIn8.xls" />-->
+    <Parameter name="environment" value="testforbreeze" />
+	<Parameter name="teamBinderVersion" value="19.1.20" />
+    <Parameter name="excelUserSourcePath" value="C:\working\DT_Breeze.xls" />
+    <Parameter name="localTempExcelUserTargetPath" value="C:\temp\DT_Breeze.xls" />
   </TestRunParameters>
   <!-- Adapter Specific sections -->
   <!-- MSTest adapter -->

@@ -522,6 +522,17 @@ namespace KiewitTeamBinder.Common
             [Description("My project")]
             MyProject
         }
+
+
+        public enum SubMenuItems
+        {
+            [Description("Add Page")]
+            AddPage,
+            [Description("Create Profile")]
+            CreateProfile,
+            [Description("Create Panel")]
+            CreatePanel
+        }
     }
 }
 

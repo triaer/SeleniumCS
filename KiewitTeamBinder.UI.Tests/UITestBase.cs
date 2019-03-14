@@ -87,7 +87,7 @@ namespace KiewitTeamBinder.UI.Tests
             return user;
         }
 
-        protected void ReportResult(Status status, string reportFilePath)
+        protected void ReportResult(Status status)
         {
             test = extent.CreateTest("Test Summary");
 
@@ -163,14 +163,14 @@ namespace KiewitTeamBinder.UI.Tests
 
             if (TestContext.CurrentTestOutcome == UnitTestOutcome.Passed)
             {
-                ReportResult(Status.Pass, reportPath);
+                ReportResult(Status.Pass);
                 Browser.Quit();
                 return;
             }
 
             else if (TestContext.CurrentTestOutcome == UnitTestOutcome.Failed)
             {
-                ReportResult(Status.Fail, reportPath);
+                ReportResult(Status.Fail);
                 Browser.Quit();
                 return;
             }

@@ -38,8 +38,8 @@ namespace KiewitTeamBinder.Common
             // dtExcelSchema.Rows[1]["TABLE_NAME"].ToString();
 
             //Set up SQL like command
-            SheetName = "TeamBinderAccounts$";
-            cmdExcel.CommandText = "SELECT ROLE, ENVIRONMENT, DESCRIPTION, URL, USERNAME, COMPANY, PASSWORD, KIEWITUSER, NOTES From [" + SheetName + "] WHERE ROLE='" + role + "' AND ENVIRONMENT='" + environment + "'";
+            SheetName = "BreezeAccount$";
+            cmdExcel.CommandText = "SELECT ROLE, ENVIRONMENT, DESCRIPTION, URL, USERNAME, PASSWORD, NOTES From [" + SheetName + "] WHERE ROLE='" + role + "' AND ENVIRONMENT='" + environment + "'";
             //Use a DataAdapter and command to populate the DataSet
             dataAdapter.SelectCommand = cmdExcel;
             dataAdapter.Fill(dataSet, "Data");
@@ -54,28 +54,27 @@ namespace KiewitTeamBinder.Common
                 {
                     Role = role,
                     Username = dt.Rows[0]["USERNAME"].ToString(),
-                    Company = dt.Rows[0]["COMPANY"].ToString(),
                     Password = dt.Rows[0]["PASSWORD"].ToString(),
                     Url = dt.Rows[0]["URL"].ToString()
                 };
             }
-            //get the user info of Kiewit Account
-            if (type == "KWUser")
-            {
-                KWSheetName = "In8Accounts$";
-                cmdExcel.CommandText = "SELECT ROLE, USERNAME, PASSWORD From [" + KWSheetName + "] WHERE ROLE='" + kwUserRole + "'";
-                dataAdapter.SelectCommand = cmdExcel;
-                DataSet dataSet1 = new DataSet();
-                dataAdapter.Fill(dataSet1, "Data");
+            ////get the user info of Kiewit Account
+            //if (type == "KWUser")
+            //{
+            //    KWSheetName = "In8Accounts$";
+            //    cmdExcel.CommandText = "SELECT ROLE, USERNAME, PASSWORD From [" + KWSheetName + "] WHERE ROLE='" + kwUserRole + "'";
+            //    dataAdapter.SelectCommand = cmdExcel;
+            //    DataSet dataSet1 = new DataSet();
+            //    dataAdapter.Fill(dataSet1, "Data");
 
-                //Create another DataTable to hold the final data
-                dt = dataSet1.Tables["Data"];
-                if (dt.Rows.Count > 0)
-                {
-                    user.kiewitUserName = dt.Rows[0]["USERNAME"].ToString();
-                    user.kiewitPassword = dt.Rows[0]["PASSWORD"].ToString();
-                }
-            }
+            //    //Create another DataTable to hold the final data
+            //    dt = dataSet1.Tables["Data"];
+            //    if (dt.Rows.Count > 0)
+            //    {
+            //        user.kiewitUserName = dt.Rows[0]["USERNAME"].ToString();
+            //        user.kiewitPassword = dt.Rows[0]["PASSWORD"].ToString();
+            //    }
+            //}
             //Clean up resources to avoid conflicts in copying file if another search is performed
             dataAdapter.Dispose();
             cmdExcel.Dispose();
@@ -97,7 +96,6 @@ namespace KiewitTeamBinder.Common
         public string kiewitPassword { get; set; }
         public string Role { get; set; }
         public string Username { get; set; }
-        public string Company { get; set; }
         public string Password { get; set; }
         public string Url { get; set; }
     }

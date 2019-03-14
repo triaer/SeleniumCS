@@ -1,4 +1,5 @@
-﻿using KiewitTeamBinder.UI.Pages.Global;
+﻿using KiewitTeamBinder.Common;
+using KiewitTeamBinder.UI.Pages.Global;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using System;
@@ -58,14 +59,14 @@ namespace KiewitTeamBinder.UI.Pages
         /// <param name="repositoryName">Name of the repository.</param>
         /// <Author>Long and Phat</Author>
         /// <returns></returns>
-        public MainPage SignOn(string username, string password, string repositoryName = null)
+        public MainPage SignOn(TestAccount account, string repositoryName = null)
         {
             if (repositoryName != null)
             {
                 CmbRepo.SelectItem(repositoryName);
             }
-            TxtUsername.SendKeys(username);
-            TxtPassword.SendKeys(password);
+            TxtUsername.SendKeys(account.Username);
+            TxtPassword.SendKeys(account.Password);
             BtnLogin.Click();
             return new MainPage(WebDriver);
         }
