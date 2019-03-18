@@ -31,7 +31,8 @@ namespace KiewitTeamBinder.UI.Pages
         static readonly By _addPageBtn = By.XPath("//a[text()='Add Page']");
         
         static readonly By _btnChoosePanels = By.XPath("//a[@id='btnChoosepanel']");
-        //static string _lnkmainmenu = "//li[@class='sep']/parent::*/../a[contains(.,'{0}')]";
+
+        static string _lnkmainmenu = "//li[@class='sep']/ancestor::*[@class='container']//a[contains(.,'{0}')]";
         //static string _lnksubmenu = "//li[@class='sep']/parent::*/../a[contains(.,'{0}')]/following::a[contains(.,'{1}')]";
         //static string _lnksettingitem = "//li[@class='mn-setting']//a[ .='{0}']";
         //static string _cbbname = "//td[contains(text(), '{0}')]/following-sibling::*/descendant::select";
@@ -111,6 +112,13 @@ namespace KiewitTeamBinder.UI.Pages
             get { return StableFindElement(_btnChoosePanels); }
         }
 
+        public IWebElement GeneralPage(String pageName)
+        {
+            By _generalPage = By.XPath(String.Format(_lnkmainmenu, pageName));
+            
+            return StableFindElement(_generalPage);
+        }
+
         #endregion
 
         #region Methods
@@ -136,6 +144,8 @@ namespace KiewitTeamBinder.UI.Pages
 
         public MainPage AddNewPage(String pageName = "test", String parentPage = "Select parent", int noOfCol = 2, String displayAfter = "Overview", Boolean publicChbx = true)
         {
+            this.OpenAddPageDialog();
+
             TxtNewPagePageName.SendKeys(pageName);
             CmbParentPage.SendKeys(parentPage);
             CmbNumberOfColumns.SendKeys(noOfCol.ToString());
@@ -193,12 +203,33 @@ namespace KiewitTeamBinder.UI.Pages
             return validation;
         }
 
+        public KeyValuePair<string, bool> CheckNewPageDisplayed()
+        {
+            var node = CreateStepNode();
+            var validation = new KeyValuePair<string, bool>();
+            try
+            {
+                bool newPageFounded = GeneralPage("Test").IsDisplayed();
+                if (newPageFounded)
+                    validation = SetPassValidation(node, ValidationMessage.ValidateNewPageFound);
+                else
+                    validation = SetFailValidation(node, ValidationMessage.ValidateNewPageFound);
+            }
+            catch (Exception e)
+            {
+                validation = SetErrorValidation(node, ValidationMessage.ValidateNewPageFound, e);
+            }
+            EndStepNode(node);
+            return validation;
+        }
+
         #endregion
 
         private static class ValidationMessage
         {
             public static string ValidateDashboardMainPageDisplayed = "Validate That TA Dashboard Main Page Displayed";
             public static string ValidateControlsAreLockedAndDisabled = "Validate That Controls On Main Page Are Locked And Dsiabled";
+            public static string ValidateNewPageFound = "Validate That New Page Created And Displayed.";
         }
     }
 }

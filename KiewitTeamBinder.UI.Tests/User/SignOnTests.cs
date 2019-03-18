@@ -12,19 +12,31 @@ namespace KiewitTeamBinder.UI.Tests.User
     {
 
         [TestMethod]
+        public void Suite()
+        {
+            this.TC001();
+            this.TC002();
+            this.TC003();
+            this.TC004();
+        }
+
+
+        [TestMethod]
         public void TC001()
         {
             try
             {
+                test = LogTest("DA_LOGIN_TC001 - Verify that user can login specific repository successfully via Dashboard login page with correct credentials.");
                 //Given
                 //1. Navigate to Dashboard login page.
-                test.Info("Navigate to Dashboard login page.");
+                test.Info("Step 1");
                 var driver = Browser.Open(Constant.HomePage, "chrome");
+
                 //When
                 //2. Enter valid username and password.
                 //3. Click on "Login" button
-
-                test = LogTest("DA_LOGIN_TC001 - Verify that user can login specific repository successfully via Dashboard login page with correct credentials.");
+                test.Info("Step 2");
+                test.Info("Step 3");
                 Login loginPage = new Login(driver);
                 MainPage mainPage = loginPage.SignOn("administrator", "", "SampleRepository");
 
@@ -48,17 +60,16 @@ namespace KiewitTeamBinder.UI.Tests.User
             {
                 //Given
                 //1. Navigate to Dashboard login page.
-                test.Info("Navigate to Dashboard login page.");
                 var driver = Browser.Open(Constant.HomePage, "chrome");
+
                 //When
                 //2. Enter valid username and password.
                 //3. Click on "Login" button
-
-                test = LogTest("DA_LOGIN_TC002 - Verify user fails to log in specific repository via Dashboard login page with incorrect credentials");
                 Login loginPage = new Login(driver).SignOnFailed("test", "123", "SampleRepository");
-                
+
                 //Then
                 //VP: Verify that Dashboard Mainpage appears
+                test = LogTest("DA_LOGIN_TC002 - Verify user fails to log in specific repository via Dashboard login page with incorrect credentials");
                 validations.Add(loginPage.ValidateDashboardDashboardErrorMessageAppeared());
                 Console.WriteLine(string.Join(System.Environment.NewLine, validations.ToArray()));
                 validations.Should().OnlyContain(validations => validations.Value).Equals(bool.TrueString);
@@ -77,17 +88,16 @@ namespace KiewitTeamBinder.UI.Tests.User
             {
                 //Given
                 //1. Navigate to Dashboard login page.
-                test.Info("Navigate to Dashboard login page.");
                 var driver = Browser.Open(Constant.HomePage, "chrome");
+                
                 //When
                 //2. Enter valid username and password.
                 //3. Click on "Login" button
-
-                test = LogTest("DA_LOGIN_TC003 - Verify user fails to log in specific repository via Dashboard login page with correct username and incorrect password");
                 Login loginPage = new Login(driver).SignOnFailed("administrator", "123", "SampleRepository");
 
                 //Then
                 //VP: Verify that Dashboard Mainpage appears
+                test = LogTest("DA_LOGIN_TC003 - Verify user fails to log in specific repository via Dashboard login page with correct username and incorrect password");
                 validations.Add(loginPage.ValidateDashboardDashboardErrorMessageAppeared());
                 Console.WriteLine(string.Join(System.Environment.NewLine, validations.ToArray()));
                 validations.Should().OnlyContain(validations => validations.Value).Equals(bool.TrueString);
@@ -106,8 +116,6 @@ namespace KiewitTeamBinder.UI.Tests.User
             {
                 //Given
                 //1. Navigate to Dashboard login page.
-
-                test.Info("Navigate to Dashboard login page.");
                 var driver = Browser.Open(Constant.HomePage, "chrome");
 
                 //When
@@ -115,7 +123,6 @@ namespace KiewitTeamBinder.UI.Tests.User
                 //3. Enter valid username and password.
                 //4. Click on "Login" button
                 //5. Click LogOut
-                test = LogTest("DA_LOGIN_TC004 - Verify user is able to log in different repositories successfully after logging out current repository");
                 Login loginPage = new Login(driver).SignOn("administrator", "", "SampleRepository").LogOut();
 
                 //6. Select another repo
@@ -123,6 +130,7 @@ namespace KiewitTeamBinder.UI.Tests.User
 
                 //Then
                 //VP: Verify that Dashboard Mainpage appears
+                test = LogTest("DA_LOGIN_TC004 - Verify user is able to log in different repositories successfully after logging out current repository");
                 validations.Add(mainPage.ValidateDashboardMainPageDisplayed());
                 Console.WriteLine(string.Join(System.Environment.NewLine, validations.ToArray()));
                 validations.Should().OnlyContain(validations => validations.Value).Equals(bool.TrueString);
@@ -142,8 +150,6 @@ namespace KiewitTeamBinder.UI.Tests.User
             {
                 //Given
                 //1. Navigate to Dashboard login page.
-
-                test.Info("Navigate to Dashboard login page.");
                 var driver = Browser.Open(Constant.HomePage, "chrome");
 
                 //When
@@ -151,14 +157,13 @@ namespace KiewitTeamBinder.UI.Tests.User
                 //3. Enter valid username and password.
                 //4. Click on "Login" button
                 //5. Click LogOut
-                test = LogTest("DA_LOGIN_TC010 - Verify 'Username' is not case sensitive");
                 Login loginPage = new Login(driver).SignOn("administrator", "", "SampleRepository").LogOut();
-
                 //6. Select another repo
                 MainPage mainPage = loginPage.SignOn("ADMINISTRATOR", "", "SampleRepository");
 
                 //Then
                 //VP: Verify that Dashboard Mainpage appears
+                test = LogTest("DA_LOGIN_TC010 - Verify 'Username' is not case sensitive");
                 validations.Add(mainPage.ValidateDashboardMainPageDisplayed());
                 Console.WriteLine(string.Join(System.Environment.NewLine, validations.ToArray()));
                 validations.Should().OnlyContain(validations => validations.Value).Equals(bool.TrueString);
