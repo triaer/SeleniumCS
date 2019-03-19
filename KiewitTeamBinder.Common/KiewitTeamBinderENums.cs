@@ -533,6 +533,17 @@ namespace KiewitTeamBinder.Common
             [Description("Create Panel")]
             CreatePanel
         }
+
+        public enum AdministerMenuENum
+        {
+            [Description("Data Profiles")]
+            DataProfiles,
+            [Description("Panels")]
+            Panels
+            
+        }
+
+
     }
 }
 

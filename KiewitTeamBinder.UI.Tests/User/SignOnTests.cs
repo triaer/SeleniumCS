@@ -76,6 +76,7 @@ namespace KiewitTeamBinder.UI.Tests.User
                     .SelectDisplayAfter(singonData.DisplayAfter)
                     .ClickOKButton();
 
+
             }
             catch (Exception e)
             {
@@ -106,6 +107,56 @@ namespace KiewitTeamBinder.UI.Tests.User
 
                 Console.WriteLine(string.Join(System.Environment.NewLine, validations.ToArray()));
                 validations.Should().OnlyContain(validations => validations.Value).Equals(bool.TrueString);
+
+            }
+            catch (Exception e)
+            {
+                lastException = e;
+                throw;
+            }
+        }
+
+
+        [TestMethod]
+        public void DA_DP_TC100()
+        {
+            try
+            {
+                //given
+                var driver = Browser.Open(Constant.HomePage, "chrome");
+                var testdemoAccount = GetTestAccount("AdminAccount1", environment, "NonSSO");
+                //Login loginPage = new Login(driver);
+                SignOnTestsSmoke signOnData = new SignOnTestsSmoke();
+                MainPage mainPage = new Login(driver).SignOn(testdemoAccount);
+                DataProfiles dataProfile = mainPage.NavigateToDataProfilesPage();
+
+                //when
+                test = LogTest("Verify all settings are recorded and updated correctly when user click on 'Finish' buttons");
+                dataProfile.IpuntName(signOnData.InputName)
+                           .SelectItemType(signOnData.ItemType)
+                           .SelectRelated(signOnData.RelatedDataItem)
+                           .ClickNextButton(true, dataProfile._displayFileds)
+                           .CheckNameCheckBox()
+                           .ClickNextButton(true, dataProfile._displayFileds)
+                           .SelectField(signOnData.Field)
+                           .CLickAddLevelButton()
+                           .ClickNextButton(true, dataProfile._displayFileds)
+                           .AddCriteria(signOnData.ValueDescription, signOnData.FitllterField)
+                           .ClickNextButton(true, dataProfile._displayFileds)
+                           .CheckNameCheckBox()
+                           .ClickFinishBUtton(true, dataProfile._dataProfilesColumn)
+                           .SelectCreatedDataProfiles(signOnData.InputName).LogValidation<DataProfiles>(ref validations, dataProfile.ValidateDataProfilename(signOnData.InputName))
+                                                                           .LogValidation<DataProfiles>(ref validations, dataProfile.ValidateItemType(signOnData.ItemType))
+                                                                           .LogValidation<DataProfiles>(ref validations, dataProfile.ValidateRelatedData(signOnData.RelatedDataItem));
+                dataProfile.ClickNextButton(true, dataProfile._displayFileds).LogValidation<DataProfiles>(ref validations, dataProfile.ValidateNameisCheked());
+                dataProfile.ClickNextButton(true, dataProfile._displayFileds).LogValidation<DataProfiles>(ref validations, dataProfile.ValidateAddedLevelIsExit(signOnData.Field));
+                dataProfile.ClickNextButton(true, dataProfile._displayFileds).LogValidation<DataProfiles>(ref validations, dataProfile.ValidateFilterValue(signOnData.FitllterField, signOnData.ValueDescription, signOnData.AndFillter));
+                dataProfile.ClickNextButton(true, dataProfile._displayFileds).LogValidation<DataProfiles>(ref validations, dataProfile.ValidateNameisCheked());
+
+                //then
+                Console.WriteLine(string.Join(System.Environment.NewLine, validations.ToArray()));
+                validations.Should().OnlyContain(validations => validations.Value).Equals(bool.TrueString);
+
 
             }
             catch (Exception e)

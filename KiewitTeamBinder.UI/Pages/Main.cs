@@ -1,10 +1,12 @@
-﻿using KiewitTeamBinder.UI.Pages.Global;
+﻿using KiewitTeamBinder.Common.Helper;
+using KiewitTeamBinder.UI.Pages.Global;
 using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static KiewitTeamBinder.Common.KiewitTeamBinderENums;
 using static KiewitTeamBinder.UI.ExtentReportsHelper;
 
 namespace KiewitTeamBinder.UI.Pages
@@ -44,6 +46,9 @@ namespace KiewitTeamBinder.UI.Pages
         private static By _numberColumnDropdown => By.XPath("//select[@id='columnnumber']");
         private static By _displayAfter => By.XPath("//select[@id='afterpage']");
         private static By _okButton => By.XPath("//td[@align='right']//input[@value='OK']");
+        private static By _administerMenu => By.XPath("//a[contains(text(),'Administer')]");
+        private static By _administerItems(string item) => By.XPath($"//a[contains(text(),'{item}')]");
+        
         #endregion
 
         #region Elements
@@ -120,6 +125,8 @@ namespace KiewitTeamBinder.UI.Pages
         public IWebElement NumberColumnDropdowm { get { return StableFindElement(_numberColumnDropdown); } }
         public IWebElement DisplayAfterDropdown { get { return StableFindElement(_displayAfter); } }
         public IWebElement ButtonOk { get { return StableFindElement(_okButton); } }
+        public IWebElement AdministerMenu { get { return StableFindElement(_administerMenu); } }
+        public IWebElement AdministerItem(string item) => StableFindElement(_administerItems(item));
         #endregion
 
         #region Methods
@@ -145,7 +152,10 @@ namespace KiewitTeamBinder.UI.Pages
 
         public MainPage InputPageName(string pageName)
         {
+            var node = CreateStepNode();
+            node.Info("Input name of page");
             PageName.InputText(pageName);
+            EndStepNode(node);
             return this;
         }
 
@@ -171,6 +181,16 @@ namespace KiewitTeamBinder.UI.Pages
         {
             ButtonOk.Click();
             return this;
+        }
+
+        public DataProfiles NavigateToDataProfilesPage()
+        {
+            HoverElement(_administerMenu);
+            AdministerItem(AdministerMenuENum.DataProfiles.ToDescription()).Click();
+            DataProfiles dataProfile = new DataProfiles(WebDriver);
+            WaitForElement(dataProfile._dataProfilesColumn);
+            return dataProfile;
+
         }
 
         public KeyValuePair<string, bool> ValidateDashboardMainPageDisplayed()

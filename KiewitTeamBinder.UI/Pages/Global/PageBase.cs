@@ -900,6 +900,13 @@ namespace KiewitTeamBinder.UI.Pages.Global
             //Console.WriteLine(callingClassName + "." + callingMethodName + " generated an error. A ScreenShot of the browser has been saved. " + filePath);
 
         }
+
+        public string GetTextSelectedDropDown(IWebElement dropdown)
+        {
+            SelectElement select = new SelectElement(dropdown);
+            string selectedValue = select.SelectedOption.Text;
+            return selectedValue;
+        }
     }
     #endregion
 }
