@@ -67,7 +67,7 @@ namespace KiewitTeamBinder.UI.Tests.User
 
                 test = LogTest("DA_LOGIN_TC002 - Verify Dashboard Error message \"Username or password is invalid\" appears");
                 Login loginPage = new Login(driver);
-                MainPage mainPage = loginPage.SignOn("test", "123", true);
+                MainPage mainPage = loginPage.SignOn("test", "123");
 
                 //Then
                 //VP: Verify that Dashboard Mainpage appears
@@ -99,7 +99,7 @@ namespace KiewitTeamBinder.UI.Tests.User
                 //4. Click on "Login" button
                 test = LogTest("DA_LOGIN_TC003 - Verify user fails to log in specific repository via Dashboard login page with correct username and incorrect password");
                 Login loginPage = new Login(driver);
-                loginPage.SignOn(signOnData.username, "123", true);
+                loginPage.SignOn(signOnData.username, "123");
 
                 MainPage mainPage = new MainPage(driver);
                 //Then

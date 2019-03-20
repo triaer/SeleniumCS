@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using KiewitTeamBinder.Common.Helper;
+using KiewitTeamBinder.Common.Models;
 using KiewitTeamBinder.Common.TestData;
 using KiewitTeamBinder.UI.Pages;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -28,8 +29,8 @@ namespace KiewitTeamBinder.UI.Tests.User
                 //3. Click Add Page icon
                 //4. Try to click other controls on Main page when New Page dialog is opening
                 Login loginPage = new Login(driver);
-                MainPage mainPage = loginPage.SignOn(signOnData.username, signOnData.password, false, signOnData.repository)
-                                                .ClickSubSymbolMenu(SymbolMenu.GlobalSettings.ToDescription(), SubMenu.AddPage.ToDescription());
+                MainPage mainPage = loginPage.SignOn(signOnData.username, signOnData.password, signOnData.repository)
+                                                .ClickGlobalSettingsSubMenu(SubMenu.AddPage.ToDescription());
 
                 //Then
                 //VP: Observe the current page: All other controls within Dashboard are locked and disabled
@@ -54,7 +55,7 @@ namespace KiewitTeamBinder.UI.Tests.User
                 test.Info("Navigate to Dashboard login page");
                 var driver = Browser.Open(Constant.HomePage, "chrome");
                 var signOnData = new SignOnData();
-                var pageData = new PageData();
+                var pageData = new PageDataSmoke();
 
                 //When
                 //2. Log in specific repository with valid account
@@ -64,7 +65,7 @@ namespace KiewitTeamBinder.UI.Tests.User
                 test = LogTest("DA_LOGIN_TC015 - Verify user is able to add additional pages besides \"Overview\" page successfully");
                 Login login = new Login(driver);
                 MainPage mainPage = login.SignOn(signOnData.username, signOnData.password)
-                                         .AddPage(pageData.pageName, true);
+                                         .AddPage(pageData.taPage1);
 
                 //Then
                 //VP: Check "Test" page is displayed besides "Overview" page
@@ -93,7 +94,7 @@ namespace KiewitTeamBinder.UI.Tests.User
                 test.Info("Navigate to Dashboard login page");
                 var driver = Browser.Open(Constant.HomePage, "chrome");
                 var signOnData = new SignOnData();
-                var pageData = new PageData();
+                var pageData = new PageDataSmoke();
 
                 //When
                 //2. Log in specific repository with valid account
@@ -108,8 +109,8 @@ namespace KiewitTeamBinder.UI.Tests.User
                 test = LogTest("DA_LOGIN_TC016 - Verify the newly added main parent page is positioned at the location specified as set with \"Displayed After\" field of \"New Page\" form on the main page bar \"Parent Page\" dropped down menu");
                 Login loginPage = new Login(driver);
                 MainPage mainPage = loginPage.SignOn(signOnData.username, signOnData.password)
-                                                .AddPage(pageData.pageName, true)
-                                                    .AddPage(pageData.anotherPageName, true, null, 2, pageData.pageName);
+                                                .AddPage(pageData.taPage1)
+                                                    .AddPage(pageData.taPage2DisplayAfter);
 
                 //Then
                 //VP: Check "Another Test" page is positioned besides the "Test" page
@@ -138,7 +139,7 @@ namespace KiewitTeamBinder.UI.Tests.User
                 test.Info("Navigate to Dashboard login page");
                 var driver = Browser.Open(Constant.HomePage, "chrome");
                 var signOnData = new SignOnData();
-                var pageData = new PageData();
+                var pageData = new PageDataSmoke();
 
                 //When
                 //2. Log in specific repository with valid account
@@ -171,27 +172,29 @@ namespace KiewitTeamBinder.UI.Tests.User
                 test = LogTest("DA_LOGIN_TC019 - Verify user is able to edit the \"Public\" setting of any page successfully");
                 Login loginPage = new Login(driver);
                 MainPage mainPage = new MainPage(driver);
-                loginPage.SignOn(signOnData.username, signOnData.password, false, signOnData.repository)
-                            .AddPage(pageData.pageName, true)
-                            .AddPage(pageData.anotherPageName, true, null, 2, null, CheckValue.Yes.ToDescription())
+                loginPage.SignOn(signOnData.username, signOnData.password, signOnData.repository)
+                            .AddPage(pageData.taPage1)
+                            .AddPage(pageData.taPage2)
                             .ClickPage(pageData.pageName)
-                            .ClickSubSymbolMenu(SymbolMenu.GlobalSettings.ToDescription(), SubMenu.Edit.ToDescription())
+                            .ClickGlobalSettingsSubMenu(SubMenu.Edit.ToDescription())
                             .LogValidation<MainPage>(ref validations, mainPage.ValidateDialogDisplayed(Dialog.EditPage.ToDescription()))
-                            .FillInfoInPageDiaglog(null, true, null, 2, null, CheckValue.Yes.ToDescription())
+                            .FillInfoInPageDiaglog(pageData.taPage1Edited)
                             .ClickPage(pageData.anotherPageName)
-                            .ClickSubSymbolMenu(SymbolMenu.GlobalSettings.ToDescription(), SubMenu.Edit.ToDescription())
+                            .ClickGlobalSettingsSubMenu(SubMenu.Edit.ToDescription())
                             .LogValidation<MainPage>(ref validations, mainPage.ValidateDialogDisplayed(Dialog.EditPage.ToDescription()))
-                            .FillInfoInPageDiaglog(null, true, null, 2, null, CheckValue.No.ToDescription())
+                            .FillInfoInPageDiaglog(pageData.taPage2Edited)
                             .Logout();
 
-                loginPage.SignOn(signOnData.anotherUsername, signOnData.anotherPassword, false, signOnData.repository)
-                            .LogValidation<MainPage>(ref validations, mainPage.ValidatePageVisible(pageData.pageName, false, true))
-                            .LogValidation<MainPage>(ref validations, mainPage.ValidatePageVisible(pageData.anotherPageName, true));
-                mainPage.Logout();            
+                loginPage.SignOn(signOnData.anotherUsername, signOnData.anotherPassword, signOnData.repository)
+                            .LogValidation<MainPage>(ref validations, mainPage.ValidatePageVisible(pageData.pageName))
+                            .LogValidation<MainPage>(ref validations, mainPage.ValidatePageAccessed(pageData.pageName))
+                            .LogValidation<MainPage>(ref validations, mainPage.ValidatePageInvisible(pageData.anotherPageName));
+                mainPage.Logout();
+
                 //Post-condition
                 //Log in  as creator page account and delete newly added page
                 string[] page = { pageData.pageName, pageData.anotherPageName };
-                loginPage.SignOn(signOnData.username, signOnData.password, false, signOnData.repository)
+                loginPage.SignOn(signOnData.username, signOnData.password, signOnData.repository)
                             .DeletePage(page);
 
             }
@@ -203,18 +206,104 @@ namespace KiewitTeamBinder.UI.Tests.User
         }
 
         [TestMethod]
+        public void TC020()
+        {
+            try
+            {
+                //Navigate to Dashboard login page
+                //Log in specific repository with valid account
+                //Add a new parent page: Test 
+                //Add a children page of newly added page: Test Child 
+                //Click on parent page
+                //Click "Delete this page" icon
+                //Check confirm message "Are you sure you want to remove this page?" appears
+                //Click OK button
+                //Check warning message "Can not delete page 'Test' since it has children page(s)" appears
+                //Click OK button
+                //Click on  children page
+                //Click "Delete this page" icon
+                //Check confirm message "Are you sure you want to remove this page?" appears
+                //Click OK button
+                //Check children page is deleted
+                //Click on  parent page
+                //Click "Delete this page" icon
+                //Check confirm message "Are you sure you want to remove this page?" appears
+                //Click OK button
+                //Check parent page is deleted
+                //Click on "Overview" page
+                //Check "Delete this page" icon disappears
+
+                //Given
+                test.Info("Navigate to Dashboard login page");
+                var driver = Browser.Open(Constant.HomePage, "chrome");
+                var signOnData = new SignOnData();
+                var pageData = new PageDataSmoke();
+
+                //Then
+                Login loginPage = new Login(driver);
+                MainPage mainPage = new MainPage(driver);
+                loginPage.SignOn(signOnData.username, signOnData.password)
+                    .AddPage(pageData.taPage1)
+                    .AddPage(pageData.taChildPage)
+                    .ClickPage(pageData.taPage1.PageName)
+                    .ClickGlobalSettingsSubMenu(SubMenu.Delete.ToDescription())
+                    .LogValidation<MainPage>(ref validations, mainPage.ValidateTextInAlertPopup(pageData.confirmDeletePageMessage));
+                string[] page = { pageData.pageName, pageData.subPageName };
+                mainPage.AcceptAlert<MainPage>()
+                     .LogValidation<MainPage>(ref validations, mainPage.ValidateTextInAlertPopup(pageData.warningHasChildPageMessage));
+                mainPage.AcceptAlert<MainPage>();
+                mainPage.ClickSubPage(page)
+                     .ClickGlobalSettingsSubMenu(SubMenu.Delete.ToDescription())
+                     .LogValidation<MainPage>(ref validations, mainPage.ValidateTextInAlertPopup(pageData.confirmDeletePageMessage))
+                     .AcceptAlert<MainPage>()
+                     .LogValidation<MainPage>(ref validations, mainPage.ValidatePageNotExisted(pageData.taChildPage.PageName))
+                     .ClickPage(pageData.taPage1.PageName)
+                     .ClickGlobalSettingsSubMenu(SubMenu.Delete.ToDescription())
+                     .LogValidation<MainPage>(ref validations, mainPage.ValidateTextInAlertPopup(pageData.confirmDeletePageMessage))
+                     .AcceptAlert<MainPage>()
+                     .LogValidation<MainPage>(ref validations, mainPage.ValidatePageNotExisted(pageData.taChildPage.PageName))
+                     .ClickPage(pageData.OverviewPage)
+                     .ClickGlobalSettingsSubMenu(SubMenu.Delete.ToDescription())
+                     .LogValidation<MainPage>(ref validations, mainPage.ValidateSubMenuNotExisted(SubMenu.Delete.ToDescription()));
+            }
+            catch (Exception e)
+            {
+                lastException = e;
+                throw;
+            }
+
+        }
+
+
+        [TestMethod]
         public void demo()
         {
             var driver = Browser.Open(Constant.HomePage, "chrome");
             var signOnData = new SignOnData();
-            var pageData = new PageData();
+            var pageData = new PageDataSmoke();
 
+            
             Login loginPage = new Login(driver);
-            MainPage mainPage = loginPage.SignOn(signOnData.username, signOnData.password, false, signOnData.repository);
-            string[] pageName = { pageData.pageName, pageData.anotherPageName };
-            mainPage.DeletePage(pageName);
+            MainPage mainPage = new MainPage(driver);
+            loginPage.SignOn(signOnData.username, signOnData.password)
+                .ClickPage(pageData.taPage1.PageName)
+                    .ClickGlobalSettingsSubMenu(SubMenu.Delete.ToDescription())
+                    .LogValidation<MainPage>(ref validations, mainPage.ValidateTextInAlertPopup(pageData.confirmDeletePageMessage));
+            string[] page = { pageData.pageName, pageData.subPageName };
+            mainPage.AcceptAlert<MainPage>()
+                 .LogValidation<MainPage>(ref validations, mainPage.ValidateTextInAlertPopup(pageData.warningHasChildPageMessage));
+            mainPage.AcceptAlert<MainPage>();
+            mainPage.ClickSubPage(page);
+            mainPage.ClickGlobalSettingsSubMenu(SubMenu.Delete.ToDescription())
+                .LogValidation<MainPage>(ref validations, mainPage.ValidateTextInAlertPopup(pageData.confirmDeletePageMessage))
+                .AcceptAlert<MainPage>()
+                .LogValidation<MainPage>(ref validations, mainPage.ValidatePageNotExisted(pageData.taChildPage.PageName))
+                    .ClickPage(pageData.taPage1.PageName)
+                    .ClickGlobalSettingsSubMenu(SubMenu.Delete.ToDescription())
+                    .LogValidation<MainPage>(ref validations, mainPage.ValidateTextInAlertPopup(pageData.confirmDeletePageMessage))
+                    .AcceptAlert<MainPage>();
         }
 
-
-    }
+    } 
+    
 }

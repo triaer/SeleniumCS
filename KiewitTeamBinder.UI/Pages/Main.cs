@@ -9,6 +9,8 @@ using static KiewitTeamBinder.UI.ExtentReportsHelper;
 using static KiewitTeamBinder.Common.DashBoardENums;
 using KiewitTeamBinder.Common.Helper;
 using KiewitTeamBinder.UI;
+using KiewitTeamBinder.Common.Models;
+using KiewitTeamBinder.Common.TestData;
 
 namespace KiewitTeamBinder.UI.Pages
 {
@@ -30,9 +32,8 @@ namespace KiewitTeamBinder.UI.Pages
         static readonly By _lblRepositoryName = By.XPath("//a[@href='#Repository']/span");
         static readonly By _tabSetting = By.XPath("//li[@class='mn-setting']");
         static readonly By _btnChoosePanels = By.XPath("//a[@id='btnChoosepanel']");
-        static string _lnkMainMenu = "//li[@class='sep']/parent::*/../a[contains(.,'{0}')]";
-        static string _lnkSubMenu = "//li[@class='sep']/parent::*/../a[contains(.,'{0}')]/following::a[contains(.,'{1}')]";
-        static string _lnkSettingItem = "//li[@class='mn-setting']//a[ .='{0}']";
+        static By _lnkMainMenu(string menuText) => By.XPath($"//li[@class='sep']/parent::*/../a[contains(.,'{menuText}')]");
+        static By _lnkSubMenu(string mainMenu, string subMenu) => By.XPath($"//li[@class='sep']/parent::*/../a[contains(.,'{mainMenu}')]/following::a[contains(.,'{subMenu}')]");
         static string _cbbName = "//td[contains(text(), '{0}')]/following-sibling::*/descendant::select";
         static string _lnkPage = "//a[.='{0}']";
         static By _lnkSubPage(string pageText, string subPageText) => By.XPath($"//a[.='{pageText}']/following-sibling::ul//a[.='{subPageText}']");
@@ -43,6 +44,14 @@ namespace KiewitTeamBinder.UI.Pages
         static By _dlgSmallElement(string dialogText) => By.XPath($"//tbody//h2[.='{dialogText}']");
         static By _dlgBigElement(string dialogText) => By.XPath($"//div[@class='ui-dialog-container']/div[@class='ui-dialog-titlebar']/span[.='{dialogText}']");
         static By _lnkOpenedPage(string pageName) => By.XPath($"//li[@class='active']/a[.='{pageName}']");
+        static By _subMenuElement(string subMenuText) => By.XPath($"//a[.='{subMenuText}']");
+        static By _lnkPanelElement(string tableName) => By.XPath($"//div[div[.='{tableName}']]//a");
+        static By _lnkButtonElement(string lnkButton) => By.XPath($"//a[.='{lnkButton}']");
+        static By _cboElement(string cboId) => By.XPath($"//select[@id='{cboId}']");
+        static By _cboElementValue(string cboId) => By.XPath($"//select[@id='{cboId}']//option");
+        static By _txtElement(string txtName) => By.XPath($"//input[@name='{txtName}']");
+        static By _chkElement(string chkId) => By.XPath($"//input[@id='{chkId}']");
+        static By _radElement(string radId) => By.XPath($"//input[@id='{radId}']");
 
         #endregion
 
@@ -151,6 +160,16 @@ namespace KiewitTeamBinder.UI.Pages
         public IWebElement DlgBigElement(string dialogText) => StableFindElement(_dlgBigElement(dialogText));
 
         public IWebElement LnkOpenedPage(string pageName) => StableFindElement(_lnkOpenedPage(pageName));
+        public IWebElement SubMenuElement(string subMenuText) => StableFindElement(_subMenuElement(subMenuText));
+
+        public IReadOnlyCollection<IWebElement> LnkPanelElement(string tableName) => StableFindElements(_lnkPanelElement(tableName));
+        public IWebElement LnkMainMenu(string menuText) => StableFindElement(_lnkMainMenu(menuText));
+        public IWebElement LnkSubMenu(string mainMenu, string subMenu) => StableFindElement(_lnkSubMenu(mainMenu, subMenu));
+        public IWebElement LnkButtonElement(string lnkButton) => StableFindElement(_lnkButtonElement(lnkButton));
+        public IWebElement CboElement(string cboId) => StableFindElement(_cboElement(cboId));
+        public IReadOnlyCollection<IWebElement> CboElementValue(string cboId) => StableFindElements(_cboElementValue(cboId));
+        public IWebElement TxtElement(string txtName) => StableFindElement(_txtElement(txtName));
+        public IWebElement ChkElement(string chkId) => StableFindElement(_chkElement(chkId));
 
         #endregion
 
@@ -165,6 +184,7 @@ namespace KiewitTeamBinder.UI.Pages
         public KeyValuePair<string, bool> ValidateDashboardMainPageDisplayed()
         {
             var node = CreateStepNode();
+
             var validation = new KeyValuePair<string, bool>();
             try
             {
@@ -189,13 +209,15 @@ namespace KiewitTeamBinder.UI.Pages
             var validation = new KeyValuePair<string, bool>();
             try
             {
+                WaitUntil(SeleniumExtras.WaitHelpers.ExpectedConditions.AlertIsPresent());
                 string errorText = WebDriver.SwitchTo().Alert().Text;
+                
                 if (errorText == text)
                     validation = SetPassValidation(node, ValidationMessage.ValidateTextInAlertPopup);
                 else
-                    validation = SetFailValidation(node, ValidationMessage.ValidateTextInAlertPopup, text, errorText);
+                    validation = SetFailValidation(node, ValidationMessage.ValidateTextInAlertPopup);
             }
-            catch (Exception e)
+            catch (UnhandledAlertException e)
             {
                 validation = SetErrorValidation(node, ValidationMessage.ValidateTextInAlertPopup, e);
             }
@@ -236,74 +258,156 @@ namespace KiewitTeamBinder.UI.Pages
             return validation;
         }
 
-        public MainPage ClickSubSymbolMenu(string symbolMenuClass, string subSymbolMenuText)
+        public List <KeyValuePair<string, bool>> ValidateInformationInChoosePanels(string tableName, string[] validateValue)
         {
-            SymbolMenuElement(symbolMenuClass).Click();
-            SubSymbolMenuElement(symbolMenuClass, subSymbolMenuText).Click();
+            var node = CreateStepNode();
+            var validations = new List <KeyValuePair<string, bool>>();
+            List<string> tempActualValue = new List<string>();
+            try
+            {
+                foreach (var item in LnkPanelElement(tableName))
+                {
+                    tempActualValue.Add(item.Text);
+                }
+                string[] actualValue = tempActualValue.ToArray();
+                foreach (var item in validateValue)
+                {
+                    if (actualValue.Contains(item))
+                        validations.Add(SetPassValidation(node, ValidationMessage.ValidateInformationInChoosePanels));
+                    else
+                        validations.Add(SetFailValidation(node, ValidationMessage.ValidateInformationInChoosePanels, item));
+                }
+            }
+            catch (Exception e)
+            {
+                validations.Add(SetErrorValidation(node, ValidationMessage.ValidateInformationInChoosePanels, e));
+            }
+            EndStepNode(node);
+            return validations;
+        }
+
+        public MainPage ClickGlobalSettingsSubMenu(string subSymbolMenuText)
+        {
+            var node = CreateStepNode();
+            node.Info("From Global Settings, click " + subSymbolMenuText);
+            ClickSymbolMenu(MainMenu.GlobalSettings.ToDescription());
+            SubSymbolMenuElement(MainMenu.GlobalSettings.ToDescription(), subSymbolMenuText).WaitAndClick();
+            EndStepNode(node);
+            return this;
+        }
+
+        public MainPage ClickSymbolMenu(string symbolMenu)
+        {
+            SymbolMenuElement(symbolMenu).WaitAndClick();
+            return this;
+        }
+
+        public MainPage ClickSubMenu(string mainMenu, String subMenu)
+        {
+            LnkMainMenu(mainMenu).Click();
+            LnkSubMenu(mainMenu, subMenu).Click();
+            return this;
+        }
+
+        public MainPage ClickLinkButton(string lnkButton)
+        {
+            var node = CreateStepNode();
+            node.Info("Click the link button: " + lnkButton);
+            LnkButtonElement(lnkButton).Click();
+            EndStepNode(node);
             return this;
         }
 
         /// <param "isPublic"> If value is "yes", check the checkbox. Else the value is "no", uncheck the checkbox </param>
-        public MainPage FillInfoInPageDiaglog(string pageName = null, bool isWaitForPage = false, string parentPage = null, int numberOfColumns = 2, string displayAfter = null, string isPublic = "Default")
+        /// 
+
+        public MainPage updatePage(TAPage page)
         {
+            page.IsPublic = true;
+            this.FillInfoInPageDiaglog(page);
+            return this;
+        }
+
+        public MainPage FillInfoInPageDiaglog(TAPage taPage)
+        {
+            var node = CreateStepNode();
+            node.Info("Fill information the Add New Page or Edit Page dialog: " + taPage.PageName + ", " + taPage.ParentPage + ", " + taPage.NumberOfColumns + ", " + taPage.DisplayAfter + ", " + taPage.IsPublic);
+            
+            if (taPage.PageName != null && taPage.PageName != TxtNewPagePageName.Text)
+            {
+                TxtNewPagePageName.InputText(taPage.PageName);
+            }
+            if (taPage.ParentPage != null)
+            {
+                CmbParentPage.SelectItem(taPage.ParentPage);
+            }
+            if (taPage.NumberOfColumns != 2)
+            {
+                CmbNumberOfColumns.SelectItem(taPage.NumberOfColumns.ToString());
+            }
+            if (taPage.DisplayAfter != null)
+            {
+                CmbNewPageDisplayAfter.SelectItem(taPage.DisplayAfter);
+            }
+            if (taPage.IsPublic)
+                ChbPublic.Check();
+            else 
+                ChbPublic.UnCheck();
             string txtNameValue = TxtNewPagePageName.Text;
-            if (pageName != null)
-            {
-                TxtNewPagePageName.InputText(pageName);
-            }
-            if (parentPage != null)
-            {
-                CmbParentPage.SelectItem(parentPage);
-            }
-            if (numberOfColumns != 2)
-            {
-                CmbNumberOfColumns.SelectItem(numberOfColumns.ToString());
-            }
-            if (displayAfter != null)
-            {
-                CmbNewPageDisplayAfter.SelectItem(displayAfter);
-            }
-            if (isPublic != CheckValue.Default.ToDescription())
-            {
-                if (isPublic == CheckValue.Yes.ToDescription())
-                    ChbPublic.Check();
-                else if (isPublic == CheckValue.No.ToDescription())
-                    ChbPublic.UnCheck();
-            }
             BtnPageOK.Click();
-            if (isWaitForPage)
+            //WaitForPage(txtNameValue, taPage.PageName);
+            string locator;
+            if (taPage.PageName.Contains(" "))
             {
-                string locator;
-                if (pageName != null && pageName.Contains(" "))
-                {
-                    string newPageName = pageName.Replace(" ", "\u00a0");
-                    locator = string.Format(_lnkPage, newPageName);
-                }
-                else if(pageName == null && txtNameValue.Contains(" "))
-                {
-                    string newPageName = txtNameValue.Replace(" ", "\u00a0");
-                    locator = string.Format(_lnkPage, newPageName);
-                }
-                else
-                {
-                    locator = string.Format(_lnkPage, txtNameValue);
-                }
-                WaitForElementDisplay(By.XPath(locator));
+                string newPageName = taPage.PageName.Replace(" ", "\u00a0");
+                locator = string.Format(_lnkPage, newPageName);
             }
+            else
+            {
+                locator = string.Format(_lnkPage, taPage.PageName);
+            }
+            WaitForElementExisted(By.XPath(locator));
+            EndStepNode(node);
             return this;
         }
 
-        public MainPage AddPage(string pageName, bool isWaitForPage = false, string parentPage = null, int numberOfColumns = 2, string displayAfter = null, string isPublic = "Default")
+        public void WaitForPage(string txtNameValue, string pageName = null)
         {
-            ClickSubSymbolMenu(SymbolMenu.GlobalSettings.ToDescription(), SubMenu.AddPage.ToDescription());
-            FillInfoInPageDiaglog(pageName, isWaitForPage, parentPage, numberOfColumns, displayAfter, isPublic);
+            string locator;
+            if (pageName != null && pageName.Contains(" "))
+            {
+                string newPageName = pageName.Replace(" ", "\u00a0");
+                locator = string.Format(_lnkPage, newPageName);
+            }
+            //else if (pageName == null && txtNameValue.Contains(" "))
+            //{
+            //    string newPageName = txtNameValue.Replace(" ", "\u00a0");
+            //    locator = string.Format(_lnkPage, newPageName);
+            //}
+            else
+            {
+                locator = string.Format(_lnkPage, txtNameValue);
+            }
+            WaitForElementDisplay(By.XPath(locator));
+        }
+
+        public MainPage AddPage(TAPage taPage)
+        {
+            var node = CreateStepNode();
+            node.Info("Add a new page.");
+            ClickGlobalSettingsSubMenu(SubMenu.AddPage.ToDescription());
+            FillInfoInPageDiaglog(taPage);
+            EndStepNode(node);
             return this;
         }
 
-        public MainPage EditPage(string pageName = null, bool isWaitForPage = false, string parentPage = null, int numberOfColumns = 2, string displayAfter = null, string isPublic = "Default")
+        public MainPage EditPage(TAPage taPage)
         {
-            ClickSubSymbolMenu(SymbolMenu.GlobalSettings.ToDescription(), SubMenu.Edit.ToDescription());
-            FillInfoInPageDiaglog(pageName, isWaitForPage, parentPage, numberOfColumns, displayAfter, isPublic);
+            var node = CreateStepNode();
+            node.Info("Edit a page.");
+            ClickGlobalSettingsSubMenu(SubMenu.Edit.ToDescription());
+            FillInfoInPageDiaglog(taPage);
+            EndStepNode(node);
             return this;
         }
 
@@ -333,16 +437,15 @@ namespace KiewitTeamBinder.UI.Pages
         //    return new Login(WebDriver);
         //}
 
-        public MainPage DeleteOnePage(string pageName, bool isWaitForDisappear = false)
+        public MainPage DeleteOnePage(string pageName)
         {
+            var node = CreateStepNode();
+            node.Info("Delete a page: " + pageName);
             ClickPage(pageName);
-            ClickSubSymbolMenu(SymbolMenu.GlobalSettings.ToDescription(), SubMenu.Delete.ToDescription());
-            WaitUntil(SeleniumExtras.WaitHelpers.ExpectedConditions.AlertIsPresent());
-            WebDriver.SwitchTo().Alert().Accept();
-            if (isWaitForDisappear)
-            {
-                WaitForElementNotExist(LnkPage(pageName));
-            }
+            ClickGlobalSettingsSubMenu(SubMenu.Delete.ToDescription());
+            AcceptAlert<MainPage>();
+            WaitForElementNotExist(LnkPage(pageName));
+            EndStepNode(node);
             return this;
         }
 
@@ -352,16 +455,16 @@ namespace KiewitTeamBinder.UI.Pages
             //int lastPage = pageName.Count();
             if (isSubPage)
             {
-                LnkSubPage(pageName[0], pageName[1]).Click();
-                ClickSubSymbolMenu(SymbolMenu.GlobalSettings.ToDescription(), SubMenu.Delete.ToDescription());
-                WebDriver.SwitchTo().Alert().Accept();
-                DeleteOnePage(pageName[1]);
+                ClickSubPage(pageName);
+                ClickGlobalSettingsSubMenu(SubMenu.Delete.ToDescription());
+                AcceptAlert<MainPage>();
+                DeleteOnePage(pageName[0]);
             }
             else
             {
                 foreach (var item in pageName)
                 {
-                    DeleteOnePage(item, true);
+                    DeleteOnePage(item);
                 }
             }
             return this;
@@ -388,7 +491,7 @@ namespace KiewitTeamBinder.UI.Pages
                         validation = SetFailValidation(node, ValidationMessage.ValiateDialogDisplayed);
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 validation = SetErrorValidation(node, ValidationMessage.ValiateDialogDisplayed, e);
             }
@@ -398,44 +501,205 @@ namespace KiewitTeamBinder.UI.Pages
 
         public MainPage ClickPage(string pageName)
         {
-            LnkPage(pageName).Click();
+            var node = CreateStepNode();
+            node.Info("Click page: " + pageName);
+            LnkPage(pageName).WaitAndClick();
+            EndStepNode(node);
             return this;
         }
 
-        public KeyValuePair<string, bool> ValidatePageVisible(string pageName, bool isInvisible = false, bool isAccessed = false)
+        public MainPage ClickSubPage(string[] pageName)
+        {
+            foreach (var item in pageName.ToList())
+            {
+                LnkPage(item).HoverElement();
+            }
+            ClickPage(pageName[pageName.Count()-1]);
+            return this;
+        }
+
+        public KeyValuePair<string, bool> ValidatePageExisted(string pageName)
         {
             var node = CreateStepNode();
             var validation = new KeyValuePair<string, bool>();
             try
             {
                 bool isDisplayed = LnkPage(pageName).IsDisplayed();
-                if (isInvisible)
+                if (isDisplayed)
+                    validation = SetPassValidation(node, ValidationMessage.ValidatePageIsExisted);
+                else
+                    validation = SetFailValidation(node, ValidationMessage.ValidatePageIsExisted);
+            }
+            catch (Exception e)
+            {
+                validation = SetErrorValidation(node, ValidationMessage.ValidatePageIsExisted, e);
+            }
+            EndStepNode(node);
+            return validation;
+        }
+
+        public KeyValuePair<string, bool> ValidatePageNotExisted(string pageName)
+        {
+            var node = CreateStepNode();
+            var validation = new KeyValuePair<string, bool>();
+            try
+            {
+                bool isDisplayed = LnkPage(pageName).IsDisplayed();
+                if (!isDisplayed)
+                    validation = SetPassValidation(node, ValidationMessage.ValidatePageIsNotExisted);
+                else
+                    validation = SetFailValidation(node, ValidationMessage.ValidatePageIsNotExisted);
+            }
+            catch (Exception e)
+            {
+                validation = SetErrorValidation(node, ValidationMessage.ValidatePageIsNotExisted, e);
+            }
+            EndStepNode(node);
+            return validation;
+        }
+
+        public KeyValuePair<string, bool> ValidatePageVisible(string pageName)
+        {
+            var node = CreateStepNode();
+            var validation = new KeyValuePair<string, bool>();
+            try
+            {
+                string locator;
+                if (pageName.Contains(" "))
                 {
-                    if (!isDisplayed)
-                        validation = SetPassValidation(node, ValidationMessage.ValidatePageInvisible);
-                    else
-                        validation = SetFailValidation(node, ValidationMessage.ValidatePageInvisible);
+                    string newPageName = pageName.Replace(" ", "\u00a0");
+                    locator = string.Format(_lnkPage, newPageName);
                 }
                 else
                 {
-                    if (isDisplayed)
-                        validation = SetPassValidation(node, ValidationMessage.ValidatePageVisible);
-                    else
-                        validation = SetFailValidation(node, ValidationMessage.ValidatePageVisible);
-                    if (isAccessed)
-                    {
-                        ClickPage(pageName);
-                        bool isOpened = LnkOpenedPage(pageName).IsDisplayed();
-                        if (isOpened)
-                            validation = SetPassValidation(node, ValidationMessage.ValidatePageIsAccessed);
-                        else
-                            validation = SetFailValidation(node, ValidationMessage.ValidatePageIsAccessed);
-                    }
+                    locator = string.Format(_lnkPage, pageName);
                 }
+                bool isVisible = IsVisible(By.XPath(locator));
+                if (isVisible)
+                    validation = SetPassValidation(node, ValidationMessage.ValidatePageVisible);
+                else
+                    validation = SetFailValidation(node, ValidationMessage.ValidatePageVisible);
+            }
+            catch (Exception e)
+            {
+                validation = SetErrorValidation(node, ValidationMessage.ValidatePageVisible, e);
+            }
+            EndStepNode(node);
+            return validation;
+        }
+
+        public KeyValuePair<string, bool> ValidatePageInvisible(string pageName)
+        {
+            var node = CreateStepNode();
+            var validation = new KeyValuePair<string, bool>();
+            try
+            {
+                string locator;
+                if (pageName.Contains(" "))
+                {
+                    string newPageName = pageName.Replace(" ", "\u00a0");
+                    locator = string.Format(_lnkPage, newPageName);
+                }
+                else
+                {
+                    locator = string.Format(_lnkPage, pageName);
+                }
+                bool isVisible = IsVisible(By.XPath(locator));
+                if (!isVisible)
+                    validation = SetPassValidation(node, ValidationMessage.ValidatePageInvisible);
+                else
+                    validation = SetFailValidation(node, ValidationMessage.ValidatePageInvisible);
+            }
+            catch (Exception e)
+            {
+                validation = SetErrorValidation(node, ValidationMessage.ValidatePageInvisible, e);
+            }
+            EndStepNode(node);
+            return validation;
+        }
+
+        public KeyValuePair<string, bool> ValidatePageAccessed(string pageName)
+        {
+            var node = CreateStepNode();
+            var validation = new KeyValuePair<string, bool>();
+            try
+            {
+                bool isAccessed = LnkPage(pageName).IsClickable();
+                if (isAccessed)
+                    validation = SetPassValidation(node, ValidationMessage.ValidatePageIsAccessed);
+                else
+                    validation = SetFailValidation(node, ValidationMessage.ValidatePageIsAccessed);
             }
             catch(Exception e)
             {
-                validation = SetErrorValidation(node, ValidationMessage.ValidatePageVisible, e);
+                validation = SetErrorValidation(node, ValidationMessage.ValidatePageIsAccessed, e);
+            }
+            EndStepNode(node);
+            return validation;
+        }
+
+        public KeyValuePair<string, bool> ValidateSubMenuNotExisted(string subMenu)
+        {
+            var node = CreateStepNode();
+            var validation = new KeyValuePair<string, bool>();
+            try
+            {
+                bool isExisted = SubMenuElement(subMenu).IsDisplayed();
+                if (isExisted)
+                    validation = SetPassValidation(node, ValidationMessage.ValidateSubMenuNotExisted);
+                else
+                    validation = SetFailValidation(node, ValidationMessage.ValidateSubMenuNotExisted);
+            }
+            catch (Exception e)
+            {
+                validation = SetErrorValidation(node, ValidationMessage.ValidateSubMenuNotExisted, e);
+            }
+            EndStepNode(node);
+            return validation;
+        }
+
+        public KeyValuePair<string, bool> ValidateListInComboboxIsInAlphabeticalOrder(string cboName)
+        {
+            var node = CreateStepNode();
+            var validation = new KeyValuePair<string, bool>();
+            List<string> cboValue = new List<string>();
+            List<string> sort = new List<string>();
+            try
+            {
+                foreach (var item in CboElementValue(cboName))
+                {
+                    cboValue.Add(item.Text);
+                }
+                sort.AddRange(cboValue.OrderBy(o=>o));
+                bool isSort = cboValue.SequenceEqual(sort);
+                if (isSort)
+                    validation = SetPassValidation(node, ValidationMessage.ValidateListInComboboxIsInAlphabeticalOrder);
+                else
+                    validation = SetFailValidation(node, ValidationMessage.ValidateListInComboboxIsInAlphabeticalOrder);
+            }
+            catch (Exception e)
+            {
+                validation = SetErrorValidation(node, ValidationMessage.ValidateListInComboboxIsInAlphabeticalOrder, e);
+            }
+            EndStepNode(node);
+            return validation;
+        }
+
+        public KeyValuePair<string, bool> ValidateSelectedDataIsDisplayOnCombobox(string cboName, string selectedData)
+        {
+            var node = CreateStepNode();
+            var validation = new KeyValuePair<string, bool>();
+            try
+            {
+                string actualValue = CboElement(cboName).Text;
+                if (actualValue == selectedData)
+                    validation = SetPassValidation(node, ValidationMessage.ValidateSelectedDataIsDisplayOnCombobox);
+                else
+                    validation = SetFailValidation(node, ValidationMessage.ValidateSelectedDataIsDisplayOnCombobox);
+            }
+            catch (Exception e)
+            {
+                validation = SetErrorValidation(node, ValidationMessage.ValidateSelectedDataIsDisplayOnCombobox, e);
             }
             EndStepNode(node);
             return validation;
@@ -453,6 +717,12 @@ namespace KiewitTeamBinder.UI.Pages
             public static string ValidatePageVisible = "Validate that page is visible";
             public static string ValidatePageInvisible = "Validate that page is invisible";
             public static string ValidatePageIsAccessed = "Validate that page is accessed";
+            public static string ValidatePageIsExisted = "Validate that page is existed";
+            public static string ValidatePageIsNotExisted = "Validate that page is not existed";
+            public static string ValidateSubMenuNotExisted = "Validate that sub menu is not existed";
+            public static string ValidateInformationInChoosePanels = "Validate that information in Choose Panels is correct.";
+            public static string ValidateListInComboboxIsInAlphabeticalOrder = "Validate that the list in combobox is in alphabetical order.";
+            public static string ValidateSelectedDataIsDisplayOnCombobox = "Validate the selected data is displayed correctly on combobox.";
         }
     }
 }

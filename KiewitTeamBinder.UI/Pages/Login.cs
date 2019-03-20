@@ -1,4 +1,5 @@
-﻿using KiewitTeamBinder.UI.Pages.Global;
+﻿using KiewitTeamBinder.Common.Models;
+using KiewitTeamBinder.UI.Pages.Global;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using System;
@@ -58,7 +59,7 @@ namespace KiewitTeamBinder.UI.Pages
         /// <param name="repositoryName">Name of the repository.</param>
         /// <Author>Long and Phat</Author>
         /// <returns></returns>
-        public MainPage SignOn(string username, string password, bool isWaitForAlert = false, string repositoryName = null)
+        public MainPage SignOn(string username, string password, string repositoryName = null)
         {
             if (repositoryName != null)
             {
@@ -67,10 +68,18 @@ namespace KiewitTeamBinder.UI.Pages
             TxtUsername.SendKeys(username);
             TxtPassword.SendKeys(password);
             BtnLogin.Click();
-            if (isWaitForAlert)
+            return new MainPage(WebDriver);
+        }
+
+        public MainPage SignOn(User user)
+        {
+            if (user.Repository != null)
             {
-                WaitUntil(SeleniumExtras.WaitHelpers.ExpectedConditions.AlertIsPresent());
+                CmbRepo.SelectItem(user.Repository);
             }
+            TxtUsername.SendKeys(user.Username);
+            TxtPassword.SendKeys(user.Password);
+            BtnLogin.Click();
             return new MainPage(WebDriver);
         }
 

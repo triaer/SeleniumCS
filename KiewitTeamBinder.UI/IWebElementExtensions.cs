@@ -16,6 +16,8 @@ namespace KiewitTeamBinder.UI
 {
     public static class IWebElementExtensions
     {
+        internal const int immediatelyCheckTimeout = 100;
+
         public static void InputText(this IWebElement Element, string text, bool byJS = false)
         {
             if (byJS)
@@ -66,6 +68,7 @@ namespace KiewitTeamBinder.UI
                 return false;
             }
         }
+
 
         public static IWebElement StableFindElement(this IWebElement Element, By by, long timeout = longTimeout)
         {
@@ -309,5 +312,20 @@ namespace KiewitTeamBinder.UI
             else
                 selector.SelectByText(item);
         }
+
+        public static bool IsClickable(this IWebElement Element, int miliseconds = immediatelyCheckTimeout)
+        {
+            try
+            {
+                var wait = Browser.WaitMiliSecond(miliseconds);
+                SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(Element);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
     }
 }

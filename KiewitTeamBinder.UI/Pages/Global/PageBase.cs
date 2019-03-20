@@ -17,6 +17,9 @@ using System.Windows.Forms;
 using KiewitTeamBinder.Common.Helper;
 using AventStack.ExtentReports;
 using static KiewitTeamBinder.UI.ExtentReportsHelper;
+using OpenQA.Selenium.Remote;
+using System.Runtime.Remoting.Contexts;
+using OpenQA.Selenium.Chrome;
 
 namespace KiewitTeamBinder.UI.Pages.Global
 {
@@ -39,6 +42,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         internal const int shortTimeout = 5;
         internal const int sapLongTimeout = 240;
         internal const int sapShortTimeout = 60;
+        internal const int immediatelyCheckTimeout = 100;
         #endregion
 
         #region Actions
@@ -259,6 +263,11 @@ namespace KiewitTeamBinder.UI.Pages.Global
             wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.StalenessOf(Element));
         }
 
+        internal static void WaitForElementExisted(By elementDescription, int seconds = mediumTimeout)
+        {
+            var wait = Browser.Wait(seconds);
+            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(elementDescription));
+        }
         internal static void WaitForElementCSSAttribute(IWebElement Element, string cssAttribute, string cssAttributeValue, int seconds = mediumTimeout)
         {
             var wait = Browser.Wait(seconds);
@@ -894,6 +903,46 @@ namespace KiewitTeamBinder.UI.Pages.Global
             //Console.WriteLine(callingClassName + "." + callingMethodName + " generated an error. A ScreenShot of the browser has been saved. " + filePath);
 
         }
+
+        public T AcceptAlert<T>()
+        {
+            try
+            {
+                WaitUntil(SeleniumExtras.WaitHelpers.ExpectedConditions.AlertIsPresent());
+                WebDriver.SwitchTo().Alert().Accept();
+                return (T)Activator.CreateInstance(typeof(T), WebDriver);
+            }
+            catch (UnhandledAlertException)
+            {
+                return (T)Activator.CreateInstance(typeof(T), WebDriver);
+            }
+            
+        }
+
+        public bool IsVisible(By elementDescription, int miliseconds = immediatelyCheckTimeout)
+        {
+            try
+            {
+                //bool isVisible = true;
+                //for (int timeOut = 0; timeOut <= immediatelyCheckTimeout; timeOut++)
+                //{
+                //    var wait = Browser.WaitMiliSecond(immediatelyCheckTimeout);
+                //    SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(elementDescription);
+                //    if (timeOut == 0)
+                //        isVisible = false;
+                //}
+
+                //return isVisible;
+                var wait = Browser.WaitMiliSecond(miliseconds);
+                SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(elementDescription);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
     }
     #endregion
 }

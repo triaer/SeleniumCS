@@ -46,6 +46,11 @@ namespace KiewitTeamBinder.UI
             return new WebDriverWait(webDriver, TimeSpan.FromSeconds(timeoutSecond));
         }
 
+        internal static WebDriverWait WaitMiliSecond(int timeoutMilisecond = 1000)
+        {
+            return new WebDriverWait(webDriver, TimeSpan.FromMilliseconds(timeoutMilisecond));
+        }
+
         public static string Title
         {
             get { return webDriver.Title; }
@@ -61,6 +66,8 @@ namespace KiewitTeamBinder.UI
         {
             DesiredCapabilities capability = new DesiredCapabilities();
             capability.SetCapability("browserName", browserName);
+            //DesiredCapabilities capabilityOption = new DesiredCapabilities();
+            //capabilityOption.SetCapability(CapabilityType.UnexpectedAlertBehavior, "ignore");
             Uri server = new Uri(url);
             string defaultDownloadLocation = Path.GetPathRoot(Environment.SystemDirectory) + "Users\\" + Environment.UserName + "\\Downloads";
             if (browserName == "chrome")
