@@ -72,6 +72,12 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
         }
 
+        internal void WaitForAlertPresent()
+        {
+            var wait = Browser.Wait();
+            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.AlertIsPresent());
+        }
+
         /// <summary>
         /// Using for special textbox which includes two input elements
         /// </summary>

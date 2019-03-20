@@ -93,6 +93,7 @@ namespace KiewitTeamBinder.UI.Pages
             try
             {
                 String foundErrorMessage = _driver.SwitchTo().Alert().Text;
+                
                 if (foundErrorMessage.Equals("Username or password is invalid"))
                     validation = SetPassValidation(node, ValidationMessage.ValidateDashboardErrorMessage);
                 else

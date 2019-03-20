@@ -12,16 +12,6 @@ namespace KiewitTeamBinder.UI.Tests.User
     {
 
         [TestMethod]
-        public void Suite()
-        {
-            this.TC001();
-            this.TC002();
-            this.TC003();
-            this.TC004();
-        }
-
-
-        [TestMethod]
         public void TC001()
         {
             try
