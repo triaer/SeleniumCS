@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace KiewitTeamBinder.Api.AddressBookServiceReference {
+namespace Agoda.Api.AddressBookServiceReference {
     using System.Data;
     
     
@@ -165,12 +165,12 @@ namespace KiewitTeamBinder.Api.AddressBookServiceReference {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public interface AddressBookSoapChannel : KiewitTeamBinder.Api.AddressBookServiceReference.AddressBookSoap, System.ServiceModel.IClientChannel {
+    public interface AddressBookSoapChannel : Agoda.Api.AddressBookServiceReference.AddressBookSoap, System.ServiceModel.IClientChannel {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class AddressBookSoapClient : System.ServiceModel.ClientBase<KiewitTeamBinder.Api.AddressBookServiceReference.AddressBookSoap>, KiewitTeamBinder.Api.AddressBookServiceReference.AddressBookSoap {
+    public partial class AddressBookSoapClient : System.ServiceModel.ClientBase<Agoda.Api.AddressBookServiceReference.AddressBookSoap>, Agoda.Api.AddressBookServiceReference.AddressBookSoap {
         
         public AddressBookSoapClient() {
         }

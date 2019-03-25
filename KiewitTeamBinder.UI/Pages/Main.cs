@@ -1,4 +1,4 @@
-﻿using KiewitTeamBinder.UI.Pages.Global;
+﻿using Agoda.UI.Pages.Global;
 using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using static KiewitTeamBinder.UI.ExtentReportsHelper;
+using static Agoda.UI.ExtentReportsHelper;
 
-namespace KiewitTeamBinder.UI.Pages
+namespace Agoda.UI.Pages
 {
     public class MainPage : PageBase
     {
@@ -28,6 +28,10 @@ namespace KiewitTeamBinder.UI.Pages
         static readonly By _lnkAccount = By.XPath("//a[@href='#Welcome']");
         static readonly By _lnkLogout = By.XPath("//a[@href='logout.do']");
         static readonly By _lblRepositoryName = By.XPath("//a[@href='#Repository']/span");
+        static readonly By _administerLnk = By.XPath("//a[text()='Administer']");
+        static readonly By _panelLnk = By.XPath("//a[text()='Panels']");
+        static readonly By _dataProfilesLnk = By.XPath("//a[text()='Data Profiles']");
+        
         static readonly By _tabSetting = By.XPath("//li[@class='mn-setting']");
         static readonly By _addPageBtn = By.XPath("//a[text()='Add Page']");
         static readonly By _deletePageBtn = By.XPath("//a[text()='Delete']");
@@ -101,6 +105,24 @@ namespace KiewitTeamBinder.UI.Pages
             get { return StableFindElement(_lblRepositoryName); }
         }
 
+        public IWebElement AdministerLink
+        {
+            get { return StableFindElement(_administerLnk); }
+            
+        }
+
+        public IWebElement PanelLink
+        {
+            get { return StableFindElement(_panelLnk); }
+
+        }
+
+        public IWebElement DataProfileLink
+        {
+            get { return StableFindElement(_dataProfilesLnk); }
+
+        }
+
         public IWebElement TabSetting
         {
             get { return StableFindElement(_tabSetting); }
@@ -141,6 +163,27 @@ namespace KiewitTeamBinder.UI.Pages
             this._driverMainPage = driver;
         }
 
+        public void expandChoosePanels()
+        {
+            WaitForElementDisplay(_btnChoosePanels);
+            BtnChoosePanels.Click();
+            Wait(3);
+        }
+
+        public Panel openPanelPage()
+        {
+            WaitForElementClickable(_administerLnk);
+            AdministerLink.Click();
+            WaitForElementClickable(_panelLnk);
+            PanelLink.Click();
+            return new Panel(this._driverMainPage);
+        }
+
+        public DataProfile openDataProfilePage()
+        {
+            return new DataProfile(this._driverMainPage);
+        }
+
         public Login LogOut()
         {
             HoverElement(_lnkAccount);
@@ -159,6 +202,7 @@ namespace KiewitTeamBinder.UI.Pages
 
         public MainPage AddNewPage(String pageName = "Test", string parentPage = null, int noOfCol = 0, String displayAfterPage = null, Boolean publicChbx = false)
         {
+            WaitForElementDisplay(_tabSetting);
             this.OpenAddPageDialog();
             
             TxtNewPagePageName.SendKeys(pageName);
@@ -199,43 +243,48 @@ namespace KiewitTeamBinder.UI.Pages
             return this;
         }
 
-        public MainPage editPage(String newPageName, string parentPage = null, int noOfCol = 0, String displayAfterPage = null, Boolean publicChbx = false)
+        public MainPage editPage(string newPageName, string newParentPage = null, int newnoOfCol = 2, String newdisplayAfterPage = null, Boolean newpublicChbxValue = false)
         {
             WaitForElementDisplay(_tabSetting);
             HoverElement(_tabSetting);
             WaitForElementClickable(_editPageBtn);
+            EditPageButton.Click();
 
-            if (newPageName.Equals(TxtNewPagePageName.GetValue().ToString()))
+            string currentPageName = TxtNewPagePageName.GetValue();
+            string currentparent = CmbParentPage.GetValue();
+            int currentNoCol = int.Parse(CmbNumberOfColumns.GetValue());
+            string currentafter = CmbNewPageDisplayAfter.GetValue();
+            // bool currentChbvalue = ChbPublic.c;
+
+            if (!newPageName.Equals(currentPageName))
             {
                 TxtNewPagePageName.Clear();
                 TxtNewPagePageName.SendKeys(newPageName); 
             }
-            if (parentPage != null)
-            {
-                CmbParentPage.SelectItem(parentPage, "Text");
-            }
-            if (noOfCol != 0)
-            {
-                CmbNumberOfColumns.SelectItem(noOfCol.ToString(), "Text");
-            }
-
-            if (displayAfterPage != null)
-            {
-                CmbNewPageDisplayAfter.SelectItem(displayAfterPage, "Text");
-            }
-
-            if (publicChbx)
-            {
-                ChbPublic.Check(); // true, set it as Public page
-            }
-            else
-            {
-                // just leave it blank
-            }
+            //if (newParentPage == null || newParentPage != currentparent)
+            //{
+            //    CmbParentPage.SelectItem(newParentPage, "Text"); 
+            //}
+            //if (currentNoCol != newnoOfCol)
+            //{
+            //    CmbNumberOfColumns.SelectItem(newnoOfCol.ToString(), "Text"); 
+            //}
+            //if (currentafter != newdisplayAfterPage || newdisplayAfterPage == null)
+            //{
+            //    CmbNewPageDisplayAfter.SelectItem(newdisplayAfterPage, "Text"); 
+            //}
+            //if (newpublicChbxValue)
+            //{
+            //    ChbPublic.Check(); // true, set it as Public page
+            //}
+            //else
+            //{
+            //    // just leave it blank
+            //}
             BtnPageOK.Click();
             return this;
 
-            return this;
+            
         }
 
         public MainPage confirmDeletePage()

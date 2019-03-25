@@ -10,7 +10,7 @@ using System.Threading;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 
-namespace KiewitTeamBinder.Common.ExcelInterop
+namespace Agoda.Common.ExcelInterop
 {
     class Old_ExcelHelper : ExcelHelper
     {

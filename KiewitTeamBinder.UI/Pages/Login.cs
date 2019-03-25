@@ -1,4 +1,4 @@
-﻿using KiewitTeamBinder.UI.Pages.Global;
+﻿using Agoda.UI.Pages.Global;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using System;
@@ -6,9 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static KiewitTeamBinder.UI.ExtentReportsHelper;
+using static Agoda.UI.ExtentReportsHelper;
 
-namespace KiewitTeamBinder.UI.Pages
+namespace Agoda.UI.Pages
 {
     public class Login : PageBase
     {

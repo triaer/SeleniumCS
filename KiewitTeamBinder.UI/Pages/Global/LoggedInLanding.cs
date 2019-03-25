@@ -7,11 +7,11 @@ using OpenQA.Selenium;
 using SeleniumExtras.PageObjects;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
-using static KiewitTeamBinder.UI.ExtentReportsHelper;
-using KiewitTeamBinder.Common.Helper;
-using static KiewitTeamBinder.Common.KiewitTeamBinderENums;
+using static Agoda.UI.ExtentReportsHelper;
+using Agoda.Common.Helper;
+using static Agoda.Common.KiewitTeamBinderENums;
 
-namespace KiewitTeamBinder.UI.Pages.Global
+namespace Agoda.UI.Pages.Global
 {
     public class LoggedInLanding : PageBase
     {

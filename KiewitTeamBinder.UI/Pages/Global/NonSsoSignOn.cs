@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using KiewitTeamBinder.Common;
+using Agoda.Common;
 using OpenQA.Selenium;
 using SeleniumExtras.PageObjects;
 using System.Windows.Forms;
 
-namespace KiewitTeamBinder.UI.Pages.Global
+namespace Agoda.UI.Pages.Global
 {
     public class NonSsoSignOn : NotLoggedInLanding
     {

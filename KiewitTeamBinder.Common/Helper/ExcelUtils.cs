@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using KiewitTeamBinder.Common;
+using Agoda.Common;
 
-namespace KiewitTeamBinder.Common.Helper
+namespace Agoda.Common.Helper
 {
     public static class ExcelUtils
     {

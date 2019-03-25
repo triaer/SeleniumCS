@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using KiewitTeamBinder.Common;
+using Agoda.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using AventStack.ExtentReports.Reporter;
 using AventStack.ExtentReports;
 using System.Linq;
-using KiewitTeamBinder.Common.Helper;
+using Agoda.Common.Helper;
 using System.Collections.Generic;
 
-namespace KiewitTeamBinder.UI.Tests
+namespace Agoda.UI.Tests
 {
     [TestClass]
     public abstract class UITestBase

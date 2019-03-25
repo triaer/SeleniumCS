@@ -6,7 +6,7 @@ using System.IO;
 using RestSharp.Serializers;
 using RestSharp.Deserializers;
 
-namespace KiewitTeamBinder.API.Helper
+namespace Agoda.API.Helper
 {
     public class NewtonsoftJsonSerializer : ISerializer, IDeserializer
     {

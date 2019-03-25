@@ -6,10 +6,10 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
 using System.Threading;
-using static KiewitTeamBinder.Common.KiewitTeamBinderENums;
+using static Agoda.Common.KiewitTeamBinderENums;
 using System.Reflection;
 
-namespace KiewitTeamBinder.Common.Helper
+namespace Agoda.Common.Helper
 {
     public static class Utils
     {
