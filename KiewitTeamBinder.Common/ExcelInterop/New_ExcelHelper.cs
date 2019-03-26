@@ -9,7 +9,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 
-namespace Agoda.Common.ExcelInterop
+namespace KiewitTeamBinder.Common.ExcelInterop
 {
     class New_ExcelHelper : ExcelHelper
     {

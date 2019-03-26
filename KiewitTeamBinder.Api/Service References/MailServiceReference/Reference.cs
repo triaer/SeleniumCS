@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Agoda.Api.MailServiceReference {
+namespace KiewitTeamBinder.Api.MailServiceReference {
     using System.Data;
     
     
@@ -123,12 +123,12 @@ namespace Agoda.Api.MailServiceReference {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public interface MailWebServiceSoapChannel : Agoda.Api.MailServiceReference.MailWebServiceSoap, System.ServiceModel.IClientChannel {
+    public interface MailWebServiceSoapChannel : KiewitTeamBinder.Api.MailServiceReference.MailWebServiceSoap, System.ServiceModel.IClientChannel {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class MailWebServiceSoapClient : System.ServiceModel.ClientBase<Agoda.Api.MailServiceReference.MailWebServiceSoap>, Agoda.Api.MailServiceReference.MailWebServiceSoap {
+    public partial class MailWebServiceSoapClient : System.ServiceModel.ClientBase<KiewitTeamBinder.Api.MailServiceReference.MailWebServiceSoap>, KiewitTeamBinder.Api.MailServiceReference.MailWebServiceSoap {
         
         public MailWebServiceSoapClient() {
         }

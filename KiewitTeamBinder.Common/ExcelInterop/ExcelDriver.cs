@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Agoda.Common.ExcelInterop
+namespace KiewitTeamBinder.Common.ExcelInterop
 {
     public static class ExcelDriver
     {

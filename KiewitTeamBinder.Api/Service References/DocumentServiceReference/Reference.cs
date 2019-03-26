@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Agoda.Api.DocumentServiceReference {
+namespace KiewitTeamBinder.Api.DocumentServiceReference {
     using System.Data;
     
     
@@ -95,12 +95,12 @@ namespace Agoda.Api.DocumentServiceReference {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public interface DocumentWebServiceSoapChannel : Agoda.Api.DocumentServiceReference.DocumentWebServiceSoap, System.ServiceModel.IClientChannel {
+    public interface DocumentWebServiceSoapChannel : KiewitTeamBinder.Api.DocumentServiceReference.DocumentWebServiceSoap, System.ServiceModel.IClientChannel {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class DocumentWebServiceSoapClient : System.ServiceModel.ClientBase<Agoda.Api.DocumentServiceReference.DocumentWebServiceSoap>, Agoda.Api.DocumentServiceReference.DocumentWebServiceSoap {
+    public partial class DocumentWebServiceSoapClient : System.ServiceModel.ClientBase<KiewitTeamBinder.Api.DocumentServiceReference.DocumentWebServiceSoap>, KiewitTeamBinder.Api.DocumentServiceReference.DocumentWebServiceSoap {
         
         public DocumentWebServiceSoapClient() {
         }

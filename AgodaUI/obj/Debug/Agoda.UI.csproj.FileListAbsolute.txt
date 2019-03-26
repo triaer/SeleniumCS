@@ -1,5 +1,0 @@
-C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\AgodaUI\bin\Debug\AgodaUI.dll
-C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\AgodaUI\bin\Debug\AgodaUI.pdb
-C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\AgodaUI\obj\Debug\Agoda.UI.csprojResolveAssemblyReference.cache
-C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\AgodaUI\obj\Debug\AgodaUI.dll
-C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\AgodaUI\obj\Debug\AgodaUI.pdb

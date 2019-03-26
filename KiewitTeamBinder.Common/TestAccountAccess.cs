@@ -3,7 +3,7 @@ using System.Data;
 using System.Data.OleDb;
 using System.IO;
 
-namespace Agoda.Common
+namespace KiewitTeamBinder.Common
 {
     public class TestAccountAccess
     {

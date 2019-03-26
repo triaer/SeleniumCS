@@ -13,16 +13,17 @@ using SeleniumExtras.WaitHelpers;
 using System.Collections.ObjectModel;
 using System.Runtime.Remoting;
 using OpenQA.Selenium.Interactions;
-using Agoda.Common.Helper;
-using AventStack.ExtentReports;
-using static Agoda.UI.ExtentReportsHelper;
 using System.Windows.Forms;
+using KiewitTeamBinder.Common.Helper;
+using AventStack.ExtentReports;
+using static KiewitTeamBinder.UI.ExtentReportsHelper;
 
-namespace Agoda.UI.Pages.Global
+namespace KiewitTeamBinder.UI.Pages.Global
 {
     public abstract class PageBase
     {
         #region Entities
+
 
         public string Title { get; set; }
         internal static string Url { get; set; }

@@ -1,11 +1,11 @@
 ﻿using FluentAssertions;
-using Agoda.Common.Helper;
-using Agoda.UI.Pages;
+using KiewitTeamBinder.Common.Helper;
+using KiewitTeamBinder.UI.Pages;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using static Agoda.UI.ExtentReportsHelper;
+using static KiewitTeamBinder.UI.ExtentReportsHelper;
 
-namespace Agoda.UI.Tests.User
+namespace KiewitTeamBinder.UI.Tests.User
 {
     [TestClass]
     public class SignOnTests : UITestBase

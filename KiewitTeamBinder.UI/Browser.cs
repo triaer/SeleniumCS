@@ -16,7 +16,7 @@ using System.Threading;
 using System.IO;
 using Microsoft.Win32;
 
-namespace Agoda.UI
+namespace KiewitTeamBinder.UI
 {
     /// <summary>
     /// Browser class
@@ -25,8 +25,6 @@ namespace Agoda.UI
     {
         private static IWebDriver webDriver;
         private static bool headless = false;
-
-        //private static RemoteWebDriver remoteWD;
 
         public static void Close()
         {

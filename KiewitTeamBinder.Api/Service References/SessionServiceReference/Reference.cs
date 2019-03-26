@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Agoda.Api.SessionServiceReference {
+namespace KiewitTeamBinder.Api.SessionServiceReference {
     using System.Data;
     
     
@@ -95,12 +95,12 @@ namespace Agoda.Api.SessionServiceReference {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public interface SessionWebServiceSoapChannel : Agoda.Api.SessionServiceReference.SessionWebServiceSoap, System.ServiceModel.IClientChannel {
+    public interface SessionWebServiceSoapChannel : KiewitTeamBinder.Api.SessionServiceReference.SessionWebServiceSoap, System.ServiceModel.IClientChannel {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class SessionWebServiceSoapClient : System.ServiceModel.ClientBase<Agoda.Api.SessionServiceReference.SessionWebServiceSoap>, Agoda.Api.SessionServiceReference.SessionWebServiceSoap {
+    public partial class SessionWebServiceSoapClient : System.ServiceModel.ClientBase<KiewitTeamBinder.Api.SessionServiceReference.SessionWebServiceSoap>, KiewitTeamBinder.Api.SessionServiceReference.SessionWebServiceSoap {
         
         public SessionWebServiceSoapClient() {
         }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using OpenQA.Selenium;
 using SeleniumExtras.PageObjects;
 
-namespace Agoda.UI.Pages.Global
+namespace KiewitTeamBinder.UI.Pages.Global
 {
     public class NotLoggedInLanding : PageBase
     {

@@ -1,11 +1,11 @@
 ﻿using FluentAssertions;
-using Agoda.Common.Helper;
-using Agoda.UI.Pages;
+using KiewitTeamBinder.Common.Helper;
+using KiewitTeamBinder.UI.Pages;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using static Agoda.UI.ExtentReportsHelper;
+using static KiewitTeamBinder.UI.ExtentReportsHelper;
 
-namespace Agoda.UI.Tests.Users
+namespace KiewitTeamBinder.UI.Tests.Users
 {
     [TestClass]
     public class MainPageTests : UITestBase
@@ -64,12 +64,12 @@ namespace Agoda.UI.Tests.Users
                 test.Info("4. Enter new page name: Test");
                 test.Info("5. Click OK button");
 
-                mainPage.AddNewPage("TC015");
+                mainPage.AddNewPage("Test");
                 
                 //Then
                 //VP: Try to click other controls on Main page when New Page dialog is opening
 
-                validations.Add(mainPage.CheckPageDisplayed("TC015"));
+                validations.Add(mainPage.CheckPageDisplayed("Test"));
                 Console.WriteLine(string.Join(System.Environment.NewLine, validations.ToArray()));
                 validations.Should().OnlyContain(validations => validations.Value).Equals(bool.TrueString);
             }
@@ -144,16 +144,16 @@ namespace Agoda.UI.Tests.Users
                 test.Info("4. Enter Page Name field"); // Test
                 test.Info("5. Check Public checkbox");
                 test.Info("6. Click OK button");
-                mainPage.AddNewPage(pageName: "TC017", publicChbx: true);
+                mainPage.AddNewPage(pageName: "Test", publicChbx: true);
 
                 test.Info("7. Log out");
                 test.Info("8. login with another account");
                 //Then
                 //VP: Try to click other controls on Main page when New Page dialog is opening
 
-                validations.Add(mainPage.CheckPageExisted("TC017"));
+                validations.Add(mainPage.CheckPageExisted("Test"));
 
-                mainPage.selectPage("TC017").deletePage().confirmDeletePage();
+                mainPage.selectPage("Test").deletePage().confirmDeletePage();
 
                 Console.WriteLine(string.Join(System.Environment.NewLine, validations.ToArray()));
                 validations.Should().OnlyContain(validations => validations.Value).Equals(bool.TrueString);
@@ -190,9 +190,7 @@ namespace Agoda.UI.Tests.Users
 
                 // VP1: 
                 validations.Add(mainPage.CheckAlertMessage(msg1)); // "Are you sure you want to delete this page?"
-
-                mainPage.confirmDeletePage();
-
+                
                 // VP2:
                 validations.Add(mainPage.CheckAlertMessage(msg2)); // Can not delete page 'HP' since it has children page(s)
                 
@@ -201,6 +199,7 @@ namespace Agoda.UI.Tests.Users
                 // VP3:
                 validations.Add(mainPage.CheckAlertMessage(msg1)); // "Are you sure you want to delete this page?"
                 
+
                 // VP4: 
                 validations.Add(mainPage.CheckPageDeleted(parent, child));
 
@@ -217,9 +216,6 @@ namespace Agoda.UI.Tests.Users
                 
                 Console.WriteLine(string.Join(System.Environment.NewLine, validations.ToArray()));
                 validations.Should().OnlyContain(validations => validations.Value).Equals(bool.TrueString);
-
-                mainPage.selectChildPage(parent, child).deletePage().confirmDeletePage();
-                mainPage.selectPage(parent).deletePage().confirmDeletePage();
             }
             catch (Exception e)
             {
@@ -240,9 +236,9 @@ namespace Agoda.UI.Tests.Users
                 //When
                 MainPage mainPage = new Login(driver).SignOn("administrator", "", "SampleRepository");
 
-                string parent = "TC021";
-                string child1 = "021c1";
-                string child2 = "021c2";
+                string parent = "parent";
+                string child1 = "child1";
+                string child2 = "child2";
 
                 mainPage.AddNewPage(pageName: parent);
                 mainPage.AddNewPage(pageName: child1, parentPage: parent);
@@ -253,10 +249,6 @@ namespace Agoda.UI.Tests.Users
 
                 Console.WriteLine(string.Join(System.Environment.NewLine, validations.ToArray()));
                 validations.Should().OnlyContain(validations => validations.Value).Equals(bool.TrueString);
-
-                mainPage.selectChildPage(parent, child1).deletePage().confirmDeletePage();
-                mainPage.selectChildPage(parent, child2).deletePage().confirmDeletePage();
-                mainPage.selectPage(parent).deletePage().confirmDeletePage();
             }
             catch (Exception e)
             {
@@ -273,29 +265,22 @@ namespace Agoda.UI.Tests.Users
                 test = LogTest("DA_LOGIN_TC024 - Verify user is able to edit the name of the page (Parent/Sibbling) successfully");
                 //Given
                 var driver = Browser.Open(Constant.HomePage, "chrome");
-                
+
                 //When
                 MainPage mainPage = new Login(driver).SignOn("administrator", "", "SampleRepository");
 
-                string parent = "parent24";
-                string child = "child24";
+                string parent = "parent";
+                string child = "child";
                 string parentedit = "parentedit";
                 string childedit = "childedit";
 
                 mainPage.AddNewPage(pageName: parent);
                 mainPage.AddNewPage(pageName: child, parentPage: parent);
+                
 
-                mainPage.selectPage(parent).editPage(newPageName: parentedit);
-                mainPage.selectChildPage(parentedit,child).editPage(newPageName: childedit);
 
                 // VP1
-                validations.Add(mainPage.CheckChildPageExisted(childedit, parentedit));
-
-                // VP2 
-                validations.Add(mainPage.CheckPageExisted(parentedit));
-
-                mainPage.selectChildPage(parentedit, childedit).deletePage().confirmDeletePage();
-                mainPage.selectPage(parentedit).deletePage().confirmDeletePage();
+                validations.Add(mainPage.CheckChildPageExisted(child2, parent));
 
                 Console.WriteLine(string.Join(System.Environment.NewLine, validations.ToArray()));
                 validations.Should().OnlyContain(validations => validations.Value).Equals(bool.TrueString);

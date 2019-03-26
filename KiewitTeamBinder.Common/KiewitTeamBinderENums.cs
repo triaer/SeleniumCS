@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Agoda.Common
+namespace KiewitTeamBinder.Common
 {
     public class KiewitTeamBinderENums
     {

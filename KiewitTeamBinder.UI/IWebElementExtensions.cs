@@ -1,4 +1,4 @@
-﻿using Agoda.UI;
+﻿using KiewitTeamBinder.UI;
 using OpenQA.Selenium;
 using OpenQA.Selenium.IE;
 using OpenQA.Selenium.Interactions;
@@ -10,9 +10,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static Agoda.UI.Pages.Global.PageBase;
+using static KiewitTeamBinder.UI.Pages.Global.PageBase;
 
-namespace Agoda.UI
+namespace KiewitTeamBinder.UI
 {
     public static class IWebElementExtensions
     {

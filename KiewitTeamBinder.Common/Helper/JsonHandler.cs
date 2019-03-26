@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Agoda.Common.Helper
+namespace KiewitTeamBinder.Common.Helper
 {
     class JsonHandler
     {
