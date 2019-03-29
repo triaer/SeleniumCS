@@ -15,7 +15,10 @@ namespace KiewitTeamBinder.Common
             TODAY,
             YESTERDAY,
             TOMORROW,
-            N_DAYS_AGO
+            N_DAYS_AGO,
+            N_DAYS_AHEAD,
+            N_MONTHS_AGO,
+            N_MONTHS_AHEAD
         }
 
         public enum TabMenuInTransmittalDetail

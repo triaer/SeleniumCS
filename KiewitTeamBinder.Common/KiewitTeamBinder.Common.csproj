@@ -65,6 +65,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AgodaEnums.cs" />
     <Compile Include="DashBoardENums.cs" />
     <Compile Include="ExcelInterop\ExcelDriver.cs" />
     <Compile Include="ExcelInterop\ExcelHelper.cs" />
@@ -75,10 +76,15 @@
     <Compile Include="Helper\JsonHandler.cs" />
     <Compile Include="KiewitTeamBinderENums.cs" />
     <Compile Include="Helper\Utils.cs" />
+    <Compile Include="Models\Agoda\CustomerInformation.cs" />
+    <Compile Include="Models\Agoda\PlaceToStay.cs" />
+    <Compile Include="Models\Agoda\Room.cs" />
+    <Compile Include="Models\Panel.cs" />
     <Compile Include="Models\TAPage.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="TestAccountAccess.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestData\Agoda\AgodaData.cs" />
     <Compile Include="TestData\PageDataSmoke.cs" />
     <Compile Include="TestData\PanelData.cs" />
     <Compile Include="TestData\SignOnData.cs" />

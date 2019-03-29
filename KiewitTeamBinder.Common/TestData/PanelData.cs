@@ -38,6 +38,7 @@ namespace KiewitTeamBinder.Common.TestData
         public string ChartSettings = "Chart Settings";
         public string IndicatorSettings = "Indicator Settings";
         public string HeatMapSettings = "Heat Map Settings";
+        public string dataProfileValue = "Action Implementation By Status";
 
         public ChartPanel chartPanel = new ChartPanel()
         {

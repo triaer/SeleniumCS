@@ -1,12 +1,6 @@
-﻿using KiewitTeamBinder.Common.Models;
-using KiewitTeamBinder.UI.Pages.Global;
-using OpenQA.Selenium;
-using OpenQA.Selenium.Support.UI;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using OpenQA.Selenium;
+using static KiewitTeamBinder.UI.ExtentReportsHelper;
+using KiewitTeamBinder.Common.Models;
 
 namespace KiewitTeamBinder.UI.Pages
 {
@@ -73,6 +67,8 @@ namespace KiewitTeamBinder.UI.Pages
 
         public MainPage SignOn(User user)
         {
+            var node = CreateStepNode();
+            node.Info("Login with username: " + user.Username + ", password: " + user.Password + " and repository: " + user.Repository);
             if (user.Repository != null)
             {
                 CmbRepo.SelectItem(user.Repository);
@@ -80,6 +76,7 @@ namespace KiewitTeamBinder.UI.Pages
             TxtUsername.SendKeys(user.Username);
             TxtPassword.SendKeys(user.Password);
             BtnLogin.Click();
+            EndStepNode(node);
             return new MainPage(WebDriver);
         }
 

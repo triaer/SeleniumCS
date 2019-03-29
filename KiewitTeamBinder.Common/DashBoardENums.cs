@@ -100,7 +100,8 @@ namespace KiewitTeamBinder.Common
             Series,
             [Description("cbbChartType")]
             ChartType,
-            
+            [Description("cbbCategoryField")]
+            Category
         }
 
         public enum Textbox
@@ -108,7 +109,11 @@ namespace KiewitTeamBinder.Common
             [Description("txtDisplayName")]
             DisplayName,
             [Description("txtChartTitle")]
-            ChartTitle
+            ChartTitle,
+            [Description("txtCategoryXAxis")]
+            Caption1,
+            [Description("txtValueYAxis")]
+            Caption2
         }
 
         public enum Checkbox
@@ -123,6 +128,24 @@ namespace KiewitTeamBinder.Common
             Values,
             [Description("chkPercentage")]
             Percentage
+        }
+
+        public enum Button
+        {
+            [Description("Next")]
+            Next,
+            [Description("Finish")]
+            Finish,
+            [Description("Cancel")]
+            Cancel,
+            [Description("Back")]
+            Back,
+            [Description("OK")]
+            OK,
+            [Description("Create new panel")]
+            CreateNewPanel,
+            [Description("Hide")]
+            Hide
         }
 
     }

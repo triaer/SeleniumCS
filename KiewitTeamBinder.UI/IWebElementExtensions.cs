@@ -17,6 +17,7 @@ namespace KiewitTeamBinder.UI
     public static class IWebElementExtensions
     {
         internal const int immediatelyCheckTimeout = 100;
+        private static int i;
 
         public static void InputText(this IWebElement Element, string text, bool byJS = false)
         {
@@ -112,7 +113,7 @@ namespace KiewitTeamBinder.UI
                         catch
                         {
                             return Ele;
-                        }     
+                        }
                 }
 
                 catch (Exception)
@@ -240,7 +241,7 @@ namespace KiewitTeamBinder.UI
         public static void ClickOnElement(this IWebElement Element)
         {
             var normalPageLoadTime = WebDriver.Manage().Timeouts().PageLoad;
-            
+
             try
             {
                 if (Browser.Driver.GetType() == typeof(InternetExplorerDriver))
@@ -256,12 +257,12 @@ namespace KiewitTeamBinder.UI
             {
                 WebDriver.Manage().Timeouts().PageLoad = normalPageLoadTime;
             }
-                        
+
         }
         public static void ClickWithHandleTimeout(this IWebElement Element)
         {
             var normalPageLoadTime = WebDriver.Manage().Timeouts().PageLoad;
-            
+
             try
             {
                 WebDriver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(shortTimeout);
@@ -273,7 +274,7 @@ namespace KiewitTeamBinder.UI
             }
             finally
             {
-                WebDriver.Manage().Timeouts().PageLoad = normalPageLoadTime; 
+                WebDriver.Manage().Timeouts().PageLoad = normalPageLoadTime;
             }
         }
 
@@ -292,14 +293,14 @@ namespace KiewitTeamBinder.UI
         public static void HoverWithJS(this IWebElement Element)
         {
             var mouseOverScript = "if(document.createEvent){var evObj = document.createEvent('MouseEvents');"
-                + "evObj.initEvent('mouseover', true, false);" 
-                +"arguments[0].dispatchEvent(evObj); }"
+                + "evObj.initEvent('mouseover', true, false);"
+                + "arguments[0].dispatchEvent(evObj); }"
                 + "else if(document.createEventObject) { arguments[0].fireEvent('onmouseover'); }";
             ((IJavaScriptExecutor)WebDriver).ExecuteScript(mouseOverScript, Element);
         }
         public static void enableWithJS(this IWebElement Element)
         {
-            ((IJavaScriptExecutor)WebDriver).ExecuteScript("arguments[0].style.display='block';",Element);
+            ((IJavaScriptExecutor)WebDriver).ExecuteScript("arguments[0].style.display='block';", Element);
         }
 
         public static void SelectItem(this IWebElement element, string item, string selectby = "Text")
@@ -326,6 +327,46 @@ namespace KiewitTeamBinder.UI
                 return false;
             }
         }
+        public static void ActionsPressEnter(this IWebElement Element)
+        {
+            Actions actions = new Actions(WebDriver);
+            actions.MoveToElement(Element).SendKeys(Keys.Enter).Build().Perform();
+        }
+
+        public static string GetSelectedValueInCombobox(this IWebElement element)
+        {
+            SelectElement value = new SelectElement(element);
+            string selectedValue = value.SelectedOption.Text;
+            return selectedValue;
+        }
+
+        public static void ScrollAndClick(this IWebElement Element, int timeout = mediumTimeout)
+        {
+            IJavaScriptExecutor js = (IJavaScriptExecutor)WebDriver;
+            bool isDataLoaded = false;
+            int numOfWait = 1;
+            int x = 100;
+            while (isDataLoaded == false)
+            {
+                isDataLoaded = Element.IsDisplayed();
+                if (isDataLoaded)
+                {
+                    Element.Click();
+                    break;
+                }
+                else
+                {
+                    js.ExecuteScript("window.scrollBy(0," + x + ")", "");
+                    Wait(1);
+                }
+                numOfWait++;
+                x = x + x;
+                if (numOfWait > timeout)
+                    break;
+            }
+        }
+
+        
 
     }
 }

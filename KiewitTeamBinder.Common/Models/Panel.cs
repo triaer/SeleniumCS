@@ -24,8 +24,8 @@ namespace KiewitTeamBinder.Common.Models
         public string Series { get; set; }
         public bool ShowTitle { get; set; }
         public string Style { get; set; }
-        public bool Legends { get; set; }
-        public bool DataLabels { get; set; }
+        public string Legends { get; set; }
+        public string[] DataLabels { get; set; }
     }
 
     public class IndicatorPanel

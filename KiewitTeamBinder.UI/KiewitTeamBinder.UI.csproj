@@ -128,14 +128,20 @@
     <Compile Include="Browser.cs" />
     <Compile Include="ExtentReportsHelper.cs" />
     <Compile Include="IWebElementExtensions.cs" />
+    <Compile Include="Pages\Agoda\AgodaGeneral.cs" />
+    <Compile Include="Pages\Agoda\AgodaHotelDetail.cs" />
+    <Compile Include="Pages\Agoda\AgodaMain.cs" />
+    <Compile Include="Pages\Agoda\AgodaPayment.cs" />
+    <Compile Include="Pages\Agoda\AgodaSearchResults.cs" />
+    <Compile Include="Pages\DataProfilesAndPanelTable.cs" />
     <Compile Include="Pages\Global\LoggedInLanding.cs" />
     <Compile Include="Pages\Global\NonSsoSignOn.cs" />
     <Compile Include="Pages\Global\SsoSignOn.cs" />
-    <Compile Include="Pages\Global\NotLoggedInLanding.cs" />
+    <Compile Include="Pages\NotLoggedInLanding.cs" />
     <Compile Include="Pages\Global\PageBase.cs" />
     <Compile Include="Pages\Login.cs" />
     <Compile Include="Pages\Main.cs" />
-    <Compile Include="Pages\PanelPage.cs" />
+    <Compile Include="Pages\Panel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

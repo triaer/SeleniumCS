@@ -142,6 +142,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="Agoda\AgodaTest.cs" />
     <Compile Include="UITestBase.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>

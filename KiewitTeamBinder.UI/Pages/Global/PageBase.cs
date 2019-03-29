@@ -288,7 +288,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             var wait = Browser.Wait(seconds);
             return wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.InvisibilityOfElementLocated(elementDescription));
         }
-        internal static bool IsElementPresent(By elementDescription)
+        public static bool IsElementPresent(By elementDescription)
         {
             try
             {
@@ -403,7 +403,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         internal static void ScrollIntoView(IWebElement Element)
         {
             IJavaScriptExecutor jse = (IJavaScriptExecutor)WebDriver;
-            jse.ExecuteScript("arguments[0].scrollIntoView(true);", Element);
+            jse.ExecuteScript("arguments[0].scrollIntoView();", Element);
         }
 
         internal static bool RetryingFindClick(IWebElement webElement)
@@ -942,6 +942,34 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 return false;
             }
         }
+
+        public static IWebElement ScrollToElement(By elementDescription, int timeout = mediumTimeout)
+        {
+            IWebElement Ele = null;
+            bool isDataLoaded = false;
+            IJavaScriptExecutor js = (IJavaScriptExecutor)WebDriver;
+            int x = 100;
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            do
+            {
+                while (isDataLoaded == false)
+                {
+                    isDataLoaded = IsElementPresent(elementDescription);
+                    if (isDataLoaded)
+                        Ele = FindElement(elementDescription);
+                    else
+                    {
+                        js.ExecuteScript("window.scrollBy(0," + x + ")", "");
+                    }
+                    x = x + x;
+                }
+            }
+            while (stopwatch.ElapsedMilliseconds <= timeout * 1000);
+            stopwatch.Stop();
+            return Ele;
+        }
+
 
     }
     #endregion

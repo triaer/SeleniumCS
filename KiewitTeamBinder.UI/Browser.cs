@@ -1,20 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium;
-using System.Reflection;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.IE;
 using OpenQA.Selenium.Remote;
-using SimpleImpersonation;
-using System.Diagnostics;
-using System.Net;
-using System.Threading;
 using System.IO;
 using Microsoft.Win32;
+using static KiewitTeamBinder.UI.ExtentReportsHelper;
 
 namespace KiewitTeamBinder.UI
 {
@@ -64,6 +56,8 @@ namespace KiewitTeamBinder.UI
 
         public static IWebDriver Open(string url, string browserName, string fileDownloadLocation = null)
         {
+            var node = CreateStepNode();
+            node.Info("Open URL: " + url + ", with browser: " + browserName + ". The download file path is: " + fileDownloadLocation);
             DesiredCapabilities capability = new DesiredCapabilities();
             capability.SetCapability("browserName", browserName);
             //DesiredCapabilities capabilityOption = new DesiredCapabilities();
@@ -137,6 +131,8 @@ namespace KiewitTeamBinder.UI
             webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
 
             MaximizeWindow();
+
+            EndStepNode(node);
 
             return webDriver;
         }

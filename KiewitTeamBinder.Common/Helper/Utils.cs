@@ -8,6 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using static KiewitTeamBinder.Common.KiewitTeamBinderENums;
 using System.Reflection;
+using System.Text;
 
 namespace KiewitTeamBinder.Common.Helper
 {
@@ -49,6 +50,29 @@ namespace KiewitTeamBinder.Common.Helper
             Thread.Sleep(100);
             Random rnum = new Random();
             return rnum.Next(min, max);
+        }
+
+        public static string RandomCharacterString(int size, bool lowerCase = true)
+        {
+            StringBuilder builder = new StringBuilder();
+            Random random = new Random();
+            char ch;
+            for (int i = 0; i < size; i++)
+            {
+                ch = Convert.ToChar(Convert.ToInt32(Math.Floor(26 * random.NextDouble() + 65)));
+                builder.Append(ch);
+            }
+            if (lowerCase)
+                return builder.ToString().ToLower();
+            return builder.ToString();
+        }
+
+        public static string RandomNumberString(int length)
+        {
+            const string chars = "0123456789";
+            Random random = new Random();
+            return new string(Enumerable.Repeat(chars, length)
+              .Select(s => s[random.Next(s.Length)]).ToArray());
         }
 
         public static List<KeyValuePair<string, bool>> AddCollectionToCollection(List<KeyValuePair<string, bool>> collectionContain, List<KeyValuePair<string, bool>> collectionAdded)
@@ -152,7 +176,7 @@ namespace KiewitTeamBinder.Common.Helper
 
         private static extern int SHGetKnownFolderPath(ref Guid id, int flags, IntPtr token, out IntPtr path);
 
-        public static DateTime ToDateTime(this GetDateTime option, int days = 0)
+        public static DateTime ToDateTime(this GetDateTime option, int days = 0, int months = 0)
         {
             {
                 switch (option)
@@ -160,7 +184,10 @@ namespace KiewitTeamBinder.Common.Helper
                     case GetDateTime.TODAY: return DateTime.Now;
                     case GetDateTime.YESTERDAY: return DateTime.Now.AddDays(-1);
                     case GetDateTime.N_DAYS_AGO: return DateTime.Now.AddDays(-days);
+                    case GetDateTime.N_DAYS_AHEAD: return DateTime.Now.AddDays(days);
                     case GetDateTime.TOMORROW: return DateTime.Now.AddDays(1);
+                    case GetDateTime.N_MONTHS_AGO: return DateTime.Now.AddMonths(-months);
+                    case GetDateTime.N_MONTHS_AHEAD: return DateTime.Now.AddMonths(months);
                     default: return DateTime.Now;
                 }
 
@@ -209,5 +236,6 @@ namespace KiewitTeamBinder.Common.Helper
             var path = GetProjectPath(false) + "DownloadFiles";
             return path;
         }
+
     }
 }

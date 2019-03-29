@@ -39,7 +39,7 @@ namespace KiewitTeamBinder.UI.Pages
         static By _lnkSubPage(string pageText, string subPageText) => By.XPath($"//a[.='{pageText}']/following-sibling::ul//a[.='{subPageText}']");
         static By _listTextMenu = By.XPath("//div[@id='main-menu']/div[@class='container']/ul/li/a");
         static string _symbolMenu = "//li[@class='{0}']";
-        static string _symbolSubMenu = "//li[@class='{0}']//a[.='{1}']";
+        static By _symbolSubMenu(string symbolMenuClass, string subSymbolMenuText) => By.XPath($"//li[@class='{symbolMenuClass}']//a[.='{subSymbolMenuText}']");
         static readonly By _pageLockedElement = By.XPath("//div[@id='div_Lock' and @class='transbox_show']");
         static By _dlgSmallElement(string dialogText) => By.XPath($"//tbody//h2[.='{dialogText}']");
         static By _dlgBigElement(string dialogText) => By.XPath($"//div[@class='ui-dialog-container']/div[@class='ui-dialog-titlebar']/span[.='{dialogText}']");
@@ -49,9 +49,12 @@ namespace KiewitTeamBinder.UI.Pages
         static By _lnkButtonElement(string lnkButton) => By.XPath($"//a[.='{lnkButton}']");
         static By _cboElement(string cboId) => By.XPath($"//select[@id='{cboId}']");
         static By _cboElementValue(string cboId) => By.XPath($"//select[@id='{cboId}']//option");
+        static By _cboSelectedValue(string cboId) => By.XPath($"//select[@id='{cboId}']//option[@selected='selected']");
         static By _txtElement(string txtName) => By.XPath($"//input[@name='{txtName}']");
         static By _chkElement(string chkId) => By.XPath($"//input[@id='{chkId}']");
         static By _radElement(string radId) => By.XPath($"//input[@id='{radId}']");
+        static By _btnElement(string btnValue) => By.XPath($"//input[@type='button' and @value='{btnValue}']");
+        static By _btnChoosePanel(string btnText) => By.XPath($"//span[text()='{btnText}']");
 
         #endregion
 
@@ -127,11 +130,7 @@ namespace KiewitTeamBinder.UI.Pages
             return StableFindElement(By.XPath(locator));
         }
 
-        public IWebElement SubSymbolMenuElement(string symbolMenuClass, string subSymbolMenuText)
-        {
-            string locator = string.Format(_symbolSubMenu, symbolMenuClass, subSymbolMenuText);
-            return StableFindElement(By.XPath(locator));
-        }
+        public IWebElement SubSymbolMenuElement(string symbolMenuClass, string subSymbolMenuText) => StableFindElement(_symbolSubMenu(symbolMenuClass, subSymbolMenuText));
 
         public IWebElement LnkPage(string pageName)
         {
@@ -168,8 +167,12 @@ namespace KiewitTeamBinder.UI.Pages
         public IWebElement LnkButtonElement(string lnkButton) => StableFindElement(_lnkButtonElement(lnkButton));
         public IWebElement CboElement(string cboId) => StableFindElement(_cboElement(cboId));
         public IReadOnlyCollection<IWebElement> CboElementValue(string cboId) => StableFindElements(_cboElementValue(cboId));
+        public IWebElement CboSelectedValue(string cboId) => StableFindElement(_cboSelectedValue(cboId));
         public IWebElement TxtElement(string txtName) => StableFindElement(_txtElement(txtName));
         public IWebElement ChkElement(string chkId) => StableFindElement(_chkElement(chkId));
+        public IWebElement RadElement(string radId) => StableFindElement(_radElement(radId));
+        public IWebElement BtnElement(string btnValue) => StableFindElement(_btnElement(btnValue));
+        public IWebElement BtnChoosePanel(string btnText) => StableFindElement(_btnChoosePanel(btnText));
 
         #endregion
 
@@ -291,14 +294,16 @@ namespace KiewitTeamBinder.UI.Pages
             var node = CreateStepNode();
             node.Info("From Global Settings, click " + subSymbolMenuText);
             ClickSymbolMenu(MainMenu.GlobalSettings.ToDescription());
-            SubSymbolMenuElement(MainMenu.GlobalSettings.ToDescription(), subSymbolMenuText).WaitAndClick();
+            WaitForElementClickable(_symbolSubMenu(MainMenu.GlobalSettings.ToDescription(), subSymbolMenuText));
+            SubSymbolMenuElement(MainMenu.GlobalSettings.ToDescription(), subSymbolMenuText).Click();
             EndStepNode(node);
             return this;
         }
 
         public MainPage ClickSymbolMenu(string symbolMenu)
         {
-            SymbolMenuElement(symbolMenu).WaitAndClick();
+            SymbolMenuElement(symbolMenu).HoverElement();
+            SymbolMenuElement(symbolMenu).Click();
             return this;
         }
 
@@ -318,14 +323,27 @@ namespace KiewitTeamBinder.UI.Pages
             return this;
         }
 
-        /// <param "isPublic"> If value is "yes", check the checkbox. Else the value is "no", uncheck the checkbox </param>
-        /// 
+        //public MainPage ClickButton(IWebElement element)
+        //{
+        //    element.Click();
+        //    return this;
+        //}
 
-        public MainPage updatePage(TAPage page)
+        public Panel OpenAddNewPanelDialog(bool isFromChoosePanel = false, string pageName = null)
         {
-            page.IsPublic = true;
-            this.FillInfoInPageDiaglog(page);
-            return this;
+            if (isFromChoosePanel)
+            {
+                if (pageName != null)
+                    ClickPage(pageName);
+                ClickSymbolMenu(MainMenu.ChoosePanels.ToDescription());
+                BtnChoosePanel(Button.CreateNewPanel.ToDescription()).Click();
+            }
+            else
+            {
+                ClickSubMenu(MainMenu.Administer.ToDescription(), SubMenu.Panels.ToDescription());
+                ClickLinkButton(LinkButton.AddNew.ToDescription());
+            }
+            return new Panel(WebDriver);
         }
 
         public MainPage FillInfoInPageDiaglog(TAPage taPage)
@@ -479,21 +497,21 @@ namespace KiewitTeamBinder.UI.Pages
                 if (dialogText == Dialog.AddNewPage.ToDescription() || dialogText == Dialog.EditPage.ToDescription())
                 {
                     if (DlgSmallElement(dialogText).IsDisplayed())
-                        validation = SetPassValidation(node, ValidationMessage.ValiateDialogDisplayed);
+                        validation = SetPassValidation(node, ValidationMessage.ValidateDialogDisplayed);
                     else
-                        validation = SetFailValidation(node, ValidationMessage.ValiateDialogDisplayed);
+                        validation = SetFailValidation(node, ValidationMessage.ValidateDialogDisplayed);
                 }
                 else
                 {
                     if (DlgBigElement(dialogText).IsDisplayed())
-                        validation = SetPassValidation(node, ValidationMessage.ValiateDialogDisplayed);
+                        validation = SetPassValidation(node, ValidationMessage.ValidateDialogDisplayed);
                     else
-                        validation = SetFailValidation(node, ValidationMessage.ValiateDialogDisplayed);
+                        validation = SetFailValidation(node, ValidationMessage.ValidateDialogDisplayed);
                 }
             }
             catch (Exception e)
             {
-                validation = SetErrorValidation(node, ValidationMessage.ValiateDialogDisplayed, e);
+                validation = SetErrorValidation(node, ValidationMessage.ValidateDialogDisplayed, e);
             }
             EndStepNode(node);
             return validation;
@@ -691,15 +709,81 @@ namespace KiewitTeamBinder.UI.Pages
             var validation = new KeyValuePair<string, bool>();
             try
             {
-                string actualValue = CboElement(cboName).Text;
+                string actualValue = CboSelectedValue(cboName).Text;
                 if (actualValue == selectedData)
                     validation = SetPassValidation(node, ValidationMessage.ValidateSelectedDataIsDisplayOnCombobox);
                 else
-                    validation = SetFailValidation(node, ValidationMessage.ValidateSelectedDataIsDisplayOnCombobox);
+                    validation = SetFailValidation(node, ValidationMessage.ValidateSelectedDataIsDisplayOnCombobox, selectedData, actualValue);
             }
             catch (Exception e)
             {
                 validation = SetErrorValidation(node, ValidationMessage.ValidateSelectedDataIsDisplayOnCombobox, e);
+            }
+            EndStepNode(node);
+            return validation;
+        }
+
+        public KeyValuePair<string, bool> ValidateComboboxStatus(string combobox, bool isDisable = false)
+        {
+            var node = CreateStepNode();
+            var validation = new KeyValuePair<string, bool>();
+            try
+            {
+                string disableValue = CboElement(combobox).GetAttribute("disabled");
+                if (isDisable)
+                {
+                    if (disableValue == "true")
+                        validation = SetPassValidation(node, ValidationMessage.ValidateComboboxlStatusDisable);
+                    else
+                        validation = SetFailValidation(node, ValidationMessage.ValidateComboboxlStatusDisable);
+                }
+                else if (!isDisable)
+                {
+                    if (disableValue == "true")
+                        validation = SetFailValidation(node, ValidationMessage.ValidateComboboxlStatusEnable);
+                    else
+                        validation = SetPassValidation(node, ValidationMessage.ValidateComboboxlStatusEnable);
+                }
+            }
+            catch (Exception e)
+            {
+                if (isDisable)
+                    validation = SetErrorValidation(node, ValidationMessage.ValidateComboboxlStatusDisable, e);
+                else
+                    validation = SetErrorValidation(node, ValidationMessage.ValidateComboboxlStatusEnable, e);     
+            }
+            EndStepNode(node);
+            return validation;
+        }
+
+        public KeyValuePair<string, bool> ValidateTextboxStatus(string textbox, bool isDisable = false)
+        {
+            var node = CreateStepNode();
+            var validation = new KeyValuePair<string, bool>();
+            try
+            {
+                string disableValue = TxtElement(textbox).GetAttribute("disabled");
+                if (isDisable)
+                {
+                    if (disableValue == "true")
+                        validation = SetPassValidation(node, ValidationMessage.ValidateTextboxlStatusDisable);
+                    else
+                        validation = SetFailValidation(node, ValidationMessage.ValidateTextboxlStatusDisable);
+                }
+                else if (!isDisable)
+                {
+                    if (disableValue == "true")
+                        validation = SetFailValidation(node, ValidationMessage.ValidateTextboxlStatusEnable);
+                    else
+                        validation = SetPassValidation(node, ValidationMessage.ValidateTextboxlStatusEnable);
+                }
+            }
+            catch (Exception e)
+            {
+                if (isDisable)
+                    validation = SetErrorValidation(node, ValidationMessage.ValidateTextboxlStatusDisable, e);
+                else
+                    validation = SetErrorValidation(node, ValidationMessage.ValidateTextboxlStatusEnable, e);
             }
             EndStepNode(node);
             return validation;
@@ -713,7 +797,7 @@ namespace KiewitTeamBinder.UI.Pages
             public static string ValidateTextInAlertPopup = "Validate Dashboard error message appears";
             public static string ValidatePageNextToAnotherPage = "Validate page next to another page";
             public static string ValidateAllControlInPageAreLocked = "Validate all other controls within page are locked and disabled";
-            public static string ValiateDialogDisplayed = "Valiate that dialog displayed";
+            public static string ValidateDialogDisplayed = "Valiate that dialog displayed";
             public static string ValidatePageVisible = "Validate that page is visible";
             public static string ValidatePageInvisible = "Validate that page is invisible";
             public static string ValidatePageIsAccessed = "Validate that page is accessed";
@@ -723,6 +807,10 @@ namespace KiewitTeamBinder.UI.Pages
             public static string ValidateInformationInChoosePanels = "Validate that information in Choose Panels is correct.";
             public static string ValidateListInComboboxIsInAlphabeticalOrder = "Validate that the list in combobox is in alphabetical order.";
             public static string ValidateSelectedDataIsDisplayOnCombobox = "Validate the selected data is displayed correctly on combobox.";
+            public static string ValidateComboboxlStatusEnable = "Validate that the combobox is enable.";
+            public static string ValidateComboboxlStatusDisable = "Validate that the combobox is disable.";
+            public static string ValidateTextboxlStatusEnable = "Validate that the textbox is enable.";
+            public static string ValidateTextboxlStatusDisable = "Validate that the textbox is disable.";
         }
     }
 }

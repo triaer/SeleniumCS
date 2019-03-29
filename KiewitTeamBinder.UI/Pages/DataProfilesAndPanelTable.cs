@@ -41,6 +41,18 @@ namespace KiewitTeamBinder.UI.Tests.User
             return this;
         }
 
+        public DataProfilesAndPanelTable DeleteDataProfileOrPanel(string rowName)
+        {
+            var node = CreateStepNode();
+            node.Info("Delete a row in the table: " + rowName);
+            ClickTableLinkButton(rowName, LinkButton.Delete.ToDescription());
+            AcceptAlert<DataProfilesAndPanelTable>();
+            EndStepNode(node);
+            return this;
+        }
+
+       
+
         #endregion
     }
 }
