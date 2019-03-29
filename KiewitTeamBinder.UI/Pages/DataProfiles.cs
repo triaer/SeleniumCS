@@ -1,4 +1,5 @@
-﻿using KiewitTeamBinder.Common;
+﻿using KiewitTeamBinder.Common.Helper;
+using KiewitTeamBinder.Common.TestData;
 using KiewitTeamBinder.UI.Pages.Global;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
@@ -7,8 +8,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using static KiewitTeamBinder.Common.KiewitTeamBinderENums;
 using static KiewitTeamBinder.UI.ExtentReportsHelper;
+
 
 namespace KiewitTeamBinder.UI.Pages
 {
@@ -35,8 +39,14 @@ namespace KiewitTeamBinder.UI.Pages
         private By _andOrDropdown => By.XPath("//select[@name='cbbAndOrCondition']");
         private By _filterFieldDropdown => By.XPath("//select[@id='cbbField']");
         private By _filterValue => By.XPath("//select[@id='listCondition']//option");
+        private By _dataProfileMenu(string menu) => By.XPath($"//li[contains(text(),'{menu}')]");
+        private By _checkAllLable(string checkOrUncheck) => By.XPath($"//a[contains(text(),'{checkOrUncheck}')]");
+        private By _checkBoxes => By.XPath("//input[@type='checkbox']");
+        private By _allCheckboxes(string checkbox) => By.XPath($"//input[@value='{checkbox}']");
+        private By _FirstColumInTable => By.XPath("//table[@class='panel_indicator_table GridView']//tr//td[1]|//th[1]");
         public By _dataProfilesColumn => By.XPath("//th[contains(text(),'Data Profile')]");
         public By _dataProfiles => By.XPath("//div[@id='div_main_body']//tr//td[2]//a");
+        
         #endregion
 
         #region Elements
@@ -55,10 +65,14 @@ namespace KiewitTeamBinder.UI.Pages
         public IWebElement SortByLable(string addedlevel) => StableFindElement(_sortByLabel(addedlevel));
         public IWebElement AndOrDropdown {get { return StableFindElement(_andOrDropdown); } }
         public IWebElement FilterFieldDropdown { get { return StableFindElement(_filterFieldDropdown); } }
+        public IWebElement DataProfilesMenu(string menuName) => StableFindElement(_dataProfileMenu(menuName));
+        public IWebElement CheckAllLable(string checkOrUncheck) => StableFindElement(_checkAllLable(checkOrUncheck));
+        //public IWebElement AllCheckBoxes(string checkBoxName) => StableFindElement(_allCheckboxes(checkBoxName));
         //public IWebElement sortByLabel(string addedLevel) { return StableFindElement(_sortByLabel(addedLevel)); }
         //List<IWebElement> documentLines = HoldingAreaGridData.StableFindElements(_documentRowsVisiableOnGrid).ToList();
         public ReadOnlyCollection<IWebElement> DataProfilesName { get { return StableFindElements(_dataProfiles); } }
         public ReadOnlyCollection<IWebElement> FilterValue { get { return StableFindElements(_filterValue); } }
+        public ReadOnlyCollection<IWebElement> CheckBoxes { get { return StableFindElements(_checkBoxes); } }
         #endregion
 
         #region Methods
@@ -97,14 +111,13 @@ namespace KiewitTeamBinder.UI.Pages
             return this;
         }
 
-        public DataProfiles ClickNextButton(bool wait, By elementForwait)
+        public DataProfiles ClickNextButton( By elementForwait)
         {
             var node = CreateStepNode();
             NextButton.Click();
-            if (wait)
-            {
-                WaitForElement(elementForwait);
-            }
+       
+            WaitForElement(elementForwait);
+         
             EndStepNode(node);
             return this;
         }
@@ -115,14 +128,13 @@ namespace KiewitTeamBinder.UI.Pages
             return this;
         }
 
-        public DataProfiles ClickFinishBUtton(bool wait, By elementForwait)
+        public DataProfiles ClickFinishBUtton( By elementForwait)
         {
             var node = CreateStepNode();
             FinishButton.Click();
-            if (wait)
-            {
-                WaitForElement(elementForwait);
-            }
+           
+            WaitForElement(elementForwait);
+            
             EndStepNode(node);
             return this;
         }
@@ -175,6 +187,18 @@ namespace KiewitTeamBinder.UI.Pages
             return this;
         }
 
+        public DataProfiles CheckAllFields()
+        {
+            CheckAllLable(CheckAllLablesEnum.CheckAll.ToDescription()).Click();
+            return this;
+        }
+
+        public DataProfiles UnCheckAllField()
+        {
+            CheckAllLable(CheckAllLablesEnum.UnCheckAll.ToDescription()).Click();
+            return this;
+        }
+
         //public string getSelectedItemType()
         //{
         //    SelectElement selectElement = new SelectElement(TypeDropdown);
@@ -210,6 +234,35 @@ namespace KiewitTeamBinder.UI.Pages
             }
             return listFitertext;
         }
+
+        public DataProfiles AddNewDataProfile(string name, string iTemType, string relatedDataItem, string filed, string valueDescription, string [] fillterField)
+        {
+            IpuntName(name);
+            SelectItemType(iTemType);
+            SelectRelated(relatedDataItem);
+            ClickNextButton(_displayFileds);
+            CheckNameCheckBox();
+            ClickNextButton(_displayFileds);
+            SelectField(filed);
+            CLickAddLevelButton();
+            ClickNextButton(_displayFileds);
+            AddCriteria(valueDescription, fillterField);
+            ClickNextButton( _displayFileds);
+            CheckNameCheckBox();
+            ClickFinishBUtton(_dataProfilesColumn);
+            return this;
+        }
+
+        public DataProfiles NavigateToStaticPage()
+        {
+            DataProfilesMenu(DataProfileMenuTabs.Generalsettings.ToDescription()).Click();
+            Thread.Sleep(1000);
+            DataProfilesMenu(DataProfileMenuTabs.StaticField.ToDescription()).Click();
+            WaitForElement(_displayFileds);
+            return this;
+        }
+
+ 
 
         public KeyValuePair<string, bool> ValidateItemType(string itemtype)
         {
@@ -389,9 +442,82 @@ namespace KiewitTeamBinder.UI.Pages
             //}
         }
 
+        public KeyValuePair<string, bool> ValidateAllCheckBoxesAreChecked()
+        {
+            var node = CreateStepNode();
+            try
+            {
+                foreach (var item in CheckBoxes)
+                {
+                    if (!item.Selected)
+                    {
+                        return SetFailValidation(node, ValidationMessage.ValidationAllCheckBoxes);
+                    }
+                }
+                return SetPassValidation(node, ValidationMessage.ValidationAllCheckBoxes);
+            }
+            catch (Exception e)
+            {
+
+                return SetErrorValidation(node, ValidationMessage.ValidationAllCheckBoxes, e);
+            }
+            finally
+            {
+                EndStepNode(node);
+            }
+        }
+
+        public KeyValuePair<string, bool> ValidationAllCheckBoxesAreUncheked()
+        {
+            var node = CreateStepNode();
+            try
+            {
+                foreach (var item in CheckBoxes)
+                {
+                    if (item.Selected)
+                    {
+                        return SetFailValidation(node, ValidationMessage.ValidationAllCheckBoxes);
+                    }
+                }
+                return SetPassValidation(node, ValidationMessage.ValidationAllCheckBoxes);
+            }
+            catch (Exception e)
+            {
+                return SetErrorValidation(node, ValidationMessage.ValidationAllCheckBoxes, e);
+            }
+            finally
+            {
+                EndStepNode(node);
+            }
+        }
+
+        public KeyValuePair<string, bool> ValidateAllFieldsArePopulated()
+        {
+            var node = CreateStepNode();
+            SignOnTestsSmoke singOnData = new SignOnTestsSmoke();
+            try
+            {
+                for (int i = 0; i < singOnData.NameOfCheckbox.Length; i++)
+                {
+                    if (StableFindElement(_allCheckboxes(singOnData.NameOfCheckbox[i]))==null)
+                    {
+                        return SetPassValidation(node, ValidationMessage.ValidateAllFieldPopulated);
+                    }
+                }
+                return SetPassValidation(node, ValidationMessage.ValidateAllFieldPopulated);
+            }
+            catch (Exception e)
+            {
+
+                return SetErrorValidation(node, ValidationMessage.ValidateAllFieldPopulated, e);
+            }
+        }
+
         private static class ValidationMessage
         {
             public static string CheckAllSetting = "Check all settings done above are saved correctly";
+            public static string ValidationAllCheckBoxes = "Validate all Checkboxes are checked or unchecked";
+            public static string ValidateAllFieldPopulated = "Validate all field are populated";
         }
 
         #endregion

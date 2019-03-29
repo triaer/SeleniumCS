@@ -72,10 +72,16 @@
     <Compile Include="Helper\Constant.cs" />
     <Compile Include="Helper\ExcelUtils.cs" />
     <Compile Include="Helper\JsonHandler.cs" />
+    <Compile Include="i18n\Resource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resource.resx</DependentUpon>
+    </Compile>
     <Compile Include="KiewitTeamBinderENums.cs" />
     <Compile Include="Helper\Utils.cs" />
     <Compile Include="TestAccountAccess.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestData\AgodaTestsSmoke.cs" />
     <Compile Include="TestData\SignOnTestsSmoke.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -85,6 +91,15 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="i18n\Resource.ko-KR.resx" />
+    <EmbeddedResource Include="i18n\Resource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="i18n\Resource.zh-HK.resx" />
+    <EmbeddedResource Include="i18n\Resource.zh-TW.resx" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

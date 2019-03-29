@@ -67,14 +67,22 @@ namespace KiewitTeamBinder.UI.Tests.User
 
                 test = LogTest("Verify user is able to add additional sibbling pages to the parent page successfully");
                 Login loginPage = new Login(driver);
-
+                string PageName = singonData.PageName;
                 MainPage mainPage = loginPage.SignOn(testdemoAccount);
                 mainPage.SelectSubMenu(SubMenuItems.AddPage.ToDescription())
-                    .InputPageName(singonData.PageName)
-                    .SelectParentPage(singonData.ParentPage)
+                    .InputPageName(PageName)
+                    .SelectParentPage(singonData.NonParentPage)
                     .SelectNumberCoumn(singonData.NumberCoumn)
-                    .SelectDisplayAfter(singonData.DisplayAfter)
-                    .ClickOKButton();
+                    .ClickOKButton()
+                    .SelectSubMenu(SubMenuItems.AddPage.ToDescription())
+                    .InputPageName(singonData.PageName)
+                    .SelectParentPage(PageName)
+                    .SelectNumberCoumn(singonData.NumberCoumn)
+                    .ClickOKButton()
+                    .ClickOnParentPage(PageName)
+                    .SelectSubMenu(SubMenuItems.Delete.ToDescription(), false).LogValidation<MainPage>(ref validations, mainPage.ValidateFristAlert())
+                    .ClickOKButtonOnAlert().LogValidation<MainPage>(ref validations, mainPage.ValidateSecondAlert(PageName))
+                    .ClickOKButtonOnAlert();
 
 
             }
@@ -132,26 +140,27 @@ namespace KiewitTeamBinder.UI.Tests.User
 
                 //when
                 test = LogTest("Verify all settings are recorded and updated correctly when user click on 'Finish' buttons");
-                dataProfile.IpuntName(signOnData.InputName)
-                           .SelectItemType(signOnData.ItemType)
-                           .SelectRelated(signOnData.RelatedDataItem)
-                           .ClickNextButton(true, dataProfile._displayFileds)
-                           .CheckNameCheckBox()
-                           .ClickNextButton(true, dataProfile._displayFileds)
-                           .SelectField(signOnData.Field)
-                           .CLickAddLevelButton()
-                           .ClickNextButton(true, dataProfile._displayFileds)
-                           .AddCriteria(signOnData.ValueDescription, signOnData.FitllterField)
-                           .ClickNextButton(true, dataProfile._displayFileds)
-                           .CheckNameCheckBox()
-                           .ClickFinishBUtton(true, dataProfile._dataProfilesColumn)
+                //dataProfile.IpuntName(signOnData.InputName)
+                //           .SelectItemType(signOnData.ItemType)
+                //           .SelectRelated(signOnData.RelatedDataItem)
+                //           .ClickNextButton(true, dataProfile._displayFileds)
+                //           .CheckNameCheckBox()
+                //           .ClickNextButton(true, dataProfile._displayFileds)
+                //           .SelectField(signOnData.Field)
+                //           .CLickAddLevelButton()
+                //           .ClickNextButton(true, dataProfile._displayFileds)
+                //           .AddCriteria(signOnData.ValueDescription, signOnData.FitllterField)
+                //           .ClickNextButton(true, dataProfile._displayFileds)
+                //           .CheckNameCheckBox()
+                //           .ClickFinishBUtton(true, dataProfile._dataProfilesColumn)
+                dataProfile.AddNewDataProfile(signOnData.InputName, signOnData.ItemType, signOnData.RelatedDataItem, signOnData.Field, signOnData.ValueDescription,signOnData.FitllterField)
                            .SelectCreatedDataProfiles(signOnData.InputName).LogValidation<DataProfiles>(ref validations, dataProfile.ValidateDataProfilename(signOnData.InputName))
                                                                            .LogValidation<DataProfiles>(ref validations, dataProfile.ValidateItemType(signOnData.ItemType))
-                                                                           .LogValidation<DataProfiles>(ref validations, dataProfile.ValidateRelatedData(signOnData.RelatedDataItem));
-                dataProfile.ClickNextButton(true, dataProfile._displayFileds).LogValidation<DataProfiles>(ref validations, dataProfile.ValidateNameisCheked());
-                dataProfile.ClickNextButton(true, dataProfile._displayFileds).LogValidation<DataProfiles>(ref validations, dataProfile.ValidateAddedLevelIsExit(signOnData.Field));
-                dataProfile.ClickNextButton(true, dataProfile._displayFileds).LogValidation<DataProfiles>(ref validations, dataProfile.ValidateFilterValue(signOnData.FitllterField, signOnData.ValueDescription, signOnData.AndFillter));
-                dataProfile.ClickNextButton(true, dataProfile._displayFileds).LogValidation<DataProfiles>(ref validations, dataProfile.ValidateNameisCheked());
+                                                                           .LogValidation<DataProfiles>(ref validations, dataProfile.ValidateRelatedData(signOnData.RelatedDataItem))
+                           .ClickNextButton(dataProfile._displayFileds).LogValidation<DataProfiles>(ref validations, dataProfile.ValidateNameisCheked())
+                           .ClickNextButton(dataProfile._displayFileds).LogValidation<DataProfiles>(ref validations, dataProfile.ValidateAddedLevelIsExit(signOnData.Field))
+                           .ClickNextButton(dataProfile._displayFileds).LogValidation<DataProfiles>(ref validations, dataProfile.ValidateFilterValue(signOnData.FitllterField, signOnData.ValueDescription, signOnData.AndFillter))
+                           .ClickNextButton(dataProfile._displayFileds).LogValidation<DataProfiles>(ref validations, dataProfile.ValidateNameisCheked());
 
                 //then
                 Console.WriteLine(string.Join(System.Environment.NewLine, validations.ToArray()));
@@ -166,6 +175,68 @@ namespace KiewitTeamBinder.UI.Tests.User
             }
         }
 
+        [TestMethod]
+        public void DA_DP_TC99()
+        {
+            try
+            {
+                //given
+                var driver = Browser.Open(Constant.HomePage, "chrome");
+                var testdemoAccount = GetTestAccount("AdminAccount1", environment, "NonSSO");
+                SignOnTestsSmoke signOnData = new SignOnTestsSmoke();
+                MainPage mainPage = new Login(driver).SignOn(testdemoAccount);
+                DataProfiles dataProfile = mainPage.NavigateToDataProfilesPage();
+
+                //when
+                dataProfile.IpuntName(signOnData.InputName)
+                           .SelectItemType(signOnData.ItemType)
+                           .NavigateToStaticPage()
+                           //.CheckAllFields()
+                           //.UnCheckAllField()
+                           .CheckAllFields().LogValidation<DataProfiles>(ref validations, dataProfile.ValidateAllCheckBoxesAreChecked())
+                           .UnCheckAllField().LogValidation<DataProfiles>(ref validations, dataProfile.ValidationAllCheckBoxesAreUncheked());
+                //then
+                Console.WriteLine(string.Join(System.Environment.NewLine, validations.ToArray()));
+                validations.Should().OnlyContain(validations => validations.Value).Equals(bool.TrueString);
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        [TestMethod]
+        public void DA_DP_TC98()
+        {
+            try
+            {
+                //given
+                var driver = Browser.Open(Constant.HomePage, "chrome");
+                var testdemoAccount = GetTestAccount("AdminAccount1", environment, "NonSSO");
+                SignOnTestsSmoke singOnData = new SignOnTestsSmoke();
+                MainPage mainpage = new Login(driver).SignOn(testdemoAccount);
+
+                //when
+                DataProfiles dataProfile = mainpage.NavigateToDataProfilesPage();
+                dataProfile.IpuntName(singOnData.InputName)
+                           .SelectItemType(singOnData.ItemType)
+                           .NavigateToStaticPage().LogValidation<DataProfiles>(ref validations, dataProfile.ValidateAllFieldsArePopulated());
+
+                //then
+                Console.WriteLine((string.Join(System.Environment.NewLine, validations.ToArray())));
+                validations.Should().OnlyContain(validations => validations.Value).Equals(bool.TrueString);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+        }
+
+       
         //[TestMethod]
         //public void General_NonSSOValidUserSignon_UI()
         //{

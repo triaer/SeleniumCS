@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using static KiewitTeamBinder.Common.KiewitTeamBinderENums;
 using static KiewitTeamBinder.UI.ExtentReportsHelper;
@@ -14,6 +15,7 @@ namespace KiewitTeamBinder.UI.Pages
     public class MainPage : LoggedInLanding
     {
         private IWebDriver _driverMainPage;
+        private IAlert alert;
 
         #region Locators
 
@@ -38,16 +40,18 @@ namespace KiewitTeamBinder.UI.Pages
         static string _cbbName = "//td[contains(text(), '{0}')]/following-sibling::*/descendant::select";
         static string _lnkPage = "//a[.='{0}']";
         private static By _subGlobalSetting(string subtab) => By.XPath($"//a[contains(text(),'{subtab}')]");
-        private static By _globalSettingIcon => By.XPath("//li[@class='mn-setting']");
+        private static By _globalSettingIcon => By.XPath("//li[@class='mn-setting']//a[@href='javascript:void(0);']");
+        private static By _header => By.XPath("//div[@id='header']");
         private static By _pageName => By.XPath("//input[@id='name']");
         private static By _popupForm => By.XPath("//div[@class='buildin_popup']");
         private static By _parentpageDropdown => By.XPath("//select[@name='parent']");
         private static By _parentPageItems => By.XPath("//select[@id='parent']//option");
         private static By _numberColumnDropdown => By.XPath("//select[@id='columnnumber']");
         private static By _displayAfter => By.XPath("//select[@id='afterpage']");
-        private static By _okButton => By.XPath("//td[@align='right']//input[@value='OK']");
+        private static By _okButton => By.XPath("//input[@value='OK'][@id='OK']");
         private static By _administerMenu => By.XPath("//a[contains(text(),'Administer')]");
         private static By _administerItems(string item) => By.XPath($"//a[contains(text(),'{item}')]");
+        private static By _parentPage(string parentPageName) => By.XPath($"//a[@class='active haschild'][contains(text(),'{parentPageName}')]");
         
         #endregion
 
@@ -119,33 +123,38 @@ namespace KiewitTeamBinder.UI.Pages
 
         public IWebElement SubGlobalSettingMenu(string subTab) => StableFindElement(_subGlobalSetting(subTab));
 
-        public IWebElement GlobalSettingIcon { get { return StableFindElement(_globalSettingIcon); } }
+        //public IWebElement GlobalSettingIcon { get { return StableFindElement(_globalSettingIcon); } }
         public IWebElement PageName { get{ return StableFindElement(_pageName); } }
         public IWebElement ParentPageDropdown { get { return StableFindElement(_parentpageDropdown); } }
         public IWebElement NumberColumnDropdowm { get { return StableFindElement(_numberColumnDropdown); } }
         public IWebElement DisplayAfterDropdown { get { return StableFindElement(_displayAfter); } }
-        public IWebElement ButtonOk { get { return StableFindElement(_okButton); } }
+        public IWebElement ButtonOKla { get { return StableFindElement(_okButton); } }
         public IWebElement AdministerMenu { get { return StableFindElement(_administerMenu); } }
         public IWebElement AdministerItem(string item) => StableFindElement(_administerItems(item));
+        public IWebElement ParentPage(string parentPageName) => StableFindElement(_parentPage(parentPageName));
         #endregion
 
         #region Methods
 
-        public MainPage(IWebDriver driver)
-            : base(driver)
+        public MainPage(IWebDriver WebDriver)
+            : base(WebDriver)
         {
-            this._driverMainPage = driver;
+            this._driverMainPage = WebDriver;
         }
 
-        public MainPage SelectSubMenu(string subTab)
+        public MainPage SelectSubMenu(string subTab, bool wait = true)
         {
             //string currentWindow;
             HoverElement(_globalSettingIcon);
+            //GlobalSettingIcon.Click();
             SubGlobalSettingMenu(subTab).Click();
             //PageName.InputText("sdasdsa");
-            WaitForElement(_popupForm);
+            if (wait)
+            {
+                WaitForElement(_popupForm);
+            }
             //SwitchToNewPopUpWindow(SubGlobalSettingMenu(subTab), out currentWindow, false);
-
+            Thread.Sleep(1000);
             return this;
         }
 
@@ -162,6 +171,7 @@ namespace KiewitTeamBinder.UI.Pages
         public MainPage SelectParentPage(string parentPageName)
         {
             SelectDropdownByText(ParentPageDropdown, parentPageName);
+            Thread.Sleep(1000);
             return this;
         }
 
@@ -179,7 +189,24 @@ namespace KiewitTeamBinder.UI.Pages
 
         public MainPage ClickOKButton()
         {
-            ButtonOk.Click();
+            ButtonOKla.Click();
+            WaitForElement(_header);
+            Thread.Sleep(1000);
+            return this;
+        }
+
+        public MainPage ClickOnParentPage(string pageName)
+        {
+            ParentPage(pageName).Click();
+            return this;
+        }
+
+        public MainPage ClickOKButtonOnAlert()
+        {
+            alert = WebDriver.SwitchTo().Alert();
+            //string textAlert = alert.Text;
+            alert.Accept();
+            Thread.Sleep(1000);
             return this;
         }
 
@@ -190,7 +217,6 @@ namespace KiewitTeamBinder.UI.Pages
             DataProfiles dataProfile = new DataProfiles(WebDriver);
             WaitForElement(dataProfile._dataProfilesColumn);
             return dataProfile;
-
         }
 
         public KeyValuePair<string, bool> ValidateDashboardMainPageDisplayed()
@@ -232,6 +258,63 @@ namespace KiewitTeamBinder.UI.Pages
             }
             EndStepNode(node);
             return validation;
+        }
+
+        public KeyValuePair<string, bool> ValidateFristAlert()
+        {
+            alert = WebDriver.SwitchTo().Alert();
+            string actAlert = alert.Text;
+            string exptAlert = "Are you sure you want to remove this page?";
+            var node = CreateStepNode();
+            try
+            {
+                if (actAlert == exptAlert)
+                {
+                    return SetPassValidation(node, ValidationMessage.ValidateTest);
+                }
+                else
+                {
+                    return SetFailValidation(node, ValidationMessage.ValidateTest);
+                }
+            }
+            catch (Exception e)
+            {
+
+                return SetErrorValidation(node, ValidationMessage.ValidateTest, e);
+            }
+            finally
+            {
+                EndStepNode(node);
+                Thread.Sleep(1000);
+            }
+        }
+
+        public KeyValuePair<string, bool> ValidateSecondAlert(string namePage)
+        {
+            alert = WebDriver.SwitchTo().Alert();
+            string actAlert = alert.Text;
+            string exptAlert = $"Cannot delete page '{namePage}' since it has child page(s).\r\n";
+            var node = CreateStepNode();
+            try
+            {
+                if (actAlert == exptAlert)
+                {
+                    return SetPassValidation(node, ValidationMessage.ValidateTest);
+                }
+                else
+                {
+                    return SetFailValidation(node, ValidationMessage.ValidateTest);
+                }
+            }
+            catch (Exception e)
+            {
+
+                return SetErrorValidation(node, ValidationMessage.ValidateTest, e);
+            }
+            finally
+            {
+                EndStepNode(node);
+            }
         }
 
         #endregion

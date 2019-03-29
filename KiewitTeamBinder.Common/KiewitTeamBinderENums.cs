@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace KiewitTeamBinder.Common
 {
     public class KiewitTeamBinderENums
@@ -531,7 +532,11 @@ namespace KiewitTeamBinder.Common
             [Description("Create Profile")]
             CreateProfile,
             [Description("Create Panel")]
-            CreatePanel
+            CreatePanel,
+            [Description("Edit")]
+            Edit,
+            [Description("Delete")]
+            Delete
         }
 
         public enum AdministerMenuENum
@@ -541,6 +546,23 @@ namespace KiewitTeamBinder.Common
             [Description("Panels")]
             Panels
             
+        }
+        public enum DataProfileMenuTabs
+        {
+            [Description("General Settings")]
+            Generalsettings,
+            [Description("Statistic Fields")]
+            StaticField
+
+        }
+
+        public enum CheckAllLablesEnum
+        {
+            [Description("Check All")]
+            CheckAll,
+            [Description("Uncheck All")]
+            UnCheckAll
+
         }
 
 
