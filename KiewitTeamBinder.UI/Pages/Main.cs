@@ -234,8 +234,6 @@ namespace KiewitTeamBinder.UI.Pages
             }
             BtnPageOK.Click();
             return this;
-
-            return this;
         }
 
         public MainPage confirmDeletePage()

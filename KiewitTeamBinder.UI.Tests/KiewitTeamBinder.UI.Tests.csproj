@@ -142,11 +142,11 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="User\MainPageTests.cs" />
+    <Compile Include="TADashboard\MainPageTests.cs" />
     <Compile Include="UITestBase.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
-    <Compile Include="User\SignOnTests.cs">
+    <Compile Include="TADashboard\SignOnTests.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
