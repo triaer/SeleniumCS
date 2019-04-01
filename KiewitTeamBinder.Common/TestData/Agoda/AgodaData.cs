@@ -26,6 +26,7 @@ namespace KiewitTeamBinder.Common.TestData.Agoda
         {
             IsFreeBreakfast = true,
             RoomType = "Standard Rom",
+            RoomPosition = 2
         };
 
         public CustomerInformation customerInfoFullname = new CustomerInformation

@@ -31,7 +31,7 @@ namespace KiewitTeamBinder.UI.Pages.Agoda
         static By _txtGuestFirstName => By.XPath("(//input[@id='firstName'])[2]");
         static By _txtLastName => By.XPath("(//input[@id='lastName'])[1]");
         static By _txtGuestLastName => By.XPath("(//input[@id='lastName'])[2]");
-        static By _txtPaymentElement(string txtId) => By.XPath($"//input[@id='fullName']");
+        static By _txtPaymentElement(string txtId) => By.XPath($"//input[@id='{txtId}']");
         static By _cboPaymentElement(string cboId) => By.XPath($"//select[@id='{cboId}']");
         static By _chkIsBookForSomeoneElse => By.XPath("//input[@id='isMakingThisBookingForSomeoneElse']");
         static By _chkIsArrangeTransportation => By.XPath("//input[@data-selenium='transportation-checkbox']");
@@ -84,28 +84,38 @@ namespace KiewitTeamBinder.UI.Pages.Agoda
             }
             TxtPaymentElement(Payment.Email.ToDescription()).InputText(customerInfo.Email);
             TxtPaymentElement(Payment.RetypeEmail.ToDescription()).InputText(customerInfo.RetypeEmail);
-            CboPaymentElement(Payment.ResidenceCountry.ToDescription()).SelectItem(customerInfo.Country);
+            if (customerInfo.Country != null)
+                CboPaymentElement(Payment.ResidenceCountry.ToDescription()).SelectItem(customerInfo.Country);
             if (customerInfo.MobileNumber != null)
                 TxtPaymentElement(Payment.MobileNumber.ToDescription()).InputText(customerInfo.MobileNumber);
-            if (customerInfo.IsBookForSomeoneElse)
+            if (customerInfo.IsBookForSomeoneElse != null)
             {
-                ChkIsBookForSomeoneElse.Check();
-                if (customerInfo.GuestFullName != null)
-                    TxtGuestFullName.InputText(customerInfo.GuestFullName);
-                else
+                if (customerInfo.IsBookForSomeoneElse == true)
                 {
-                    TxtGuestFirstName.InputText(customerInfo.GuestFirstName);
-                    TxtGuestLastName.InputText(customerInfo.GuestLastName);
+                    ChkIsBookForSomeoneElse.Check();
+                    if (customerInfo.GuestFullName != null)
+                        TxtGuestFullName.InputText(customerInfo.GuestFullName);
+                    else
+                    {
+                        TxtGuestFirstName.InputText(customerInfo.GuestFirstName);
+                        TxtGuestLastName.InputText(customerInfo.GuestLastName);
+                    }
                 }
             }
-            if (customerInfo.NonSmokingRoom)
-                RadPaymentElement(Payment.NonSmokingRoom.ToDescription()).Check();
-            else
-                RadPaymentElement(Payment.SmokingRoom.ToDescription()).Check();
-            if (customerInfo.IsLargeBedOrTwinBeds)
-                RadPaymentElement(Payment.LargeBed.ToDescription()).Check();
-            else
-                RadPaymentElement(Payment.TwinBeds.ToDescription()).Check();
+            if (customerInfo.NonSmokingRoom != null)
+            {
+                if (customerInfo.NonSmokingRoom == true)
+                    RadPaymentElement(Payment.NonSmokingRoom.ToDescription()).Check();
+                else if (customerInfo.NonSmokingRoom == false)
+                    RadPaymentElement(Payment.SmokingRoom.ToDescription()).Check();
+            }
+            if (customerInfo.IsLargeBedOrTwinBeds != null)
+            {
+                if (customerInfo.IsLargeBedOrTwinBeds == true)
+                    RadPaymentElement(Payment.LargeBed.ToDescription()).Check();
+                else if (customerInfo.IsLargeBedOrTwinBeds == false)
+                    RadPaymentElement(Payment.TwinBeds.ToDescription()).Check();
+            }
             if (customerInfo.ArrivalTime != null)
                 CboPaymentElement(Payment.ArrivalTime.ToDescription()).SelectItem(customerInfo.ArrivalTime);
             BtnNextPage.Click();
@@ -119,9 +129,8 @@ namespace KiewitTeamBinder.UI.Pages.Agoda
             var validations = new List<KeyValuePair<string, bool>>();
             try
             {
-                AgodaHotelDetail agodaHotelDetail = new AgodaHotelDetail(WebDriver);
-                string currency = agodaHotelDetail.GetCurrency(room.RoomType, room.RoomPosition);
-                string oneRoomPriceValue = agodaHotelDetail.GetOneRoomPrice(room.RoomType, room.RoomPosition);
+                string currency = Constant.currency;
+                string oneRoomPriceValue = Constant.roomPrice;
                 int oneRoomPrice = Int32.Parse(oneRoomPriceValue.Replace(",", ""));
                 var roomPrice = (Math.Round(oneRoomPrice * placeToStay.Room * 1.05 * 1.1)).ToString();
                 string roomPriceInPaymentPage = LblRoomType.Text;
@@ -173,8 +182,7 @@ namespace KiewitTeamBinder.UI.Pages.Agoda
             {
                 string actualCheckinCheckout = LblCheckinCheckoutDate.Text;
                 string actualDuration = LblDuration.Text;
-                AgodaMain agodaMain = new AgodaMain(WebDriver);
-                string expectedCheckinCheckout = agodaMain.GetCheckinCheckoutDate();
+                string expectedCheckinCheckout = Constant.checkinCheckoutDate;
                 bool isCheckinCheckoutCorrect = actualCheckinCheckout.Equals(expectedCheckinCheckout);
                 bool isDurationCorrect = actualDuration.Contains(placeToStay.Duration.ToString());
                 if (isCheckinCheckoutCorrect)
@@ -266,6 +274,7 @@ namespace KiewitTeamBinder.UI.Pages.Agoda
                 string actualEmail = TxtPaymentElement(Payment.Email.ToDescription()).Text;
                 string actualRetypeEmail = TxtPaymentElement(Payment.RetypeEmail.ToDescription()).Text;
                 string actualCountry = CboPaymentElement(Payment.ResidenceCountry.ToDescription()).GetSelectedValueInCombobox();
+                
                 if (actualEmail.Equals(customerInfo.Email))
                     validations.Add(SetPassValidation(node, ValidationMessage.ValidateCustomerInfoEmail));
                 else
@@ -274,10 +283,13 @@ namespace KiewitTeamBinder.UI.Pages.Agoda
                     validations.Add(SetPassValidation(node, ValidationMessage.ValidateCustomerInfoRetypeEmail));
                 else
                     validations.Add(SetFailValidation(node, ValidationMessage.ValidateCustomerInfoRetypeEmail, customerInfo.RetypeEmail, actualRetypeEmail));
-                if (actualCountry.Equals(customerInfo.Country))
-                    validations.Add(SetPassValidation(node, ValidationMessage.ValidateCustomerInfoCountry));
-                else
-                    validations.Add(SetFailValidation(node, ValidationMessage.ValidateCustomerInfoCountry, customerInfo.Country, actualCountry));
+                if (customerInfo.Country != null)
+                {
+                    if (actualCountry.Equals(customerInfo.Country))
+                        validations.Add(SetPassValidation(node, ValidationMessage.ValidateCustomerInfoCountry));
+                    else
+                        validations.Add(SetFailValidation(node, ValidationMessage.ValidateCustomerInfoCountry, customerInfo.Country, actualCountry));
+                }
             }
             catch (Exception e)
             {
@@ -291,6 +303,7 @@ namespace KiewitTeamBinder.UI.Pages.Agoda
         {
             var node = CreateStepNode();
             node.Info("Click Button Back ToBooking Details.");
+            IWebElement element = ScrollToElement(_btnBackToBookingDetails);
             BtnBackToBookingDetails.Click();
             EndStepNode(node);
             return this;

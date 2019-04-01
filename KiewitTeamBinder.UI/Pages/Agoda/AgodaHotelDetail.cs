@@ -25,7 +25,7 @@ namespace KiewitTeamBinder.UI.Pages.Agoda
 
         #region Locators
         static By _chkRoomFilter(string filterType) => By.XPath($"//div[contains(@data-element-name,'{filterType}')]");
-        static By _btnBook(string roomName, int roomPosition) => By.XPath($"(//span[contains(text(),'{roomName}') and @data-selenium='masterroom-title-name']/ancestor::div[@class='MasterRoom-header']/following-sibling::div[@class='MasterRoom - table']//button)[{roomPosition}]");
+        static By _btnBook(string roomName, int roomPosition) => By.XPath($"(//span[contains(text(),'{roomName}') and @data-selenium='masterroom-title-name']/ancestor::div[@class='MasterRoom-header']/following-sibling::div[@class='MasterRoom-table']//button)[{roomPosition}]");
         static By _lblCurrency(string roomName, int roomPosition) => By.XPath($"(//span[contains(text(),'{roomName}') and @data-selenium='masterroom-title-name']/ancestor::div[@class='MasterRoom-header']/following-sibling::div[@class='MasterRoom-table']//span[@class='pd-currency'])[{roomPosition}]");
         static By _lblPrice(string roomName, int roomPosition) => By.XPath($"(//span[contains(text(),'{roomName}') and @data-selenium='masterroom-title-name']/ancestor::div[@class='MasterRoom-header']/following-sibling::div[@class='MasterRoom-table']//strong[@data-ppapi='room-price'])[{roomPosition}]");
         #endregion
@@ -75,8 +75,9 @@ namespace KiewitTeamBinder.UI.Pages.Agoda
         {
             var node = CreateStepNode();
             node.Info("Click Book Now button of room: " + roomType);
-            ScrollToElement(_btnBook(roomType, roomPosition));
-            BtnBook(roomType, roomPosition).Click();
+            IWebElement element = ScrollToElement(_btnBook(roomType, roomPosition));
+            WaitForElementClickable(_btnBook(roomType, roomPosition));
+            element.Click();
             EndStepNode(node);
             return new AgodaPayment(WebDriver);
         }
@@ -86,9 +87,9 @@ namespace KiewitTeamBinder.UI.Pages.Agoda
             var node = CreateStepNode();
             node.Info("Select room");
             //FilterRoom(room.IsFreeBreakfast, room.IsFreeCancellation, room.IsNonSmoking, room.IsTwinBed);
-            ClickBookNowButton(room.RoomType, room.RoomPosition);
             GetCurrency(room.RoomType, room.RoomPosition);
             GetOneRoomPrice(room.RoomType, room.RoomPosition);
+            ClickBookNowButton(room.RoomType, room.RoomPosition);
             EndStepNode(node);
             return new AgodaPayment(WebDriver);
         }
@@ -99,7 +100,7 @@ namespace KiewitTeamBinder.UI.Pages.Agoda
             string currency = LblCurrency(roomType, roomPosition).Text;
             node.Info("Get the currency: " + currency);
             EndStepNode(node);
-            return currency;
+            return Constant.currency = currency;
         }
 
         public string GetOneRoomPrice(string roomType, int roomPosition = 1)
@@ -108,7 +109,7 @@ namespace KiewitTeamBinder.UI.Pages.Agoda
             string price = LblPrice(roomType, roomPosition).Text;
             node.Info("Get the currency: " + price);
             EndStepNode(node);
-            return price;
+            return Constant.roomPrice = price;
         }
 
         #endregion

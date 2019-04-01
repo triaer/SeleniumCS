@@ -53,6 +53,5 @@ namespace KiewitTeamBinder.UI.Tests.Agoda
             Utils.GetRandomValue("abc");
             Utils.GetRandomNumber(3, 9);
         }
-
     }
 }

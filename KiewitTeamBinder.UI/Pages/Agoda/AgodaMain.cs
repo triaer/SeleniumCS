@@ -91,13 +91,13 @@ namespace KiewitTeamBinder.UI.Pages.Agoda
             List<IWebElement> dates = DtmAllDates.ToList();
             if (isContainsToday)
             {
-                index = dates.FindIndex(a => a.Equals(DtmToday));
+                index = dates.FindIndex(a => a.Equals(DtmToday)) + 1;
             }
             else
             {
                 DtmPrevButton.Click();
                 dates = DtmAllDates.ToList();
-                index = dates.FindIndex(a => a.Equals(DtmToday));
+                index = dates.FindIndex(a => a.Equals(DtmToday)) + 1;
             }
             int checkin;
             int checkout;
@@ -115,7 +115,7 @@ namespace KiewitTeamBinder.UI.Pages.Agoda
                     string todayDate = DtmToday.Text;
                     DtmDateNextMonth(todayDate).Click();
                     dates = DtmAllDates.ToList();
-                    index = dates.FindIndex(a => a.Equals(DtmDateNextMonth(todayDate)));
+                    index = dates.FindIndex(a => a.Equals(DtmDateNextMonth(todayDate))) + 1;
                     checkout = index + duration;
                     if (checkout > dates.Count - 1)
                     {
@@ -196,7 +196,7 @@ namespace KiewitTeamBinder.UI.Pages.Agoda
             string checkinCheckoutDate = checkinDate + " - " + checkoutDate;
             node.Info("Checkin date is: " + checkinDate + ", checkout date is: " + checkoutDate);
             EndStepNode(node);
-            return checkinCheckoutDate;
+            return Constant.checkinCheckoutDate = checkinCheckoutDate;
         }
 
         public string GetOccupancyDetails()
@@ -207,7 +207,7 @@ namespace KiewitTeamBinder.UI.Pages.Agoda
             string occupancy = room + ", " + adult;
             node.Info("Occupancy Details: " + adult + " adults, " + room + " rooms.");
             EndStepNode(node);
-            return occupancy;
+            return Constant.occupancy = occupancy;
         }
 
         #endregion
