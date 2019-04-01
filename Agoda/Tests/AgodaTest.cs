@@ -28,29 +28,20 @@ namespace Agoda.Tests
                     - Duration as 3 nights
                     - 4 guests, 2 rooms
                 */
+                test.Info("4. Select 'Arcadia Phu Quoc Resort'");
+                test.Info("5. Select a specific room type");
+                test.Info("6. Enter required data for Information");
 
 
                 AgodaMain agodaPage = new AgodaMain(driver);
-
-                //agodaPage.initSearch();
-
-                //Console.WriteLine(agodaPage.getstring());
-
-                //
+                //agodaPage.initSearch()
+                //    .selectHotel("Arcadia Phu Quoc Resort")
+                //    .selectRoom()
+                //    .fillInformation()
+                //    .goBack();
 
                 agodaPage.test();
-
-
-                test.Info("4. Select 'Arcadia Phu Quoc Resort'");
-
-                test.Info("5. Select a specific room type");
-
-                test.Info("6. Enter required data for Information");
-
-                
-
-                
-                
+                                
                 //Then, VP: 
                 test = LogTest("Verify all filled information is correct");
                 //validations.Add(AgodaMain.ValidateFilledInformation());

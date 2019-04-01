@@ -12,7 +12,18 @@ namespace Agoda.DataObject
         public string emailAddress = "vinh.tuan.nguyen@logigear.com";
         public string mobileNumber = "0831234567";
         public string countryResidence = "Vietnam";
-         
+
+        public bool bookForSomeoneElse = true;
+        public string guestName = "Vladimir Putin";
+        public string guestResidence = "Russia";
+
+        public bool smokingRoom = false;
+        public bool largeBed = true;
+
+        public User()
+        {
+            // init user.
+        }
 
 
     }

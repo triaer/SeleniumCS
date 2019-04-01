@@ -8,6 +8,7 @@ using OpenQA.Selenium;
 using static Agoda.ExtentReportsHelper;
 using System.Globalization;
 using Agoda.DataObject;
+using System.Collections;
 
 namespace Agoda.Pages
 {
@@ -37,8 +38,26 @@ namespace Agoda.Pages
         static readonly By _button_plusAdult = By.XPath("//div[@data-selenium='occupancyAdults']/span[text()='+']");
         static readonly By _label_OccupiedAdult = By.XPath("//div[@data-selenium='occupancyAdults']/span[@class='PlusMinusRow__number']");
 
-        string _hotel_tagname = "//li[@data-selenium='hotel-item']//*[@class='hotel-name' and text()='{0}']";
+        static readonly By _textSearchInput = By.XPath("//div[@class='TextSearchContainer']//input");
 
+        string _hotel_tagname = "//li[@data-selenium='hotel-item']//*[@class='hotel-name' and text()='{0}']";
+        static readonly By _button_BookRoom = By.XPath("//*[contains(text(), 'Standard')]/ancestor::div//div[@id='ChildRoom-FF37038627E495CAFC9933ECE5E24E951']//button[@data-selenium='ChildRoomsList - bookButtonInput']");
+
+        static readonly By _textFullName = By.XPath("//div[@class='customer-info']//input[@id='fullName']");
+        static readonly By _textEmail = By.XPath("//div[@class='customer-info']//input[@id='email']");
+        static readonly By _textRetypeEmail = By.XPath("//div[@class='customer-info']//input[@id='reEmail']");
+        static readonly By _textMobileNumber = By.XPath("//div[@class='customer-info']//input[@id='phoneNumber']");
+        static readonly By _selectBookerNational = By.XPath("//div[@class='customer-info']//select[@id='countryOfResidence']");
+        static readonly By _checkboxBookForGuest = By.XPath("//input[@id='isMakingThisBookingForSomeoneElse']");
+        static readonly By _textGuestName = By.XPath("//div[@class='well']//input[@id='fullName']");
+        static readonly By _selectGuestNational = By.XPath("//select[@id='guestCountryOfResidence']");
+
+        static readonly By _radioNoSmoke = By.XPath("//input[@id='non-smoking-radio']");
+        static readonly By _radioLargeBed = By.XPath("//input[@id='king-bed-radio']");
+
+        static readonly By _buttonNextPage = By.XPath("//button/*[text()='NEXT PAGE']");
+
+        static readonly By _buttonBack = By.XPath("//div[@id='step2']//button/span[text()='Back to your booking details']");
         #endregion
 
 
@@ -103,13 +122,83 @@ namespace Agoda.Pages
             get { return StableFindElement(_button_plusAdult); }
         }
 
+        public IWebElement TextSearchInput
+        {
+            get { return StableFindElement(_textSearchInput); }
+        }
+
         public IWebElement HotelTagName(string hotelName)
         {
             return StableFindElement(By.XPath(string.Format(_hotel_tagname, hotelName)));
         }
+
+        public IWebElement ButtonBookRoom
+        {
+            get { return StableFindElement(_button_BookRoom); }
+        }
+
+        public IWebElement TextFullName
+        {
+            get { return StableFindElement(_textFullName); }
+        }
+
+        public IWebElement TextEmail
+        {
+            get { return StableFindElement(_textEmail); }
+        }
+
+        public IWebElement TextRetypeEmail
+        {
+            get { return StableFindElement(_textRetypeEmail); }
+        }
+
+        public IWebElement TextMobileNumber
+        {
+            get { return StableFindElement(_textMobileNumber); }
+        }
+
+        public IWebElement SelectBookerNational
+        {
+            get { return StableFindElement(_selectBookerNational); }
+        }
+
+        public IWebElement CheckBoxBookForGuest
+        {
+            get { return StableFindElement(_checkboxBookForGuest); }
+        }
+
+        public IWebElement TextGuestName
+        {
+            get { return StableFindElement(_textGuestName); }
+        }
+
+        public IWebElement SelectGuestNational
+        {
+            get { return StableFindElement(_selectGuestNational); }
+        }
+
+        public IWebElement RadioNonSmoking
+        {
+            get { return StableFindElement(_radioNoSmoke); }
+        }
+
+        public IWebElement RadioLargeBed
+        {
+            get { return StableFindElement(_radioLargeBed); }
+        }
+        
+        public IWebElement ButtonNextPage
+        {
+            get { return StableFindElement(_buttonNextPage); }
+        }
+
+        public IWebElement ButtonBack
+        {
+            get { return StableFindElement(_buttonBack); }
+        }
         #endregion
 
-        # region Methods
+        #region Methods
         public AgodaMain(IWebDriver driver) : base (driver)
         {
             this._driver = driver;
@@ -228,14 +317,78 @@ namespace Agoda.Pages
 
         public AgodaMain selectHotel (string hotelName)
         {
-            ScrollIntoView(HotelTagName(hotelName));
+            searchForHotelName(hotelName);
+            WaitForElementDisplay(By.XPath(string.Format(_hotel_tagname, hotelName)));
             HotelTagName(hotelName).Click();
+            return this;
+        }
+
+        public AgodaMain searchForHotelName(string hotelName)
+        {
+            TextSearchInput.SendKeys(hotelName);
+            TextSearchInput.SendKeys(Keys.Enter);
+            return this;
+        }
+
+        public AgodaMain selectRoom()
+        {
+            ButtonBookRoom.Click();
+            return this;
+        }
+
+        public AgodaMain fillInformation()
+        {
+            User user = new User();
+
+            TextFullName.Clear();
+            TextFullName.SendKeys(user.username);
+
+            TextEmail.Clear();
+            TextEmail.SendKeys(user.emailAddress);
+
+            TextRetypeEmail.Clear();
+            TextRetypeEmail.SendKeys(user.emailAddress);
+
+            SelectBookerNational.SelectItem(user.countryResidence);
+
+            if (user.bookForSomeoneElse)
+            {
+                CheckBoxBookForGuest.Check();
+
+                TextGuestName.Clear();
+                TextGuestName.SendKeys(user.guestName);
+
+                SelectGuestNational.SelectItem(user.guestResidence);
+            }
+
+            if (!user.smokingRoom)
+            {
+                RadioNonSmoking.Check();
+            }
+
+            if (user.largeBed)
+            {
+                RadioLargeBed.Check();
+            }
+
+            ButtonNextPage.Click();
+
+            return this;
+        }
+
+        public AgodaMain goBack()
+        {
+            WaitForElement(_buttonBack);
+            ButtonBack.Click();
             return this;
         }
 
         public void test()
         {
-            Console.WriteLine(DateTime.Today.ToString("yyyy'년' M'월' d'일' dddd", CultureInfo.GetCultureInfo("ko-KR")));
+            ArrayList tabs = new ArrayList(_driver.WindowHandles);
+            Console.WriteLine(tabs.Count);
+            //_driver.SwitchTo().Window(tabs[0]);
+            
         }
 
         public static KeyValuePair<string, bool> ValidateFilledInformation()
