@@ -180,10 +180,20 @@ namespace KiewitTeamBinder.UI
 
             if (browserName == "firefox")
             {
-
+                webDriver = new FirefoxDriver();
                 //FirefoxOptions options = new FirefoxOptions();
-                //options.BrowserExecutableLocation("C:\\Users\\hung.ha\\Downloads");
-                webDriver = new FirefoxDriver("C:\\Users\\hung.ha\\Downloads");
+                //FirefoxDriverService service = FirefoxDriverService.CreateDefaultService("C:\\Users\\hung.ha\\Downloads");
+                //FirefoxOptions options = new FirefoxOptions();
+                //if (headless)
+                //{
+                //    options.AddArgument("--headless");
+                //    options.AddArguments("--disable-gpu");
+                //}
+
+                //if (fileDownloadLocation != null)
+                //    options.AddArgument("--incognito");
+                ////options.BrowserExecutableLocation("C:\\Users\\hung.ha\\Downloads");
+                //webDriver = new FirefoxDriver(service, options);
 
             }
 

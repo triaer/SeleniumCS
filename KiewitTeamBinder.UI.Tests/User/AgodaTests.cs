@@ -29,7 +29,7 @@ namespace KiewitTeamBinder.UI.Tests.User
             try
             {
                 //given
-                var driver = Browser.Open(Constant.AgodaPage, "chrome", Constant.GB_Local);
+                var driver = Browser.Open(Constant.AgodaPage, "firefox", Constant.GB_Local);
 
                 //when
                 test.Info("Navigate to www.agoda.com.");
