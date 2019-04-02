@@ -9,6 +9,7 @@ using static Agoda.ExtentReportsHelper;
 using System.Globalization;
 using Agoda.DataObject;
 using System.Collections;
+using OpenQA.Selenium.Support.UI;
 
 namespace Agoda.Pages
 {
@@ -41,7 +42,10 @@ namespace Agoda.Pages
         static readonly By _textSearchInput = By.XPath("//div[@class='TextSearchContainer']//input");
 
         string _hotel_tagname = "//li[@data-selenium='hotel-item']//*[@class='hotel-name' and text()='{0}']";
-        static readonly By _button_BookRoom = By.XPath("//*[contains(text(), 'Standard')]/ancestor::div//div[@id='ChildRoom-FF37038627E495CAFC9933ECE5E24E951']//button[@data-selenium='ChildRoomsList - bookButtonInput']");
+
+        static readonly By _childRoom = By.XPath("//span[contains(text(),'Standard')]/ancestor::div[@class='MasterRoom']//div[@data-selenium='ChildRoomsList-room']");
+        static readonly By _select_NumberOfRoom = By.XPath("//span[contains(text(),'Standard')]/ancestor::div[@class='MasterRoom']//select");
+        static readonly By _button_BookRoom = By.XPath("//span[contains(text(),'Standard')]/ancestor::div[@class='MasterRoom']//button");
 
         static readonly By _textFullName = By.XPath("//div[@class='customer-info']//input[@id='fullName']");
         static readonly By _textEmail = By.XPath("//div[@class='customer-info']//input[@id='email']");
@@ -242,7 +246,7 @@ namespace Agoda.Pages
                 + " " + getFormattedMonth(d) 
                 + " " + getFormattedDay(d) 
                 + " " + getFormattedYear(d);
-            Console.WriteLine(value);
+            //Console.WriteLine(value);
             return StableFindElement(By.XPath(string.Format(_generalDateBox, value)));
         }
 
@@ -332,7 +336,18 @@ namespace Agoda.Pages
 
         public AgodaMain selectRoom()
         {
-            ButtonBookRoom.Click();
+            //WebDriverWait wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+            //wait.Until(ExpectedConditions.ElementExists(_button_BookRoom));
+            
+            IReadOnlyCollection<IWebElement> list = _driver.FindElements(_button_BookRoom);
+            int a = list.Count;
+            Console.WriteLine(a);
+            IWebElement e = list.ElementAt(0);
+            string b = e.GetAttribute("id").Split('-').Last().ToString();
+            Console.WriteLine(b);
+
+            
+            //ButtonBookRoom.Click();
             return this;
         }
 
@@ -385,9 +400,11 @@ namespace Agoda.Pages
 
         public void test()
         {
-            ArrayList tabs = new ArrayList(_driver.WindowHandles);
-            Console.WriteLine(tabs.Count);
+            //ArrayList tabs = new ArrayList(_driver.WindowHandles);
+            //Console.WriteLine(tabs.Count);
             //_driver.SwitchTo().Window(tabs[0]);
+
+
             
         }
 

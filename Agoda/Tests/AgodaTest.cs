@@ -4,6 +4,8 @@ using KiewitTeamBinder.Common.Helper;
 using Agoda.Pages;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static Agoda.ExtentReportsHelper;
+using OpenQA.Selenium;
+using System.Collections.Generic;
 
 namespace Agoda.Tests
 {
@@ -34,14 +36,17 @@ namespace Agoda.Tests
 
 
                 AgodaMain agodaPage = new AgodaMain(driver);
-                //agodaPage.initSearch()
-                //    .selectHotel("Arcadia Phu Quoc Resort")
-                //    .selectRoom()
+                agodaPage.initSearch();
+                agodaPage.selectHotel("Arcadia Phu Quoc Resort");
+                agodaPage.selectRoom();
+
+                
+
                 //    .fillInformation()
                 //    .goBack();
 
-                agodaPage.test();
-                                
+                //agodaPage.test();
+
                 //Then, VP: 
                 test = LogTest("Verify all filled information is correct");
                 //validations.Add(AgodaMain.ValidateFilledInformation());

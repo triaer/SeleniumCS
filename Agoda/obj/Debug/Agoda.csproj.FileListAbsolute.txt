@@ -1,4 +1,3 @@
-C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\obj\Debug\Agoda.csprojResolveAssemblyReference.cache
 C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\bin\Debug\Agoda.dll.config
 C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\bin\Debug\Agoda.dll
 C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\bin\Debug\Agoda.pdb
@@ -12,6 +11,7 @@ C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\bin\Debug\Microsoft.Visu
 C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\bin\Debug\MongoDB.Bson.dll
 C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\bin\Debug\MongoDB.Driver.Core.dll
 C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\bin\Debug\MongoDB.Driver.dll
+C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\bin\Debug\RazorEngine.dll
 C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\bin\Debug\SeleniumExtras.PageObjects.dll
 C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\bin\Debug\SeleniumExtras.WaitHelpers.dll
 C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\bin\Debug\SimpleImpersonation.dll
@@ -36,6 +36,7 @@ C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\bin\Debug\Microsoft.Visu
 C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\bin\Debug\MongoDB.Bson.xml
 C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\bin\Debug\MongoDB.Driver.xml
 C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\bin\Debug\MongoDB.Driver.Core.xml
+C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\bin\Debug\RazorEngine.xml
 C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\bin\Debug\SimpleImpersonation.xml
 C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\bin\Debug\System.Buffers.xml
 C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\bin\Debug\System.ValueTuple.xml
@@ -45,7 +46,6 @@ C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\bin\Debug\WebDriver.Supp
 C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\bin\Debug\EPPlus.xml
 C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\bin\Debug\ExcelDataReader.xml
 C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\bin\Debug\ExcelDataReader.DataSet.xml
+C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\obj\Debug\Agoda.csprojResolveAssemblyReference.cache
 C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\obj\Debug\Agoda.dll
 C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\obj\Debug\Agoda.pdb
-C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\bin\Debug\RazorEngine.dll
-C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\bin\Debug\RazorEngine.xml
