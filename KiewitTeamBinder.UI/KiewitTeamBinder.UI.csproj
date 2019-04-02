@@ -140,6 +140,8 @@
     <Compile Include="Pages\Global\PageBase.cs" />
     <Compile Include="Pages\Login.cs" />
     <Compile Include="Pages\Main.cs" />
+    <Compile Include="Pages\MouserMain.cs" />
+    <Compile Include="Pages\Thermistors.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -15,6 +15,8 @@ using System.Net;
 using System.Threading;
 using System.IO;
 using Microsoft.Win32;
+using System.Globalization;
+using KiewitTeamBinder.Common.Helper;
 
 namespace KiewitTeamBinder.UI
 {
@@ -59,12 +61,14 @@ namespace KiewitTeamBinder.UI
 
         public static IWebDriver Open(string url, string browserName, string fileDownloadLocation = null)
         {
+            Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture(Constant.GB_Local);
             DesiredCapabilities capability = new DesiredCapabilities();
             capability.SetCapability("browserName", browserName);
             Uri server = new Uri(url);
             string defaultDownloadLocation = Path.GetPathRoot(Environment.SystemDirectory) + "Users\\" + Environment.UserName + "\\Downloads";
             if (browserName == "chrome")
             {
+
                 ChromeOptions options = new ChromeOptions();
                 if (headless)
                 {
@@ -75,10 +79,11 @@ namespace KiewitTeamBinder.UI
 
                 if (fileDownloadLocation != null)
                     options.AddUserProfilePreference("download.default_directory", fileDownloadLocation);
-                options.AddArgument("--incognito");
+                    options.AddArgument("--incognito");
 
 
                 webDriver = new ChromeDriver(options);
+
             }
             else if (browserName.ToLower() == "internetexplorer")
             {
@@ -125,8 +130,9 @@ namespace KiewitTeamBinder.UI
                     webDriver = new InternetExplorerDriver(ieWebDriver,ieOptions);
                 }
             }
+            
             webDriver.Navigate().GoToUrl(server);
-
+            
             webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
 
             MaximizeWindow();

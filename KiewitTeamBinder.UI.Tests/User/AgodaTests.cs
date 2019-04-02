@@ -30,7 +30,6 @@ namespace KiewitTeamBinder.UI.Tests.User
             {
                 //given
                 var driver = Browser.Open(Constant.AgodaCNPage, "chrome");
-                Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture(Constant.GB_Local);
 
                 //when
                 test.Info("Navigate to www.agoda.com.");
@@ -44,7 +43,6 @@ namespace KiewitTeamBinder.UI.Tests.User
                             bookingForm.LogValidation<BookingForm>(ref validations, bookingForm.ValidateRoomsAndGuests(agodaData.Rooms, agodaData.Guests))
                                        .LogValidation<BookingForm>(ref validations, bookingForm.ValidateBookingDay(agodaData.Month, agodaData.Duration));                              
                 
-
                 //then
                 Console.WriteLine(string.Join(System.Environment.NewLine, validations.ToArray()));
                 validations.Should().OnlyContain(validations => validations.Value).Equals(bool.TrueString);
