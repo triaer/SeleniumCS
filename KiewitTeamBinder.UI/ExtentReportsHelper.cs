@@ -64,6 +64,19 @@ namespace KiewitTeamBinder.UI
         {
             if (nodeList.ElementAt(0) == node)
                 nodeList = new List<ExtentTest>();
+            else
+            {
+                nodeList.RemoveAt(nodeList.Count - 1);
+            }
+        }
+
+        public static ExtentTest GetLastNode()
+        {
+            if (nodeList.Count != 0)
+            {
+                return nodeList[nodeList.Count - 1];
+            }
+            else return null;
         }
 
 

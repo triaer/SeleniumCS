@@ -37,7 +37,7 @@ namespace KiewitTeamBinder.UI.Tests.User
                 DateTime r = DateTime.ParseExact(d, "MMMM yyyy", b);
                 DateTime e = DateTime.ParseExact("Tháng 4 2019", "'Tháng' M yyyy", b);
                 
-                var driver = Browser.Open(Constant.HomePage, "chrome");
+                var driver = Browser.Open(Constant.HomePage, "chrome", language, currency);
                 AgodaHomePage a = new AgodaHomePage(driver);
 
                 //When

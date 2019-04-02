@@ -142,6 +142,7 @@
     <Compile Include="Pages\Global\PageBase.cs" />
     <Compile Include="Pages\Login.cs" />
     <Compile Include="Pages\Main.cs" />
+    <Compile Include="Pages\Popup\AgodaTravelerSelection.cs" />
     <Compile Include="Pages\Popup\AgodaDayPicker.cs" />
     <Compile Include="Pages\Popup\AgodaCurrencySelectionPopup.cs" />
     <Compile Include="Pages\Popup\AgodaLanguageSelectionPopup.cs" />

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static KiewitTeamBinder.UI.ExtentReportsHelper;
 
 namespace KiewitTeamBinder.UI.Pages.Popup
 {
@@ -22,8 +23,8 @@ namespace KiewitTeamBinder.UI.Pages.Popup
         #endregion
 
         #region Elements
-        public IWebElement PopupCurrencySelection => StableFindElement(_popupCurrencySelection);
-        public IWebElement LinkTargetCurrency(string currency) => StableFindElement(_linkTargetCurrency(currency));
+        public IWebElement CurrencySelectionPopup => StableFindElement(_popupCurrencySelection);
+        public IWebElement TargetCurrencyLink(string currency) => StableFindElement(_linkTargetCurrency(currency));
         #endregion
 
         #region Methods
@@ -35,8 +36,11 @@ namespace KiewitTeamBinder.UI.Pages.Popup
 
         public void SelectCurrency(string targetCurrency)
         {
-            LinkTargetCurrency(targetCurrency).Click();
+            var node = CreateStepNode();
+            node.Info(String.Format("Select Currency: {0}", targetCurrency));
+            TargetCurrencyLink(targetCurrency).Click();
             Browser.CurrentCurrency = targetCurrency;
+            EndStepNode(node);
         }
 
         #endregion

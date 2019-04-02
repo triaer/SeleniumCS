@@ -4,9 +4,13 @@
       "type": "xpath",
       "value": "//div[@class='DayPicker']"
     },
+    "_eleFirstDayInMonth": {
+      "type": "xpath",
+      "value": "(//div[contains(@class,'DayPicker-Day') and not(contains(@class,'outside'))])[1]"
+    },
     "_eleTargetDay": {
       "type": "xpath",
-      "value": "//div[@class='DayPicker-Day' and @aria-label='{0}']"
+      "value": "//div[contains(@class,'DayPicker-Day') and @aria-label='{0}']"
     },
     "_elePreviousMonth": {
       "type": "xpath",

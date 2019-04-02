@@ -17,6 +17,8 @@ namespace KiewitTeamBinder.UI.Tests
     public abstract class UITestBase
     {
         protected string browser = string.Empty;
+        protected string language = string.Empty;
+        protected string currency = string.Empty;
         protected string environment = string.Empty;
         private string excelUserSourcePath = string.Empty;
         private string localTempExcelUserTargetPath = string.Empty;
@@ -36,6 +38,16 @@ namespace KiewitTeamBinder.UI.Tests
             if (TestContext.Properties.Contains("browser"))
             {
                 browser = TestContext.Properties["browser"].ToString();
+            }
+
+            if (TestContext.Properties.Contains("language"))
+            {
+                language = TestContext.Properties["language"].ToString();
+            }
+
+            if (TestContext.Properties.Contains("currency"))
+            {
+                currency = TestContext.Properties["currency"].ToString();
             }
 
             if (TestContext.Properties.Contains("environment"))

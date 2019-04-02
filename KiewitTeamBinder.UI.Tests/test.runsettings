@@ -33,6 +33,8 @@
   <TestRunParameters>
     <!-- <Parameter name="browser" value="chrome" /> -->
     <Parameter name="browser" value="chrome" />
+    <Parameter name="language" value="vn" />
+    <Parameter name="currency" value="USD" />
     <Parameter name="headless" value="false" />
     <Parameter name="environment" value="test" />
     <!--<Parameter name="teamBinderVersion" value="19.1.20" />

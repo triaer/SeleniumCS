@@ -522,6 +522,20 @@ namespace KiewitTeamBinder.Common
             [Description("My project")]
             MyProject
         }
+
+        public enum TravelerType
+        {
+            [Description("Solo traveler")]
+            Solo,
+            [Description("Couple/Pair")]
+            Couples,
+            [Description("Family travelers")]
+            Families,
+            [Description("Group travelers")]
+            Group,
+            [Description("Business travelers")]
+            Business
+        }
     }
 }
 

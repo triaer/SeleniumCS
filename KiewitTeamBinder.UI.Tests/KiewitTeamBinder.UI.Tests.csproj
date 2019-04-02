@@ -155,6 +155,7 @@
     <None Include="app.config" />
     <None Include="Data\LanguageData.json" />
     <None Include="Data\CurrencyData.json" />
+    <None Include="Locator\AgodaTravelerSelection.json" />
     <None Include="Locator\AgodaDayPicker.json" />
     <None Include="Locator\AgodaCurrencySelectionPopup.json" />
     <None Include="Locator\AgodaLanguageSelectionPopup.json" />

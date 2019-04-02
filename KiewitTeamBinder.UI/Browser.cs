@@ -78,7 +78,7 @@ namespace KiewitTeamBinder.UI
             set { currency = value; }
         }
 
-        public static IWebDriver Open(string url, string browserName, string fileDownloadLocation = null)
+        public static IWebDriver Open(string url, string browserName, string languageName, string currencyName, string fileDownloadLocation = null)
         {
             DesiredCapabilities capability = new DesiredCapabilities();
             capability.SetCapability("browserName", browserName);
@@ -147,6 +147,8 @@ namespace KiewitTeamBinder.UI
                 }
             }
             browser = browserName;
+            language = languageName;
+            currency = currencyName;
 
             webDriver.Navigate().GoToUrl(server);
 

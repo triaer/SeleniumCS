@@ -74,6 +74,8 @@
     <Compile Include="Helper\JsonHandler.cs" />
     <Compile Include="KiewitTeamBinderENums.cs" />
     <Compile Include="Helper\Utils.cs" />
+    <Compile Include="Models\BookingInfo.cs" />
+    <Compile Include="Models\HotelInfo.cs" />
     <Compile Include="TestAccountAccess.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -83,7 +85,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Models\" />
     <Folder Include="TestData\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

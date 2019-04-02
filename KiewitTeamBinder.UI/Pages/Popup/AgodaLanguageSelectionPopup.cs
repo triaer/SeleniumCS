@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static KiewitTeamBinder.UI.ExtentReportsHelper;
 
 namespace KiewitTeamBinder.UI.Pages.Popup
 {
@@ -22,8 +23,8 @@ namespace KiewitTeamBinder.UI.Pages.Popup
         #endregion
 
         #region Elements
-        public IWebElement PopupLanguageSelection => StableFindElement(_popupLanguageSelection);
-        public IWebElement LinkTargetLanguage(string language) => StableFindElement(_linkTargetLanguage(language));
+        public IWebElement LanguageSelectionPopup => StableFindElement(_popupLanguageSelection);
+        public IWebElement TargetLanguageLink(string language) => StableFindElement(_linkTargetLanguage(language));
         #endregion
 
         #region Methods
@@ -35,8 +36,11 @@ namespace KiewitTeamBinder.UI.Pages.Popup
 
         public void SelectLanguage(string targetLanguage)
         {
-            LinkTargetLanguage(targetLanguage).Click();
+            var node = CreateStepNode();
+            node.Info(String.Format("Select Language: {0}", targetLanguage));
+            TargetLanguageLink(targetLanguage).Click();
             Browser.CurrentLanguage = targetLanguage;
+            EndStepNode(node);
         }
 
         #endregion
