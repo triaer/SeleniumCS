@@ -17,6 +17,7 @@ using System.IO;
 using Microsoft.Win32;
 using System.Globalization;
 using KiewitTeamBinder.Common.Helper;
+using OpenQA.Selenium.Firefox;
 
 namespace KiewitTeamBinder.UI
 {
@@ -59,11 +60,102 @@ namespace KiewitTeamBinder.UI
             set { headless = value; }
         }
 
-        public static IWebDriver Open(string url, string browserName, string fileDownloadLocation = null)
+        //public static IWebDriver Open(string url, string browserName, string fileDownloadLocation = null)
+        //{
+        //    Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture(Constant.GB_Local);
+        //    DesiredCapabilities capability = new DesiredCapabilities();
+        //    capability.SetCapability("browserName", browserName);
+        //    Uri server = new Uri(url);
+        //    string defaultDownloadLocation = Path.GetPathRoot(Environment.SystemDirectory) + "Users\\" + Environment.UserName + "\\Downloads";
+        //    if (browserName == "chrome")
+        //    {
+
+        //        ChromeOptions options = new ChromeOptions();
+        //        if (headless)
+        //        {
+        //            options.AddArgument("--headless");
+        //            options.AddArguments("--disable-gpu"); options.AddUserProfilePreference("disable-popup-blocking", "true");
+        //            options.AddUserProfilePreference("intl.accept_languages", "en,en_US");
+        //        }
+
+        //        if (fileDownloadLocation != null)
+        //            options.AddUserProfilePreference("download.default_directory", fileDownloadLocation);
+        //        options.AddArgument("--incognito");
+
+
+        //        webDriver = new ChromeDriver(options);
+
+        //    }
+        //    else if (browserName.ToLower() == "internetexplorer")
+        //    {
+
+        //        InternetExplorerOptions ieOptions = new InternetExplorerOptions();
+        //        ieOptions.EnableNativeEvents = true;
+        //        ieOptions.UnhandledPromptBehavior = UnhandledPromptBehavior.Ignore;
+        //        ieOptions.EnablePersistentHover = true;
+        //        ieOptions.RequireWindowFocus = true;
+        //        ieOptions.IntroduceInstabilityByIgnoringProtectedModeSettings = true;
+        //        ieOptions.IgnoreZoomLevel = true;
+        //        ieOptions.EnsureCleanSession = true;
+        //        ieOptions.AddAdditionalCapability("disable-popup-blocking", true);
+        //        ieOptions.AddAdditionalCapability(CapabilityType.IsJavaScriptEnabled, true);
+        //        //ieOptions.AddAdditionalCapability(CapabilityType.UnexpectedAlertBehavior, "ignore");
+
+
+
+        //        if (fileDownloadLocation != null)
+        //        {
+        //            RegistryKey myKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Internet Explorer\\Main", true);
+        //            if (myKey != null)
+        //            {
+        //                myKey.SetValue("Default Download Directory", fileDownloadLocation);
+        //                myKey.Close();
+        //            }
+
+        //            myKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\\Zones\\3", true);
+        //            if (myKey != null)
+        //            {
+        //                myKey.SetValue("1803", 0);
+        //                myKey.Close();
+        //            }
+        //        }
+
+        //        //string ieWebDriver = Environment.GetEnvironmentVariable("IEWebDriver");
+        //        string ieWebDriver = null;
+        //        if (string.IsNullOrEmpty(ieWebDriver))
+        //        {
+        //            webDriver = new InternetExplorerDriver(ieOptions);
+        //        }
+        //        else
+        //        {
+        //            webDriver = new InternetExplorerDriver(ieWebDriver, ieOptions);
+        //        }
+        //    }
+
+        //    webDriver.Navigate().GoToUrl(server);
+
+        //    webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
+
+        //    MaximizeWindow();
+
+        //    return webDriver;
+        //}
+
+        public static IWebDriver Open(string url, string browserName,string language, string fileDownloadLocation = null)
         {
-            Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture(Constant.GB_Local);
+            Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture(language);
             DesiredCapabilities capability = new DesiredCapabilities();
             capability.SetCapability("browserName", browserName);
+
+            if (language == "zh-HK")
+            {
+                url = url + "/zh-HK";
+            }
+            if (language == "ko-KR")
+            {
+                url = url + "/ko-KR";
+            }
+
             Uri server = new Uri(url);
             string defaultDownloadLocation = Path.GetPathRoot(Environment.SystemDirectory) + "Users\\" + Environment.UserName + "\\Downloads";
             if (browserName == "chrome")
@@ -85,6 +177,16 @@ namespace KiewitTeamBinder.UI
                 webDriver = new ChromeDriver(options);
 
             }
+
+            if (browserName == "firefox")
+            {
+
+                //FirefoxOptions options = new FirefoxOptions();
+                //options.BrowserExecutableLocation("C:\\Users\\hung.ha\\Downloads");
+                webDriver = new FirefoxDriver("C:\\Users\\hung.ha\\Downloads");
+
+            }
+
             else if (browserName.ToLower() == "internetexplorer")
             {
 

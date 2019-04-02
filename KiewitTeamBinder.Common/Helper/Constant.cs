@@ -14,9 +14,10 @@ namespace KiewitTeamBinder.Common.Helper
         public const string AgodaCNPage = "https://www.agoda.com/zh-hk/?cid=-1";
         public const string AgodaKRPage = "https://www.agoda.com/ko-kr/?cid=-1";
         public const string MouserVN = "https://www.mouser.vn/";
-        public const string GB_Local = "zh-HK";
+        public const string GB_Local = "en-US";
         //Korean: ko-KR
         //Chinese: zh-HK
+        //EngLish: en-US
 
     }
 }

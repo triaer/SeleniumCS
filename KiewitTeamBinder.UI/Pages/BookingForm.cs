@@ -86,7 +86,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             {
                 CultureInfo enUS = new CultureInfo("en-US");
                 string actualDateRaw = checkInDay.ToString("R", enUS).Substring(4, 12).Replace(" 0", " ") + " - " + CheckoutDate.ToString("R", enUS).Substring(4, 12).Replace("  0", " ");
-                actualDate = actualDateRaw.Trim().Replace("  ", " ");
+                actualDate = actualDateRaw.Trim().Replace("  ", " ").Replace(" 0", " ");
                 //actualDate = checkInDay.ToString
                 //return actualDate;
             }
