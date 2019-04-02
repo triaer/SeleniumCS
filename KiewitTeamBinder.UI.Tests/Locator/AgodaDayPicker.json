@@ -1,0 +1,20 @@
+﻿{
+  "default": {
+    "_popupDayPicker": {
+      "type": "xpath",
+      "value": "//div[@class='DayPicker']"
+    },
+    "_eleTargetDay": {
+      "type": "xpath",
+      "value": "//div[@class='DayPicker-Day' and @aria-label='{0}']"
+    },
+    "_elePreviousMonth": {
+      "type": "xpath",
+      "value": "//span[@role='button' and @aria-label='Previous Month']"
+    },
+    "_eleNextMonth": {
+      "type": "xpath",
+      "value": "//span[@role='button' and @aria-label='Next Month']"
+    }
+  }
+}

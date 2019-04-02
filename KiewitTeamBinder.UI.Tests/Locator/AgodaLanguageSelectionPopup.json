@@ -1,0 +1,12 @@
+﻿{
+  "default": {
+    "_popupLanguageSelection": {
+      "type": "xpath",
+      "value": "//div[@role='dialog'][./ul[@data-element-name='language-popup']]"
+    },
+    "_linkTargetLanguage": {
+      "type": "xpath",
+      "value": "//a[@data-element-name='lang-{0}']"
+    }
+  }
+}

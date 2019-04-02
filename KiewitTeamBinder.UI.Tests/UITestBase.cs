@@ -9,6 +9,7 @@ using AventStack.ExtentReports;
 using System.Linq;
 using KiewitTeamBinder.Common.Helper;
 using System.Collections.Generic;
+using KiewitTeamBinder.UI.Common;
 
 namespace KiewitTeamBinder.UI.Tests
 {

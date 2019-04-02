@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using KiewitTeamBinder.Common;
 using KiewitTeamBinder.Common.Helper;
+using KiewitTeamBinder.UI.Common;
 using KiewitTeamBinder.UI.Pages;
 using KiewitTeamBinder.UI.Pages.Global;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -9,6 +10,7 @@ using SimpleImpersonation;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using static KiewitTeamBinder.UI.ExtentReportsHelper;
 
@@ -24,10 +26,20 @@ namespace KiewitTeamBinder.UI.Tests.User
 
             try
             {
+                
                 //Given
                 //1. Navigate to Dashboard login page.
                 test.Info("Navigate to Dashboard login page.");
+                CultureInfo b = LanguageHelper.GetCulture(Language.VIETNAM);
+                string c = b.DateTimeFormat.LongDatePattern;
+                //DateTime r = DateTime.ParseExact("1 Tháng Tư 2019", "dd MMMM yyyy", b);
+                string d = DateTime.Today.ToString("MMMM yyyy", b);
+                DateTime r = DateTime.ParseExact(d, "MMMM yyyy", b);
+                DateTime e = DateTime.ParseExact("Tháng 4 2019", "'Tháng' M yyyy", b);
+                
                 var driver = Browser.Open(Constant.HomePage, "chrome");
+                AgodaHomePage a = new AgodaHomePage(driver);
+
                 //When
                 //2. Enter valid username and password.
                 //3. Click on "Login" button

@@ -15,6 +15,7 @@ using System.Net;
 using System.Threading;
 using System.IO;
 using Microsoft.Win32;
+using KiewitTeamBinder.UI.Common;
 
 namespace KiewitTeamBinder.UI
 {
@@ -25,6 +26,9 @@ namespace KiewitTeamBinder.UI
     {
         private static IWebDriver webDriver;
         private static bool headless = false;
+        private static string browser = "";
+        private static string language = Language.ENGLISH;
+        private static string currency = Currency.VIETNAM_DONG;
 
         public static void Close()
         {
@@ -55,6 +59,23 @@ namespace KiewitTeamBinder.UI
         {
             get { return headless; }
             set { headless = value; }
+        }
+
+        public static string CurrentBrowser
+        {
+            get { return browser; }
+        }
+
+        public static string CurrentLanguage
+        {
+            get { return language; }
+            set { language = value; }
+        }
+
+        public static string CurrentCurrency
+        {
+            get { return currency; }
+            set { currency = value; }
         }
 
         public static IWebDriver Open(string url, string browserName, string fileDownloadLocation = null)
@@ -125,6 +146,8 @@ namespace KiewitTeamBinder.UI
                     webDriver = new InternetExplorerDriver(ieWebDriver,ieOptions);
                 }
             }
+            browser = browserName;
+
             webDriver.Navigate().GoToUrl(server);
 
             webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);

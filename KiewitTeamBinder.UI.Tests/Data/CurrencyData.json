@@ -1,0 +1,14 @@
+﻿{
+  "USD": {
+    "description": "DOLLAR",
+    "icon": "$"
+  },
+  "VND": {
+    "code": "VIET NAME DONG",
+    "icon": "₫"
+  },
+  "JPY": {
+    "code": "YEN",
+    "icon": "¥"
+  }
+}

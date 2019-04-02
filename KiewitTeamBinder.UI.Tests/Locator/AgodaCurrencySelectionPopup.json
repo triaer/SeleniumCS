@@ -1,0 +1,12 @@
+﻿{
+  "default": {
+    "_popupCurrencySelection": {
+      "type": "xpath",
+      "value": "//div[@role='dialog'][./ul[@data-element-name='currency-popup']]"
+    },
+    "_linkTargetCurrency": {
+      "type": "xpath",
+      "value": "//a[@data-value='{0}']"
+    }
+  }
+}
