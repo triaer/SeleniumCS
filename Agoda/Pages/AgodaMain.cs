@@ -10,6 +10,7 @@ using System.Globalization;
 using Agoda.DataObject;
 using System.Collections;
 using OpenQA.Selenium.Support.UI;
+using System.Threading;
 
 namespace Agoda.Pages
 {
@@ -45,7 +46,8 @@ namespace Agoda.Pages
 
         static readonly By _childRoom = By.XPath("//span[contains(text(),'Standard')]/ancestor::div[@class='MasterRoom']//div[@data-selenium='ChildRoomsList-room']");
         static readonly By _select_NumberOfRoom = By.XPath("//span[contains(text(),'Standard')]/ancestor::div[@class='MasterRoom']//select");
-        static readonly By _button_BookRoom = By.XPath("//span[contains(text(),'Standard')]/ancestor::div[@class='MasterRoom']//button");
+        //static readonly By _button_BookRoom = By.XPath("//span[contains(text(),'Standard')]/ancestor::div[@class='MasterRoom']//button[1]");
+        static readonly By _button_BookRoom = By.XPath("//button[@data-selenium='ChildRoomsList-bookButtonInput']");
 
         static readonly By _textFullName = By.XPath("//div[@class='customer-info']//input[@id='fullName']");
         static readonly By _textEmail = By.XPath("//div[@class='customer-info']//input[@id='email']");
@@ -62,6 +64,13 @@ namespace Agoda.Pages
         static readonly By _buttonNextPage = By.XPath("//button/*[text()='NEXT PAGE']");
 
         static readonly By _buttonBack = By.XPath("//div[@id='step2']//button/span[text()='Back to your booking details']");
+
+        static readonly By _LblHotelName = By.XPath("//div[@class='hotel-information']//span[@class='hotel-name']");
+        static readonly By _LblHotelAddress = By.XPath("//div[@class='hotel-information']//span[@class='address']");
+        static readonly By _LblDates = By.XPath("//div[@class='checkin-checkout-details-panel']//div[@class='dates-container']/h4");
+        static readonly By _LblOccupantDetail = By.XPath("//div[@class='room-details-info-container']//span[@id='occupancyDetails']");
+
+
         #endregion
 
 
@@ -200,6 +209,26 @@ namespace Agoda.Pages
         {
             get { return StableFindElement(_buttonBack); }
         }
+
+        public IWebElement LabelHotelName
+        {
+            get { return StableFindElement(_LblHotelName); }
+        }
+
+        public IWebElement LabelHotelAddress
+        {
+            get { return StableFindElement(_LblHotelAddress); }
+        }
+
+        public IWebElement LabelDates
+        {
+            get { return StableFindElement(_LblDates); }
+        }
+
+        public IWebElement LabelOccupantsDetails
+        {
+            get { return StableFindElement(_LblOccupantDetail); }
+        }
         #endregion
 
         #region Methods
@@ -306,13 +335,12 @@ namespace Agoda.Pages
             TextDestination.SendKeys(order.destination);
             selectSuggestDestination(order.destination).Click();
 
-            //TextCheckIn.Click();
             selectDateBox(getCheckInDate()).Click();
             selectDateBox(getCheckOutDate()).Click();
 
             OptionGroupTravel.Click();
-            SelectNeedRoom(order.roomInNeed);
-            SelectGuestNumber(order.guestNumber);
+            SelectNeedRoom(BookOrder.roomInNeed);
+            SelectGuestNumber(BookOrder.guestNumber);
 
             ButtonSearch.Click();
 
@@ -323,7 +351,8 @@ namespace Agoda.Pages
         {
             searchForHotelName(hotelName);
             WaitForElementDisplay(By.XPath(string.Format(_hotel_tagname, hotelName)));
-            HotelTagName(hotelName).Click();
+            HotelTagName(hotelName).Click(); // open in new tab.
+            Thread.Sleep(3);
             return this;
         }
 
@@ -338,16 +367,18 @@ namespace Agoda.Pages
         {
             //WebDriverWait wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
             //wait.Until(ExpectedConditions.ElementExists(_button_BookRoom));
-            
-            IReadOnlyCollection<IWebElement> list = _driver.FindElements(_button_BookRoom);
-            int a = list.Count;
-            Console.WriteLine(a);
-            IWebElement e = list.ElementAt(0);
-            string b = e.GetAttribute("id").Split('-').Last().ToString();
-            Console.WriteLine(b);
-
-            
-            //ButtonBookRoom.Click();
+            //IReadOnlyCollection<IWebElement> list = _driver.FindElements(_button_BookRoom);
+            //int a = list.Count;
+            //Console.WriteLine(a);
+            //IWebElement e = list.ElementAt(0);
+            //string b = e.GetAttribute("id").Split('-').Last().ToString();
+            this.switchTab();
+            WaitForElementClickable(_button_BookRoom);
+            if (ButtonBookRoom.IsDisplayed())
+            {
+                ButtonBookRoom.Click();
+                //Console.WriteLine("click");
+            }
             return this;
         }
 
@@ -355,40 +386,94 @@ namespace Agoda.Pages
         {
             User user = new User();
 
+            WaitForElement(_textFullName);
             TextFullName.Clear();
             TextFullName.SendKeys(user.username);
 
+            WaitForElement(_textEmail);
             TextEmail.Clear();
             TextEmail.SendKeys(user.emailAddress);
 
+            WaitForElement(_textRetypeEmail);
             TextRetypeEmail.Clear();
             TextRetypeEmail.SendKeys(user.emailAddress);
 
+            WaitForElement(_textMobileNumber);
+            TextMobileNumber.Clear();
+            TextMobileNumber.SendKeys(user.mobileNumber);
+
+            WaitForElement(_selectBookerNational);
             SelectBookerNational.SelectItem(user.countryResidence);
 
             if (user.bookForSomeoneElse)
             {
+                WaitForElement(_checkboxBookForGuest);
                 CheckBoxBookForGuest.Check();
 
+                WaitForElement(_textGuestName);
                 TextGuestName.Clear();
                 TextGuestName.SendKeys(user.guestName);
 
+                WaitForElement(_selectGuestNational);
                 SelectGuestNational.SelectItem(user.guestResidence);
             }
 
-            if (!user.smokingRoom)
-            {
-                RadioNonSmoking.Check();
-            }
+            //if (!user.smokingRoom)
+            //{
+            //    RadioNonSmoking.Check();
+            //}
 
-            if (user.largeBed)
-            {
-                RadioLargeBed.Check();
-            }
+            //if (user.largeBed)
+            //{
+            //    RadioLargeBed.Click();
+            //}
 
             ButtonNextPage.Click();
 
             return this;
+        }
+
+        public bool checkDisplayedInformation()
+        {
+            //Console.WriteLine(LabelHotelName.Text + "\n" + Hotel.hotelName);
+            bool nameCorrect = LabelHotelName.Text.Equals(Hotel.hotelName);
+
+            //Console.WriteLine(LabelHotelAddress.Text + "\n" + Hotel.hotelAdd);
+            bool addressCorrect = LabelHotelAddress.Text.Equals(Hotel.hotelAdd);
+
+            var checkinDate = this.getCheckInDate();
+            var checkoutDate = this.getCheckOutDate();
+
+            string ciday = getFormattedDay(checkinDate);
+            string coday = getFormattedDay(checkoutDate);
+
+            if (int.Parse(ciday) < 10)
+                ciday = ciday.Remove(0, 1);
+            if (int.Parse(coday) < 10)
+                coday = coday.Remove(0, 1);
+            
+            var date = ciday + " " + getFormattedMonth(checkinDate) + " " + getFormattedYear(checkinDate) + " - "
+                + coday + " " + getFormattedMonth(checkoutDate) + " " + getFormattedYear(checkoutDate);
+
+            //Console.WriteLine(date + "\n" + LabelDates.Text);
+            bool dateCorrect = LabelDates.Text.Equals(date);
+
+            var occupant = BookOrder.roomInNeed + " rooms, " +
+                BookOrder.guestNumber + " adults";
+
+            //Console.WriteLine(occupant + "\n" + LabelOccupantsDetails.Text);
+            bool occupantCorrect = LabelOccupantsDetails.Text.Equals(occupant);
+
+            if (nameCorrect == false)
+                return false;
+            if (addressCorrect == false)
+                return false;
+            if (dateCorrect == false)
+                return false;
+            if (occupantCorrect == false)
+                return false;
+
+            return true;
         }
 
         public AgodaMain goBack()
@@ -398,25 +483,23 @@ namespace Agoda.Pages
             return this;
         }
 
-        public void test()
+        public void switchTab()
         {
-            //ArrayList tabs = new ArrayList(_driver.WindowHandles);
+            ArrayList tabs = new ArrayList(_driver.WindowHandles);
             //Console.WriteLine(tabs.Count);
-            //_driver.SwitchTo().Window(tabs[0]);
-
-
-            
+            _driver.SwitchTo().Window(tabs[1].ToString());
+            //_driver.SwitchTo().Window(_driver.WindowHandles.Last());
         }
 
-        public static KeyValuePair<string, bool> ValidateFilledInformation()
+        public KeyValuePair<string, bool> ValidateFilledInformation()
         {
             var node = CreateStepNode();
             var validation = new KeyValuePair<string, bool>();
             try
             {
-                bool newPageFounded = true;
+                bool totalCheck = checkDisplayedInformation();
 
-                if (newPageFounded)
+                if (totalCheck == true)
                     validation = SetPassValidation(node, ValidationMessage.ValidateFilledInformation);
                 else
                     validation = SetFailValidation(node, ValidationMessage.ValidateFilledInformation);
