@@ -17,9 +17,6 @@ namespace KiewitTeamBinder.UI.Pages.Popup
 {
     public class AgodaTravelerSelection : PageBase
     {
-        private string dateTimeFormat = "ddd MMM dd yyyy";
-        private CultureInfo culture = CultureInfo.GetCultureInfo("en-US");
-
         #region Locators
         static readonly LocatorLoader locator = new LocatorLoader("AgodaTravelerSelection");
 
@@ -56,12 +53,15 @@ namespace KiewitTeamBinder.UI.Pages.Popup
 
         public AgodaTravelerSelection(IWebDriver webDriver) : base(webDriver)
         {
-            WaitForElementDisplay(_popupTravelerSelection);
+            WaitForElement(_popupTravelerSelection);
         }
 
         public void EnterTravelerInfo(BookingInfo info)
         {
+            var node = ExtentReportsHelper.GetLastNode();
+            node.Info(String.Format("Select Traveler Type: {0}", info.TravelerType));
             TravelerTypeElement(Enum.GetName(typeof(TravelerType), info.TravelerType).ToLower()).Click();
+
             if (info.TravelerType == TravelerType.Families ||
                 info.TravelerType == TravelerType.Group ||
                 info.TravelerType == TravelerType.Business)

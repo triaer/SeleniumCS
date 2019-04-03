@@ -64,11 +64,11 @@ namespace KiewitTeamBinder.UI.Pages
             popup.SelectCurrency(targetCurrency);
         }
 
-        public void EnterBookingInfo(BookingInfo info)
+        public AgodaHotelListPage EnterBookingInfo(BookingInfo info)
         {
             var node = CreateStepNode();
             node.Info(String.Format("Input Destination: {0}", info.Destination));
-            SearchTextBox.SendKeys(info.Destination);
+            SearchTextBox.InputText(info.Destination);
             Wait(1);
             SearchTextBox.SendKeys(Keys.Enter);
             AgodaDayPicker dayPicker = new AgodaDayPicker(WebDriver);
@@ -77,6 +77,7 @@ namespace KiewitTeamBinder.UI.Pages
             travelerPicker.EnterTravelerInfo(info);
             SearchButton.Click();
             EndStepNode(node);
+            return new AgodaHotelListPage(WebDriver);
         }
 
         #endregion

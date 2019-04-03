@@ -1,0 +1,24 @@
+﻿{
+  "default": {
+    "_popupDayPicker": {
+      "type": "xpath",
+      "value": "//div[@class='DayPicker']"
+    },
+    "_eleFirstDayInMonth": {
+      "type": "xpath",
+      "value": "(//div[contains(@class,'DayPicker-Day') and not(contains(@class,'outside'))])[1]"
+    },
+    "_eleTargetDay": {
+      "type": "xpath",
+      "value": "//div[contains(@class,'DayPicker-Day') and @aria-label='{0}']"
+    },
+    "_elePreviousMonth": {
+      "type": "xpath",
+      "value": "//span[@role='button' and @aria-label='Previous Month']"
+    },
+    "_eleNextMonth": {
+      "type": "xpath",
+      "value": "//span[@role='button' and @aria-label='Next Month']"
+    }
+  }
+}

@@ -42,7 +42,7 @@ namespace KiewitTeamBinder.UI.Pages.Popup
 
         public AgodaDayPicker(IWebDriver webDriver) : base(webDriver)
         {
-            WaitForElementDisplay(_popupDayPicker);
+            WaitForElement(_popupDayPicker);
         }
 
         public void SelectDate(DateTime date)

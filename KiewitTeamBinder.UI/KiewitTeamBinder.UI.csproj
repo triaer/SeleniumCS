@@ -126,22 +126,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Browser.cs" />
-    <Compile Include="Common\JsonHelper.cs" />
-    <Compile Include="Common\CurrencyHelper.cs" />
-    <Compile Include="Common\LanguageHelper.cs" />
-    <Compile Include="Common\LocatorLoader.cs" />
-    <Compile Include="Common\Currency.cs" />
-    <Compile Include="Common\Language.cs" />
     <Compile Include="ExtentReportsHelper.cs" />
+    <Compile Include="Helper\LocatorLoader.cs" />
     <Compile Include="IWebElementExtensions.cs" />
+    <Compile Include="Pages\AgodaBookingFormPage.cs" />
+    <Compile Include="Pages\AgodaHotelDetailPage.cs" />
+    <Compile Include="Pages\AgodaHotelListPage.cs" />
     <Compile Include="Pages\AgodaHomePage.cs" />
-    <Compile Include="Pages\Global\LoggedInLanding.cs" />
-    <Compile Include="Pages\Global\NonSsoSignOn.cs" />
-    <Compile Include="Pages\Global\SsoSignOn.cs" />
-    <Compile Include="Pages\Global\NotLoggedInLanding.cs" />
     <Compile Include="Pages\Global\PageBase.cs" />
-    <Compile Include="Pages\Login.cs" />
-    <Compile Include="Pages\Main.cs" />
     <Compile Include="Pages\Popup\AgodaTravelerSelection.cs" />
     <Compile Include="Pages\Popup\AgodaDayPicker.cs" />
     <Compile Include="Pages\Popup\AgodaCurrencySelectionPopup.cs" />
@@ -149,6 +141,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Locator\AgodaBookingFormPage.json" />
+    <None Include="Locator\AgodaCurrencySelectionPopup.json" />
+    <None Include="Locator\AgodaDayPicker.json" />
+    <None Include="Locator\AgodaHomePage.json" />
+    <None Include="Locator\AgodaHotelDetailPage.json" />
+    <None Include="Locator\AgodaHotelListPage.json" />
+    <None Include="Locator\AgodaLanguageSelectionPopup.json" />
+    <None Include="Locator\AgodaTravelerSelection.json" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
@@ -167,7 +167,9 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Selenium.WebDriver.IEDriver.3.141.0\build\Selenium.WebDriver.IEDriver.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Selenium.WebDriver.IEDriver.3.141.0\build\Selenium.WebDriver.IEDriver.targets'))" />
     <Error Condition="!Exists('..\packages\Selenium.WebDriver.ChromeDriver.2.42.0.1\build\Selenium.WebDriver.ChromeDriver.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Selenium.WebDriver.ChromeDriver.2.42.0.1\build\Selenium.WebDriver.ChromeDriver.targets'))" />
+    <Error Condition="!Exists('..\packages\Selenium.WebDriver.GeckoDriver.0.24.0\build\Selenium.WebDriver.GeckoDriver.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Selenium.WebDriver.GeckoDriver.0.24.0\build\Selenium.WebDriver.GeckoDriver.targets'))" />
   </Target>
   <Import Project="..\packages\Selenium.WebDriver.IEDriver.3.141.0\build\Selenium.WebDriver.IEDriver.targets" Condition="Exists('..\packages\Selenium.WebDriver.IEDriver.3.141.0\build\Selenium.WebDriver.IEDriver.targets')" />
   <Import Project="..\packages\Selenium.WebDriver.ChromeDriver.2.42.0.1\build\Selenium.WebDriver.ChromeDriver.targets" Condition="Exists('..\packages\Selenium.WebDriver.ChromeDriver.2.42.0.1\build\Selenium.WebDriver.ChromeDriver.targets')" />
+  <Import Project="..\packages\Selenium.WebDriver.GeckoDriver.0.24.0\build\Selenium.WebDriver.GeckoDriver.targets" Condition="Exists('..\packages\Selenium.WebDriver.GeckoDriver.0.24.0\build\Selenium.WebDriver.GeckoDriver.targets')" />
 </Project>

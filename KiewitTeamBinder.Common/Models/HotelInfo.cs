@@ -9,7 +9,9 @@ namespace KiewitTeamBinder.Common.Models
     public class HotelInfo
     {
         private string hotelName;
+        private string actualHotelName;
         private string roomName;
+        private string actualRoomName;
         private int roomQuantity;
         private double roomPrice;
 
@@ -26,6 +28,19 @@ namespace KiewitTeamBinder.Common.Models
             }
         }
 
+        public string ActualHotelName
+        {
+            get
+            {
+                return actualHotelName;
+            }
+
+            set
+            {
+                actualHotelName = value;
+            }
+        }
+
         public string RoomName
         {
             get
@@ -36,6 +51,19 @@ namespace KiewitTeamBinder.Common.Models
             set
             {
                 roomName = value;
+            }
+        }
+
+        public string ActualRoomName
+        {
+            get
+            {
+                return actualRoomName;
+            }
+
+            set
+            {
+                actualRoomName = value;
             }
         }
 
@@ -67,10 +95,12 @@ namespace KiewitTeamBinder.Common.Models
 
         public HotelInfo(string hotelName, string roomName, int roomQuantity, double roomPrice)
         {
-            this.hotelName = hotelName;
-            this.roomName = roomName;
-            this.roomQuantity = roomQuantity;
-            this.roomPrice = roomPrice;
+            this.HotelName = hotelName;
+            this.RoomName = roomName;
+            this.RoomQuantity = roomQuantity;
+            this.RoomPrice = roomPrice;
+            this.actualHotelName = hotelName;
+            this.actualRoomName = roomName;
         }
 
         public HotelInfo() { }

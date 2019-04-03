@@ -31,14 +31,14 @@ namespace KiewitTeamBinder.UI.Pages.Popup
 
         public AgodaLanguageSelectionPopup(IWebDriver webDriver) : base(webDriver)
         {
-            WaitForElementDisplay(_popupLanguageSelection);
+            WaitForElement(_popupLanguageSelection);
         }
 
         public void SelectLanguage(string targetLanguage)
         {
             var node = CreateStepNode();
             node.Info(String.Format("Select Language: {0}", targetLanguage));
-            TargetLanguageLink(targetLanguage).Click();
+            TargetLanguageLink(targetLanguage.ToLower()).Click();
             Browser.CurrentLanguage = targetLanguage;
             EndStepNode(node);
         }

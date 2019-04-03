@@ -11,7 +11,7 @@ namespace KiewitTeamBinder.Common.Models
     {
         private string destination = String.Empty;
         private DateTime checkInDate;
-        private DateTime checkOutDate;
+        private int duration = 0;
         private TravelerType travelerType;
         private int room = 0;
         private int adults = 0;
@@ -47,12 +47,20 @@ namespace KiewitTeamBinder.Common.Models
         {
             get
             {
-                return checkOutDate;
+                return checkInDate.AddDays(duration);
+            }
+        }
+
+        public int Duration
+        {
+            get
+            {
+                return duration;
             }
 
             set
             {
-                checkOutDate = value;
+                duration = value;
             }
         }
 
@@ -108,12 +116,12 @@ namespace KiewitTeamBinder.Common.Models
             }
         }
 
-        public BookingInfo(string destination, DateTime checkInDate, DateTime checkOutDate, TravelerType travelerType, int room, int adults, int children)
+        public BookingInfo(string destination, DateTime checkInDate, int duration, TravelerType travelerType, int room, int adults, int children)
         {
             this.Destination = destination;
             this.CheckInDate = checkInDate;
-            this.CheckOutDate = checkOutDate;
-            this.TravelerType = travelerType;
+            this.duration = duration;
+            this.travelerType = travelerType;
             this.Room = room;
             this.Adults = adults;
             this.Children = children;

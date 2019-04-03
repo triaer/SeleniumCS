@@ -16,6 +16,9 @@ using System.Threading;
 using System.IO;
 using Microsoft.Win32;
 using KiewitTeamBinder.UI.Common;
+using KiewitTeamBinder.Common;
+using System.Globalization;
+using OpenQA.Selenium.Firefox;
 
 namespace KiewitTeamBinder.UI
 {
@@ -27,8 +30,9 @@ namespace KiewitTeamBinder.UI
         private static IWebDriver webDriver;
         private static bool headless = false;
         private static string browser = "";
-        private static string language = Language.ENGLISH;
-        private static string currency = Currency.VIETNAM_DONG;
+        private static string language = "";
+        private static string currency = "";
+        private static string currencyIcon = "";
 
         public static void Close()
         {
@@ -78,6 +82,12 @@ namespace KiewitTeamBinder.UI
             set { currency = value; }
         }
 
+        public static string CurrentCurrencyIcon
+        {
+            get { return currencyIcon; }
+            set { currencyIcon = value; }
+        }
+
         public static IWebDriver Open(string url, string browserName, string languageName, string currencyName, string fileDownloadLocation = null)
         {
             DesiredCapabilities capability = new DesiredCapabilities();
@@ -101,7 +111,7 @@ namespace KiewitTeamBinder.UI
 
                 webDriver = new ChromeDriver(options);
             }
-            else if (browserName.ToLower() == "internetexplorer")
+            else if (browserName.ToLower() == "ie")
             {
 
                 InternetExplorerOptions ieOptions = new InternetExplorerOptions();
@@ -146,9 +156,29 @@ namespace KiewitTeamBinder.UI
                     webDriver = new InternetExplorerDriver(ieWebDriver,ieOptions);
                 }
             }
+            else if(browserName == "firefox")
+            {
+                FirefoxOptions options = new FirefoxOptions();
+                if (headless)
+                {
+                    options.AddArgument("--headless");
+                    options.SetPreference("intl.accept_languages", "en,en_US");
+                }
+
+                if (fileDownloadLocation != null)
+                {
+                    options.SetPreference("browser.download.folderList", 2);
+                    options.SetPreference("browser.download.dir", fileDownloadLocation);
+                }
+
+                options.AddArgument("--private");
+
+                webDriver = new FirefoxDriver(options);
+            }
             browser = browserName;
             language = languageName;
             currency = currencyName;
+            Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo(languageName);
 
             webDriver.Navigate().GoToUrl(server);
 

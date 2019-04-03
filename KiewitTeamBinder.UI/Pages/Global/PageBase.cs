@@ -786,8 +786,13 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
         }
 
-        internal static KeyValuePair<string, bool> SetPassValidation(ExtentTest test, string testInfo)
+        internal static KeyValuePair<string, bool> SetPassValidation(ExtentTest test, string testInfo, string expectedValue = null)
         {
+            if (expectedValue != null)
+            {
+                testInfo += ": " + expectedValue;
+            }
+
             test.Pass(testInfo);
             return new KeyValuePair<string, bool>(testInfo, true);
         }
@@ -893,6 +898,15 @@ namespace KiewitTeamBinder.UI.Pages.Global
 
             //Console.WriteLine(callingClassName + "." + callingMethodName + " generated an error. A ScreenShot of the browser has been saved. " + filePath);
 
+        }
+
+        internal static void SwitchToWindow(string window, bool closePreviousWindow = false)
+        {
+            if (closePreviousWindow == true)
+            {
+                Browser.Close();
+            }
+            WebDriver.SwitchTo().Window(window);
         }
     }
     #endregion
