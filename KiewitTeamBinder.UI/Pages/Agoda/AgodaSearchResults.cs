@@ -24,7 +24,7 @@ namespace KiewitTeamBinder.UI.Pages.Agoda
         }
 
         #region Locators
-        static By _choosePlace(string placeName) => By.XPath($"//h3[text()='{placeName}']/ancestor::a");
+        static By _choosePlace(string placeName) => By.XPath($"//h3[contains(text(),'{placeName}')]/ancestor::a");
         static By _txtSearch => By.XPath("//div[@class='TextSearchContainer']//input");
 
         #endregion
@@ -45,7 +45,6 @@ namespace KiewitTeamBinder.UI.Pages.Agoda
             TxtSearch.ActionsPressEnter();
             string hotelUrl = ChoosePlace(placeName).GetAttribute("href");
             WebDriver.Navigate().GoToUrl(hotelUrl);
-            Wait(5);
             EndStepNode(node);
             return new AgodaHotelDetail(WebDriver);
         }

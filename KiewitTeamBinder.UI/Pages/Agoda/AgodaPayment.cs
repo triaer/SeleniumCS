@@ -42,7 +42,7 @@ namespace KiewitTeamBinder.UI.Pages.Agoda
         static By _lblDuration => By.XPath("//h4[contains(@data-bind,'nightsText')]");
         static By _lblRoomType => By.XPath("//span[contains(@data-bind,'roomTypeListText')]");
         static By _lblOccupancy => By.XPath("//span[@id='occupancyDetails']");
-        static By _lblTotalPrice => By.XPath("//strong[@id='totalAmount']");
+        static By _lblTotalPrice => By.XPath("//strong[@id='finalAmount' or @id='totalAmount']");
         static By _btnBackToBookingDetails => By.XPath("//div[@class='text-left flip hidden-xs']/button[@data-bind='click: backToFirstStep']");
 
         #endregion
@@ -129,21 +129,21 @@ namespace KiewitTeamBinder.UI.Pages.Agoda
             var validations = new List<KeyValuePair<string, bool>>();
             try
             {
-                string currency = Constant.currency;
+                //string currency = Constant.currency;
                 string oneRoomPriceValue = Constant.roomPrice;
-                int oneRoomPrice = Int32.Parse(oneRoomPriceValue.Replace(",", ""));
-                var roomPrice = (Math.Round(oneRoomPrice * placeToStay.Room * 1.05 * 1.1)).ToString();
-                string roomPriceInPaymentPage = LblRoomType.Text;
-                bool isCurrencyCorrect = currency.Equals(roomPriceInPaymentPage.Substring(0, 1));
-                bool isPriceCorrect = (roomPrice.Replace(",", "")).Equals(roomPriceInPaymentPage.Substring(2, roomPriceInPaymentPage.Length));
-                if (isCurrencyCorrect)
-                    validations.Add(SetPassValidation(node, ValidationMessage.ValidateRoomPriceCurency));
-                else
-                    validations.Add(SetFailValidation(node, ValidationMessage.ValidateRoomPriceCurency, currency, roomPriceInPaymentPage.Substring(0, 1)));
+                int oneRoomPrice = Int32.Parse(ConvertPrice(oneRoomPriceValue));
+                string roomPrice = (Math.Round(oneRoomPrice * placeToStay.Room * placeToStay.Duration * 1.05 * 1.1)).ToString();
+                string roomPriceInPaymentPage = LblTotalPrice.Text;
+                //bool isCurrencyCorrect = currency.Equals(roomPriceInPaymentPage.Substring(0, 1));
+                bool isPriceCorrect = (ConvertPrice(roomPriceInPaymentPage)).Contains(roomPrice);
+                //if (isCurrencyCorrect)
+                //    validations.Add(SetPassValidation(node, ValidationMessage.ValidateRoomPriceCurency));
+                //else
+                //    validations.Add(SetFailValidation(node, ValidationMessage.ValidateRoomPriceCurency, currency, roomPriceInPaymentPage.Substring(0, 1)));
                 if (isPriceCorrect)
                     validations.Add(SetPassValidation(node, ValidationMessage.ValidateRoomPriceValue));
                 else
-                    validations.Add(SetFailValidation(node, ValidationMessage.ValidateRoomPriceValue, roomPrice, roomPriceInPaymentPage.Substring(2, roomPriceInPaymentPage.Length)));
+                    validations.Add(SetFailValidation(node, ValidationMessage.ValidateRoomPriceValue, roomPrice, roomPriceInPaymentPage));
             }
             catch (Exception e)
             {
@@ -151,6 +151,21 @@ namespace KiewitTeamBinder.UI.Pages.Agoda
             }
             EndStepNode(node);
             return validations;
+        }
+
+        public string ConvertPrice(string price)
+        {
+            var node = CreateStepNode();
+            node.Info("Convert price: " + price);
+            string oneRoomPrice;
+            if (price.Contains(","))
+                oneRoomPrice = price.Replace(",", "");
+            else if (price.Contains("."))
+                oneRoomPrice = price.Replace(".", "");
+            else
+                oneRoomPrice = price;
+            EndStepNode(node);
+            return oneRoomPrice;
         }
 
         public KeyValuePair<string, bool> ValidateHotelInformation(string hotelName)
@@ -210,19 +225,29 @@ namespace KiewitTeamBinder.UI.Pages.Agoda
             {
                 string actualRoomType = LblRoomType.Text;
                 string actualRoomAndPerson = LblOccupancy.Text;
+                int actualRoomQuantity;
+                int actualAdultQuantity;
                 string[] tempActualRoomAndPersonSplit = actualRoomAndPerson.Split(',');
-                List<int> listValue = new List<int>();
-                for (int i = 0; i < 3; i++)
+                if(tempActualRoomAndPersonSplit.Contains(" "))
                 {
-                    string[] tempValue = tempActualRoomAndPersonSplit[i].Split(' ');
-                    listValue.Add(Int32.Parse(tempValue[0]));
+                    List<int> listValue = new List<int>();
+                    for (int i = 0; i < tempActualRoomAndPersonSplit.Count(); i++)
+                    {
+                        string[] tempValue = (tempActualRoomAndPersonSplit[i].Trim()).Split(' ');
+                        listValue.Add(Int32.Parse(tempValue[0]));
+                    }
+                    int[] value = listValue.ToArray();
+                    actualRoomQuantity = value[0];
+                    actualAdultQuantity = value[1];
                 }
-                int[] value = listValue.ToArray();
-                int actualRoomQuantity = value[0];
-                int actualAdultQuantity = value[1];
+                else
+                {
+                    actualRoomQuantity = Int32.Parse(tempActualRoomAndPersonSplit[0].Trim().Substring(0, 1));
+                    actualAdultQuantity = Int32.Parse(tempActualRoomAndPersonSplit[1].Trim().Substring(0, 1));
+                }
                 bool isRoomTypeCorrect = actualRoomType.Contains(room.RoomType);
-                bool isRoomQuantityCorrect = (placeToStay.Room == actualRoomQuantity);
-                bool isAdultQuantityCorrect = (placeToStay.Adults == actualAdultQuantity);
+                bool isRoomQuantityCorrect = placeToStay.Room.Equals(actualRoomQuantity);
+                bool isAdultQuantityCorrect = placeToStay.Adults.Equals(actualAdultQuantity);
                 if (isRoomTypeCorrect)
                     validations.Add(SetPassValidation(node, ValidationMessage.ValidateOccupancyRoomType));
                 else
@@ -252,7 +277,7 @@ namespace KiewitTeamBinder.UI.Pages.Agoda
             {
                if(customerInfo.FullName != null)
                 {
-                    string actualFullName = TxtFullName.Text;
+                    string actualFullName = TxtFullName.GetAttribute("value");
                     if (actualFullName.Equals(customerInfo.FullName))
                         validations.Add(SetPassValidation(node, ValidationMessage.ValidateCustomerInfoFullName));
                     else
@@ -260,8 +285,8 @@ namespace KiewitTeamBinder.UI.Pages.Agoda
                 }
                 else
                 {
-                    string actualFirstName = TxtFirstName.Text;
-                    string actualLastName = TxtLastName.Text;
+                    string actualFirstName = TxtFirstName.GetAttribute("value");
+                    string actualLastName = TxtLastName.GetAttribute("value");
                     if (actualFirstName.Equals(customerInfo.FirstName))
                         validations.Add(SetPassValidation(node, ValidationMessage.ValidateCustomerInfoFirstName));
                     else
@@ -271,8 +296,8 @@ namespace KiewitTeamBinder.UI.Pages.Agoda
                     else
                         validations.Add(SetFailValidation(node, ValidationMessage.ValidateCustomerInfoLastName, customerInfo.LastName, actualLastName));
                 }
-                string actualEmail = TxtPaymentElement(Payment.Email.ToDescription()).Text;
-                string actualRetypeEmail = TxtPaymentElement(Payment.RetypeEmail.ToDescription()).Text;
+                string actualEmail = TxtPaymentElement(Payment.Email.ToDescription()).GetAttribute("value");
+                string actualRetypeEmail = TxtPaymentElement(Payment.RetypeEmail.ToDescription()).GetAttribute("value");
                 string actualCountry = CboPaymentElement(Payment.ResidenceCountry.ToDescription()).GetSelectedValueInCombobox();
                 
                 if (actualEmail.Equals(customerInfo.Email))
@@ -299,7 +324,7 @@ namespace KiewitTeamBinder.UI.Pages.Agoda
             return validations;
         }
 
-        public AgodaPayment ClickButtonBackToBookingDetails()
+        public AgodaPayment BackToBookingDetails()
         {
             var node = CreateStepNode();
             node.Info("Click Button Back ToBooking Details.");

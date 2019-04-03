@@ -13,5 +13,6 @@ namespace KiewitTeamBinder.UI.Pages.Agoda
         public AgodaGeneral(IWebDriver webDriver) : base(webDriver)
         {
         }
+
     }
 }

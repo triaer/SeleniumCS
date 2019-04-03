@@ -17,6 +17,7 @@ namespace KiewitTeamBinder.UI.Tests
     public abstract class UITestBase
     {
         protected string browser = string.Empty;
+        //protected string language = string.Empty;
         protected string environment = string.Empty;
         private string excelUserSourcePath = string.Empty;
         private string localTempExcelUserTargetPath = string.Empty;
@@ -37,6 +38,11 @@ namespace KiewitTeamBinder.UI.Tests
             {
                 browser = TestContext.Properties["browser"].ToString();
             }
+
+            //if (TestContext.Properties.Contains("language"))
+            //{
+            //    browser = TestContext.Properties["language"].ToString();
+            //}
 
             if (TestContext.Properties.Contains("environment"))
             {
@@ -75,6 +81,7 @@ namespace KiewitTeamBinder.UI.Tests
             extent = ExtentReportsHelper.CreateReport(reportPath, TestContext.TestName);
             extent.AddSystemInfo("Environment", TestContext.Properties["environment"].ToString());
             extent.AddSystemInfo("Browser", TestContext.Properties["browser"].ToString());
+            //extent.AddSystemInfo("Language", TestContext.Properties["language"].ToString());
             test = ExtentReportsHelper.LogTest("Pre-condition");
         }
 

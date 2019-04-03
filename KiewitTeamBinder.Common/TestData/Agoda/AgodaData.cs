@@ -20,13 +20,24 @@ namespace KiewitTeamBinder.Common.TestData.Agoda
             Adults = 4,
         };
 
+        public PlaceToStay placeToStayWithCurrency = new PlaceToStay
+        {
+            Destination = "Phu Quoc",
+            CheckinTime = "Next month",
+            Duration = 3,
+            TravelType = AgodaEnums.Occupancy.Group.ToDescription(),
+            Room = 2,
+            Adults = 4,
+            Currency = AgodaEnums.Currency.USD.ToDescription(),
+        };
+
         public string choosenPlace = "Arcadia Phu Quoc Resort";
 
         public Room room = new Room
         {
             IsFreeBreakfast = true,
-            RoomType = "Standard Rom",
-            RoomPosition = 2
+            RoomType = "Premier Beach Front",
+            RoomPosition = 1
         };
 
         public CustomerInformation customerInfoFullname = new CustomerInformation
@@ -34,6 +45,16 @@ namespace KiewitTeamBinder.Common.TestData.Agoda
             FullName = "Hanh Nguyen",
             Email = "hanhnguyen@gmail.com",
             RetypeEmail = "hanhnguyen@gmail.com",
+            MobileNumber = Utils.RandomNumberString(10)
+        };
+
+        public CustomerInformation customerInfor = new CustomerInformation
+        {
+            FirstName = "Hanh",
+            LastName = "Nguyen",
+            Email = "hanhnguyen@gmail.com",
+            RetypeEmail = "hanhnguyen@gmail.com",
+            MobileNumber = Utils.RandomNumberString(10)
         };
     }
 }

@@ -69,5 +69,23 @@ namespace KiewitTeamBinder.Common
             [Description("twin-bed-radio")]
             TwinBeds
         }
+
+        public enum Currency
+        {
+            [Description("BHD")]
+            BHD,
+            [Description("USD")]
+            USD
+        }
+
+        public enum LanguageCode
+        {
+            [Description("en,en_US")]
+            EN_US,
+            [Description("zh")]
+            Chinese,
+            [Description("ru")]
+            Russian
+        }
     }
 }

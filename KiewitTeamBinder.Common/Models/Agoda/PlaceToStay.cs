@@ -16,5 +16,6 @@ namespace KiewitTeamBinder.Common.Models.Agoda
         public int Room { get; set; }
         public int Adults { get; set; }
         public int Children { get; set; }
+        public string Currency { get; set; }
     }
 }

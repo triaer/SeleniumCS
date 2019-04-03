@@ -37,7 +37,8 @@ namespace KiewitTeamBinder.UI.Pages.Global
         internal static By _progressPopUp => By.Id("divProgressWindow");
         internal static By _progressMessage => By.Id("spanProgressMsg");
         internal static By overlayWindow = By.XPath("//div[@class = 'k-overlay']");
-        internal const int longTimeout = 30;
+        //internal const int longTimeout = 30;
+        internal const int longTimeout = 20;
         internal const int mediumTimeout = 15;
         internal const int shortTimeout = 5;
         internal const int sapLongTimeout = 240;
@@ -962,7 +963,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
                     {
                         js.ExecuteScript("window.scrollBy(0," + x + ")", "");
                     }
-                    x = x + x;
+                    x += x;
                 }
             }
             while (stopwatch.ElapsedMilliseconds <= timeout * 1000);

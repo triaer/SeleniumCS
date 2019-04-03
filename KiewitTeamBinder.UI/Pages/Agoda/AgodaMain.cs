@@ -1,18 +1,11 @@
-﻿using KiewitTeamBinder.UI.Pages.Global;
-using OpenQA.Selenium;
+﻿using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static KiewitTeamBinder.UI.ExtentReportsHelper;
-using static KiewitTeamBinder.Common.DashBoardENums;
 using KiewitTeamBinder.Common.Helper;
-using KiewitTeamBinder.UI;
-using KiewitTeamBinder.Common.Models;
-using KiewitTeamBinder.Common.TestData;
-using static KiewitTeamBinder.Common.KiewitTeamBinderENums;
 using static KiewitTeamBinder.Common.AgodaEnums;
+using static KiewitTeamBinder.Common.Language;
 using KiewitTeamBinder.Common.Models.Agoda;
 
 namespace KiewitTeamBinder.UI.Pages.Agoda
@@ -26,6 +19,7 @@ namespace KiewitTeamBinder.UI.Pages.Agoda
         #region Locators
         static By _txtSearch => By.XPath("//input[contains(@class, 'SearchBoxTextEditor')]");
         static By _lblSearchResult(string searchValue) => By.XPath($"//li[contains(@data-text,'{searchValue}')][1]");
+        static By _lblAnotherSearchResult => By.XPath("//li[@class='Suggestion Suggestion__categoryName'][1]");
         static By _boxCheckin => By.XPath("//div[@data-element-name='check-in-box']");
         static By _boxCheckout => By.XPath("//div[@data-element-name='check-out-box']");
         static By _boxOccupancy => By.XPath("//div[@data-element-name='occupancy-box']");
@@ -47,12 +41,15 @@ namespace KiewitTeamBinder.UI.Pages.Agoda
         static By _lblBoxCheckoutValue => By.XPath("//div[@data-selenium='checkOutText']");
         static By _lblBoxOccupancyAdultValue => By.XPath("//span[@data-selenium='adultValue']");
         static By _lblBoxOccupancyRoomValue => By.XPath("//div[@data-selenium='roomValue']");
-
+        static By _lnkChangeCurrency => By.XPath("//a[@class='currency-trigger']");
+        static By _lnkChooseCurrency(string currency) => By.XPath($"//li[a[@data-value='{currency}'] and @class='header-menu__item currency']");
+        static By _msgMissingDestination => By.XPath("//div[@class='ModalMessage ModalMessage--center']/div");
         #endregion
 
         #region Elements
         public IWebElement TxtSearch => StableFindElement(_txtSearch);
         public IWebElement LblSearchResult(string searchValue) => StableFindElement(_lblSearchResult(searchValue));
+        public IWebElement LblAnotherSearchResul => StableFindElement(_lblAnotherSearchResult);
         public IWebElement BoxCheckIn => StableFindElement(_boxCheckin);
         public IWebElement BoxCheckOut => StableFindElement(_boxCheckout);
         public IWebElement BoxOccupancy => StableFindElement(_boxOccupancy);
@@ -74,6 +71,9 @@ namespace KiewitTeamBinder.UI.Pages.Agoda
         public IWebElement LblBoxCheckoutValue => StableFindElement(_lblBoxCheckoutValue);
         public IWebElement LblBoxOccupancyAdultValue => StableFindElement(_lblBoxOccupancyAdultValue);
         public IWebElement LblBoxOccupancyRoomValue => StableFindElement(_lblBoxOccupancyRoomValue);
+        public IWebElement LnkChangeCurrency => StableFindElement(_lnkChangeCurrency);
+        public IWebElement LnkChooseCurrency(string currency) => StableFindElement(_lnkChooseCurrency(currency));
+        public IWebElement MsgMissingDestination => StableFindElement(_msgMissingDestination);
         #endregion
 
         #region Methods
@@ -166,10 +166,11 @@ namespace KiewitTeamBinder.UI.Pages.Agoda
             var node = CreateStepNode();
             node.Info("Search destination: " + searchValue);
             TxtSearch.InputText(searchValue);
-            if (LblSearchResult(searchValue).IsDisplayed())
-                LblSearchResult(searchValue).Click();
-            else
-                TxtSearch.ActionsPressEnter();
+            //if (LblSearchResult(searchValue).IsDisplayed())
+            //    LblSearchResult(searchValue).Click();
+            //else
+            //    TxtSearch.ActionsPressEnter();
+            LblAnotherSearchResul.Click();
             EndStepNode(node);
             return this;
         }
@@ -178,6 +179,8 @@ namespace KiewitTeamBinder.UI.Pages.Agoda
         {
             var node = CreateStepNode();
             node.Info("Search for place to stay.");
+            if (placeToStay.Currency != null)
+                ChooseCurrency(placeToStay.Currency);
             SearchDestination(placeToStay.Destination);
             SelectDate(placeToStay.Duration, placeToStay.CheckinDate, placeToStay.CheckinTime);
             SelectOccupancy(placeToStay.TravelType, placeToStay.Room, placeToStay.Adults, placeToStay.Children);
@@ -210,6 +213,42 @@ namespace KiewitTeamBinder.UI.Pages.Agoda
             return Constant.occupancy = occupancy;
         }
 
-        #endregion
-    }
+        public AgodaMain ChooseCurrency(string currency)
+        {
+            var node = CreateStepNode();
+            node.Info("Choose the currency: " + currency);
+            LnkChangeCurrency.Click();
+            LnkChooseCurrency(currency).Click();
+            EndStepNode(node);
+            return this;
+        }
+
+        public KeyValuePair<string, bool> ValidateWarningMessage()
+        {
+            var node = CreateStepNode();
+            var validation = new KeyValuePair<string, bool>();
+            try
+            {
+                string expectedMsg = Resource.MissingDestinationWarningMessage;
+                string actualMsg = MsgMissingDestination.Text;
+                if (actualMsg.Equals(expectedMsg))
+                    validation.Add(SetPassValidation(node, ValidationMessage.ValidateWarningMessage));
+                else
+                    validation.Add(SetFailValidation(node, ValidationMessage.ValidateWarningMessage, expectedMsg, actualMsg));
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            EndStepNode(node);
+            return validation;
+        }
+
+        private static class ValidationMessage
+        {
+            public static string ValidateWarningMessage = "Validate that warning message is correct.";
+        }
+            #endregion
+        }
 }
