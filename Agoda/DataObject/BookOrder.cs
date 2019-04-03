@@ -16,14 +16,28 @@ namespace Agoda.DataObject
 
         public BookOrder()
         {
-
+            //init
         }
 
         public BookOrder(string language = "EN")
         {
             //init
-            if (language.Equals("EN"))
-                destination = "Phu Quoc";
+            switch (language)
+            {
+                case "EN":
+                    destination = "Phu Quoc";
+                    return;
+                case "DE":
+                    destination = "Phu Quoc";
+                    return;
+                case "JA":
+                    destination = "フーコック島";
+                    return;
+                default:
+                    destination = "Phu Quoc";
+                    return;
+            }
+            
         }
     }
 }

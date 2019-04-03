@@ -46,7 +46,6 @@ namespace Agoda.Pages
 
         static readonly By _childRoom = By.XPath("//span[contains(text(),'Standard')]/ancestor::div[@class='MasterRoom']//div[@data-selenium='ChildRoomsList-room']");
         static readonly By _select_NumberOfRoom = By.XPath("//span[contains(text(),'Standard')]/ancestor::div[@class='MasterRoom']//select");
-        //static readonly By _button_BookRoom = By.XPath("//span[contains(text(),'Standard')]/ancestor::div[@class='MasterRoom']//button[1]");
         static readonly By _button_BookRoom = By.XPath("//button[@data-selenium='ChildRoomsList-bookButtonInput']");
 
         static readonly By _textFullName = By.XPath("//div[@class='customer-info']//input[@id='fullName']");
@@ -489,6 +488,12 @@ namespace Agoda.Pages
             //Console.WriteLine(tabs.Count);
             _driver.SwitchTo().Window(tabs[1].ToString());
             //_driver.SwitchTo().Window(_driver.WindowHandles.Last());
+        }
+
+        public void test()
+        {
+            Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("fr-FR");
+            //Console.WriteLine(string.Hello);
         }
 
         public KeyValuePair<string, bool> ValidateFilledInformation()

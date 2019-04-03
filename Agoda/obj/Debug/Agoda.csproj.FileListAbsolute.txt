@@ -1,6 +1,7 @@
 C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\bin\Debug\Agoda.dll.config
 C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\bin\Debug\Agoda.dll
 C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\bin\Debug\Agoda.pdb
+C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\bin\Debug\fr\Agoda.resources.dll
 C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\bin\Debug\DnsClient.dll
 C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\bin\Debug\ExtentReports.dll
 C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\bin\Debug\FluentAssertions.dll
@@ -47,5 +48,9 @@ C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\bin\Debug\EPPlus.xml
 C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\bin\Debug\ExcelDataReader.xml
 C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\bin\Debug\ExcelDataReader.DataSet.xml
 C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\obj\Debug\Agoda.csprojResolveAssemblyReference.cache
+C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\obj\Debug\Agoda.string.resources
+C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\obj\Debug\Agoda.string.fr.resources
+C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\obj\Debug\Agoda.csproj.GenerateResource.Cache
+C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\obj\Debug\fr\Agoda.resources.dll
 C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\obj\Debug\Agoda.dll
 C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\obj\Debug\Agoda.pdb
