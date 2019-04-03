@@ -29,19 +29,20 @@ namespace KiewitTeamBinder.UI.Tests.User
             try
             {
                 //given
-                var driver = Browser.Open(Constant.AgodaPage, "firefox", Constant.GB_Local);
+                var driver = Browser.Open(Constant.AgodaPage, "chrome", Constant.GB_Local);
 
                 //when
                 test.Info("Navigate to www.agoda.com.");
                 AgodaTestsSmoke agodaData = new AgodaTestsSmoke();
                 AgodaLogin agodaLogin = new AgodaLogin(driver);
-                
-                agodaLogin.EnterRequiredData(agodaData.Place, agodaData.Month, agodaData.Duration, agodaData.Rooms, agodaData.Guests);
+
+                test = LogTest("ABC");
+                agodaLogin.EnterRequiredData(agodaData.bookingInfo);
                 AgodaResults agodaResults = agodaLogin.ClickSearchButton<AgodaResults>();
                 AgodaBookingRoom agodaBookingRoom = agodaResults.SelectHotel(agodaData.HotelName);
                 BookingForm bookingForm = agodaBookingRoom.SelectSpecificRoomType();
-                            bookingForm.LogValidation<BookingForm>(ref validations, bookingForm.ValidateRoomsAndGuests(agodaData.Rooms, agodaData.Guests))
-                                       .LogValidation<BookingForm>(ref validations, bookingForm.ValidateBookingDay(agodaData.Month, agodaData.Duration));                              
+                            bookingForm.LogValidation<BookingForm>(ref validations, bookingForm.ValidateRoomsAndGuests(agodaData.bookingInfo.Rooms, agodaData.bookingInfo.Guests))
+                                       .LogValidation<BookingForm>(ref validations, bookingForm.ValidateBookingDay(agodaData.bookingInfo.Month, agodaData.bookingInfo.Duration));                              
                 
                 //then
                 Console.WriteLine(string.Join(System.Environment.NewLine, validations.ToArray()));
@@ -53,6 +54,34 @@ namespace KiewitTeamBinder.UI.Tests.User
                 throw;
             }
         }
-        
+
+        [TestMethod]
+        public void TC002()
+        {
+            try
+            {
+                //given
+                var driver = Browser.Open(Constant.AgodaPage, "chrome", Constant.GB_Local);
+
+                //when
+                test.Info("Navigate to www.agoda.com.");
+                AgodaTestsSmoke agodaData = new AgodaTestsSmoke();
+                AgodaLogin agodaLogin = new AgodaLogin(driver);
+
+                test = LogTest("TC002");
+                agodaLogin.EnterRequiredData(agodaData.bookingInfo);
+                AgodaResults agodaResults = agodaLogin.ClickSearchButton<AgodaResults>()
+                                                      .SelectPriceRange(FilterAgoda.Price.ToDescription(), agodaData.LeftPercent, agodaData.RightPercent);
+               
+
+
+            }
+            catch (Exception e)
+            {
+                lastException = e;
+                throw;
+            }
+        }
+
     }
 }

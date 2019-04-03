@@ -565,6 +565,16 @@ namespace KiewitTeamBinder.Common
 
         }
 
+        public enum FilterAgoda
+        {
+            [Description("Popular")]
+            Popular,
+            [Description("Price")]
+            Price,
+            [Description("Star rating")]
+            StarRating
+        }
+
 
     }
 }

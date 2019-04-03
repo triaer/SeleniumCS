@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using static KiewitTeamBinder.UI.ExtentReportsHelper;
 using System.Collections.Generic;
+using KiewitTeamBinder.Common.TestData;
 
 namespace KiewitTeamBinder.UI.Pages
 {
@@ -52,10 +53,12 @@ namespace KiewitTeamBinder.UI.Pages
         #region Methods
         public AgodaLogin InputSearchField(string place)
         {
+            var node = CreateStepNode();
             SearchInput.SendKeys(place);
             WaitForElement(_listResults);
             FirstResult.Click();
             WaitForElement(_dateTimePicker);
+            EndStepNode(node);
             return this;
         }
 
@@ -110,6 +113,7 @@ namespace KiewitTeamBinder.UI.Pages
 
         public AgodaLogin SelectRoomsAndGuets(string rooms, string guests)
         {
+            var node = CreateStepNode();
             FamilyTravel.Click();
             while (rooms != Rooms.Text)
             {
@@ -119,17 +123,18 @@ namespace KiewitTeamBinder.UI.Pages
             {
                 GuestsPlus.Click();
             }
+            EndStepNode(node);
             return this;
         }
 
-       public AgodaLogin EnterRequiredData(string place, int month, int duration, string room, string guests)
+       public AgodaLogin EnterRequiredData(BookingInfo bookingInfo)
         {
             var node = CreateStepNode();
             node.Info("Enter required data ");
-            InputSearchField(place);
-            SelectDay(month);
-            SelectDay(month, duration, true, true);
-            SelectRoomsAndGuets(room, guests);
+            InputSearchField(bookingInfo.Place);
+            SelectDay(bookingInfo.Month);
+            SelectDay(bookingInfo.Month, bookingInfo.Duration, true, true);
+            SelectRoomsAndGuets(bookingInfo.Rooms, bookingInfo.Guests);
             EndStepNode(node);
             return this;
         } 

@@ -144,6 +144,7 @@ namespace KiewitTeamBinder.UI
         public static IWebDriver Open(string url, string browserName,string language, string fileDownloadLocation = null)
         {
             Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture(language);
+            //CultureInfo cl = new CultureInfo(language)
             DesiredCapabilities capability = new DesiredCapabilities();
             capability.SetCapability("browserName", browserName);
 
