@@ -5,7 +5,7 @@ using System.Linq;
 using static KiewitTeamBinder.UI.ExtentReportsHelper;
 using KiewitTeamBinder.Common.Helper;
 using static KiewitTeamBinder.Common.AgodaEnums;
-using static KiewitTeamBinder.Common.Language;
+//using KiewitTeamBinder.Common.Language;
 using KiewitTeamBinder.Common.Models.Agoda;
 
 namespace KiewitTeamBinder.UI.Pages.Agoda
@@ -229,17 +229,16 @@ namespace KiewitTeamBinder.UI.Pages.Agoda
             var validation = new KeyValuePair<string, bool>();
             try
             {
-                string expectedMsg = Resource.MissingDestinationWarningMessage;
-                string actualMsg = MsgMissingDestination.Text;
-                if (actualMsg.Equals(expectedMsg))
-                    validation.Add(SetPassValidation(node, ValidationMessage.ValidateWarningMessage));
-                else
-                    validation.Add(SetFailValidation(node, ValidationMessage.ValidateWarningMessage, expectedMsg, actualMsg));
+                //string expectedMsg = Resource.MissingDestinationWarningMessage;
+                //string actualMsg = MsgMissingDestination.Text;
+                //if (actualMsg.Equals(expectedMsg))
+                //    SetPassValidation(node, ValidationMessage.ValidateWarningMessage);
+                //else
+                //    SetFailValidation(node, ValidationMessage.ValidateWarningMessage, expectedMsg, actualMsg);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
-                throw;
+                SetErrorValidation(node, ValidationMessage.ValidateWarningMessage, e);
             }
             EndStepNode(node);
             return validation;

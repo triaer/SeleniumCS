@@ -15,5 +15,8 @@ namespace KiewitTeamBinder.Common.Helper
         public static string occupancy;
         public static string roomPrice;
         public static string currency;
+        public static string DigikeyPage = "https://www.digikey.vn";
+        public static string[] digikeyPartNumber;
+        public static string[] digikeyMrfNumber;
     }
 }

@@ -76,20 +76,30 @@
     <Compile Include="Helper\JsonHandler.cs" />
     <Compile Include="KiewitTeamBinderENums.cs" />
     <Compile Include="Helper\Utils.cs" />
-    <Compile Include="Language\Resource.zh-CN.Designer.cs">
+    <Compile Include="Language\Agoda\Resource.zh-CN.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resource.zh-CN.resx</DependentUpon>
     </Compile>
-    <Compile Include="Language\Resource.en-US.Designer.cs">
+    <Compile Include="Language\Agoda\Resource.en-US.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resource.en-US.resx</DependentUpon>
     </Compile>
-    <Compile Include="Language\Resource.vi-VN.Designer.cs">
+    <Compile Include="Language\Agoda\Resource.vi-VN.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resource.vi-VN.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Language\Digikey\DigikeyResource.en-US.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DigikeyResource.en-US.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Language\Digikey\DigikeyResource.zh-CN.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DigikeyResource.zh-CN.resx</DependentUpon>
     </Compile>
     <Compile Include="Models\Agoda\CustomerInformation.cs" />
     <Compile Include="Models\Agoda\PlaceToStay.cs" />
@@ -97,9 +107,11 @@
     <Compile Include="Models\Panel.cs" />
     <Compile Include="Models\TAPage.cs" />
     <Compile Include="Models\User.cs" />
+    <Compile Include="MouserEnum.cs" />
     <Compile Include="TestAccountAccess.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestData\Agoda\AgodaData.cs" />
+    <Compile Include="TestData\Digikey\DigikeyData.cs" />
     <Compile Include="TestData\PageDataSmoke.cs" />
     <Compile Include="TestData\PanelData.cs" />
     <Compile Include="TestData\SignOnData.cs" />
@@ -111,17 +123,25 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <EmbeddedResource Include="Language\Resource.zh-CN.resx">
+    <EmbeddedResource Include="Language\Agoda\Resource.zh-CN.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resource.zh-CN.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Language\Resource.en-US.resx">
+    <EmbeddedResource Include="Language\Agoda\Resource.en-US.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resource.en-US.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Language\Resource.vi-VN.resx">
+    <EmbeddedResource Include="Language\Agoda\Resource.vi-VN.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resource.vi-VN.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Language\Digikey\DigikeyResource.en-US.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>DigikeyResource.en-US.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Language\Digikey\DigikeyResource.zh-CN.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>DigikeyResource.zh-CN.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
