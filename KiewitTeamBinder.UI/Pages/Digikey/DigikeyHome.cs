@@ -12,15 +12,14 @@ using KiewitTeamBinder.UI;
 using KiewitTeamBinder.Common.Models;
 using KiewitTeamBinder.Common.TestData;
 using static KiewitTeamBinder.Common.KiewitTeamBinderENums;
-using static KiewitTeamBinder.Common.AgodaEnums;
-using KiewitTeamBinder.Common.Models.Agoda;
 using OpenQA.Selenium.Support.UI;
+using KiewitTeamBinder.UI.Pages.Digikey;
 
-namespace KiewitTeamBinder.UI.Pages.Mouser
+namespace KiewitTeamBinder.UI.Pages.Home
 {
-    public class MouserHome : MouserGeneral
+    public class DigikeyHome : DigikeyGeneral
     {
-        public MouserHome(IWebDriver webDriver) : base(webDriver)
+        public DigikeyHome(IWebDriver webDriver) : base(webDriver)
         {
         }
 
@@ -33,7 +32,7 @@ namespace KiewitTeamBinder.UI.Pages.Mouser
         #endregion
 
         #region Methods
-        public MouserHome SelectLocation(string location)
+        public DigikeyHome SelectLocation(string location)
         {
             var node = CreateStepNode();
             node.Info("Select location: " + location);

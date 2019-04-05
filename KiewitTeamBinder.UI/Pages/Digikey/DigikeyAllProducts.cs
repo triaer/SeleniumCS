@@ -34,13 +34,13 @@ namespace KiewitTeamBinder.UI.Pages.Digikey
         #endregion
 
         #region Methods
-        public DigikeyProductsDetail OpenSpecificProductList(string section, string type)
+        public DigikeyProductList OpenSpecificProductList(string section, string type)
         {
             var node = CreateStepNode();
             node.Info("Open product list with section: " + section + " and type: " + type);
             LnkProductType(section, type).Click();
             EndStepNode(node);
-            return new DigikeyProductsDetail(WebDriver);
+            return new DigikeyProductList(WebDriver);
         }
         #endregion
     }

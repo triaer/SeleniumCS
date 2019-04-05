@@ -18,9 +18,9 @@ using OpenQA.Selenium.Support.UI;
 
 namespace KiewitTeamBinder.UI.Pages.Digikey
 {
-    public class DigikeyProductsDetail : DigikeyGeneral
+    public class DigikeyProductDetail : DigikeyGeneral
     {
-        public DigikeyProductsDetail(IWebDriver webDriver) : base(webDriver)
+        public DigikeyProductDetail(IWebDriver webDriver) : base(webDriver)
         {
         }
 
@@ -28,17 +28,27 @@ namespace KiewitTeamBinder.UI.Pages.Digikey
         static By _txtQty => By.XPath("//input[@name='qty']");
         static By _txtCustomerReference => By.XPath("//input[@name='cref']");
         static By _btnAddToCart => By.XPath("//input[@id='addtoorderbutton']");
+        static By _lnkProduct(string product) => By.XPath($"//div[contains(@class,'crumb')]//a[text()='{product}']");
         #endregion
 
         #region Elements
         public IWebElement TxtQty => StableFindElement(_txtQty);
         public IWebElement TxtCustomerReference => StableFindElement(_txtCustomerReference);
         public IWebElement BtnAddToCart => StableFindElement(_btnAddToCart);
-
+        public IWebElement LnkProduct(string product) => StableFindElement(_lnkProduct(product));
         #endregion
 
         #region Methods
-
+        public DigikeyCart AddAProductToCartFromProductDetailPage(int quantity, string customerReference)
+        {
+            var node = CreateStepNode();
+            node.Info("Art a product to Cart with quantity: " + quantity + " and customer reference: " + customerReference);
+            TxtQty.InputText(quantity.ToString());
+            TxtCustomerReference.InputText(customerReference);
+            BtnAddToCart.Click();
+            EndStepNode(node);
+            return new DigikeyCart(WebDriver);
+        }
 
         private static class ValidationMessage
         {

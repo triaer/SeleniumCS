@@ -74,13 +74,13 @@ namespace KiewitTeamBinder.UI.Pages.Digikey
             return validations;
         }
 
-        public DigikeyProductsList BackToDigikeyProductList()
+        public DigikeyProductList BackToDigikeyProductList()
         {
             var node = CreateStepNode();
             node.Info("Back to Digikey Product List page.");
             LnkBackToSearchResult.Click();
             EndStepNode(node);
-            return new DigikeyProductsList(WebDriver);
+            return new DigikeyProductList(WebDriver);
         }
 
         private static class ValidationMessage

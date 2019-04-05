@@ -154,7 +154,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Agoda\AgodaTest.cs" />
-    <Compile Include="Mouser\MouserTest.cs" />
+    <Compile Include="Digikey\DigikeyTest.cs" />
     <Compile Include="UITestBase.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
