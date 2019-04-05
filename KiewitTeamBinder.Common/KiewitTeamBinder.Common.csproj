@@ -82,6 +82,7 @@
     <Compile Include="TestAccountAccess.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestData\AgodaTestsSmoke.cs" />
+    <Compile Include="TestData\DigiKeyTestsSmoke.cs" />
     <Compile Include="TestData\SignOnTestsSmoke.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -131,6 +131,8 @@
     <Compile Include="Pages\AgodaBookingRoom.cs" />
     <Compile Include="Pages\AgodaLogin.cs" />
     <Compile Include="Pages\AgodaResults.cs" />
+    <Compile Include="Pages\CartDigiKey.cs" />
+    <Compile Include="Pages\CompareDigiKey.cs" />
     <Compile Include="Pages\DataProfiles.cs" />
     <Compile Include="Pages\BookingForm.cs" />
     <Compile Include="Pages\Global\LoggedInLanding.cs" />
@@ -140,8 +142,10 @@
     <Compile Include="Pages\Global\PageBase.cs" />
     <Compile Include="Pages\Login.cs" />
     <Compile Include="Pages\Main.cs" />
-    <Compile Include="Pages\MouserMain.cs" />
-    <Compile Include="Pages\Thermistors.cs" />
+    <Compile Include="Pages\MainDigiKey.cs" />
+    <Compile Include="Pages\ProductDetailsDigiKey.cs" />
+    <Compile Include="Pages\ProductsDigiKey.cs" />
+    <Compile Include="Pages\SubCategoryDigiKey.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

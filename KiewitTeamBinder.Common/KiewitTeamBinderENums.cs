@@ -575,7 +575,15 @@ namespace KiewitTeamBinder.Common
             StarRating
         }
 
-
+        public enum TopMenuDigiKey
+        {
+            [Description("PRODUCTS")]
+            Products,
+            [Description("MANUFACTURERS")]
+            Manufacturers,
+            [Description("RESOURCES")]
+            Resources
+        }
     }
 }
 
