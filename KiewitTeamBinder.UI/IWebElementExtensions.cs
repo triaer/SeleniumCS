@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using static KiewitTeamBinder.UI.Pages.Global.PageBase;
 
@@ -33,9 +34,32 @@ namespace KiewitTeamBinder.UI
             {
                 Element.SendKeys("");
                 Element.Clear();
+                //Thread.Sleep(2000);
                 Element.SendKeys(text);
             }
         }
+
+        //public static void InputText(this IWebElement Element, string text, IWebDriver driver, bool byJS = false)
+        //{
+        //    if (byJS)
+        //    {
+        //        try
+        //        {
+        //            ((IJavaScriptExecutor)WebDriver).ExecuteScript("arguments[0].value = arguments[1];", Element, text);
+        //        }
+        //        catch (TimeoutException e)
+        //        {
+        //            throw new Exception($"{Element.TagName} - Element not visible within timeout period - Message: {e.Message}");
+        //        }
+        //    }
+        //    else
+        //    {
+        //        Element.Clear();
+                
+        //        //Thread.Sleep(2000);
+        //        Element.SendKeys(text);
+        //    }
+        //}
 
         public static void Check(this IWebElement Element)
         {

@@ -34,14 +34,16 @@ namespace KiewitTeamBinder.UI.Tests.User
                            .SelectSubCategory<SubCategoryDigiKey>(digiKeyData.Category, digiKeyData.subCategory)
                            .SelectAndCompareProducts(digiKeyData.Quantity)
                            .ClickBackButton<SubCategoryDigiKey>()
-                           .SelectProductAndAddtoCart(digiKeyData.Quantity, digiKeyData.QuantityProduct, digiKeyData.MultiReference);           
+                           .SelectProductAndAddtoCart(digiKeyData.Quantity, digiKeyData.QuantityOrder, digiKeyData.MultiReference)
+                           .ModifyCustomerRef(digiKeyData.ModifiedRef, digiKeyData.ModifiedQuantity, digiKeyData.Quantity)
+                           .DeleteProducts(digiKeyData.DeleteProducts);           
 
                 //then
             }
             catch (Exception e)
             {
 
-                throw;
+                throw e;
             }
         }
     }
