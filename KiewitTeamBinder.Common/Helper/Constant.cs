@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,8 @@ namespace KiewitTeamBinder.Common.Helper
         //public const string HomePage = "https://www.agoda.com/";
         //public const string HomePage = "https://www.agoda.com/vi-vn/";
         //public const string HomePage = "https://www.agoda.com/de-de/";
-        public const string HomePage = "www.digikey.com";
+        public const string HomePage = "https://www.digikey.com";
+
+        public static ArrayList _cart;
     }
 }

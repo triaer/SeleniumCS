@@ -54,3 +54,11 @@ C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\obj\Debug\Agoda.csproj.G
 C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\obj\Debug\fr\Agoda.resources.dll
 C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\obj\Debug\Agoda.dll
 C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\obj\Debug\Agoda.pdb
+C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll
+C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll
+C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll
+C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\bin\Debug\Newtonsoft.Json.dll
+C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\bin\Debug\Newtonsoft.Json.pdb
+C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\bin\Debug\Newtonsoft.Json.xml
+C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\bin\Debug\ExcelDataReader.pdb
+C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Agoda\bin\Debug\ExcelDataReader.DataSet.pdb

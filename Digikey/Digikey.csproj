@@ -150,17 +150,24 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Browser.cs" />
+    <Compile Include="Constants\Constants.cs" />
+    <Compile Include="DataObjects\CartItem.cs" />
     <Compile Include="DataObjects\Product.cs" />
     <Compile Include="ExtentReportsHelper.cs" />
     <Compile Include="IWebElementExtensions.cs" />
+    <Compile Include="Pages\CartPage.cs" />
     <Compile Include="Pages\DigikeyMain.cs" />
     <Compile Include="Pages\PageBase.cs" />
+    <Compile Include="Pages\ProductComparePage.cs" />
+    <Compile Include="Pages\ProductDetailPage.cs" />
     <Compile Include="Pages\ProductsPage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tests\DigikeyTest.cs" />
     <Compile Include="Tests\UITestBase.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />

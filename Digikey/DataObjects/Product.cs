@@ -11,6 +11,7 @@ namespace Digikey.DataObjects
         public string _digiKey;
         public string _mfgPartNumber;
         public string _manufacturer;
+        public string _description;
 
         public Product()
         {
@@ -37,6 +38,11 @@ namespace Digikey.DataObjects
         public string getManufacturer()
         {
             return this._manufacturer;
+        }
+
+        public string getDescription()
+        {
+            return this._description;
         }
 
         private void test()

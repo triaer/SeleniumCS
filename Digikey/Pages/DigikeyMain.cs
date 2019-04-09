@@ -55,7 +55,7 @@ namespace Digikey.Pages
         
         
 
-        public void test()
+        public void mytest()
         {
             Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("fr-FR");
             //Console.WriteLine(string.Hello);
