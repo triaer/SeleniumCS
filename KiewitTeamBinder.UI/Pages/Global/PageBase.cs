@@ -30,7 +30,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         internal static IWebDriver WebDriver { get; set; }
 
         public static By _walkMe => By.XPath("//div[@id='walkme-player']//div[contains(@class,'walkme-in')]");
-        internal static By _loadingPanel => By.XPath("//div[contains(@id, 'LoadingPanel')]");
+        internal static By _loadingPanel => By.Id("spinner");
         internal static By _progressPopUp => By.Id("divProgressWindow");
         internal static By _progressMessage => By.Id("spanProgressMsg");
         internal static By overlayWindow = By.XPath("//div[@class = 'k-overlay']");
@@ -100,8 +100,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
             {
                 try
                 {
-                    WaitForLoading(_loadingPanel);
-                    WaitForElementDisplay(_walkMe, mediumTimeout);
+                    WaitForElement(_loadingPanel, 5);
                     if (WaitForElementInvisible(_loadingPanel))
                         break;
                 }
@@ -395,6 +394,12 @@ namespace KiewitTeamBinder.UI.Pages.Global
         {
             IJavaScriptExecutor jse = (IJavaScriptExecutor)WebDriver;
             jse.ExecuteScript("arguments[0].scrollIntoView(true);", Element);
+        }
+
+        internal static void ScrollIntoViewBottom(IWebElement Element)
+        {
+            IJavaScriptExecutor jse = (IJavaScriptExecutor)WebDriver;
+            jse.ExecuteScript("arguments[0].scrollIntoView(false);", Element);
         }
 
         internal static bool RetryingFindClick(IWebElement webElement)
@@ -907,6 +912,21 @@ namespace KiewitTeamBinder.UI.Pages.Global
                 Browser.Close();
             }
             WebDriver.SwitchTo().Window(window);
+        }
+
+        public T LogValidation<T>(ref List<KeyValuePair<string, bool>> validations, KeyValuePair<string, bool> addedValidation) where T:PageBase
+        {
+            validations.Add(addedValidation);
+            return (T)this;
+        }
+
+        public T LogValidation<T>(ref List<KeyValuePair<string, bool>> validations, List<KeyValuePair<string, bool>> addedValidations) where T:PageBase
+        {
+            foreach (var item in addedValidations)
+            {
+                validations.Add(item);
+            }
+            return (T)this;
         }
     }
     #endregion

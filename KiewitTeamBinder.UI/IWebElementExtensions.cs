@@ -309,5 +309,11 @@ namespace KiewitTeamBinder.UI
             else
                 selector.SelectByText(item);
         }
+
+        public static void ClickWithJS(this IWebElement Element)
+        {
+            IJavaScriptExecutor jse = (IJavaScriptExecutor)WebDriver;
+            jse.ExecuteScript("arguments[0].click();", Element);
+        }
     }
 }
