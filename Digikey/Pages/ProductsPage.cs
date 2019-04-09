@@ -14,6 +14,8 @@ namespace Digikey.Pages
         private IWebDriver _driver;
 
         # region Locators
+        static readonly By _cartMenu = By.XPath("//a[contains(@class,'cart')]");
+        static readonly By _ViewCartBtn = By.XPath("//div[contains(@class,'dropdown--cart')]/a[@class='dropdown--button']");
 
         static readonly By _LinkBatteryProdCat = By.XPath("//a[@href='#cat-6' and text()='Battery Products']");
         static readonly By _linkAccessories = By.XPath("//a[@href='/products/en/battery-products/accessories/87']");
@@ -25,10 +27,9 @@ namespace Digikey.Pages
         string _linkManufacturer = "//tbody/tr[{0}]//td[contains(@class,'tr-vendor')]//span[@itemprop='name']";
 
         string _itemByKey = "//td[contains(@class,'dkPartNumber')]/a[contains(text(),'{0}')]";
-        string _itemMfgByKey = "//tr[./td[./a[contains(text(),'{0}')]]]/td[contains(@class,'mfgPartNumber')]/a";
+        string _itemMfgByKey = "//tr[./td[./a[contains(text(),'{0}')]]]/td[contains(@class,'mfgPartNumber')]//span[@itemprop='name']";
         string _itemManufacturerByKey = "//tr[./td[./a[contains(text(),'{0}')]]]/td[contains(@class,'vendor')]//span[@itemprop='name']";
         string _itemDescriptionByKey = "//tr[./td[./a[contains(text(),'{0}')]]]/td[contains(@class,'description')]";
-
 
         static readonly By _buttonCompare = By.XPath("//input[@id='compare-button']");
 
@@ -37,6 +38,18 @@ namespace Digikey.Pages
         //======================================
 
         #region Elements
+
+        public IWebElement CartMenu
+        {
+            get { return StableFindElement(_cartMenu); }
+        }
+
+
+        public IWebElement ButtonViewCart
+        {
+            get { return StableFindElement(_ViewCartBtn); }
+        }
+
         public IWebElement LinkBatteryProductsCategory
         {
             get { return StableFindElement(_LinkBatteryProdCat); }
@@ -69,12 +82,14 @@ namespace Digikey.Pages
 
         public IWebElement ItemLinkByKey(string digiKey)
         {
+            WaitForElementDisplay(By.XPath(string.Format(_itemByKey, digiKey)));
             return StableFindElement(By.XPath(string.Format(_itemByKey, digiKey)));
         }
 
         public IWebElement ItemMfgByKey (string digikey)
         {
-            return StableFindElement(By.XPath(string.Format(_itemMfgByKey, digikey))
+            //WaitForElementDisplay(By.XPath(string.Format(_itemMfgByKey, digikey)));
+            return StableFindElement(By.XPath(string.Format(_itemMfgByKey, digikey)));
         }
 
         public IWebElement ItemManufacturerByKey(string digikey)
@@ -103,14 +118,9 @@ namespace Digikey.Pages
             this._driver = driver;
         }
 
-        public ProductsPage JumpToBatteryProductsCategory()
+        public ProductsPage GetProductList()
         {
             this.LinkBatteryProductsCategory.Click();
-            return this;
-        }
-
-        public ProductsPage GetAccessories()
-        {
             this.LinkAccessories.Click();
             return this;
         }
@@ -133,21 +143,18 @@ namespace Digikey.Pages
             return new ProductComparePage(_driver, alist);
         }
 
-        public ProductDetailPage SelectItemByDigikey(string digiKey)
+        public ProductDetailPage SelectItemByDigikey(int order)
         {
-            var product = new Product();
-            product._digiKey = digiKey;
-            product._mfgPartNumber = ItemMfgByKey(digiKey).Text;
-            product._manufacturer = ItemManufacturerByKey(digiKey).Text;
-            product._description = ItemDescriptionByKey(digiKey).Text;
-
-            ItemLinkByKey(digiKey).Click();
-            return new ProductDetailPage(_driver, product);
+            LinkDigikeyPart(order).Click();
+            return new ProductDetailPage(_driver);
         }
 
-
-
-
+        public CartPage goToCartPage()
+        {
+            this.CartMenu.Click();
+            this.ButtonViewCart.Click();
+            return new CartPage(_driver);
+        }
 
         #endregion
     }

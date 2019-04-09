@@ -1,4 +1,6 @@
-﻿using Digikey.DataObjects;
+﻿using System;
+using System.Collections.Generic;
+using Digikey.DataObjects;
 using OpenQA.Selenium;
 
 namespace Digikey.Pages
@@ -72,6 +74,11 @@ namespace Digikey.Pages
 
 
             return isDisplayed;
+        }
+
+        internal KeyValuePair<string, bool> ValidateCartItems()
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

@@ -10,6 +10,6 @@ namespace Digikey.Constants
     public static class Constants
     {
         public const string HomePage = "https://www.digikey.com";
-        public static ArrayList _cart;
+        public static ArrayList _cart = new ArrayList();
     }
 }
