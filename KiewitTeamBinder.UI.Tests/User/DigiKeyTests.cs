@@ -24,19 +24,19 @@ namespace KiewitTeamBinder.UI.Tests.User
                 //given
                 var driver = Browser.Open(Constant.DigiKey, "chrome");
                 DigiKeyTestsSmoke digiKeyData = new DigiKeyTestsSmoke();
-                //IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
-                //js.ExecuteScript("localStorage.setItem('lpLastVisit-12757882','1554105342430');");
-                //js.ExecuteScript("localStorage.setItem('SZMKSessionId', {\"time\":1554112731778,\"id\":\"1016452831274060622\"});");
+
 
                 //when
                 MainDigiKey mainDigiKey = new MainDigiKey(driver);
-                mainDigiKey.SelectMenu<ProductsDigiKey>(TopMenuDigiKey.Products.ToDescription())
-                           .SelectSubCategory<SubCategoryDigiKey>(digiKeyData.Category, digiKeyData.subCategory)
-                           .SelectAndCompareProducts(digiKeyData.Quantity)
-                           .ClickBackButton<SubCategoryDigiKey>()
-                           .SelectProductAndAddtoCart(digiKeyData.Quantity, digiKeyData.QuantityOrder, digiKeyData.MultiReference)
-                           .ModifyCustomerRef(digiKeyData.ModifiedRef, digiKeyData.ModifiedQuantity, digiKeyData.Quantity)
-                           .DeleteProducts(digiKeyData.DeleteProducts);           
+
+                CompareDigiKey compareDigiKey = mainDigiKey.SelectMenu<ProductsDigiKey>(TopMenuDigiKey.Products.ToDescription())
+                                                            .SelectSubCategory<SubCategoryDigiKey>(digiKeyData.Category, digiKeyData.subCategory)
+                                                            .SelectAndCompareProducts(digiKeyData.Quantity);
+                compareDigiKey.LogValidation<CompareDigiKey>(ref validations, compareDigiKey.ValidateNumber())
+                                                                                                            .ClickBackButton<SubCategoryDigiKey>()
+                                                                                                            .SelectProductAndAddtoCart(digiKeyData.Quantity, digiKeyData.QuantityOrder, digiKeyData.MultiReference)
+                                                                                                            .ModifyCustomerRef(digiKeyData.ModifiedRef, digiKeyData.ModifiedQuantity, digiKeyData.Quantity)
+                                                                                                            .DeleteProducts(digiKeyData.DeleteProducts);
 
                 //then
             }

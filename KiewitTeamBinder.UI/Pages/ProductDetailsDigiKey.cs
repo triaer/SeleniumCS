@@ -15,12 +15,14 @@ namespace KiewitTeamBinder.UI.Pages
         private By _referrence => By.XPath("//input[@id='cref']");
         private By _addtoCart => By.XPath("//input[@id='addtoorderbutton']");
         private By _searchIcon => By.XPath("//button[@id='header-search-button']");
+        private By _digiKeyNumber => By.XPath("//meta[@itemprop='productID']");
         #endregion
 
         #region Elements
         public IWebElement Quantity { get { return StableFindElement(_quantity); } }
         public IWebElement Reference { get { return StableFindElement(_referrence); } }
         public IWebElement AddToCart { get { return StableFindElement(_addtoCart); } }
+        public IWebElement DigiKeyNumber { get { return StableFindElement(_digiKeyNumber); } }
         #endregion
 
         #region Methods

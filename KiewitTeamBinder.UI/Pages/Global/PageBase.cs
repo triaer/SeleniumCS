@@ -30,7 +30,7 @@ namespace KiewitTeamBinder.UI.Pages.Global
         internal static IWebDriver WebDriver { get; set; }
 
         public static By _walkMe => By.XPath("//div[@id='walkme-player']//div[contains(@class,'walkme-in')]");
-        internal static By _loadingPanel => By.XPath("//div[contains(@id, 'LoadingPanel')]");
+        internal static By _loadingPanel => By.Id("spinner");
         internal static By _progressPopUp => By.Id("divProgressWindow");
         internal static By _progressMessage => By.Id("spanProgressMsg");
         internal static By overlayWindow = By.XPath("//div[@class = 'k-overlay']");
@@ -100,8 +100,8 @@ namespace KiewitTeamBinder.UI.Pages.Global
             {
                 try
                 {
-                    WaitForLoading(_loadingPanel);
-                    WaitForElementDisplay(_walkMe, mediumTimeout);
+                    WaitForElement(_loadingPanel, 3);
+                    //WaitForElementDisplay(_walkMe, mediumTimeout);
                     if (WaitForElementInvisible(_loadingPanel))
                         break;
                 }
