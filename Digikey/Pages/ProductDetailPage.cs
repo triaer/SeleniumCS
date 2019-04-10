@@ -105,10 +105,8 @@ namespace Digikey.Pages
             // Add Cart Item to Cart
             _cart.Add(cartItem);
            
-            Console.WriteLine(_cart[0].ToString());
-
             // Go to Cart page
-            Wait(2);
+            //Wait(2);
             ButtonAddToCart.Click();
 
             return new CartPage(_driver);

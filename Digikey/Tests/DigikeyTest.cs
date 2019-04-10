@@ -48,23 +48,36 @@ namespace Digikey.Tests
                     .BackToProductsPage();
                 
                 test.Info("10. Repeat step 7-9 for 2 others products");
-
+                                
                 productPage.GetProductList()
                     .SelectItemByDigikey(2)
                     .AddProductToCart(quantity: 2, customerRef: "cusRef02")
                     .BackToProductsPage();
-
                 productPage.GetProductList()
                     .SelectItemByDigikey(3)
                     .AddProductToCart(quantity: 2, customerRef: "cusRef03")
                     .BackToProductsPage();
-
+                
                 CartPage cartPage = productPage.goToCartPage();
 
                 // VP:
                 validations.Add(cartPage.ValidateCartItems());
 
+                test = LogTest("Verify modified quantity of items in Cart.");
+                test.Info("12. Modify Customer Reference  and quantity as 3 for all products");
 
+                cartPage.modifyQuantityForAllItems(newQuantity: 3);
+
+                // VP:
+                validations.Add(cartPage.ValidateNewQuantityOfCartItems());
+
+                test = LogTest("Verify deleted items not existed in Cart.");
+                test.Info("14. Delete any 2 products");
+
+                cartPage.DeleteItemFromCart(2);
+
+                // VP:
+                validations.Add(cartPage.ValidateExistenceOfDeletedCartItems());
 
                 Console.WriteLine(string.Join(Environment.NewLine, validations.ToArray()));
                 validations.Should().OnlyContain(validations => validations.Value).Equals(bool.TrueString);

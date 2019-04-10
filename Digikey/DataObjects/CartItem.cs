@@ -9,8 +9,8 @@ namespace Digikey.DataObjects
     public class CartItem
     {
         public Product _product;
-        public  int _quantity;
-        public  string _customerRef;
+        public int _quantity;
+        public string _customerRef;
 
 
         public CartItem()
