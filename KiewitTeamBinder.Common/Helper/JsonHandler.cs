@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace KiewitTeamBinder.Common.Helper
 {
-    class JsonHandler
+    public class JsonHandler
     {
         private static string jsonFilePath = AppDomain.CurrentDomain.BaseDirectory + "\\TestData\\";
         internal static void WriteToJson(Object obj, string testCaseName)
@@ -29,5 +29,30 @@ namespace KiewitTeamBinder.Common.Helper
             }
         }
 
+        public static List<Employee> ReadDataFromJson(string path)
+        { 
+            using (StreamReader r = new StreamReader(path))
+            {
+                string json = r.ReadToEnd();
+                Console.WriteLine(json);
+                List<Employee> items = JsonConvert.DeserializeObject<List<Employee>>(json);
+                return items;
+            }
+            
+        }
+
     }
+
+    public class Employee
+    {
+        public string firstName { get; set; }
+        public string lastName { get; set; }
+
+        public Employee()
+        {
+            // init
+        }
+    }
+
+
 }
