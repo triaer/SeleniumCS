@@ -53,7 +53,7 @@ namespace Breeze.UI.Tests.Digikey
                 Browser.Open(Constant.DigikeyHomePage, browser);
                 homePage.SelectProductMenu().SelectTargetProductCategory(testData.Category, testData.SubCategory);
 
-                WebDriver.SwitchDriverTo("firefox");
+                WebDriver.SwitchToTargetDriver("firefox");
 
 
                 //Then

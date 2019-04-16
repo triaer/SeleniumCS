@@ -3,6 +3,12 @@ using OpenQA.Selenium;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading;
+using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.IE;
+using OpenQA.Selenium.Firefox;
+using Microsoft.Win32;
+using OpenQA.Selenium.Remote;
+using System.IO;
 
 namespace Breeze.UI.DriverWrapper
 {
@@ -11,23 +17,129 @@ namespace Breeze.UI.DriverWrapper
     ///</summary>
     public class WebDriver 
     {
-        private static int timeOut = 60;
-        ///<summary>
-        ///Contain properties of web driver
-        ///</summary>
-        private static ThreadLocal<DriverManager> DRIVER = new ThreadLocal<DriverManager>();
+        [ThreadStatic]
+        private static int timeOut;
+        [ThreadStatic]
+        private static string defaultKey;
+        [ThreadStatic]
+        private static string currentKey;
+        [ThreadStatic]
+        private static Dictionary<string, IWebDriver> listDriver;
+        [ThreadStatic]
+        private static Dictionary<string, DriverProperties> listProperties;
 
         public static void InitDriverManager(DriverProperties pro, string key = "default")
         {
-            DRIVER.Value = new DriverManager(key);
+            listDriver = new Dictionary<string, IWebDriver>();
+            listProperties = new Dictionary<string, DriverProperties>();
+            defaultKey = key;
+            timeOut = 60;
+            listProperties.Add(key, pro);
         }
 
-        ///<summary>
-        ///Add webdriver by key
-        ///</summary>
-        public static void SetDriverByKey(DriverProperties pro, string key)
+        public static void CreateDriverByProperties(DriverProperties properties, string key)
         {
-            DRIVER.Value.CreateDriverByProperties(pro, key);
+            if (listDriver.Count == 0 || listDriver.ContainsKey(key) == false)
+            {
+                IWebDriver webDriver = null;
+                string defaultDownloadLocation = Path.GetPathRoot(Environment.SystemDirectory) + "Users\\" + Environment.UserName + "\\Downloads";
+                if (properties.getDriverType() == DriverType.Chrome)
+                {
+                    ChromeOptions options = new ChromeOptions();
+                    if (properties.isHeadless())
+                    {
+                        options.AddArgument("--headless");
+                        options.AddArguments("--disable-gpu");
+                        options.AddUserProfilePreference("disable-popup-blocking", "true");
+                        options.AddUserProfilePreference("intl.accept_languages", "en,en_US");
+                    }
+
+                    if (properties.getDownloadLocation() != null)
+                        options.AddUserProfilePreference("download.default_directory", properties.getDownloadLocation());
+                    options.AddArgument("--incognito");
+
+                    webDriver = new ChromeDriver(options);
+                }
+                else if (properties.getDriverType() == DriverType.IE)
+                {
+
+                    InternetExplorerOptions ieOptions = new InternetExplorerOptions();
+                    ieOptions.EnableNativeEvents = true;
+                    ieOptions.UnhandledPromptBehavior = UnhandledPromptBehavior.Ignore;
+                    ieOptions.EnablePersistentHover = true;
+                    ieOptions.RequireWindowFocus = true;
+                    ieOptions.IntroduceInstabilityByIgnoringProtectedModeSettings = true;
+                    ieOptions.IgnoreZoomLevel = true;
+                    ieOptions.EnsureCleanSession = true;
+                    ieOptions.AddAdditionalCapability("disable-popup-blocking", true);
+                    ieOptions.AddAdditionalCapability(CapabilityType.IsJavaScriptEnabled, true);
+                    //ieOptions.AddAdditionalCapability(CapabilityType.UnexpectedAlertBehavior, "ignore");
+
+                    if (properties.getDownloadLocation() != null)
+                    {
+                        RegistryKey myKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Internet Explorer\\Main", true);
+                        if (myKey != null)
+                        {
+                            myKey.SetValue("Default Download Directory", properties.getDownloadLocation());
+                            myKey.Close();
+                        }
+
+                        myKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\\Zones\\3", true);
+                        if (myKey != null)
+                        {
+                            myKey.SetValue("1803", 0);
+                            myKey.Close();
+                        }
+                    }
+
+                    webDriver = new InternetExplorerDriver(ieOptions);
+                }
+                else if (properties.getDriverType() == DriverType.Firefox)
+                {
+                    FirefoxOptions options = new FirefoxOptions();
+                    if (properties.isHeadless())
+                    {
+                        options.AddArgument("--headless");
+                        options.SetPreference("intl.accept_languages", "en,en_US");
+                    }
+
+                    if (properties.getDownloadLocation() != null)
+                    {
+                        options.SetPreference("browser.download.folderList", 2);
+                        options.SetPreference("browser.download.dir", properties.getDownloadLocation());
+                    }
+
+                    options.AddArgument("--private");
+
+                    webDriver = new FirefoxDriver(options);
+                }
+                else
+                {
+
+                }
+
+                webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
+
+                if (listDriver.ContainsKey(key))
+                {
+                    listDriver[key] = webDriver;
+                }
+                else
+                {
+                    listDriver.Add(key, webDriver);
+                }
+
+                if (listProperties.ContainsKey(key))
+                {
+                    listProperties[key] = properties;
+                }
+                else
+                {
+                    listProperties.Add(key, properties);
+                }
+                
+                currentKey = key;
+            }
         }
 
         ///<summary>
@@ -35,33 +147,48 @@ namespace Breeze.UI.DriverWrapper
         ///</summary>
         public static IWebDriver GetDriver()
         {
-            return DRIVER.Value.GetCurrentDriver();
+            return listDriver[currentKey];
+        }
+
+        public static IWebDriver GetDriverByKey(string key)
+        {
+            try
+            {
+                return listDriver[key];
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public static DriverProperties GetProperties()
         {
-            return DRIVER.Value.GetCurrentProperties();
+            return listProperties[currentKey];
         }
 
         public static DriverProperties GetPropertiesByKey(string key)
         {
-            return DRIVER.Value.GetPropertiesByKey(key);
+            try
+            {
+                return listProperties[key];
+            }
+            catch
+            {
+                return null;
+            }
         }
 
-        ///<summary>
-        /// Switch To Default Web Driver.
-        ///</summary>
         public static void SwitchToDefaultDriver()
         {
-            DRIVER.Value.SwitchToDefaultDriver();
+            currentKey = defaultKey;
         }
 
-        ///<summary>
-        ///Switch to another driver in the list, 1st driver key = defaultKey if not set
-        ///</summary>
-        public static void SwitchDriverTo(string driverKey) {
-            DRIVER.Value.SwitchToTargetDriver(driverKey);
+        public static void SwitchToTargetDriver(string key)
+        {
+            currentKey = key;
         }
+
         ///<summary>
         ///Find web element by locator.
         ///</summary>
@@ -106,7 +233,10 @@ namespace Breeze.UI.DriverWrapper
 
         public static void QuitAllDriver()
         {
-            DRIVER.Value.QuitAllDriver();
+            foreach (var driver in listDriver.Values)
+            {
+                driver.Quit();
+            }
         }
 
         ///<summary>
