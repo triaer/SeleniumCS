@@ -124,6 +124,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Digikey\ShoppingTests2.cs" />
     <Compile Include="Digikey\ShoppingTests1.cs" />
     <Compile Include="Digikey\ShoppingTests.cs" />
     <Compile Include="UITestBase.cs" />

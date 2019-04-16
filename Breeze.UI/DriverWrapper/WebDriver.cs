@@ -15,14 +15,11 @@ namespace Breeze.UI.DriverWrapper
         ///<summary>
         ///Contain properties of web driver
         ///</summary>
-        private static string defaultKey;
-        private static string currentKey;
         private static ThreadLocal<DriverManager> DRIVER = new ThreadLocal<DriverManager>();
 
         public static void InitDriverManager(DriverProperties pro, string key = "default")
         {
-            defaultKey = key;
-            DRIVER.Value = new DriverManager();
+            DRIVER.Value = new DriverManager(key);
         }
 
         ///<summary>
@@ -30,7 +27,6 @@ namespace Breeze.UI.DriverWrapper
         ///</summary>
         public static void SetDriverByKey(DriverProperties pro, string key)
         {
-            currentKey = key;
             DRIVER.Value.CreateDriverByProperties(pro, key);
         }
 
@@ -39,12 +35,12 @@ namespace Breeze.UI.DriverWrapper
         ///</summary>
         public static IWebDriver GetDriver()
         {
-            return DRIVER.Value.GetDriverByKey(currentKey);
+            return DRIVER.Value.GetCurrentDriver();
         }
 
         public static DriverProperties GetProperties()
         {
-            return DRIVER.Value.GetPropertiesByKey(currentKey);
+            return DRIVER.Value.GetCurrentProperties();
         }
 
         public static DriverProperties GetPropertiesByKey(string key)
@@ -57,20 +53,20 @@ namespace Breeze.UI.DriverWrapper
         ///</summary>
         public static void SwitchToDefaultDriver()
         {
-            currentKey = defaultKey;
+            DRIVER.Value.SwitchToDefaultDriver();
         }
 
         ///<summary>
         ///Switch to another driver in the list, 1st driver key = defaultKey if not set
         ///</summary>
         public static void SwitchDriverTo(string driverKey) {
-            currentKey = driverKey;
+            DRIVER.Value.SwitchToTargetDriver(driverKey);
         }
         ///<summary>
         ///Find web element by locator.
         ///</summary>
         public static IWebElement FindElement(By locator) {
-            return DRIVER.Value.GetDriverByKey(currentKey).FindElement(locator);
+            return GetDriver().FindElement(locator);
         }
 
 
@@ -78,14 +74,14 @@ namespace Breeze.UI.DriverWrapper
         ///Find all web elements by locator and return to a List
         ///</summary>
         public static ReadOnlyCollection<IWebElement> FindElements(By locator) {
-            return DRIVER.Value.GetDriverByKey(currentKey).FindElements(locator);
+            return GetDriver().FindElements(locator);
         }
 
         ///<summary>
         ///Navigate to URL.
         ///</summary>
         public static void GoToUrl(string url) {
-            DRIVER.Value.GetDriverByKey(currentKey).Navigate().GoToUrl(url);
+            GetDriver().Navigate().GoToUrl(url);
         }
 
         ///<summary>
@@ -93,19 +89,19 @@ namespace Breeze.UI.DriverWrapper
         ///</summary>
         public static string CurrentUrl()
         {
-            return DRIVER.Value.GetDriverByKey(currentKey).Url;
+            return GetDriver().Url;
         }
 
         ///<summary>
         ///Close browser.
         ///</summary>
         public static void Close() {
-            DRIVER.Value.GetDriverByKey(currentKey).Close();
+            GetDriver().Close();
         }
 
         public static void Quit()
         {
-            DRIVER.Value.GetDriverByKey(currentKey).Quit();
+            GetDriver().Quit();
         }
 
         public static void QuitAllDriver()
@@ -117,7 +113,7 @@ namespace Breeze.UI.DriverWrapper
         ///Maximize web browser.
         ///</summary>
         public static void Maximize() {
-            DRIVER.Value.GetDriverByKey(currentKey).Manage().Window.Maximize();
+            GetDriver().Manage().Window.Maximize();
         }
 
         ///<summary>
@@ -125,7 +121,7 @@ namespace Breeze.UI.DriverWrapper
         ///</summary>
         public static void Minimize()
         {
-            DRIVER.Value.GetDriverByKey(currentKey).Manage().Window.Minimize();
+            GetDriver().Manage().Window.Minimize();
         }
 
         ///<summary>
@@ -133,14 +129,14 @@ namespace Breeze.UI.DriverWrapper
         ///</summary>
         public static void SwitchToIframe(IWebElement iframe)
         {
-            DRIVER.Value.GetDriverByKey(currentKey).SwitchTo().Frame(iframe);
+            GetDriver().SwitchTo().Frame(iframe);
         }
 
         ///<summary>
         ///Switch to Previous frame 
         ///</summary>
         public static void SwitchToPrevious() {
-            DRIVER.Value.GetDriverByKey(currentKey).SwitchTo().ParentFrame();
+            GetDriver().SwitchTo().ParentFrame();
         }
 
         ///<summary>
@@ -155,7 +151,7 @@ namespace Breeze.UI.DriverWrapper
         ///Create javascript executor.
         ///</summary>
         public static IJavaScriptExecutor JsExecutor() {
-            return (IJavaScriptExecutor)DRIVER.Value.GetDriverByKey(currentKey);
+            return (IJavaScriptExecutor)GetDriver();
         }
 
         ///<summary>
@@ -180,11 +176,6 @@ namespace Breeze.UI.DriverWrapper
         {
             string js = string.Format("window.scrollTo(0, document.body.scrollHeight)");
             JsExecutor().ExecuteScript(js);
-        }
-
-        public static IWebDriver CurrentDriver()
-        {
-            return DRIVER.Value.GetDriverByKey(currentKey);
         }
     }
 }

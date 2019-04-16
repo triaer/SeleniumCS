@@ -188,7 +188,7 @@ namespace Breeze.UI.Pages.Global
 
         internal static void WaitForElement(By elementDescription, long timeout = longTimeout)
         {
-            var wait = new WebDriverWait(WebDriver.CurrentDriver(), TimeSpan.FromSeconds(shortTimeout));
+            var wait = new WebDriverWait(WebDriver.GetDriver(), TimeSpan.FromSeconds(shortTimeout));
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
@@ -220,7 +220,7 @@ namespace Breeze.UI.Pages.Global
 
         internal static void WaitForElementClickable(By elementDescription, int seconds = mediumTimeout)
         {
-            IWebElement myDynamicElement = (new WebDriverWait(WebDriver.CurrentDriver(), TimeSpan.FromSeconds(seconds))).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(elementDescription));
+            IWebElement myDynamicElement = (new WebDriverWait(WebDriver.GetDriver(), TimeSpan.FromSeconds(seconds))).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(elementDescription));
         }
 
         internal static void WaitForElementEnable(By elementDescription, int seconds = mediumTimeout)
@@ -376,7 +376,7 @@ namespace Breeze.UI.Pages.Global
         {
             var element = StableFindElement(by, timeout);
 
-            Actions action = new Actions(WebDriver.CurrentDriver());
+            Actions action = new Actions(WebDriver.GetDriver());
             action.MoveToElement(element);
             action.Perform();
         }
@@ -628,7 +628,7 @@ namespace Breeze.UI.Pages.Global
 
         internal static void Reload()
         {
-            WebDriver.CurrentDriver().Navigate().Refresh();
+            WebDriver.GetDriver().Navigate().Refresh();
         }
 
         public bool IsPageLoaded(By by)
@@ -646,8 +646,8 @@ namespace Breeze.UI.Pages.Global
 
         internal static void SwitchToNewPopUpWindow(IWebElement ElementToBeClicked, out string parentWindow, bool closePreviousWindow = false, bool doubleClick = false, int timeout = 30)
         {
-            parentWindow = WebDriver.CurrentDriver().CurrentWindowHandle;
-            ReadOnlyCollection<string> originalHandles = WebDriver.CurrentDriver().WindowHandles;
+            parentWindow = WebDriver.GetDriver().CurrentWindowHandle;
+            ReadOnlyCollection<string> originalHandles = WebDriver.GetDriver().WindowHandles;
 
             try
             {
@@ -665,7 +665,7 @@ namespace Breeze.UI.Pages.Global
 
                     // Subtract out the list of known handles. In the case of a single
                     // popup, the newHandles list will only have one value.
-                    List<string> newHandles = WebDriver.CurrentDriver().WindowHandles.Except(originalHandles).ToList();
+                    List<string> newHandles = WebDriver.GetDriver().WindowHandles.Except(originalHandles).ToList();
                     if (newHandles.Count > 0)
                     {
                         foundHandle = newHandles[0];
@@ -677,7 +677,7 @@ namespace Breeze.UI.Pages.Global
                 {
                     Browser.Close();
                 }
-                WebDriver.CurrentDriver().SwitchTo().Window(popUpWindowHandle);
+                WebDriver.GetDriver().SwitchTo().Window(popUpWindowHandle);
                 WebDriver.Maximize();
             }
             catch (WebDriverTimeoutException e)
@@ -689,46 +689,46 @@ namespace Breeze.UI.Pages.Global
 
         internal static void SwitchToPopUpWindowByTitle(IWebElement ElementToBeClicked, string windowTitle)
         {
-            string winHandleBefore = WebDriver.CurrentDriver().CurrentWindowHandle;
-            int previousWinCount = WebDriver.CurrentDriver().WindowHandles.Count;
+            string winHandleBefore = WebDriver.GetDriver().CurrentWindowHandle;
+            int previousWinCount = WebDriver.GetDriver().WindowHandles.Count;
 
             // Perform the action to open a new Window
             ElementToBeClicked.ClickOnElement();
 
             WaitUntil(driver => driver.WindowHandles.Count != previousWinCount);
 
-            var normalPageLoadTime = WebDriver.CurrentDriver().Manage().Timeouts().PageLoad;
-            WebDriver.CurrentDriver().Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(shortTimeout);
-            foreach (string handle in WebDriver.CurrentDriver().WindowHandles)
+            var normalPageLoadTime = WebDriver.GetDriver().Manage().Timeouts().PageLoad;
+            WebDriver.GetDriver().Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(shortTimeout);
+            foreach (string handle in WebDriver.GetDriver().WindowHandles)
             {
                 if (handle != winHandleBefore)
                 {
                     try
                     {
-                        WebDriver.CurrentDriver().SwitchTo().Window(handle);
-                        Console.WriteLine("CurrentWindow:" + WebDriver.CurrentDriver().Title);
+                        WebDriver.GetDriver().SwitchTo().Window(handle);
+                        Console.WriteLine("CurrentWindow:" + WebDriver.GetDriver().Title);
                     }
                     catch (Exception e)
                     {
                         Console.WriteLine(handle);
                         Console.WriteLine(e);
                     }
-                    if (WebDriver.CurrentDriver().Title.Contains(windowTitle))
+                    if (WebDriver.GetDriver().Title.Contains(windowTitle))
                         break;
                 }
 
             }
-            WebDriver.CurrentDriver().Manage().Timeouts().PageLoad = normalPageLoadTime;
+            WebDriver.GetDriver().Manage().Timeouts().PageLoad = normalPageLoadTime;
             //string currHandle = WebDriver.CurrentWindowHandle;
         }
 
         internal static void OpenURLInNewTab(string url, out string parentWindow, int timeout = 30)
         {
-            parentWindow = WebDriver.CurrentDriver().CurrentWindowHandle;
+            parentWindow = WebDriver.GetDriver().CurrentWindowHandle;
             WebDriver.ExecuteScript("window.open('" + url + "','_blank');");
 
-            string[] listTabs = WebDriver.CurrentDriver().WindowHandles.ToArray();
-            WebDriver.CurrentDriver().SwitchTo().Window(listTabs[listTabs.Count() - 1]);
+            string[] listTabs = WebDriver.GetDriver().WindowHandles.ToArray();
+            WebDriver.GetDriver().SwitchTo().Window(listTabs[listTabs.Count() - 1]);
             WebDriver.Maximize();
         }
 
@@ -873,7 +873,7 @@ namespace Breeze.UI.Pages.Global
 
             catch (UnhandledAlertException)
             {
-                IAlert alert = WebDriver.CurrentDriver().SwitchTo().Alert();
+                IAlert alert = WebDriver.GetDriver().SwitchTo().Alert();
                 alert.Dismiss();
                 Screenshot screenshot = ((ITakesScreenshot)Browser.Driver).GetScreenshot();
                 screenshot.SaveAsFile(filePath, ScreenshotImageFormat.Png);
@@ -897,7 +897,7 @@ namespace Breeze.UI.Pages.Global
             {
                 Browser.Close();
             }
-            WebDriver.CurrentDriver().SwitchTo().Window(window);
+            WebDriver.GetDriver().SwitchTo().Window(window);
         }
 
         public T LogValidation<T>(ref List<KeyValuePair<string, bool>> validations, KeyValuePair<string, bool> addedValidation) where T : BasePage

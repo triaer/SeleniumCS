@@ -197,30 +197,30 @@ namespace Breeze.UI
 
         public static void ActionsClick(this IWebElement Element)
         {
-            Actions actions = new Actions(WebDriver.CurrentDriver());
+            Actions actions = new Actions(WebDriver.GetDriver());
             actions.MoveToElement(Element).Click(Element).Build().Perform();
         }
         public static void ClickTwice(this IWebElement Element)
         {
-            Actions actions = new Actions(WebDriver.CurrentDriver());
+            Actions actions = new Actions(WebDriver.GetDriver());
             actions.Click(Element).Click(Element).Perform();
         }
 
         public static void DoubleClick(this IWebElement Element)
         {
-            Actions actions = new Actions(WebDriver.CurrentDriver());
+            Actions actions = new Actions(WebDriver.GetDriver());
             actions.DoubleClick(Element).Perform();
         }
 
         public static void ClickOnElement(this IWebElement Element)
         {
-            var normalPageLoadTime = WebDriver.CurrentDriver().Manage().Timeouts().PageLoad;
+            var normalPageLoadTime = WebDriver.GetDriver().Manage().Timeouts().PageLoad;
             
             try
             {
                 if (Browser.Driver.GetType() == typeof(InternetExplorerDriver))
                     ScrollIntoView(Element);
-                WebDriver.CurrentDriver().Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(longTimeout);
+                WebDriver.GetDriver().Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(longTimeout);
                 Element.Click();
             }
             catch (WebDriverTimeoutException e)
@@ -229,17 +229,17 @@ namespace Breeze.UI
             }
             finally
             {
-                WebDriver.CurrentDriver().Manage().Timeouts().PageLoad = normalPageLoadTime;
+                WebDriver.GetDriver().Manage().Timeouts().PageLoad = normalPageLoadTime;
             }
                         
         }
         public static void ClickWithHandleTimeout(this IWebElement Element)
         {
-            var normalPageLoadTime = WebDriver.CurrentDriver().Manage().Timeouts().PageLoad;
+            var normalPageLoadTime = WebDriver.GetDriver().Manage().Timeouts().PageLoad;
             
             try
             {
-                WebDriver.CurrentDriver().Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(shortTimeout);
+                WebDriver.GetDriver().Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(shortTimeout);
                 Element.Click();
             }
             catch (WebDriverException e)
@@ -248,13 +248,13 @@ namespace Breeze.UI
             }
             finally
             {
-                WebDriver.CurrentDriver().Manage().Timeouts().PageLoad = normalPageLoadTime; 
+                WebDriver.GetDriver().Manage().Timeouts().PageLoad = normalPageLoadTime; 
             }
         }
 
         public static void HoverElement(this IWebElement Element)
         {
-            Actions action = new Actions(WebDriver.CurrentDriver());
+            Actions action = new Actions(WebDriver.GetDriver());
             action.MoveToElement(Element);
             action.Perform();
         }

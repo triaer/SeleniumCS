@@ -15,12 +15,19 @@ namespace Breeze.UI.DriverWrapper
     /// </summary>
      class DriverManager
     {
+        private static string defaultKey;
+        private static string currentKey;
         private Dictionary<string, IWebDriver> listDriver = new Dictionary<string, IWebDriver>();
         private Dictionary<string, DriverProperties> listProperties = new Dictionary<string, DriverProperties>();
-        public DriverManager() {}
+
+        public DriverManager(string key)
+        {
+            defaultKey = key;
+        }
+
         public DriverManager(DriverProperties properties, string key)
         {
-
+            defaultKey = key;
             CreateDriverByProperties(properties, key);
         }
         /// <summary>
@@ -111,6 +118,7 @@ namespace Breeze.UI.DriverWrapper
 
                 listDriver.Add(key, webDriver);
                 listProperties.Add(key, properties);
+                currentKey = key;
             }
         }
 
@@ -122,9 +130,29 @@ namespace Breeze.UI.DriverWrapper
             return listDriver[key];
         }
 
+        public IWebDriver GetCurrentDriver()
+        {
+            return listDriver[currentKey];
+        }
+
         public DriverProperties GetPropertiesByKey(string key)
         {
             return listProperties[key];
+        }
+
+        public DriverProperties GetCurrentProperties()
+        {
+            return listProperties[currentKey];
+        }
+
+        public void SwitchToDefaultDriver()
+        {
+            currentKey = defaultKey;
+        }
+
+        public void SwitchToTargetDriver(string key)
+        {
+            currentKey = key;
         }
 
         public void QuitAllDriver()

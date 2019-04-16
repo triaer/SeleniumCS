@@ -38,7 +38,7 @@ namespace Breeze.UI
             WebDriver.GoToUrl(url);
             MaximizeWindow();
 
-            return WebDriver.CurrentDriver();
+            return WebDriver.GetDriver();
         }
 
         public static void Close()
@@ -58,22 +58,22 @@ namespace Breeze.UI
 
         public static ISearchContext Driver
         {
-            get { return WebDriver.CurrentDriver(); }
+            get { return WebDriver.GetDriver(); }
         }
 
         public static void Navigate(string url)
         {
-            WebDriver.CurrentDriver().Url = url;
+            WebDriver.GetDriver().Url = url;
         }
 
         internal static WebDriverWait Wait(int timeoutSecond = 30)
         {
-            return new WebDriverWait(WebDriver.CurrentDriver(), TimeSpan.FromSeconds(timeoutSecond));
+            return new WebDriverWait(WebDriver.GetDriver(), TimeSpan.FromSeconds(timeoutSecond));
         }
 
         public static string Title
         {
-            get { return WebDriver.CurrentDriver().Title; }
+            get { return WebDriver.GetDriver().Title; }
         }
 
         internal static void MaximizeWindow()
