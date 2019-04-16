@@ -15,8 +15,8 @@ namespace Breeze.UI.DriverWrapper
     /// </summary>
      class DriverManager
     {
-        private static string defaultKey;
-        private static string currentKey;
+        private string defaultKey;
+        private string currentKey;
         private Dictionary<string, IWebDriver> listDriver = new Dictionary<string, IWebDriver>();
         private Dictionary<string, DriverProperties> listProperties = new Dictionary<string, DriverProperties>();
 

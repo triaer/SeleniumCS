@@ -14,9 +14,13 @@ namespace Breeze.UI
 {
     public class ExtentReportsHelper
     {
+        [ThreadStatic]
         public static ExtentReports extent;
+        [ThreadStatic]
         public static ExtentTest test;
+        [ThreadStatic]
         public static List<ExtentTest> extentTestList;
+        [ThreadStatic]
         public static List<ExtentTest> nodeList;
         public static ExtentReports CreateReport(string reportPath, string reportName)
         {

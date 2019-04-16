@@ -47,15 +47,9 @@ namespace Breeze.UI.DriverWrapper
                 case "chrome":
                     this.driverType = DriverType.Chrome;
                     break;
-                case "edge":
-                    this.driverType = DriverType.Edge;
-                    break;
                 case "internetexplorer":
                     this.driverType = DriverType.IE;
                     break;
-                case "safari":
-                    this.driverType = DriverType.Safari;
-                    break; 
             }
         }
         ///<summary>

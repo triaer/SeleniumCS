@@ -27,6 +27,7 @@ namespace Breeze.UI.Tests
         public Exception lastException;
         public ExtentReports extent;
         public TestContext TestContext { get; set; }
+        [ThreadStatic]
         public static ExtentTest test;
         protected string teamBinderVersion;
 

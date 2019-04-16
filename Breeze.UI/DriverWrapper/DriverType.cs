@@ -4,7 +4,7 @@
     ///Type of Web driver
     ///</summary>
     public enum DriverType {
-        Chrome, Firefox, IE, Edge, Safari
+        Chrome, Firefox, IE
     }   
 
 }
