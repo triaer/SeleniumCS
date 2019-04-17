@@ -38,7 +38,7 @@ namespace Breeze.UI.Tests.Digikey
                 test.Info("Navigate to Digikey home page.");
                 Browser.Open(Constant.DigikeyHomePage, "chrome");
 
-                //test = LogTest("DIGIKEY_SHOPPING_TC002 - Verify that user can add, edit, delete product in cart successfully.");
+                test = LogTest("DIGIKEY_SHOPPING_TC002 - Verify that user can add, edit, delete product in cart successfully.");
                 DigikeyHomePage homePage = new DigikeyHomePage();
                 DigikeyProductComparisonPage comparePage = homePage.SelectProductMenu()
                                                                  .SelectTargetProductCategory(testData.Category, testData.SubCategory)
