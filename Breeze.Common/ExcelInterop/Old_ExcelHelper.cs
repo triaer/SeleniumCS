@@ -16,10 +16,10 @@ namespace Breeze.Common.ExcelInterop
     {
         /*
          This class support for working with Excel 97-2003 (.XLS) and CSV format 
-         */
+        */
         public string fileType;
         private Application excel;
-        private System.Data.DataTable table;
+        public System.Data.DataTable table;
 
         public Old_ExcelHelper() { }
 
@@ -28,32 +28,40 @@ namespace Breeze.Common.ExcelInterop
             this.fileType = fileType;
         }
 
-        public void Open(string filePath, string sheetName)
+        public void LoadExcelSheetData(string filePath, string sheetName) // load all data from a sheet specified by sheetName
         {
             if (fileType == ".csv")
                 table = ConvertCSVtoDataTable(filePath);
             else
-                using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
+                try
                 {
-                    using (var reader = ExcelReaderFactory.CreateReader(stream))
+                    using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
                     {
-                        DataSet result = reader.AsDataSet();
-                        if (sheetName.Trim() == "")
-                            table = result.Tables[0];
-                        else
-                            table = result.Tables[sheetName.Trim()];
+                        using (var reader = ExcelReaderFactory.CreateReader(stream))
+                        {
+                            DataSet result = reader.AsDataSet();
+                            if (sheetName.Trim() == "")
+                                table = result.Tables[0];
+                            else
+                                table = result.Tables[sheetName.Trim()];
+                        }
                     }
+                }
+                catch (IOException e)
+                {
+                    Console.WriteLine(e.Message);
+                    throw;
                 }
         }
 
-        public string GetAllValue()
+        public string GetAllValue() // worked
         {
             string strCellValue = "";
 
 
             int rowCount = table.Rows.Count;
             int colCount = table.Columns.Count;
-           
+
             for (int i = 0; i < rowCount; i++)
                 for (int j = 0; j < colCount; j++)
                     strCellValue += table.Rows[i][j].ToString() + ",";
@@ -63,13 +71,13 @@ namespace Breeze.Common.ExcelInterop
             return strCellValue;
         }
 
-        public string GetAllExcelRowsValue(int rowIndex)
+        public string GetAllValuesByRow(int rowIndex) // get all values by Row index
         {
             string strCellValue = "";
 
             int rowCount = table.Rows.Count;
             int colCount = table.Columns.Count;
-    
+
             if (rowIndex > rowCount)
                 return strCellValue;
             else
@@ -83,13 +91,12 @@ namespace Breeze.Common.ExcelInterop
             }
         }
 
-        public void WriteDataToExcelFile(string filePath, string sheetName, int rowIndex, int colIndex, string cellValue)
+        public void UpdateCellValue(string filePath, string sheetName, int rowIndex, int colIndex, string cellValue)
         {
             //Not implement for .csv file
         }
 
-
-        public void OpenExcelfileToView(string filePath, string sheetName, int timeout)
+        public void OpenExcelFileToView(string filePath, string sheetName, int timeout) // worked
         {
             excel = new Application();
             var workBooks = excel.Workbooks;
@@ -104,7 +111,7 @@ namespace Breeze.Common.ExcelInterop
             {
                 excel.Visible = true;
                 workSheet.Activate();
-                
+
                 Thread.Sleep(timeout * 1000);
                 excel.Visible = false;
                 // workBook.Close();
@@ -126,7 +133,7 @@ namespace Breeze.Common.ExcelInterop
             }
         }
 
-        public void Close()
+        public void Close() //worked
         {
             excel.Application.Quit();
             excel.Quit();
@@ -139,20 +146,33 @@ namespace Breeze.Common.ExcelInterop
             GC.Collect();
             GC.WaitForPendingFinalizers();
         }
-        public int GetExcelTotalRows()
+
+        public int GetTotalRows() // get total number of Rows
         {
             return table.Rows.Count;
         }
 
-        public string GetCellValue(int intRow, int intColumn)
+        public int GetTotalColumns()  // get total number of Columns
         {
-            string cellValue = null;
-
-            cellValue = table.Rows[intRow - 1][intColumn - 1].ToString();
-
-            return cellValue;
+            return table.Columns.Count;
         }
 
+        public string GetCellValue(int intRow, int intColumn) // worked
+        {
+            try
+            {
+                string cellValue = null;
+                cellValue = table.Rows[intRow - 1][intColumn - 1].ToString();
+                return cellValue;
+            }
+            catch (IndexOutOfRangeException e)
+            {
+                Console.WriteLine(e.Message);
+                throw;
+            }
+        }
+
+        // search for the first cell that has exact keyword
         public int[] Search(string strKeyword, bool blnCaseSensitive = true)
         {
             if (!blnCaseSensitive) strKeyword = strKeyword.ToLower();
@@ -172,7 +192,56 @@ namespace Breeze.Common.ExcelInterop
             return new int[2] { -1, -1 };
         }
 
-        private System.Data.DataTable ConvertCSVtoDataTable(string filePath)
+        // search for the first cell that has exact keyword
+        public List<string> SearchAll(string strKeyword, bool blnCaseSensitive = true)
+        {
+            List<string> results = new List<string>();
+            if (!blnCaseSensitive) strKeyword = strKeyword.ToLower();
+
+            int rowCount = table.Rows.Count;
+            int colCount = table.Columns.Count;
+
+            for (int i = 0; i < rowCount; i++)
+                for (int j = 0; j < colCount; j++)
+                {
+                    string strCell = table.Rows[i][j].ToString();
+                    if ((blnCaseSensitive && strCell.Equals(strKeyword)) ||
+                            (!blnCaseSensitive && strCell.ToLower().Equals(strKeyword)))
+                        results.Add((i + 1) + ":" + (j + 1));
+
+                }
+            if (results == null)
+            {
+                results.Add("-1:-1");
+            }
+            return results;
+        }
+
+        // search for all cells that contain keyword partially.
+        public List<string> SearchAllCellsContain(string strKeyword, bool blnCaseSensitive = true)
+        {
+            List<string> results = new List<string>();
+            if (!blnCaseSensitive) strKeyword = strKeyword.ToLower();
+
+            int rowCount = table.Rows.Count;
+            int colCount = table.Columns.Count;
+
+            for (int i = 0; i < rowCount; i++)
+                for (int j = 0; j < colCount; j++)
+                {
+                    string strCell = table.Rows[i][j].ToString();
+                    if ((blnCaseSensitive && strCell.Contains(strKeyword)) ||
+                            (!blnCaseSensitive && strCell.ToLower().Contains(strKeyword)))
+                        results.Add((i + 1) + ":" + (j + 1));
+                }
+            if (results == null)
+            {
+                results.Add("-1:-1");
+            }
+            return results;
+        }
+
+        private System.Data.DataTable ConvertCSVtoDataTable(string filePath) // worked: with CSV format "a,b,c,d"
         {
             System.Data.DataTable dt = new System.Data.DataTable();
             using (StreamReader sr = new StreamReader(filePath))
@@ -201,6 +270,19 @@ namespace Breeze.Common.ExcelInterop
             }
 
             return dt;
+        }
+
+        public void PrintDataTable()
+        {
+            for (int i = 0; i <= table.Rows.Count - 1; i++)
+            {
+                for (int j = 0; j <= table.Columns.Count - 1; j++)
+                {
+                    var cell = table.Rows[i][j];
+                    Console.Write(cell.ToString() + "\t");
+                }
+                Console.WriteLine("\n");
+            }
         }
     }
 }
