@@ -19,6 +19,7 @@ using Breeze.Common;
 using System.Globalization;
 using OpenQA.Selenium.Firefox;
 using Breeze.UI.DriverWrapper;
+using Breeze.Common.Helper;
 
 namespace Breeze.UI
 {
@@ -27,39 +28,26 @@ namespace Breeze.UI
     /// </summary>
     public static class Browser
     {
-        public static IWebDriver Open(string url, string plaftform, bool headless, string fileDownloadLocation, string arguments = null, string key = null)
+        public static IWebDriver Open(string url, string plaftform, bool headless, string fileDownloadLocation, string arguments = null)
         {
             DriverProperties prop = new DriverProperties(plaftform, headless, fileDownloadLocation, arguments);
-
-            if (key == null)
-            {
-                key = plaftform;
-            }
-
-            WebDriver.CreateDriverByProperties(prop, key);
+            WebDriver.CreateDriverByProperties(prop, plaftform);
             WebDriver.GoToUrl(url);
             MaximizeWindow();
 
             return WebDriver.GetDriver();
         }
 
-        public static IWebDriver Open(string url, string plaftform, string key = null)
+        public static IWebDriver Open(string url, string plaftform)
         {
-            DriverProperties prop;
+            DriverProperties prop = WebDriver.GetPDefaultProperties();
 
-            if (key == null)
-            {
-                key = plaftform;
-            }
-
-            prop = WebDriver.GetPropertiesByKey(key);
-
-            if (prop == null)
+            if (prop.getDriverType().ToDescription() != plaftform.ToLower())
             {
                 prop = new DriverProperties(plaftform);
             }
 
-            WebDriver.CreateDriverByProperties(prop, key);
+            WebDriver.CreateDriverByProperties(prop, plaftform);
             WebDriver.GoToUrl(url);
             MaximizeWindow();
 
