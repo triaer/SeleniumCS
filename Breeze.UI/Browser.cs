@@ -28,26 +28,26 @@ namespace Breeze.UI
     /// </summary>
     public static class Browser
     {
-        public static IWebDriver Open(string url, string plaftform, bool headless, string fileDownloadLocation, string arguments = null)
+        public static IWebDriver Open(string url, string platform, bool headless, string fileDownloadLocation, string arguments = null)
         {
-            DriverProperties prop = new DriverProperties(plaftform, headless, fileDownloadLocation, arguments);
-            WebDriver.CreateDriverByProperties(prop, plaftform);
+            DriverProperties prop = new DriverProperties(platform, headless, fileDownloadLocation, arguments);
+            WebDriver.CreateDriverByProperties(prop, platform);
             WebDriver.GoToUrl(url);
             MaximizeWindow();
 
             return WebDriver.GetDriver();
         }
 
-        public static IWebDriver Open(string url, string plaftform)
+        public static IWebDriver Open(string url, string platform)
         {
             DriverProperties prop = WebDriver.GetPDefaultProperties();
 
-            if (prop.getDriverType().ToDescription() != plaftform.ToLower())
+            if (prop.getDriverType().ToDescription() != platform.ToLower())
             {
-                prop = new DriverProperties(plaftform);
+                prop = new DriverProperties(platform);
             }
 
-            WebDriver.CreateDriverByProperties(prop, plaftform);
+            WebDriver.CreateDriverByProperties(prop, platform);
             WebDriver.GoToUrl(url);
             MaximizeWindow();
 

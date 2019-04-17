@@ -30,16 +30,16 @@ namespace Breeze.UI.DriverWrapper
         [ThreadStatic]
         private static Dictionary<string, DriverProperties> listProperties;
 
-        public static void InitDriverManager(DriverProperties pro, string plaform)
+        public static void InitDriverManager(DriverProperties pro, string platform)
         {
             listDriver = new Dictionary<string, IWebDriver>() ;
             listProperties = new Dictionary<string, DriverProperties>();
-            defaultKey = plaform + "-1";
+            defaultKey = platform + "-1";
             timeOut = 60;
             defaultDriverProperties = pro;
         }
 
-        public static void CreateDriverByProperties(DriverProperties properties, string plaform)
+        public static void CreateDriverByProperties(DriverProperties properties, string platform)
         {
             IWebDriver webDriver = null;
             string key;
@@ -121,19 +121,19 @@ namespace Breeze.UI.DriverWrapper
 
             webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
 
-            key = plaform + "-" + getNextPlatformNumber(plaform);
+            key = platform + "-" + getNextPlatformNumber(platform);
             listDriver.Add(key, webDriver);
             listProperties.Add(key, properties);
             currentKey = key;
         }
 
-        private static int getNextPlatformNumber(string plaform)
+        private static int getNextPlatformNumber(string platform)
         {
             int number = 1;
             foreach (var item in listDriver.Keys)
             {
                 int lastIndex = item.LastIndexOf("-");
-                if (item.Substring(0, lastIndex) == plaform)
+                if (item.Substring(0, lastIndex) == platform)
                 {
                     number++;
                 }
