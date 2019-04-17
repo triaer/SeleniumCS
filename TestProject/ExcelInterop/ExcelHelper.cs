@@ -14,8 +14,8 @@ namespace TestProject.ExcelInterop
         int GetTotalRows();
         int GetTotalColumns();
         string GetAllValuesByRow(int rowIndex);
-        void WriteDataToExcelFile(string filePath, string sheetName, int rowIndex, int colIndex, string cellValue);
-        void OpenExcelfileToView(string filePath, string sheetName, int timeout);
+        void UpdateCellValue(string filePath, string sheetName, int rowIndex, int colIndex, string cellValue);
+        void OpenExcelFileToView(string filePath, string sheetName, int timeout);
         string GetCellValue(int intRow, int intColumn);
         int[] Search(string strKeyword, Boolean blnCaseSensitive = true);
         void Close();

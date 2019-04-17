@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using Test.ExcelInterop;
 using TestProject.ExcelInterop;
 
@@ -18,26 +19,32 @@ namespace TestProject
             var sheet1 = "Words";
             var sheet2 = "Rules";
 
-            var excelHelper = (New_ExcelHelper)ExcelDriver.getExcelHelper(xlsxPath);
+            var excelHelper = (Old_ExcelHelper)ExcelDriver.getExcelHelper(xlsPath);
 
-            excelHelper.LoadExcelSheetData(xlsxPath, sheet1);
+            excelHelper.LoadExcelSheetData(xlsPath, sheet1);
 
-
-            //excelHelper.PrintDataTable();
-            
-
-            
-            
-            
+            var array = excelHelper.SearchAllCellsContain("que", false);
+            foreach (var a in array)
+                Console.WriteLine(a);
 
 
 
-            
-            
 
 
 
-            //ExcelUtils.OpenFiletoView(xlsPath, sheet1, 5);
+
+
+
+
+
+
+
+
+
+
+
+
+
         }
     }
 }

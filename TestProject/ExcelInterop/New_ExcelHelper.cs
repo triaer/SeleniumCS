@@ -1,12 +1,9 @@
 ﻿using Microsoft.Office.Interop.Excel;
-using System.Data;
 using OfficeOpenXml;
-using OfficeOpenXml.Style;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 
@@ -18,12 +15,12 @@ namespace TestProject.ExcelInterop
         This class support for working with Excel 2007 and newer (.XLSX)
         */
 
-        private ExcelWorksheet workSheet;
+        public ExcelWorksheet workSheet;
         private Application excel = new Application();
 
         public New_ExcelHelper() { }
 
-        public void LoadExcelSheetData(string filePath, string sheetName)
+        public void LoadExcelSheetData(string filePath, string sheetName) //worked
         {
             try
             {
@@ -41,7 +38,7 @@ namespace TestProject.ExcelInterop
             }
         }
 
-        public string GetAllValue()
+        public string GetAllValue() // worked
         {
             string strCellValue = "";
 
@@ -68,7 +65,7 @@ namespace TestProject.ExcelInterop
             return strCellValue;
         }
 
-        public string GetAllValuesByRow(int rowIndex)
+        public string GetAllValuesByRow(int rowIndex) // worked
         {
             string strCellValue = "";
             try
@@ -109,7 +106,7 @@ namespace TestProject.ExcelInterop
             }
         }
 
-        public void WriteDataToExcelFile(string filePath, string sheetName, int rowIndex, int colIndex, string cellValue)
+        public void UpdateCellValue(string filePath, string sheetName, int rowIndex, int colIndex, string cellValue)
         {
             var workBooks = excel.Workbooks;
             Workbook workBook = workBooks.Open(filePath, ReadOnly: false, Editable: true);
@@ -141,8 +138,9 @@ namespace TestProject.ExcelInterop
             }
 
         }
+        //worked
 
-        public void OpenExcelfileToView(string filePath, string sheetName, int timeout)
+        public void OpenExcelFileToView(string filePath, string sheetName, int timeout) // worked
         {
             var workBooks = excel.Workbooks;
             Workbook workBook = workBooks.Open(filePath);
@@ -206,13 +204,13 @@ namespace TestProject.ExcelInterop
             }
         } // get number of Columns
 
-        public string GetCellValue(int intRow, int intColumn)
+        public string GetCellValue(int intRow, int intColumn) // worked
         {
             try
             {
                 return workSheet.Cells[intRow, intColumn].Value.ToString();
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 excel.Application.Quit();
                 excel.Quit();
@@ -220,7 +218,8 @@ namespace TestProject.ExcelInterop
             }
         }
 
-        public int[] Search(string strKeyword, bool blnCaseSensitive = true)
+        // search for the first cell that has exact keyword
+        public int[] Search(string strKeyword, bool blnCaseSensitive = true) 
         {
             try
             {
@@ -248,10 +247,79 @@ namespace TestProject.ExcelInterop
                 excel.Quit();
                 return new int[2] { -1, -1 };
             }
-            
         }
 
-        public void Close()
+        // search for all cells that has exact keyword
+        public List<string> SearchAll(string strKeyword, bool blnCaseSensitive = true)
+        {
+            List<string> results = new List<string>();
+            try
+            {
+                if (!blnCaseSensitive) strKeyword = strKeyword.ToLower();
+                ExcelAddressBase oRange = workSheet.Dimension;
+                int rowCount = oRange.End.Row;
+                int colCount = oRange.End.Column;
+                for (int i = 1; i <= rowCount; i++)
+                    for (int j = 1; j <= colCount; j++)
+                    {
+                        if (workSheet.Cells[i, j].Value == null) continue;
+
+                        string strCell = workSheet.Cells[i, j].Value.ToString();
+                        if ((blnCaseSensitive && strCell.Equals(strKeyword)) ||
+                                (!blnCaseSensitive && strCell.ToLower().Equals(strKeyword)))
+                            results.Add(i + ":" + j);
+                    }
+                if (results == null)
+                {
+                    results.Add("-1:-1");
+                }
+                return results;
+            }
+            catch (Exception)
+            {
+                excel.Application.Quit();
+                excel.Quit();
+                results.Add("-1:-1");
+                return results;
+            }
+        }
+
+        // search for all cells that contain keyword partially.
+        public List<string> SearchAllCellsContain(string strKeyword, bool blnCaseSensitive = true)
+        {
+            List<string> results = new List<string>();
+            try
+            {
+                if (!blnCaseSensitive) strKeyword = strKeyword.ToLower();
+                ExcelAddressBase oRange = workSheet.Dimension;
+                int rowCount = oRange.End.Row;
+                int colCount = oRange.End.Column;
+                for (int i = 1; i <= rowCount; i++)
+                    for (int j = 1; j <= colCount; j++)
+                    {
+                        if (workSheet.Cells[i, j].Value == null) continue;
+
+                        string strCell = workSheet.Cells[i, j].Value.ToString();
+                        if ((blnCaseSensitive && strCell.Contains(strKeyword)) ||
+                                (!blnCaseSensitive && strCell.ToLower().Contains(strKeyword)))
+                            results.Add(i + ":" + j);
+                    }
+                if (results == null)
+                {
+                    results.Add("-1:-1");
+                }
+                return results;
+            }
+            catch (Exception)
+            {
+                excel.Application.Quit();
+                excel.Quit();
+                results.Add("-1:-1");
+                return results;
+            }
+        }
+
+        public void Close() // worked
         {
             excel.Application.Quit();
             excel.Quit();
@@ -265,19 +333,18 @@ namespace TestProject.ExcelInterop
             GC.WaitForPendingFinalizers();
         }
 
-        public void PrintWorksheet()
+        public void PrintWorksheet() // print workSheet content
         {
             var rows = GetTotalRows();
             var cols = GetTotalColumns();
-            for (int i = 0; i <= rows - 1; i++)
+            for (int i = 1; i <= rows; i++)
             {
-                for (int j = 0; j <= cols - 1; j++)
+                for (int j = 1; j <= cols; j++)
                 {
-                    var cell = workSheet.Rows[i][j];
-                    var cell = workSheet.Row(i);
-                    Console.Write(cell.ToString() + "\t");
+                    var cell = workSheet.Cells[i, j];
+                    Console.Write(cell.Value.ToString().Trim() + "\t");
                 }
-                Console.WriteLine("\n");
+                Console.Write("\n");
             }
         }
     }

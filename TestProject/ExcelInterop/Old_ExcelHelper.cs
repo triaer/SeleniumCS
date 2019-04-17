@@ -91,12 +91,12 @@ namespace TestProject.ExcelInterop
             }
         }
 
-        public void WriteDataToExcelFile(string filePath, string sheetName, int rowIndex, int colIndex, string cellValue)
+        public void UpdateCellValue(string filePath, string sheetName, int rowIndex, int colIndex, string cellValue)
         {
             //Not implement for .csv file
         }
         
-        public void OpenExcelfileToView(string filePath, string sheetName, int timeout) // worked
+        public void OpenExcelFileToView(string filePath, string sheetName, int timeout) // worked
         {
             excel = new Application();
             var workBooks = excel.Workbooks;
@@ -172,8 +172,30 @@ namespace TestProject.ExcelInterop
             }
         }
 
+        // search for the first cell that has exact keyword
         public int[] Search(string strKeyword, bool blnCaseSensitive = true)
         {
+            if (!blnCaseSensitive) strKeyword = strKeyword.ToLower();
+
+            int rowCount = table.Rows.Count;
+            int colCount = table.Columns.Count;
+            
+            for (int i = 0; i < rowCount; i++)
+                for (int j = 0; j < colCount; j++)
+                {
+                    string strCell = table.Rows[i][j].ToString();
+                    if ((blnCaseSensitive && strCell.Equals(strKeyword)) ||
+                            (!blnCaseSensitive && strCell.ToLower().Equals(strKeyword)))
+                        return new int[2] { i + 1, j + 1 };
+
+                }
+            return new int[2] { -1, -1 };
+        }
+
+        // search for the first cell that has exact keyword
+        public List<string> SearchAll(string strKeyword, bool blnCaseSensitive = true)
+        {
+            List<string> results = new List<string>();
             if (!blnCaseSensitive) strKeyword = strKeyword.ToLower();
 
             int rowCount = table.Rows.Count;
@@ -185,10 +207,38 @@ namespace TestProject.ExcelInterop
                     string strCell = table.Rows[i][j].ToString();
                     if ((blnCaseSensitive && strCell.Equals(strKeyword)) ||
                             (!blnCaseSensitive && strCell.ToLower().Equals(strKeyword)))
-                        return new int[2] { i + 1, j + 1 };
+                        results.Add((i+1) + ":" + (j+1));
 
                 }
-            return new int[2] { -1, -1 };
+            if (results == null)
+            {
+                results.Add("-1:-1");
+            }
+            return results;
+        }
+
+        // search for all cells that contain keyword partially.
+        public List<string> SearchAllCellsContain(string strKeyword, bool blnCaseSensitive = true)
+        {
+            List<string> results = new List<string>();
+            if (!blnCaseSensitive) strKeyword = strKeyword.ToLower();
+
+            int rowCount = table.Rows.Count;
+            int colCount = table.Columns.Count;
+
+            for (int i = 0; i < rowCount; i++)
+                for (int j = 0; j < colCount; j++)
+                {
+                    string strCell = table.Rows[i][j].ToString();
+                    if ((blnCaseSensitive && strCell.Contains(strKeyword)) ||
+                            (!blnCaseSensitive && strCell.ToLower().Contains(strKeyword)))
+                        results.Add((i+1) + ":" + (j+1));
+                }
+            if (results == null)
+            {
+                results.Add("-1:-1");
+            }
+            return results;
         }
 
         private System.Data.DataTable ConvertCSVtoDataTable(string filePath) // worked: with CSV format "a,b,c,d"
