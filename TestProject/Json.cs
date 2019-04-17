@@ -10,25 +10,13 @@ using System.Reflection;
 namespace TestProject
 {
     [TestClass]
-    public class Test : UITestBase
+    public class Json : UITestBase
     {
         [TestMethod]
-        public void DigiKey_Test()
+        public void json()
         {
             try
             {
-
-                //var driver = Browser.Open("http://google.com/", "chrome");
-                //DigikeyMain digiMain = new DigikeyMain(driver);
-
-                //var filePath = "D:\\test.xls";
-                //var sheetName = "Words";
-
-                //var excelHelper = ExcelDriver.getExcelHelper(filePath);
-                //excelHelper.Open(filePath, "Words");
-                //excelHelper.OpenExcelfileToView(filePath, sheetName, 5);
-
-                //Console.WriteLine(ExcelUtils.GetNumberOfRows(filePath, sheetName).ToString());
 
                 // JSON ======== https://jsoneditoronline.org/
 

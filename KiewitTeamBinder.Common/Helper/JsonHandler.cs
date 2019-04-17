@@ -43,6 +43,8 @@ namespace KiewitTeamBinder.Common.Helper
 
     }
 
+
+    // Test class
     public class Employee
     {
         public string firstName { get; set; }
