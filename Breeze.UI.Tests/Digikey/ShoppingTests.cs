@@ -38,7 +38,7 @@ namespace Breeze.UI.Tests.Digikey
                 //2. Select Products on top menu
                 //3. Select Accessories under Battery Products section
                 test.Info("Navigate to Digikey home page.");
-                Browser.Open(Constant.DigikeyHomePage, "firefox");
+                Browser.Open(Constant.DigikeyHomePage, "chrome");
 
                 test = LogTest("DIGIKEY_SHOPPING_TC001 - Verify that user can add, edit, delete product in cart successfully.");
                 DigikeyHomePage homePage = new DigikeyHomePage();
@@ -50,10 +50,11 @@ namespace Breeze.UI.Tests.Digikey
                 //5. Click Compare Selected
                 DigikeyProductComparisonPage comparePage = productListPage.SelectProductsAndCompare(testData.Products);
 
-                Browser.Open(Constant.DigikeyHomePage, browser);
+                Browser.Open(Constant.DigikeyHomePage, "firefox");
+                Browser.Open(Constant.DigikeyHomePage, "chrome", true, "abc");
                 homePage.SelectProductMenu().SelectTargetProductCategory(testData.Category, testData.SubCategory);
 
-                WebDriver.SwitchToTargetDriver("firefox");
+                WebDriver.SwitchToTargetDriver("chrome");
 
 
                 //Then

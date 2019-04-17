@@ -1,10 +1,17 @@
-﻿namespace Breeze.UI.DriverWrapper
+﻿using System.ComponentModel;
+
+namespace Breeze.UI.DriverWrapper
 {
     ///<summary>
     ///Type of Web driver
     ///</summary>
     public enum DriverType {
-        Chrome, Firefox, IE
+        [Description("chrome")]
+        Chrome,
+        [Description("firefox")]
+        Firefox,
+        [Description("internetexplorer")]
+        IE
     }   
 
 }
