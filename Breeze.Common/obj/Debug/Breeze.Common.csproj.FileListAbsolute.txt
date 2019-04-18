@@ -1,0 +1,13 @@
+C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Breeze.Common\obj\Debug\Breeze.Common.csprojResolveAssemblyReference.cache
+C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Breeze.Common\bin\Debug\Breeze.Common.dll
+C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Breeze.Common\bin\Debug\Breeze.Common.pdb
+C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Breeze.Common\bin\Debug\EPPlus.dll
+C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Breeze.Common\bin\Debug\ExcelDataReader.DataSet.dll
+C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Breeze.Common\bin\Debug\ExcelDataReader.dll
+C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Breeze.Common\bin\Debug\Newtonsoft.Json.dll
+C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Breeze.Common\bin\Debug\EPPlus.xml
+C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Breeze.Common\bin\Debug\ExcelDataReader.xml
+C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Breeze.Common\bin\Debug\ExcelDataReader.DataSet.xml
+C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Breeze.Common\bin\Debug\Newtonsoft.Json.xml
+C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Breeze.Common\obj\Debug\Breeze.Common.dll
+C:\Users\vinh.tuan.nguyen\source\repos\VinhNguyen\Breeze.Common\obj\Debug\Breeze.Common.pdb
