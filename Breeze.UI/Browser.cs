@@ -40,7 +40,7 @@ namespace Breeze.UI
 
         public static IWebDriver Open(string url, string platform)
         {
-            DriverProperties prop = WebDriver.GetPDefaultProperties();
+            DriverProperties prop = WebDriver.GetDefaultProperties();
 
             if (prop.getDriverType().ToDescription() != platform.ToLower())
             {
@@ -81,7 +81,7 @@ namespace Breeze.UI
 
         public static string Title
         {
-            get { return WebDriver.GetDriver().Title; }
+            get { return WebDriver.Title; }
         }
 
         internal static void MaximizeWindow()

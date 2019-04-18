@@ -84,7 +84,6 @@
     <Compile Include="ExcelInterop\New_ExcelHelper.cs" />
     <Compile Include="ExcelInterop\Old_ExcelHelper.cs" />
     <Compile Include="Helper\Constant.cs" />
-    <Compile Include="Helper\ExcelUtils.cs" />
     <Compile Include="Helper\JsonHandler.cs" />
     <Compile Include="Helper\Utils.cs" />
     <Compile Include="BreezeENums.cs" />
