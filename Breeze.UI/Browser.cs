@@ -18,8 +18,8 @@ using Microsoft.Win32;
 using Breeze.Common;
 using System.Globalization;
 using OpenQA.Selenium.Firefox;
-using Breeze.UI.DriverWrapper;
 using Breeze.Common.Helper;
+using Breeze.Common.DriverWrapper;
 
 namespace Breeze.UI
 {
@@ -69,7 +69,7 @@ namespace Breeze.UI
             WebDriver.QuitAllDriver();
         }
 
-        public static ISearchContext Driver
+        public static IWebDriver Driver
         {
             get { return WebDriver.GetDriver(); }
         }
@@ -77,11 +77,6 @@ namespace Breeze.UI
         public static void Navigate(string url)
         {
             WebDriver.GetDriver().Url = url;
-        }
-
-        internal static WebDriverWait Wait(int timeoutSecond = 30)
-        {
-            return new WebDriverWait(WebDriver.GetDriver(), TimeSpan.FromSeconds(timeoutSecond));
         }
 
         public static string Title
@@ -97,6 +92,16 @@ namespace Breeze.UI
         internal static void MinimizeWindow()
         {
             WebDriver.Minimize();
+        }
+
+        public static void SwitchToDefaultBrowser()
+        {
+            WebDriver.SwitchToDefaultDriver();
+        }
+
+        public static void SwitchToTargetBrowser(string browserName, int browserIndex = 1)
+        {
+            WebDriver.SwitchToTargetDriver(browserName, browserIndex);
         }
     }
 }

@@ -1,5 +1,5 @@
-﻿using Breeze.UI;
-using Breeze.UI.DriverWrapper;
+﻿using Breeze.Common.DriverWrapper;
+using Breeze.UI;
 using OpenQA.Selenium;
 using OpenQA.Selenium.IE;
 using OpenQA.Selenium.Interactions;
@@ -77,7 +77,7 @@ namespace Breeze.UI
             {
                 try
                 {
-                    var wait = Browser.Wait(shortTimeout);
+                    var wait = WebDriver.Wait(shortTimeout);
                     wait.Until(d => Element.FindElement(by).Displayed);
                     Ele = Element.FindElement(by);
                     HoverElement(Ele);
@@ -132,7 +132,7 @@ namespace Breeze.UI
             {
                 try
                 {
-                    var wait = Browser.Wait(shortTimeout);
+                    var wait = WebDriver.Wait(shortTimeout);
                     wait.Until(d => Element.FindElements(by).Count > 0);
                     Eles = Element.FindElements(by);
                     break;
@@ -163,7 +163,7 @@ namespace Breeze.UI
                 try
                 {
                     WaitForElement(bySelector);
-                    driver = Browser.Wait(longTimeout).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.FrameToBeAvailableAndSwitchToIt(bySelector));
+                    driver = WebDriver.Wait(longTimeout).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.FrameToBeAvailableAndSwitchToIt(bySelector));
                     break;
                 }
                 catch (Exception)
@@ -184,7 +184,7 @@ namespace Breeze.UI
         {
             try
             {
-                WebDriverWait wait = Browser.Wait(mediumTimeout);
+                WebDriverWait wait = WebDriver.Wait(mediumTimeout);
                 //wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.InvisibilityOfElementLocated(By.className("loader")));
                 wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(Element)).Click();
             }
@@ -197,30 +197,30 @@ namespace Breeze.UI
 
         public static void ActionsClick(this IWebElement Element)
         {
-            Actions actions = new Actions(WebDriver.GetDriver());
+            Actions actions = WebDriver.Actions;
             actions.MoveToElement(Element).Click(Element).Build().Perform();
         }
         public static void ClickTwice(this IWebElement Element)
         {
-            Actions actions = new Actions(WebDriver.GetDriver());
+            Actions actions = WebDriver.Actions;
             actions.Click(Element).Click(Element).Perform();
         }
 
         public static void DoubleClick(this IWebElement Element)
         {
-            Actions actions = new Actions(WebDriver.GetDriver());
+            Actions actions = WebDriver.Actions;
             actions.DoubleClick(Element).Perform();
         }
 
         public static void ClickOnElement(this IWebElement Element)
         {
-            var normalPageLoadTime = WebDriver.GetDriver().Manage().Timeouts().PageLoad;
+            var normalPageLoadTime = WebDriver.Manage.Timeouts().PageLoad;
             
             try
             {
-                if (Browser.Driver.GetType() == typeof(InternetExplorerDriver))
+                if (WebDriver.GetDriver().GetType() == typeof(InternetExplorerDriver))
                     ScrollIntoView(Element);
-                WebDriver.GetDriver().Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(longTimeout);
+                WebDriver.Manage.Timeouts().PageLoad = TimeSpan.FromSeconds(longTimeout);
                 Element.Click();
             }
             catch (WebDriverTimeoutException e)
@@ -229,17 +229,17 @@ namespace Breeze.UI
             }
             finally
             {
-                WebDriver.GetDriver().Manage().Timeouts().PageLoad = normalPageLoadTime;
+                WebDriver.Manage.Timeouts().PageLoad = normalPageLoadTime;
             }
                         
         }
         public static void ClickWithHandleTimeout(this IWebElement Element)
         {
-            var normalPageLoadTime = WebDriver.GetDriver().Manage().Timeouts().PageLoad;
+            var normalPageLoadTime = WebDriver.Manage.Timeouts().PageLoad;
             
             try
             {
-                WebDriver.GetDriver().Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(shortTimeout);
+                WebDriver.Manage.Timeouts().PageLoad = TimeSpan.FromSeconds(shortTimeout);
                 Element.Click();
             }
             catch (WebDriverException e)
@@ -248,13 +248,13 @@ namespace Breeze.UI
             }
             finally
             {
-                WebDriver.GetDriver().Manage().Timeouts().PageLoad = normalPageLoadTime; 
+                WebDriver.Manage.Timeouts().PageLoad = normalPageLoadTime; 
             }
         }
 
         public static void HoverElement(this IWebElement Element)
         {
-            Actions action = new Actions(WebDriver.GetDriver());
+            Actions action = WebDriver.Actions;
             action.MoveToElement(Element);
             action.Perform();
         }

@@ -9,7 +9,7 @@ using AventStack.ExtentReports;
 using System.Linq;
 using Breeze.Common.Helper;
 using System.Collections.Generic;
-using Breeze.UI.DriverWrapper;
+using Breeze.Common.DriverWrapper;
 
 namespace Breeze.UI.Tests
 {

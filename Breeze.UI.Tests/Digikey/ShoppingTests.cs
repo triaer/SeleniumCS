@@ -16,7 +16,6 @@ using System.Globalization;
 using System.IO;
 using static Breeze.Common.BreezeENums;
 using static Breeze.UI.ExtentReportsHelper;
-using Breeze.UI.DriverWrapper;
 
 namespace Breeze.UI.Tests.Digikey
 {
@@ -51,11 +50,9 @@ namespace Breeze.UI.Tests.Digikey
                 DigikeyProductComparisonPage comparePage = productListPage.SelectProductsAndCompare(testData.Products);
 
                 Browser.Open(Constant.DigikeyHomePage, "firefox");
-                Browser.Open(Constant.DigikeyHomePage, "chrome", true, "abc");
                 homePage.SelectProductMenu().SelectTargetProductCategory(testData.Category, testData.SubCategory);
 
-                WebDriver.SwitchToTargetDriver("chrome");
-
+                Browser.SwitchToDefaultBrowser();
 
                 //Then
                 //VP: Verify Digi-Key Part Number & Manufacturer Part Number is correct
@@ -64,9 +61,7 @@ namespace Breeze.UI.Tests.Digikey
                 //6. Click Back to Search Results link
                 comparePage.BackToSearchResultsPage();
 
-                WebDriver.SwitchToDefaultDriver();
-
-                
+                Browser.SwitchToTargetBrowser("firefox");
 
                 productListPage.SelectProductsAndCompare(testData.Products);
                 comparePage.LogValidation<DigikeyProductComparisonPage>(ref validations, comparePage.ValidateComparedProductInfos(testData.Products));
