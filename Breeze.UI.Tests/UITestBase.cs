@@ -29,7 +29,6 @@ namespace Breeze.UI.Tests
         public TestContext TestContext { get; set; }
         [ThreadStatic]
         public static ExtentTest test;
-        protected string teamBinderVersion;
 
         [TestInitialize]
         public void TestInitialize()
@@ -108,7 +107,7 @@ namespace Breeze.UI.Tests
                 string filePath = captureLocation + "ErrorCapture" + timeStamp + ".png";
                 try
                 {
-                    Screenshot screenshot = ((ITakesScreenshot)Browser.Driver).GetScreenshot();
+                    Screenshot screenshot = WebDriver.GetScreenshot();
                     screenshot.SaveAsFile(filePath, ScreenshotImageFormat.Png);
                 }
                 catch (Exception e)
