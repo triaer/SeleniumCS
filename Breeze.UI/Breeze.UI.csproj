@@ -134,9 +134,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Browser.cs" />
-    <Compile Include="DriverWrapper\DriverProperties.cs" />
-    <Compile Include="DriverWrapper\DriverType.cs" />
-    <Compile Include="DriverWrapper\WebDriver.cs" />
     <Compile Include="ExtentReportsHelper.cs" />
     <Compile Include="IWebElementExtensions.cs" />
     <Compile Include="Pages\DigikeyBasePage.cs" />
