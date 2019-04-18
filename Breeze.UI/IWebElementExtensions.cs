@@ -1,16 +1,11 @@
 ﻿using Breeze.Common.DriverWrapper;
-using Breeze.UI;
 using OpenQA.Selenium;
 using OpenQA.Selenium.IE;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static Breeze.UI.Pages.Global.BasePage;
 
 namespace Breeze.UI

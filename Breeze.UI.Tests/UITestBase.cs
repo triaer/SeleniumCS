@@ -1,15 +1,13 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
+﻿using AventStack.ExtentReports;
 using Breeze.Common;
+using Breeze.Common.DriverWrapper;
+using Breeze.Common.Helper;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
-using AventStack.ExtentReports.Reporter;
-using AventStack.ExtentReports;
-using System.Linq;
-using Breeze.Common.Helper;
+using System;
 using System.Collections.Generic;
-using Breeze.Common.DriverWrapper;
+using System.IO;
+using System.Linq;
 
 namespace Breeze.UI.Tests
 {

@@ -1,8 +1,4 @@
-﻿using Breeze.Common.Helper;
-using Newtonsoft.Json.Linq;
-using System.Collections.Generic;
-
-namespace Breeze.Common.DriverWrapper
+﻿namespace Breeze.Common.DriverWrapper
 {
     ///<summary>
     ///Contain properties for web driver.

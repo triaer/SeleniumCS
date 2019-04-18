@@ -1,25 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using OpenQA.Selenium.Support.UI;
-using OpenQA.Selenium;
-using System.Reflection;
-using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.IE;
-using OpenQA.Selenium.Remote;
-using SimpleImpersonation;
-using System.Diagnostics;
-using System.Net;
-using System.Threading;
-using System.IO;
-using Microsoft.Win32;
-using Breeze.Common;
-using System.Globalization;
-using OpenQA.Selenium.Firefox;
+﻿using Breeze.Common.DriverWrapper;
 using Breeze.Common.Helper;
-using Breeze.Common.DriverWrapper;
+using OpenQA.Selenium;
 
 namespace Breeze.UI
 {

@@ -1,20 +1,9 @@
-﻿using FluentAssertions;
-using Breeze.Common;
-using Breeze.Common.Helper;
-using Breeze.Common.Models;
+﻿using Breeze.Common.Helper;
 using Breeze.Common.TestData;
 using Breeze.UI.Pages;
-using Breeze.UI.Pages.Global;
+using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OpenQA.Selenium;
-using Protractor;
-using SimpleImpersonation;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.IO;
-using static Breeze.Common.BreezeENums;
 using static Breeze.UI.ExtentReportsHelper;
 
 namespace Breeze.UI.Tests.Digikey

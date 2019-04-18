@@ -1,16 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Win32;
 using OpenQA.Selenium;
-using System;
-using System.Collections.ObjectModel;
-using System.Threading;
 using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.IE;
 using OpenQA.Selenium.Firefox;
-using Microsoft.Win32;
-using OpenQA.Selenium.Remote;
-using System.IO;
-using OpenQA.Selenium.Support.UI;
+using OpenQA.Selenium.IE;
 using OpenQA.Selenium.Interactions;
+using OpenQA.Selenium.Remote;
+using OpenQA.Selenium.Support.UI;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
 
 namespace Breeze.Common.DriverWrapper
 {
