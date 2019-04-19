@@ -26,24 +26,7 @@ namespace TestProject
             var array = excelHelper.SearchAllCellsContain("que", false);
             foreach (var a in array)
                 Console.WriteLine(a);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            
 
         }
     }
