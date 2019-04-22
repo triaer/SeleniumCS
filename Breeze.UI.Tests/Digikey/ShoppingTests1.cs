@@ -24,7 +24,7 @@ namespace Breeze.UI.Tests.Digikey
                 //2. Select Products on top menu
                 //3. Select Accessories under Battery Products section
                 test.Info("Navigate to Digikey home page.");
-                Browser.Open(Constant.DigikeyHomePage, "chrome");
+                Browser.Open(Constant.DigikeyHomePage, browser);
 
                 test = LogTest("DIGIKEY_SHOPPING_TC002 - Verify that user can add, edit, delete product in cart successfully.");
                 DigikeyHomePage homePage = new DigikeyHomePage();

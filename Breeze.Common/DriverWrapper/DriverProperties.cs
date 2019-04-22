@@ -51,10 +51,24 @@
         ///<summary>
         ///Get arguments.
         ///</summary>
-        public string getArguments()
+        public string[] getArguments()
         {
-            return arguments;
+            if (arguments != null)
+            {
+                return arguments.Split(';');
+            }
+            else return null;
         }
+
+        public string getArgumentsAsString()
+        {
+            if (arguments != null)
+            {
+                return arguments.Replace(';', ' ');
+            }
+            else return "";
+        }
+
         ///<summary>
         ///Set arguments.
         ///</summary>

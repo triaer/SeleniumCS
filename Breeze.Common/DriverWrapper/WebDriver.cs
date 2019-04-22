@@ -51,13 +51,22 @@ namespace Breeze.Common.DriverWrapper
                 if (properties.isHeadless())
                 {
                     options.AddArgument("--headless");
-                    options.AddArguments("--disable-gpu");
+                    options.AddArgument("--disable-gpu");
                     options.AddUserProfilePreference("disable-popup-blocking", "true");
                     options.AddUserProfilePreference("intl.accept_languages", "en,en_US");
                 }
 
                 if (properties.getDownloadLocation() != null)
+                {
                     options.AddUserProfilePreference("download.default_directory", properties.getDownloadLocation());
+                }
+
+                if (properties.getArguments() != null)
+                {
+                    options.AddArguments(properties.getArguments());
+                }
+
+                // run in private mode
                 options.AddArgument("--incognito");
 
                 webDriver = new ChromeDriver(options);
@@ -93,6 +102,16 @@ namespace Breeze.Common.DriverWrapper
                         myKey.Close();
                     }
                 }
+                //ieOptions.ForceCreateProcessApi = true;
+                //// run in private mode
+                //string arguments = "-private";
+
+                //if (properties.getArguments() != null)
+                //{
+                //    arguments += " " + properties.getArgumentsAsString();
+                //}
+
+                //ieOptions.BrowserCommandLineArguments = arguments;
 
                 webDriver = new InternetExplorerDriver(ieOptions);
             }
@@ -111,13 +130,20 @@ namespace Breeze.Common.DriverWrapper
                     options.SetPreference("browser.download.dir", properties.getDownloadLocation());
                 }
 
+                if (properties.getArguments() != null)
+                {
+                    options.AddArguments(properties.getArguments());
+                }
+
+                // run in private mode
                 options.AddArgument("--private");
+
 
                 webDriver = new FirefoxDriver(options);
             }
             else
             {
-
+                // Handle more platforms here
             }
 
             webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
