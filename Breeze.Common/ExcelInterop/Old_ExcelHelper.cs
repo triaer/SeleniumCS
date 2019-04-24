@@ -10,7 +10,7 @@ using System.Threading;
 
 namespace Breeze.Common.ExcelInterop
 {
-    class Old_ExcelHelper : ExcelHelper
+    public class Old_ExcelHelper : ExcelDriver
     {
         /*
          This class support for working with Excel 97-2003 (.XLS) and CSV format 

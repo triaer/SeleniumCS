@@ -9,7 +9,7 @@ using System.Threading;
 
 namespace Breeze.Common.ExcelInterop
 {
-    class New_ExcelHelper : ExcelHelper
+    public class New_ExcelHelper : ExcelDriver
     {
         /*
         This class support for working with Excel 2007 and newer (.XLSX)
@@ -249,29 +249,47 @@ namespace Breeze.Common.ExcelInterop
             }
         }
 
-        // search for all cells that has exact keyword
-        public List<string> SearchAll(string strKeyword, bool blnCaseSensitive = true)
+        // caseSensitive = TRUE: search for all cells that has exact keyword
+        // partialSearch = TRUE: search for all cells that contain keyword partially.
+        public List<int[]> SearchAll(string strKeyword, bool caseSensitive = true, bool partialSearch = true)
         {
-            List<string> results = new List<string>();
+            List<int[]> results = new List<int[]>();
             try
             {
-                if (!blnCaseSensitive) strKeyword = strKeyword.ToLower();
+                if (!caseSensitive) strKeyword = strKeyword.ToLower();
                 ExcelAddressBase oRange = workSheet.Dimension;
                 int rowCount = oRange.End.Row;
                 int colCount = oRange.End.Column;
-                for (int i = 1; i <= rowCount; i++)
-                    for (int j = 1; j <= colCount; j++)
-                    {
-                        if (workSheet.Cells[i, j].Value == null) continue;
 
-                        string strCell = workSheet.Cells[i, j].Value.ToString();
-                        if ((blnCaseSensitive && strCell.Equals(strKeyword)) ||
-                                (!blnCaseSensitive && strCell.ToLower().Equals(strKeyword)))
-                            results.Add(i + ":" + j);
-                    }
+                if (partialSearch == false)
+                {
+                    for (int i = 1; i <= rowCount; i++)
+                        for (int j = 1; j <= colCount; j++)
+                        {
+                            if (workSheet.Cells[i, j].Value == null) continue;
+
+                            string strCell = workSheet.Cells[i, j].Value.ToString();
+                            if ((caseSensitive && strCell.Equals(strKeyword)) ||
+                                    (!caseSensitive && strCell.ToLower().Equals(strKeyword)))
+                                results.Add(new int[2] { i, j });
+                        }
+                }
+                else
+                {
+                    for (int i = 1; i <= rowCount; i++)
+                        for (int j = 1; j <= colCount; j++)
+                        {
+                            if (workSheet.Cells[i, j].Value == null) continue;
+
+                            string strCell = workSheet.Cells[i, j].Value.ToString();
+                            if ((caseSensitive && strCell.Contains(strKeyword)) ||
+                                    (!caseSensitive && strCell.ToLower().Contains(strKeyword)))
+                                results.Add(new int[2] { i, j });
+                        }
+                }
                 if (results == null)
                 {
-                    results.Add("-1:-1");
+                    results.Add(new int[2] { -1, -1 });
                 }
                 return results;
             }
@@ -279,46 +297,12 @@ namespace Breeze.Common.ExcelInterop
             {
                 excel.Application.Quit();
                 excel.Quit();
-                results.Add("-1:-1");
+                results.Add(new int[2] { -1, -1 });
                 return results;
             }
         }
 
-        // search for all cells that contain keyword partially.
-        public List<string> SearchAllCellsContain(string strKeyword, bool blnCaseSensitive = true)
-        {
-            List<string> results = new List<string>();
-            try
-            {
-                if (!blnCaseSensitive) strKeyword = strKeyword.ToLower();
-                ExcelAddressBase oRange = workSheet.Dimension;
-                int rowCount = oRange.End.Row;
-                int colCount = oRange.End.Column;
-                for (int i = 1; i <= rowCount; i++)
-                    for (int j = 1; j <= colCount; j++)
-                    {
-                        if (workSheet.Cells[i, j].Value == null) continue;
-
-                        string strCell = workSheet.Cells[i, j].Value.ToString();
-                        if ((blnCaseSensitive && strCell.Contains(strKeyword)) ||
-                                (!blnCaseSensitive && strCell.ToLower().Contains(strKeyword)))
-                            results.Add(i + ":" + j);
-                    }
-                if (results == null)
-                {
-                    results.Add("-1:-1");
-                }
-                return results;
-            }
-            catch (Exception)
-            {
-                excel.Application.Quit();
-                excel.Quit();
-                results.Add("-1:-1");
-                return results;
-            }
-        }
-
+        
         public void Close() // worked
         {
             excel.Application.Quit();
