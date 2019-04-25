@@ -15,7 +15,6 @@ namespace Breeze.UI.Tests.Digikey
         [TestMethod]
         public void TC001()
         {
-
             try
             {
                 //Given

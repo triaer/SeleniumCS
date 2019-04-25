@@ -210,7 +210,7 @@ namespace Breeze.Common.ExcelInterop
             {
                 return workSheet.Cells[intRow, intColumn].Value.ToString();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 excel.Application.Quit();
                 excel.Quit();

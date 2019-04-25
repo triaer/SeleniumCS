@@ -276,7 +276,7 @@ namespace Breeze.UI.Pages.Global
                 WebDriver.FindElement(elementDescription);
                 return true;
             }
-            catch (NoSuchElementException e)
+            catch (NoSuchElementException)
             {
                 return false;
             }
