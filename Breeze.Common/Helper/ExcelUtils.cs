@@ -6,11 +6,12 @@ namespace Breeze.Common.Helper
     {
         public static void CopyDataFromFileToFile(string excelFileContainPath, string excelFileToBeCopiedPath, string excelFileContainSheetName, string excelFileToBeCopiedSheetName, int rowToBeCopied, int rowContain)
         {
-            var excelDriver1 = ExcelDriver.getExcelHelper(excelFileToBeCopiedPath);
+            var excelDriver1 = (ExcelHelper)ExcelDriver.getExcelHelper(excelFileToBeCopiedPath);
+            
             excelDriver1.LoadExcelSheetData(excelFileToBeCopiedPath, excelFileToBeCopiedSheetName);
             excelDriver1.GetAllValuesByRow(rowToBeCopied);
             string[] cellValue = excelDriver1.GetAllValuesByRow(rowToBeCopied).Split(',');
-            var excelDriver2 = ExcelDriver.getExcelHelper(excelFileContainPath);
+            var excelDriver2 = (ExcelHelper)ExcelDriver.getExcelHelper(excelFileContainPath);
 
             for (int colIndex = 1; colIndex <= cellValue.Length; colIndex++)
             {
@@ -22,7 +23,7 @@ namespace Breeze.Common.Helper
 
         public static void EditCellValueInFile(string filePath, string sheetName, string cellValueBeforeEdit, string cellValueAfterEdit)
         {
-            var excelDriver = ExcelInterop.ExcelDriver.getExcelHelper(filePath);
+            var excelDriver = (ExcelHelper)ExcelDriver.getExcelHelper(filePath);
             excelDriver.LoadExcelSheetData(filePath, sheetName);
             excelDriver.Search(cellValueBeforeEdit);
             excelDriver.UpdateCellValue(filePath, sheetName, excelDriver.Search(cellValueBeforeEdit)[0], excelDriver.Search(cellValueBeforeEdit)[1], cellValueAfterEdit);
@@ -31,14 +32,14 @@ namespace Breeze.Common.Helper
 
         public static void OpenFiletoView(string filePath, string sheetName, int timeout)
         {
-            var excelDriver = ExcelInterop.ExcelDriver.getExcelHelper(filePath);
+            var excelDriver = (ExcelHelper)ExcelDriver.getExcelHelper(filePath);
             excelDriver.OpenExcelFileToView(filePath, sheetName, timeout);
             excelDriver.Close();
         }               
 
         public static int GetNumberOfRows(string filePath, string sheetName)
         {
-            var excelDriver = ExcelInterop.ExcelDriver.getExcelHelper(filePath);
+            var excelDriver = (ExcelHelper)ExcelDriver.getExcelHelper(filePath);
             excelDriver.LoadExcelSheetData(filePath, sheetName);
             int numberOfRows = excelDriver.GetTotalRows() - 1;
             excelDriver.Close();
@@ -46,7 +47,7 @@ namespace Breeze.Common.Helper
         }
 
         public static string GetExcelRowValue(string filePath, string sheetName, int rowIndex) {
-            var excelDriver = ExcelInterop.ExcelDriver.getExcelHelper(filePath);
+            var excelDriver = (ExcelHelper)ExcelDriver.getExcelHelper(filePath);
             excelDriver.LoadExcelSheetData(filePath, sheetName);
             string rowValue = excelDriver.GetAllValuesByRow(rowIndex);
             excelDriver.Close();
