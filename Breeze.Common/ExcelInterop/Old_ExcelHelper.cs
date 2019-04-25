@@ -190,51 +190,42 @@ namespace Breeze.Common.ExcelInterop
             return new int[2] { -1, -1 };
         }
 
-        // search for the first cell that has exact keyword
-        public List<string> SearchAll(string strKeyword, bool blnCaseSensitive = true)
+        // caseSensitive = TRUE: search for all cells that has exact keyword
+        // partialSearch = TRUE: search for all cells that contain keyword partially.
+        public List<int[]> SearchAll(string strKeyword, bool caseSensitive = true, bool partialSearch = true)
         {
-            List<string> results = new List<string>();
-            if (!blnCaseSensitive) strKeyword = strKeyword.ToLower();
+            List<int[]> results = new List<int[]>();
+            if (!caseSensitive) strKeyword = strKeyword.ToLower();
 
             int rowCount = table.Rows.Count;
             int colCount = table.Columns.Count;
 
-            for (int i = 0; i < rowCount; i++)
-                for (int j = 0; j < colCount; j++)
-                {
-                    string strCell = table.Rows[i][j].ToString();
-                    if ((blnCaseSensitive && strCell.Equals(strKeyword)) ||
-                            (!blnCaseSensitive && strCell.ToLower().Equals(strKeyword)))
-                        results.Add((i + 1) + ":" + (j + 1));
-
-                }
-            if (results == null)
+            if(partialSearch == false)
             {
-                results.Add("-1:-1");
+                for (int i = 0; i < rowCount; i++)
+                    for (int j = 0; j < colCount; j++)
+                    {
+                        string strCell = table.Rows[i][j].ToString();
+                        if ((caseSensitive && strCell.Equals(strKeyword)) ||
+                                (!caseSensitive && strCell.ToLower().Equals(strKeyword)))
+                            results.Add(new int[2] { i + 1, j + 1 });
+                    }
             }
-            return results;
-        }
-
-        // search for all cells that contain keyword partially.
-        public List<string> SearchAllCellsContain(string strKeyword, bool blnCaseSensitive = true)
-        {
-            List<string> results = new List<string>();
-            if (!blnCaseSensitive) strKeyword = strKeyword.ToLower();
-
-            int rowCount = table.Rows.Count;
-            int colCount = table.Columns.Count;
-
-            for (int i = 0; i < rowCount; i++)
-                for (int j = 0; j < colCount; j++)
-                {
-                    string strCell = table.Rows[i][j].ToString();
-                    if ((blnCaseSensitive && strCell.Contains(strKeyword)) ||
-                            (!blnCaseSensitive && strCell.ToLower().Contains(strKeyword)))
-                        results.Add((i + 1) + ":" + (j + 1));
-                }
+            else
+            {
+                for (int i = 0; i < rowCount; i++)
+                    for (int j = 0; j < colCount; j++)
+                    {
+                        string strCell = table.Rows[i][j].ToString();
+                        if ((caseSensitive && strCell.Contains(strKeyword)) ||
+                                (!caseSensitive && strCell.ToLower().Contains(strKeyword)))
+                            results.Add(new int[2] { i + 1, j + 1 });
+                    }
+            }
+            
             if (results == null)
             {
-                results.Add("-1:-1");
+                results.Add(new int[2] { -1, -1 });
             }
             return results;
         }

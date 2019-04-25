@@ -1,14 +1,16 @@
-﻿namespace Breeze.Common.Helper
+﻿using Breeze.Common.ExcelInterop;
+
+namespace Breeze.Common.Helper
 {
     public static class ExcelUtils
     {
         public static void CopyDataFromFileToFile(string excelFileContainPath, string excelFileToBeCopiedPath, string excelFileContainSheetName, string excelFileToBeCopiedSheetName, int rowToBeCopied, int rowContain)
         {
-            var excelDriver1 = ExcelInterop.ExcelDriver.getExcelHelper(excelFileToBeCopiedPath);
+            var excelDriver1 = ExcelDriver.getExcelHelper(excelFileToBeCopiedPath);
             excelDriver1.LoadExcelSheetData(excelFileToBeCopiedPath, excelFileToBeCopiedSheetName);
             excelDriver1.GetAllValuesByRow(rowToBeCopied);
             string[] cellValue = excelDriver1.GetAllValuesByRow(rowToBeCopied).Split(',');
-            var excelDriver2 = ExcelInterop.ExcelDriver.getExcelHelper(excelFileContainPath);
+            var excelDriver2 = ExcelDriver.getExcelHelper(excelFileContainPath);
 
             for (int colIndex = 1; colIndex <= cellValue.Length; colIndex++)
             {
