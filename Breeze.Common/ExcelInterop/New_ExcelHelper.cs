@@ -4,19 +4,20 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 
 namespace Breeze.Common.ExcelInterop
 {
-    public class New_ExcelHelper : ExcelDriver
+    public class New_ExcelHelper : ExcelHelper
     {
         /*
         This class support for working with Excel 2007 and newer (.XLSX)
         */
 
         public ExcelWorksheet workSheet;
-        private Application excel = new Application();
+        public Application excel = new Application();
 
         public New_ExcelHelper() { }
 
@@ -330,6 +331,38 @@ namespace Breeze.Common.ExcelInterop
                 }
                 Console.Write("\n");
             }
+        }
+
+        public void InsertRow(int fromRow, int noRowsToInsert = 1)
+        {
+            var filePath = "D:\\test.xlsx";
+            Application app = new Application();
+            object misval = System.Reflection.Missing.Value;
+            Workbook wb = app.Workbooks.Open(filePath, 
+                misval, misval, misval, misval, misval, misval, misval, misval, misval, 
+                misval, misval, misval, misval, misval);
+
+            Worksheet ws = app.Worksheets[1];
+            Range line = (Range)ws.Rows[1];
+            line.Insert();
+
+
+            //workSheet.InsertRow(fromRow, noRowsToInsert);
+
+            //workSheet.Cells[3, 1].Value = "test";
+            //excel.Application.ActiveWorkbook.Save();
+
+
+            
+
+
+        }
+
+        
+        public void InsertColumn(int fromColumn, int noColumnsToInsert = 1)
+        {
+            workSheet.InsertColumn(fromColumn, noColumnsToInsert);
+            
         }
     }
 }

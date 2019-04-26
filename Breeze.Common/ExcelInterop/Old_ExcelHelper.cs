@@ -10,7 +10,7 @@ using System.Threading;
 
 namespace Breeze.Common.ExcelInterop
 {
-    public class Old_ExcelHelper : ExcelDriver
+    public class Old_ExcelHelper : ExcelHelper
     {
         /*
          This class support for working with Excel 97-2003 (.XLS) and CSV format 
@@ -272,6 +272,16 @@ namespace Breeze.Common.ExcelInterop
                 }
                 Console.WriteLine("\n");
             }
+        }
+
+        public void InsertRow(int fromRow, int noOfRows = 1)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void InsertColumn(int fromColumn, int noOfColumns = 1)
+        {
+            throw new NotImplementedException();
         }
     }
 }

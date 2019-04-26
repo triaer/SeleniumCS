@@ -4,7 +4,7 @@ namespace Breeze.Common.ExcelInterop
 {
     public class ExcelDriver
     {
-        public static ExcelDriver getExcelHelper(string filePath)
+        public static ExcelHelper getExcelHelper(string filePath)
         {
             string fileType = getFileType(filePath);
             if (fileType == ".xlsx")
