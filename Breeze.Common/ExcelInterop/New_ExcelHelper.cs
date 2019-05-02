@@ -18,6 +18,9 @@ namespace Breeze.Common.ExcelInterop
 
         public ExcelWorksheet workSheet;
         public Application excel = new Application();
+        private Workbook wb = null;
+        private Worksheet ws = null;
+        object misval;
 
         public New_ExcelHelper() { }
 
@@ -333,36 +336,77 @@ namespace Breeze.Common.ExcelInterop
             }
         }
 
-        public void InsertRow(int fromRow, int noRowsToInsert = 1)
+        private Worksheet GetWorkSheet(string filePath, string sheetName)
         {
-            var filePath = "D:\\test.xlsx";
-            Application app = new Application();
-            object misval = System.Reflection.Missing.Value;
-            Workbook wb = app.Workbooks.Open(filePath, 
-                misval, misval, misval, misval, misval, misval, misval, misval, misval, 
-                misval, misval, misval, misval, misval);
-
-            Worksheet ws = app.Worksheets[1];
-            Range line = (Range)ws.Rows[1];
-            line.Insert();
-
-
-            //workSheet.InsertRow(fromRow, noRowsToInsert);
-
-            //workSheet.Cells[3, 1].Value = "test";
-            //excel.Application.ActiveWorkbook.Save();
-
-
-            
-
-
+            if (File.Exists(filePath))
+            {
+                misval = System.Reflection.Missing.Value;
+                wb = excel.Workbooks.Open(filePath,
+                    misval, misval, misval, misval, misval, misval, misval,
+                    misval, misval, misval, misval, misval, misval, misval);
+                ws = excel.Worksheets[sheetName];
+            }
+            return ws;
         }
 
+        public void InsertRow(string filePath, string sheetName, int fromRow = 1, int noRowsToInsert = 1)
+        {   
+            Range line = (Range)GetWorkSheet(filePath, sheetName).Rows[fromRow];
+            for (int i = 1; i <= noRowsToInsert; i++)
+                line.Insert();
+            wb.Save();
+        }
         
-        public void InsertColumn(int fromColumn, int noColumnsToInsert = 1)
+        public void InsertColumn(string filePath, string sheetName, int fromColumn = 1, int noColumnsToInsert = 1)
         {
-            workSheet.InsertColumn(fromColumn, noColumnsToInsert);
-            
+            Range col = (Range)GetWorkSheet(filePath, sheetName).Columns[fromColumn];
+            for (int i = 1; i <= noColumnsToInsert; i++)
+                col.Insert();
+            wb.Save();
+        }
+
+        public void DeleteRow(string filePath, string sheetName, int fromRow = 1, int noRowsToDelete = 1)
+        {
+            Range line = (Range)GetWorkSheet(filePath, sheetName).Rows[fromRow];
+            for (int i = 1; i <= noRowsToDelete; i++)
+                line.Delete();
+            wb.Save();
+        }
+
+        public void DeleteColumn(string filePath, string sheetName, int fromColumn = 1, int noColumnsToDelete = 1)
+        {
+            Range col = (Range)GetWorkSheet(filePath, sheetName).Columns[fromColumn];
+            for (int i = 1; i <= noColumnsToDelete; i++)
+                col.Delete();
+            wb.Save();
+        }
+
+        public string GetColumnNameByNumber(int columnNumber)
+        {
+            int dividend = columnNumber;
+            string columnName = String.Empty;
+            int modulo;
+            while (dividend > 0)
+            {
+                modulo = (dividend - 1) % 26;
+                columnName = Convert.ToChar(65 + modulo).ToString() + columnName;
+                dividend = (int)((dividend - modulo) / 26);
+            }
+            return columnName;
+        }
+
+        public int GetColumnNumberByName(string columnName)
+        {
+            if (string.IsNullOrEmpty(columnName))
+                throw new ArgumentNullException("columnName");
+            columnName = columnName.ToUpperInvariant();
+            int sum = 0;
+            for (int i = 0; i < columnName.Length; i++)
+            {
+                sum *= 26;
+                sum += (columnName[i] - 'A' + 1);
+            }
+            return sum;
         }
     }
 }

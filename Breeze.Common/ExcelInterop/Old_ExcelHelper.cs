@@ -18,6 +18,7 @@ namespace Breeze.Common.ExcelInterop
         public string fileType;
         private Application excel;
         public System.Data.DataTable table;
+        object misval;
 
         public Old_ExcelHelper() { }
 
@@ -274,12 +275,32 @@ namespace Breeze.Common.ExcelInterop
             }
         }
 
-        public void InsertRow(int fromRow, int noOfRows = 1)
+        public void InsertRow(string filePath, string sheetName, int fromRow = 1, int noRowsToInsert = 1)
+        {
+            // not implemented yet
+        }
+
+        public void InsertColumn(string filePath, string sheetName, int fromColumn = 1, int noColumnsToInsert = 1)
+        {
+            // not implemented yet
+        }
+
+        public void DeleteRow(string filePath, string sheetName, int fromRow = 1, int noRowsToDelete = 1)
+        {
+            // not implemented yet
+        }
+
+        public void DeleteColumn(string filePath, string sheetName, int fromColumn = 1, int noColumnsToDelete = 1)
+        {
+            // not implemented yet
+        }
+
+        public string GetColumnNameByNumber(int columnNumber)
         {
             throw new NotImplementedException();
         }
 
-        public void InsertColumn(int fromColumn, int noOfColumns = 1)
+        public int GetColumnNumberByName(string columnName)
         {
             throw new NotImplementedException();
         }
