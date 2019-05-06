@@ -10,7 +10,7 @@ namespace Breeze.UI
 {
     public class ExtentReportsHelper
     {
-        [ThreadStatic]
+        //[ThreadStatic]
         public static ExtentReports extent;
         [ThreadStatic]
         public static ExtentTest test;
@@ -18,19 +18,24 @@ namespace Breeze.UI
         public static List<ExtentTest> extentTestList;
         [ThreadStatic]
         public static List<ExtentTest> nodeList;
+
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public static ExtentReports CreateReport(string reportPath, string reportName)
         {
-            
-            System.IO.File.Create(reportPath).Dispose();
-            var htmlReporter = new ExtentV3HtmlReporter(reportPath);
-            //htmlReporter.LoadConfig(Utils.GetProjectPath() + "extent-config.xml");
-            htmlReporter.Config.ReportName = reportName;
-            htmlReporter.Config.DocumentTitle = reportName;
-            htmlReporter.Config.Theme = AventStack.ExtentReports.Reporter.Configuration.Theme.Standard;
-            extent = new ExtentReports();
-            extent.AttachReporter(htmlReporter);
+            if (extent == null)
+            {
+                System.IO.File.Create(reportPath).Dispose();
+                var htmlReporter = new ExtentV3HtmlReporter(reportPath);
+                //htmlReporter.LoadConfig(Utils.GetProjectPath() + "extent-config.xml");
+                htmlReporter.Config.ReportName = reportName;
+                htmlReporter.Config.DocumentTitle = reportName;
+                htmlReporter.Config.Theme = AventStack.ExtentReports.Reporter.Configuration.Theme.Standard;
+                extent = new ExtentReports();
+                extent.AttachReporter(htmlReporter);
+            }
             extentTestList = new List<ExtentTest>();
             nodeList = new List<ExtentTest>();
+
             return extent;
         }
 

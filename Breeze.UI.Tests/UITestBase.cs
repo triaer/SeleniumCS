@@ -14,19 +14,28 @@ namespace Breeze.UI.Tests
     [TestClass]
     public abstract class UITestBase
     {
-        protected string browser = string.Empty;
-        protected string environment = string.Empty;
+        protected static string browser = string.Empty;
+        protected static string environment = string.Empty;
         private string excelUserSourcePath = string.Empty;
         private string localTempExcelUserTargetPath = string.Empty;
-        private string reportPath = string.Empty;
-        protected string captureLocation = "c:\\temp\\testresults\\";
+        private static string report = string.Empty;
+        private static string reportPath = string.Empty;
+        protected static string captureLocation = "c:\\temp\\testresults\\";
         protected List<KeyValuePair<string, bool>> validations = new List<KeyValuePair<string, bool>>();
         protected List<KeyValuePair<string, bool>> methodValidations = new List<KeyValuePair<string, bool>>();
         public Exception lastException;
-        public ExtentReports extent;
+        //public ExtentReports extent;
         public TestContext TestContext { get; set; }
         [ThreadStatic]
         public static ExtentTest test;
+
+        [AssemblyInitialize]
+        public static void SuiteInitialize(TestContext testContext)
+        {
+            report = Utils.GetRandomValue(testContext.TestName);
+            reportPath = captureLocation + report + ".html";
+            
+        }
 
         [TestInitialize]
         public void TestInitialize()
@@ -64,12 +73,9 @@ namespace Breeze.UI.Tests
             }
 
             WebDriver.InitDriverManager(driverProperties, browser);
-
-            string report = Utils.GetRandomValue(TestContext.TestName);
-            reportPath = captureLocation + report + ".html";
-            extent = ExtentReportsHelper.CreateReport(reportPath, TestContext.TestName);
-            extent.AddSystemInfo("Environment", environment);
-            extent.AddSystemInfo("Browser", browser);
+            ExtentReportsHelper.CreateReport(reportPath, report);
+            ExtentReportsHelper.extent.AddSystemInfo("Environment", TestContext.Properties["environment"].ToString());
+            ExtentReportsHelper.extent.AddSystemInfo("Browser", TestContext.Properties["browser"].ToString());
             test = ExtentReportsHelper.LogTest("Pre-condition");
         }
 
@@ -85,7 +91,7 @@ namespace Breeze.UI.Tests
 
         protected void ReportResult(Status status, string reportFilePath)
         {
-            test = extent.CreateTest("Test Summary");
+            test = ExtentReportsHelper.extent.CreateTest("Test Summary");
 
             if (status == Status.Pass)
             {
@@ -146,9 +152,6 @@ namespace Breeze.UI.Tests
                 }
                 TestContext.AddResultFile(filePath);
             }
-
-            extent.AnalysisStrategy = AnalysisStrategy.Test;
-            extent.Flush();
             TestContext.AddResultFile(reportPath);
         }
 
@@ -156,7 +159,6 @@ namespace Breeze.UI.Tests
         [TestCleanup]
         public void TestCleanup()
         {
-
             if (TestContext.CurrentTestOutcome == UnitTestOutcome.Passed)
             {
                 ReportResult(Status.Pass, reportPath);
@@ -170,6 +172,13 @@ namespace Breeze.UI.Tests
                 Browser.QuitAll();
                 return;
             }
+        }
+
+        [AssemblyCleanup]
+        public static void SuiteCleanup()
+        {
+            ExtentReportsHelper.extent.AnalysisStrategy = AnalysisStrategy.Test;
+            ExtentReportsHelper.extent.Flush();
         }
     }
 }
