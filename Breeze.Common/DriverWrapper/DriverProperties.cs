@@ -10,11 +10,19 @@
         private string downloadLocation;
         private string arguments;
         ///<summary>
-        ///Load driver config from json file.
+        ///Load driver config.
         ///</summary>
-        public DriverProperties(string platform, bool headless = false, string downloadLocation = null, string arguments = null)
+        public DriverProperties(string driver, bool headless = false, string downloadLocation = null, string arguments = null)
         {
-            setDriverType(platform);
+            setDriverType(driver);
+            setHeadless(headless);
+            setDownloadLocation(downloadLocation);
+            setArguments(arguments);
+        }
+
+        public DriverProperties(DriverType driver, bool headless = false, string downloadLocation = null, string arguments = null)
+        {
+            setDriverType(driver);
             setHeadless(headless);
             setDownloadLocation(downloadLocation);
             setArguments(arguments);
@@ -48,6 +56,12 @@
                     break;
             }
         }
+
+        public void setDriverType(DriverType driverType)
+        {
+            this.driverType = driverType;
+        }
+
         ///<summary>
         ///Get arguments.
         ///</summary>

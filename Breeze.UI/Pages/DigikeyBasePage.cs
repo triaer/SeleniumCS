@@ -8,7 +8,7 @@ namespace Breeze.UI.Pages
     {
 
         #region Locators
-        private By _linkProductMenu => By.XPath("//a[contains(@class,'header__resource') and ./span[text()='PRODUCTS']]");
+        private By _linkProductMenu => By.XPath("//a[contains(@class,'section-title') and text()='Products']");
 
         #endregion
 

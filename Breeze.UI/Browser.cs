@@ -9,26 +9,52 @@ namespace Breeze.UI
     /// </summary>
     public static class Browser
     {
-        public static IWebDriver Open(string url, string platform, bool headless, string fileDownloadLocation, string arguments = null)
+        public static IWebDriver Open(string browser, string url, bool headless, string fileDownloadLocation, string arguments = null)
         {
-            DriverProperties prop = new DriverProperties(platform, headless, fileDownloadLocation, arguments);
-            WebDriver.CreateDriverByProperties(prop, platform);
+            DriverProperties prop = new DriverProperties(browser, headless, fileDownloadLocation, arguments);
+            WebDriver.CreateDriverByProperties(prop);
             WebDriver.GoToUrl(url);
             MaximizeWindow();
 
             return WebDriver.GetDriver();
         }
 
-        public static IWebDriver Open(string url, string platform)
+        public static IWebDriver Open(DriverType browser, string url, bool headless, string fileDownloadLocation, string arguments = null)
+        {
+            DriverProperties prop = new DriverProperties(browser, headless, fileDownloadLocation, arguments);
+            WebDriver.CreateDriverByProperties(prop);
+            WebDriver.GoToUrl(url);
+            MaximizeWindow();
+
+            return WebDriver.GetDriver();
+        }
+
+        public static IWebDriver Open(string browser, string url)
         {
             DriverProperties prop = WebDriver.GetDefaultProperties();
 
-            if (prop.getDriverType().ToDescription() != platform.ToLower())
+            if (prop.getDriverType().ToDescription() != browser.ToLower())
             {
-                prop = new DriverProperties(platform);
+                prop = new DriverProperties(browser);
             }
 
-            WebDriver.CreateDriverByProperties(prop, platform);
+            WebDriver.CreateDriverByProperties(prop);
+            WebDriver.GoToUrl(url);
+            MaximizeWindow();
+
+            return WebDriver.GetDriver();
+        }
+
+        public static IWebDriver Open(DriverType browser, string url)
+        {
+            DriverProperties prop = WebDriver.GetDefaultProperties();
+
+            if (prop.getDriverType() != browser)
+            {
+                prop = new DriverProperties(browser);
+            }
+
+            WebDriver.CreateDriverByProperties(prop);
             WebDriver.GoToUrl(url);
             MaximizeWindow();
 
