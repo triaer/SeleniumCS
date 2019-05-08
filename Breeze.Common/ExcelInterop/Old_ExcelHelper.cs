@@ -285,24 +285,11 @@ namespace Breeze.Common.ExcelInterop
             // not implemented yet
         }
 
-        public void DeleteRow(string filePath, string sheetName, int fromRow = 1, int noRowsToDelete = 1)
-        {
-            // not implemented yet
-        }
+        //public void DeleteRow(string filePath, string sheetName, int fromRow = 1, int noRowsToDelete = 1) { } // not implemented yet
 
-        public void DeleteColumn(string filePath, string sheetName, int fromColumn = 1, int noColumnsToDelete = 1)
-        {
-            // not implemented yet
-        }
+        //public void DeleteColumn(string filePath, string sheetName, int fromColumn = 1, int noColumnsToDelete = 1) { } // not implemented yet
 
-        public string GetColumnNameByNumber(int columnNumber)
-        {
-            throw new NotImplementedException();
-        }
 
-        public int GetColumnNumberByName(string columnName)
-        {
-            throw new NotImplementedException();
-        }
+
     }
 }

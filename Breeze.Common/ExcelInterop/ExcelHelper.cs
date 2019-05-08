@@ -17,10 +17,8 @@ namespace Breeze.Common.ExcelInterop
         List<int[]> SearchAll(string strKeyword, bool caseSensitive = true, bool partialSearch = true);
         void InsertRow(string filePath, string sheetName, int fromRow, int noOfRows = 1);
         void InsertColumn(string filePath, string sheetName, int fromColumn, int noOfColumns = 1);
-        void DeleteRow(string filePath, string sheetName, int fromRow, int noOfRows = 1);
-        void DeleteColumn(string filePath, string sheetName, int fromCol, int noOfColumns = 1);
-        string GetColumnNameByNumber(int columnNumber);
-        int GetColumnNumberByName(string columnName);
+        //void DeleteRow(string filePath, string sheetName, int fromRow, int noOfRows = 1);
+        //void DeleteColumn(string filePath, string sheetName, int fromCol, int noOfColumns = 1);
         void Close();
     }
 }
