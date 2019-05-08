@@ -34,8 +34,8 @@ namespace Breeze.UI.Tests
             DriverProperties driverProperties = new DriverProperties();
             if (TestContext.Properties.Contains("browser"))
             {
-                driverProperties.setDriverType(TestContext.Properties["browser"].ToString());
                 browser = TestContext.Properties["browser"].ToString();
+                driverProperties.setDriverType(browser);
             }
 
             if (TestContext.Properties.Contains("arguments"))
@@ -63,7 +63,7 @@ namespace Breeze.UI.Tests
                 Directory.CreateDirectory(captureLocation);
             }
 
-            WebDriver.InitDriverManager(driverProperties, browser);
+            WebDriver.InitDriverManager(driverProperties);
 
             string report = Utils.GetRandomValue(TestContext.TestName);
             reportPath = captureLocation + report + ".html";
@@ -71,16 +71,6 @@ namespace Breeze.UI.Tests
             extent.AddSystemInfo("Environment", environment);
             extent.AddSystemInfo("Browser", browser);
             test = ExtentReportsHelper.LogTest("Pre-condition");
-        }
-
-
-
-        protected TestAccount GetTestAccount(string role, string environment, string type, string tbUserRole = "AdminAccount1")
-        {
-            string sourceFilePath = excelUserSourcePath; // @"C:\working\DT_CommonDataBreeze.xls";
-            var user = TestAccountAccess.GetTestAccount(role, environment, type, tbUserRole, excelUserSourcePath, localTempExcelUserTargetPath);
-
-            return user;
         }
 
         protected void ReportResult(Status status, string reportFilePath)
@@ -128,15 +118,19 @@ namespace Breeze.UI.Tests
                         else
                         {
                             if (ExtentReportsHelper.nodeList.LastOrDefault() != null)
-                                ExtentReportsHelper.nodeList.LastOrDefault().Error(lastException.ToString(), ExtentReportsHelper.AttachScreenshot(filePath));
                             {
-                                test.Error(TestContext.TestName + " Got Exception During Execution - " + lastException.Message + " " + lastException.StackTrace, ExtentReportsHelper.AttachScreenshot(filePath));
-                                for (int i = 0; i < validations.Count; i++)
-                                {
-                                    test.Info(string.Join(Environment.NewLine, validations[i]));
-                                }
+                                ExtentReportsHelper.nodeList.LastOrDefault().Error(lastException.ToString(), ExtentReportsHelper.AttachScreenshot(filePath));
+                            }
+                            else
+                            {
+                                ExtentReportsHelper.test.Error(lastException.ToString(), ExtentReportsHelper.AttachScreenshot(filePath));
                             }
 
+                            test.Error(TestContext.TestName + " Got Exception During Execution - " + lastException.Message + " " + lastException.StackTrace, ExtentReportsHelper.AttachScreenshot(filePath));
+                            for (int i = 0; i < validations.Count; i++)
+                            {
+                                test.Info(string.Join(Environment.NewLine, validations[i]));
+                            }
                         }
                     }
                     catch (Exception)

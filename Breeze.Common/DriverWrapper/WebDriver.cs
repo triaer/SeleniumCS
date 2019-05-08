@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using Breeze.Common.Helper;
 
 namespace Breeze.Common.DriverWrapper
 {
@@ -31,16 +32,16 @@ namespace Breeze.Common.DriverWrapper
         [ThreadStatic]
         private static Dictionary<string, DriverProperties> listProperties;
 
-        public static void InitDriverManager(DriverProperties pro, string plaform)
+        public static void InitDriverManager(DriverProperties pro)
         {
             listDriver = new Dictionary<string, IWebDriver>() ;
             listProperties = new Dictionary<string, DriverProperties>();
-            defaultKey = plaform + "-1";
+            defaultKey = pro.getDriverType().ToDescription() + "-1";
             timeOut = 60;
             defaultDriverProperties = pro;
         }
 
-        public static void CreateDriverByProperties(DriverProperties properties, string plaform)
+        public static void CreateDriverByProperties(DriverProperties properties)
         {
             IWebDriver webDriver = null;
             string key;
@@ -148,7 +149,7 @@ namespace Breeze.Common.DriverWrapper
 
             webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
 
-            key = plaform + "-" + getNextPlatformNumber(plaform);
+            key = properties.getDriverType().ToDescription() + "-" + getNextPlatformNumber(properties.getDriverType().ToDescription());
             listDriver.Add(key, webDriver);
             listProperties.Add(key, properties);
             currentKey = key;
