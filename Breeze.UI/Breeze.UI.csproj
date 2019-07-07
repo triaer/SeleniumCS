@@ -148,6 +148,8 @@
     <Compile Include="Pages\DigikeyProductDetailsPage.cs" />
     <Compile Include="Pages\DigikeyProductListPage.cs" />
     <Compile Include="Pages\DigikeyShoppingCartPage.cs" />
+    <Compile Include="Pages\Foody\HomePage.cs" />
+    <Compile Include="Pages\Foody\LoginPage.cs" />
     <Compile Include="Pages\Global\BasePage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -126,6 +126,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Digikey\ShoppingTests.cs" />
+    <Compile Include="Foody\FoodyTests.cs" />
     <Compile Include="UITestBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -5,5 +5,6 @@
         public const string HomePage = "http://google.com/";
         public const string AgodaHomePage = "http://www.agoda.com/";
         public const string DigikeyHomePage = "http://www.digikey.com/";
+        public const string Foody = "https://www.foody.vn/";
     }
 }
