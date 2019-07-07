@@ -15,6 +15,7 @@ namespace DelivermoreUITests
             {
                 var loginPage = new LoginPage2();
                 PageFactory.InitElements(Browser.Driver, loginPage);
+                var s = new string();
                 return loginPage;
             }
         }
