@@ -15,7 +15,7 @@ namespace KiewitTeamBinder.UI.Pages.Foody
 
         static readonly By _txtUsername = By.XPath("//input[@id='Email']");
         static readonly By _txtPassword = By.XPath("//input[@id='Password']");
-        static readonly By _cbRememberMe = By.XPath("//input[@id='RememberMe']");
+        static readonly By _cbRememberMe = By.XPath("//input[@id ='RememberMe']/following-sibling::label");
         static readonly By _btnLogin = By.XPath("//input[@id='bt_submit']");
 
         #endregion
@@ -32,7 +32,10 @@ namespace KiewitTeamBinder.UI.Pages.Foody
             get { return StableFindElement(_txtPassword); }
         }
 
-        public IWebElement CbRememberMe => StableFindElement(_cbRememberMe);
+        public IWebElement CbRememberMe
+        {
+            get { return StableFindElement(_cbRememberMe); }
+        }
 
         public IWebElement BtnLogin
         {
@@ -47,17 +50,14 @@ namespace KiewitTeamBinder.UI.Pages.Foody
         {
         }
 
-        public object Login(String username, String password, Boolean isRememberMe = false)
+        public HomePage Login(string username, string password, bool isRememberMe = false)
         {
             try
             {
                 TxtUsername.SendKeys(username);
                 TxtPassword.SendKeys(password);
-                //CbRememberMe.Click();
-
+                CbRememberMe.Click();
                 BtnLogin.Click();
-                WaitForElementDisappear(_btnLogin);
-                if (BtnLogin.IsDisplayed()) return this;
             }
             catch (Exception e)
             {

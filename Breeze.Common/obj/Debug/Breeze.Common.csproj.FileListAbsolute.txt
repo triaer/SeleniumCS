@@ -20,3 +20,23 @@ C:\Users\Tri Mai\source\repos\SeleniumCS\Breeze.Common\obj\Debug\Breeze.Common.c
 C:\Users\Tri Mai\source\repos\SeleniumCS\Breeze.Common\obj\Debug\Breeze.Common.csproj.CopyComplete
 C:\Users\Tri Mai\source\repos\SeleniumCS\Breeze.Common\obj\Debug\Breeze.Common.dll
 C:\Users\Tri Mai\source\repos\SeleniumCS\Breeze.Common\obj\Debug\Breeze.Common.pdb
+C:\Users\tri.mai\Source\Repos\SeleniumCS\Breeze.Common\bin\Debug\Breeze.Common.dll
+C:\Users\tri.mai\Source\Repos\SeleniumCS\Breeze.Common\bin\Debug\Breeze.Common.pdb
+C:\Users\tri.mai\Source\Repos\SeleniumCS\Breeze.Common\bin\Debug\EPPlus.dll
+C:\Users\tri.mai\Source\Repos\SeleniumCS\Breeze.Common\bin\Debug\ExcelDataReader.DataSet.dll
+C:\Users\tri.mai\Source\Repos\SeleniumCS\Breeze.Common\bin\Debug\ExcelDataReader.dll
+C:\Users\tri.mai\Source\Repos\SeleniumCS\Breeze.Common\bin\Debug\Newtonsoft.Json.dll
+C:\Users\tri.mai\Source\Repos\SeleniumCS\Breeze.Common\bin\Debug\System.ValueTuple.dll
+C:\Users\tri.mai\Source\Repos\SeleniumCS\Breeze.Common\bin\Debug\WebDriver.dll
+C:\Users\tri.mai\Source\Repos\SeleniumCS\Breeze.Common\bin\Debug\WebDriver.Support.dll
+C:\Users\tri.mai\Source\Repos\SeleniumCS\Breeze.Common\bin\Debug\EPPlus.xml
+C:\Users\tri.mai\Source\Repos\SeleniumCS\Breeze.Common\bin\Debug\ExcelDataReader.pdb
+C:\Users\tri.mai\Source\Repos\SeleniumCS\Breeze.Common\bin\Debug\ExcelDataReader.xml
+C:\Users\tri.mai\Source\Repos\SeleniumCS\Breeze.Common\bin\Debug\ExcelDataReader.DataSet.pdb
+C:\Users\tri.mai\Source\Repos\SeleniumCS\Breeze.Common\bin\Debug\ExcelDataReader.DataSet.xml
+C:\Users\tri.mai\Source\Repos\SeleniumCS\Breeze.Common\bin\Debug\Newtonsoft.Json.xml
+C:\Users\tri.mai\Source\Repos\SeleniumCS\Breeze.Common\bin\Debug\System.ValueTuple.xml
+C:\Users\tri.mai\Source\Repos\SeleniumCS\Breeze.Common\bin\Debug\WebDriver.xml
+C:\Users\tri.mai\Source\Repos\SeleniumCS\Breeze.Common\bin\Debug\WebDriver.Support.xml
+C:\Users\tri.mai\Source\Repos\SeleniumCS\Breeze.Common\obj\Debug\Breeze.Common.dll
+C:\Users\tri.mai\Source\Repos\SeleniumCS\Breeze.Common\obj\Debug\Breeze.Common.pdb
